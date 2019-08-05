@@ -4,16 +4,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Xplicity_Holidays.Migrations
 {
-    public partial class Initialization : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Clients",
+                name: "Teams",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teams", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Clients",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Surname = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
@@ -22,26 +34,12 @@ namespace Xplicity_Holidays.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Clients", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Teams",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: false),
-                    ClientId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teams", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Teams_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
+                        name: "FK_Clients_Teams_Id",
+                        column: x => x.Id,
+                        principalTable: "Teams",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -56,7 +54,9 @@ namespace Xplicity_Holidays.Migrations
                     WorksFromDate = table.Column<DateTime>(nullable: false),
                     DaysOfVacation = table.Column<double>(nullable: false),
                     Email = table.Column<string>(nullable: false),
-                    Password = table.Column<string>(nullable: false)
+                    Password = table.Column<string>(nullable: false),
+                    Role = table.Column<string>(nullable: true),
+                    Token = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -101,17 +101,13 @@ namespace Xplicity_Holidays.Migrations
                 name: "IX_Holidays_EmployeeId",
                 table: "Holidays",
                 column: "EmployeeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Teams_ClientId",
-                table: "Teams",
-                column: "ClientId",
-                unique: true,
-                filter: "[ClientId] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Clients");
+
             migrationBuilder.DropTable(
                 name: "Holidays");
 
@@ -120,9 +116,6 @@ namespace Xplicity_Holidays.Migrations
 
             migrationBuilder.DropTable(
                 name: "Teams");
-
-            migrationBuilder.DropTable(
-                name: "Clients");
         }
     }
 }

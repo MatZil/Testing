@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Xplicity_Holidays.Models.Entities
+namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
-    public class Employee
+    public class Employee: BaseEntity
     {
-        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
@@ -24,6 +21,6 @@ namespace Xplicity_Holidays.Models.Entities
         public string Password { get; set; }
         public string Role { get; set; }
         public string Token { get; set; }
-        public List<Holiday> Holidays { get; set; }
+        public ICollection<Holiday> Holidays { get; set; }
     }
 }

@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Xplicity_Holidays.Models;
+using Xplicity_Holidays.Infrastructure.Database;
 
 namespace Xplicity_Holidays.Migrations
 {
-    [DbContext(typeof(SystemContext))]
-    [Migration("20190804144903_Initialization")]
-    partial class Initialization
+    [DbContext(typeof(HolidayDbContext))]
+    [Migration("20190805184227_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,11 +21,9 @@ namespace Xplicity_Holidays.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Xplicity_Holidays.Models.Entities.Client", b =>
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Client", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("Id");
 
                     b.Property<string>("Email")
                         .IsRequired();
@@ -44,7 +42,7 @@ namespace Xplicity_Holidays.Migrations
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("Xplicity_Holidays.Models.Entities.Employee", b =>
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,10 +59,14 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<string>("Password")
                         .IsRequired();
 
+                    b.Property<string>("Role");
+
                     b.Property<string>("Surname")
                         .IsRequired();
 
                     b.Property<int?>("TeamId");
+
+                    b.Property<string>("Token");
 
                     b.Property<DateTime>("WorksFromDate");
 
@@ -75,7 +77,7 @@ namespace Xplicity_Holidays.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("Xplicity_Holidays.Models.Entities.Holiday", b =>
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Holiday", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -99,46 +101,41 @@ namespace Xplicity_Holidays.Migrations
                     b.ToTable("Holidays");
                 });
 
-            modelBuilder.Entity("Xplicity_Holidays.Models.Entities.Team", b =>
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Team", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ClientId");
 
                     b.Property<string>("Name")
                         .IsRequired();
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId")
-                        .IsUnique()
-                        .HasFilter("[ClientId] IS NOT NULL");
-
                     b.ToTable("Teams");
                 });
 
-            modelBuilder.Entity("Xplicity_Holidays.Models.Entities.Employee", b =>
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Client", b =>
                 {
-                    b.HasOne("Xplicity_Holidays.Models.Entities.Team", "Team")
+                    b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.Team", "Team")
+                        .WithOne("Client")
+                        .HasForeignKey("Xplicity_Holidays.Infrastructure.Database.Models.Client", "Id")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Employee", b =>
+                {
+                    b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.Team", "Team")
                         .WithMany("Employees")
                         .HasForeignKey("TeamId");
                 });
 
-            modelBuilder.Entity("Xplicity_Holidays.Models.Entities.Holiday", b =>
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Holiday", b =>
                 {
-                    b.HasOne("Xplicity_Holidays.Models.Entities.Employee", "Employee")
+                    b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.Employee", "Employee")
                         .WithMany("Holidays")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Xplicity_Holidays.Models.Entities.Team", b =>
-                {
-                    b.HasOne("Xplicity_Holidays.Models.Entities.Client", "Client")
-                        .WithOne("Team")
-                        .HasForeignKey("Xplicity_Holidays.Models.Entities.Team", "ClientId");
                 });
 #pragma warning restore 612, 618
         }
