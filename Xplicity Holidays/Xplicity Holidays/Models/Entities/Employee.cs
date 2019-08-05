@@ -22,6 +22,8 @@ namespace Xplicity_Holidays.Models.Entities
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
+        public string Role { get; set; }
+        public string Token { get; set; }
         public List<Holiday> Holidays { get; set; }
     }
 }
