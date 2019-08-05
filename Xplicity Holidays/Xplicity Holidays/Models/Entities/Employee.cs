@@ -14,6 +14,8 @@ namespace Xplicity_Holidays.Models.Entities
         [Required]
         public string Surname { get; set; }
         public Team Team { get; set; }
+        public string Token { get; set; }
+        public string Role { get; set; }  
         [Required]
         public DateTime WorksFromDate { get; set; }
         [Required]

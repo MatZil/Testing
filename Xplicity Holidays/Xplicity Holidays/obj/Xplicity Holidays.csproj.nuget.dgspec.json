@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mataszil\\gamma\\Xplicity Holidays\\Xplicity Holidays\\Xplicity Holidays.csproj": {}
+    "C:\\Users\\domin\\Documents\\gamma\\Xplicity Holidays\\Xplicity Holidays\\Xplicity Holidays.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mataszil\\gamma\\Xplicity Holidays\\Xplicity Holidays\\Xplicity Holidays.csproj": {
+    "C:\\Users\\domin\\Documents\\gamma\\Xplicity Holidays\\Xplicity Holidays\\Xplicity Holidays.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mataszil\\gamma\\Xplicity Holidays\\Xplicity Holidays\\Xplicity Holidays.csproj",
+        "projectUniqueName": "C:\\Users\\domin\\Documents\\gamma\\Xplicity Holidays\\Xplicity Holidays\\Xplicity Holidays.csproj",
         "projectName": "Xplicity Holidays",
-        "projectPath": "C:\\Users\\mataszil\\gamma\\Xplicity Holidays\\Xplicity Holidays\\Xplicity Holidays.csproj",
-        "packagesPath": "C:\\Users\\mataszil\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mataszil\\gamma\\Xplicity Holidays\\Xplicity Holidays\\obj\\",
+        "projectPath": "C:\\Users\\domin\\Documents\\gamma\\Xplicity Holidays\\Xplicity Holidays\\Xplicity Holidays.csproj",
+        "packagesPath": "C:\\Users\\domin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\domin\\Documents\\gamma\\Xplicity Holidays\\Xplicity Holidays\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\mataszil\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\domin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
