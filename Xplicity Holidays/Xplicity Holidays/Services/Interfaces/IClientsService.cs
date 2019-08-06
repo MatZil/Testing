@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xplicity_Holidays.Dtos;
+using Xplicity_Holidays.Dtos.Clients;
 
 namespace Xplicity_Holidays.Services.Interfaces
 {

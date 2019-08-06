@@ -1,106 +1,71 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.EntityFrameworkCore;
-//using Xplicity_Holidays.Models;
-//using Xplicity_Holidays.Models.Entities;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Xplicity_Holidays.Dtos.Employees;
+using Xplicity_Holidays.Services.Interfaces;
 
-//namespace Xplicity_Holidays.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class EmployeesController : ControllerBase
-//    {
-//        private readonly SystemContext _context;
+namespace Xplicity_Holidays.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EmployeesController : ControllerBase
+    {
+        private readonly IEmployeesService _service;
 
-//        public EmployeesController(SystemContext context)
-//        {
-//            _context = context;
-//        }
+        public EmployeesController(IEmployeesService service)
+        {
+            _service = service;
+        }
 
-//        // GET: api/Employees
-//        [HttpGet]
-//        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
-//        {
-//            return await _context.Employees.ToListAsync();
-//        }
+        // GET: api/Employees
+        [HttpGet]
+        [Produces(typeof(GetEmployeeDto[]))]
+        public async Task<IActionResult> Get()
+        {
+            var clients = await _service.GetAll();
+            return Ok(clients);
+        }
 
-//        // GET: api/Employees/5
-//        [HttpGet("{id}")]
-//        public async Task<ActionResult<Employee>> GetEmployee(int id)
-//        {
-//            var employee = await _context.Employees.FindAsync(id);
+        // GET: api/Employees/5
+        [HttpGet("{id}")]
+        [Produces(typeof(GetEmployeeDto))]
+        public async Task<IActionResult> Get(int id)
+        {
+            var employee = await _service.GetById(id);
 
-//            if (employee == null)
-//            {
-//                return NotFound();
-//            }
+            if (employee == null)
+            {
+                return NotFound();
+            }
 
-//            return employee;
-//        }
+            return Ok(employee);
+        }
 
-//        // PUT: api/Employees/5
-//        [HttpPut("{id}")]
-//        public async Task<IActionResult> PutEmployee(int id, Employee employee)
-//        {
-//            if (id != employee.Id)
-//            {
-//                return BadRequest();
-//            }
+        // PUT: api/Employees/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] NewEmployeeDto NewEmployeeDto)
+        {
+            await _service.Update(id, NewEmployeeDto);
 
-//            _context.Entry(employee).State = EntityState.Modified;
+            return NoContent();
+        }
 
-//            try
-//            {
-//                await _context.SaveChangesAsync();
-//            }
-//            catch (DbUpdateConcurrencyException)
-//            {
-//                if (!EmployeeExists(id))
-//                {
-//                    return NotFound();
-//                }
-//                else
-//                {
-//                    throw;
-//                }
-//            }
+        // POST: api/Employees
+        [HttpPost]
+        [Produces(typeof(NewEmployeeDto))]
+        public async Task<IActionResult> Post(NewEmployeeDto newEmployeeDto)
+        {
+            var createdEmployee = await _service.Create(newEmployeeDto);
 
-//            return NoContent();
-//        }
+            return Ok(createdEmployee);
+        }
 
-//        // POST: api/Employees
-//        [HttpPost]
-//        public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
-//        {
-//            _context.Employees.Add(employee);
-//            await _context.SaveChangesAsync();
+        // DELETE: api/Employee/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.Delete(id);
 
-//            return CreatedAtAction("GetEmployee", new { id = employee.Id }, employee);
-//        }
-
-//        // DELETE: api/Employees/5
-//        [HttpDelete("{id}")]
-//        public async Task<ActionResult<Employee>> DeleteEmployee(int id)
-//        {
-//            var employee = await _context.Employees.FindAsync(id);
-//            if (employee == null)
-//            {
-//                return NotFound();
-//            }
-
-//            _context.Employees.Remove(employee);
-//            await _context.SaveChangesAsync();
-
-//            return employee;
-//        }
-
-//        private bool EmployeeExists(int id)
-//        {
-//            return _context.Employees.Any(e => e.Id == id);
-//        }
-//    }
-//}
+            return NoContent();
+        }
+    }
+}

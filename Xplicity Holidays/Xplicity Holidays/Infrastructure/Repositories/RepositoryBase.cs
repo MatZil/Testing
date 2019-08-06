@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -17,21 +18,16 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
             Context = context;
         }
 
-        protected virtual IQueryable<TEntity> IncludeDependencies(IQueryable<TEntity> queryable)
-        {
-            return queryable;
-        }
-
         public virtual async Task<ICollection<TEntity>> GetAll()
         {
-            var items = await IncludeDependencies(ItemSet).ToArrayAsync();
+            var items = await ItemSet.ToArrayAsync();
 
             return items;
         }
 
         public virtual async Task<TEntity> GetById(int id)
         {
-            var items = await IncludeDependencies(ItemSet).FirstOrDefaultAsync();
+            var items = await ItemSet.FirstOrDefaultAsync();
 
             return items;
         }

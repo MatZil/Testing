@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Xplicity_Holidays.Dtos
+namespace Xplicity_Holidays.Dtos.Holidays
 {
     public class HolidayAddDto
     {

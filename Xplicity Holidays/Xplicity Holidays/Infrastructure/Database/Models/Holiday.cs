@@ -8,12 +8,12 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public Employee Employee { get; set; }
         [Required]
+        public int EmployeeId { get; set; }
+        [Required]
         public string Type { get; set; }
         [Required]
         public DateTime From { get; set; }
         [Required]
         public DateTime To { get; set; }
-        [Required]
-        public int Days { get; set; }
     }
 }

@@ -1,17 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
     public class Client: BaseEntity
     {
         [Required]
-        public string Name { get; set; }
+        public string CompanyName { get; set; }
         [Required]
-        public string Surname { get; set; }
+        public string OwnerName { get; set; }
         [Required]
-        public string Email { get; set; }
+        public string OwnerSurname { get; set; }
         [Required]
-        public string Phone { get; set; }
-        public Team Team { get; set; }
+        public string OwnerEmail { get; set; }
+        [Required]
+        public string OwnerPhone { get; set; }
+        public ICollection<Employee> Employees { get; set; }
     }
 }

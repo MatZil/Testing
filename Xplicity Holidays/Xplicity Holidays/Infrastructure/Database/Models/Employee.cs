@@ -10,9 +10,12 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         public string Name { get; set; }
         [Required]
         public string Surname { get; set; }
-        public Team Team { get; set; }
+        public Client Client { get; set; }
+        public int ClientId { get; set; }
         [Required]
         public DateTime WorksFromDate { get; set; }
+        [Required]
+        public DateTime BirthdayDate { get; set; }
         [Required]
         public double DaysOfVacation { get; set; }
         [Required]

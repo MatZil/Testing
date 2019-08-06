@@ -7,7 +7,7 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
     {
         [Required]
         public string Name { get; set; }
-        public ICollection<Employee> Employees { get; set; }
-        public Client Client { get; set; }
+        //public ICollection<Employee> Employees { get; set; }
+        //public Client Client { get; set; }
     }
 }

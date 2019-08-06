@@ -9,6 +9,23 @@ namespace Xplicity_Holidays.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Clients",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CompanyName = table.Column<string>(nullable: false),
+                    OwnerName = table.Column<string>(nullable: false),
+                    OwnerSurname = table.Column<string>(nullable: false),
+                    OwnerEmail = table.Column<string>(nullable: false),
+                    OwnerPhone = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clients", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Teams",
                 columns: table => new
                 {
@@ -22,27 +39,6 @@ namespace Xplicity_Holidays.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Clients",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Surname = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(nullable: false),
-                    Phone = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Clients_Teams_Id",
-                        column: x => x.Id,
-                        principalTable: "Teams",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
@@ -50,8 +46,9 @@ namespace Xplicity_Holidays.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: false),
                     Surname = table.Column<string>(nullable: false),
-                    TeamId = table.Column<int>(nullable: true),
+                    ClientId = table.Column<int>(nullable: false),
                     WorksFromDate = table.Column<DateTime>(nullable: false),
+                    BirthdayDate = table.Column<DateTime>(nullable: false),
                     DaysOfVacation = table.Column<double>(nullable: false),
                     Email = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
@@ -62,11 +59,11 @@ namespace Xplicity_Holidays.Migrations
                 {
                     table.PrimaryKey("PK_Employees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Employees_Teams_TeamId",
-                        column: x => x.TeamId,
-                        principalTable: "Teams",
+                        name: "FK_Employees_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,8 +75,7 @@ namespace Xplicity_Holidays.Migrations
                     EmployeeId = table.Column<int>(nullable: false),
                     Type = table.Column<string>(nullable: false),
                     From = table.Column<DateTime>(nullable: false),
-                    To = table.Column<DateTime>(nullable: false),
-                    Days = table.Column<int>(nullable: false)
+                    To = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -93,9 +89,9 @@ namespace Xplicity_Holidays.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employees_TeamId",
+                name: "IX_Employees_ClientId",
                 table: "Employees",
-                column: "TeamId");
+                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Holidays_EmployeeId",
@@ -106,16 +102,16 @@ namespace Xplicity_Holidays.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Clients");
+                name: "Holidays");
 
             migrationBuilder.DropTable(
-                name: "Holidays");
+                name: "Teams");
 
             migrationBuilder.DropTable(
                 name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "Teams");
+                name: "Clients");
         }
     }
 }

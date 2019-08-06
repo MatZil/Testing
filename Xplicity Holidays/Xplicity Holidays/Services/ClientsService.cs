@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Xplicity_Holidays.Dtos;
+using Xplicity_Holidays.Dtos.Clients;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Services.Interfaces;

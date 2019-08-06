@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Xplicity_Holidays.Dtos;
+using Xplicity_Holidays.Dtos.Clients;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers

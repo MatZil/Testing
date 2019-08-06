@@ -13,10 +13,5 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
         {
             ItemSet = context.Clients;
         }
-
-        protected override IQueryable<Client> IncludeDependencies(IQueryable<Client> queryable)
-        {
-            return queryable.Include(obj => obj.Team);
-        }
     }
 }

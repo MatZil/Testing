@@ -27,7 +27,8 @@ namespace Xplicity_Holidays.Configurations
         public static IServiceCollection AddApplicationDependencies(this IServiceCollection service)
         {
             return service
-                .AddScoped<IClientsService, ClientsService>();
+                .AddScoped<IClientsService, ClientsService>()
+                .AddScoped<IEmployeesService, EmployeesService>();
         }
     }
 }
