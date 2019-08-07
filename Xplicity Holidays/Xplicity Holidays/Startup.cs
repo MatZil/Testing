@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.Swagger;
-using Xplicity_Holidays.Models;
+using Xplicity_Holidays.Configurations;
 
 namespace Xplicity_Holidays
 {
@@ -29,15 +19,12 @@ namespace Xplicity_Holidays
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.SetUpAutoMapper();
+            services.AddAllDependencies();
+            services.SetUpDatabase(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("holidays", new Info { Title = "Xplicity Holidays", Version = "v1" });
-            });
-
-            const string connection = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
-            services.AddDbContext<SystemContext>(options => options.UseSqlServer(connection));
+            services.AddSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,14 +42,7 @@ namespace Xplicity_Holidays
 
             app.UseHttpsRedirection();
             app.UseMvc();
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                //                c.SwaggerEndpoint("/swagger/v1/swagger.json", "version_demo");
-                c.SwaggerEndpoint("/swagger/holidays/swagger.json", "holidays");
-                c.RoutePrefix = "holidays";
-            });
+            app.ConfigureAndUseSwagger();
         }
     }
 }

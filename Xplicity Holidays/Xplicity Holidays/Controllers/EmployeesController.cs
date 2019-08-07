@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Xplicity_Holidays.Models;
-using Xplicity_Holidays.Models.Entities;
+using Xplicity_Holidays.Dtos.Employees;
+using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers
 {
@@ -14,93 +9,63 @@ namespace Xplicity_Holidays.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private readonly SystemContext _context;
+        private readonly IEmployeesService _service;
 
-        public EmployeesController(SystemContext context)
+        public EmployeesController(IEmployeesService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Employees
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        [Produces(typeof(GetEmployeeDto[]))]
+        public async Task<IActionResult> Get()
         {
-            return await _context.Employees.ToListAsync();
+            var clients = await _service.GetAll();
+            return Ok(clients);
         }
 
         // GET: api/Employees/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(int id)
+        [Produces(typeof(GetEmployeeDto))]
+        public async Task<IActionResult> Get(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _service.GetById(id);
 
             if (employee == null)
             {
                 return NotFound();
             }
 
-            return employee;
+            return Ok(employee);
         }
 
         // PUT: api/Employees/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(int id, Employee employee)
+        public async Task<IActionResult> Put(int id, [FromBody] NewEmployeeDto NewEmployeeDto)
         {
-            if (id != employee.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(employee).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EmployeeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _service.Update(id, NewEmployeeDto);
 
             return NoContent();
         }
 
         // POST: api/Employees
         [HttpPost]
-        public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
+        [Produces(typeof(NewEmployeeDto))]
+        public async Task<IActionResult> Post(NewEmployeeDto newEmployeeDto)
         {
-            _context.Employees.Add(employee);
-            await _context.SaveChangesAsync();
+            var createdEmployee = await _service.Create(newEmployeeDto);
 
-            return CreatedAtAction("GetEmployee", new { id = employee.Id }, employee);
+            return Ok(createdEmployee);
         }
 
-        // DELETE: api/Employees/5
+        // DELETE: api/Employee/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Employee>> DeleteEmployee(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
+            await _service.Delete(id);
 
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
-
-            return employee;
-        }
-
-        private bool EmployeeExists(int id)
-        {
-            return _context.Employees.Any(e => e.Id == id);
+            return NoContent();
         }
     }
 }

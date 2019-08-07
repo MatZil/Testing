@@ -1,29 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Xplicity_Holidays.Models.Entities
+namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
-    public class Employee
+    public class Employee: BaseEntity
     {
-        public int Id { get; set; }
         [Required]
+        [MinLength(3)]
+        [MaxLength(15)]
         public string Name { get; set; }
         [Required]
+        [MinLength(3)]
+        [MaxLength(20)]
         public string Surname { get; set; }
-        public Team Team { get; set; }
+        public Client Client { get; set; }
+        public int? ClientId { get; set; }
         [Required]
         public DateTime WorksFromDate { get; set; }
         [Required]
+        public DateTime BirthdayDate { get; set; }
+        [Required]
         public double DaysOfVacation { get; set; }
         [Required]
+        [MinLength(4)]
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
         public string Role { get; set; }
         public string Token { get; set; }
-        public List<Holiday> Holidays { get; set; }
+        public ICollection<Holiday> Holidays { get; set; }
     }
 }

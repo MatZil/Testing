@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Xplicity_Holidays.Models;
-using Xplicity_Holidays.Models.Entities;
+using Xplicity_Holidays.Dtos.Holidays;
+using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers
 {
@@ -14,93 +9,63 @@ namespace Xplicity_Holidays.Controllers
     [ApiController]
     public class HolidaysController : ControllerBase
     {
-        private readonly SystemContext _context;
+        private readonly IHolidaysService _service;
 
-        public HolidaysController(SystemContext context)
+        public HolidaysController(IHolidaysService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        // GET: api/Holidays
+        // GET: api/holidays
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Holiday>>> GetHolidays()
+        [Produces(typeof(NewHolidayDto[]))]
+        public async Task<IActionResult> Get()
         {
-            return await _context.Holidays.ToListAsync();
+            var holidays = await _service.GetAll();
+            return Ok(holidays);
         }
 
-        // GET: api/Holidays/5
+        // GET: api/holidays/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Holiday>> GetHoliday(int id)
+        [Produces(typeof(NewHolidayDto))]
+        public async Task<IActionResult> Get(int id)
         {
-            var holiday = await _context.Holidays.FindAsync(id);
+            var holiday = await _service.GetById(id);
 
             if (holiday == null)
             {
                 return NotFound();
             }
 
-            return holiday;
+            return Ok(holiday);
         }
 
-        // PUT: api/Holidays/5
+        // PUT: api/holidays/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutHoliday(int id, Holiday holiday)
+        public async Task<IActionResult> Put(int id, [FromBody] NewHolidayDto newHoliday)
         {
-            if (id != holiday.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(holiday).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!HolidayExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _service.Update(id, newHoliday);
 
             return NoContent();
         }
 
-        // POST: api/Holidays
+        // POST: api/holidays
         [HttpPost]
-        public async Task<ActionResult<Holiday>> PostHoliday(Holiday holiday)
+        [Produces(typeof(NewHolidayDto))]
+        public async Task<IActionResult> Post(NewHolidayDto newHoliday)
         {
-            _context.Holidays.Add(holiday);
-            await _context.SaveChangesAsync();
+            var createdHoliday = await _service.Create(newHoliday);
 
-            return CreatedAtAction("GetHoliday", new { id = holiday.Id }, holiday);
+            return Ok(createdHoliday);
         }
 
-        // DELETE: api/Holidays/5
+        // DELETE: api/holidays/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Holiday>> DeleteHoliday(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var holiday = await _context.Holidays.FindAsync(id);
-            if (holiday == null)
-            {
-                return NotFound();
-            }
+            await _service.Delete(id);
 
-            _context.Holidays.Remove(holiday);
-            await _context.SaveChangesAsync();
-
-            return holiday;
-        }
-
-        private bool HolidayExists(int id)
-        {
-            return _context.Holidays.Any(e => e.Id == id);
+            return NoContent();
         }
     }
 }

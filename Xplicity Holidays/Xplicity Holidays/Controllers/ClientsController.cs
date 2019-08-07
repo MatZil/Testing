@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Xplicity_Holidays.Models;
-using Xplicity_Holidays.Models.Entities;
+using Xplicity_Holidays.Dtos.Clients;
+using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers
 {
@@ -14,93 +9,64 @@ namespace Xplicity_Holidays.Controllers
     [ApiController]
     public class ClientsController : ControllerBase
     {
-        private readonly SystemContext _context;
+        private readonly IClientsService _service;
 
-        public ClientsController(SystemContext context)
+        public ClientsController(IClientsService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Clients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Client>>> GetClients()
+        [Produces(typeof(NewClientDto[]))]
+        public async Task<IActionResult> Get()
         {
-            return await _context.Clients.ToListAsync();
+            var clients = await _service.GetAll();
+            return Ok(clients);
         }
 
         // GET: api/Clients/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Client>> GetClient(int id)
+        [Produces(typeof(NewClientDto))]
+        public async Task<IActionResult> Get(int id)
         {
-            var client = await _context.Clients.FindAsync(id);
+            var client = await _service.GetById(id);
 
             if (client == null)
             {
                 return NotFound();
             }
 
-            return client;
+            return Ok(client);
         }
 
         // PUT: api/Clients/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutClient(int id, Client client)
+        public async Task<IActionResult> Put(int id, [FromBody] NewClientDto newClient)
         {
-            if (id != client.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(client).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClientExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _service.Update(id, newClient);
 
             return NoContent();
         }
 
         // POST: api/Clients
         [HttpPost]
-        public async Task<ActionResult<Client>> PostClient(Client client)
+        [Produces(typeof(NewClientDto))]
+        public async Task<IActionResult> Post(NewClientDto newClient)
         {
-            _context.Clients.Add(client);
-            await _context.SaveChangesAsync();
+            var createdClient = await _service.Create(newClient);
 
-            return CreatedAtAction("GetClient", new { id = client.Id }, client);
+            return Ok(createdClient);
         }
 
         // DELETE: api/Clients/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Client>> DeleteClient(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var client = await _context.Clients.FindAsync(id);
-            if (client == null)
-            {
-                return NotFound();
-            }
+            await _service.Delete(id);
 
-            _context.Clients.Remove(client);
-            await _context.SaveChangesAsync();
-
-            return client;
+            return NoContent();
         }
 
-        private bool ClientExists(int id)
-        {
-            return _context.Clients.Any(e => e.Id == id);
-        }
     }
 }

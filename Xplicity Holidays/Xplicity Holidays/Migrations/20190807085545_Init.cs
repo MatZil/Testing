@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Xplicity_Holidays.Migrations
 {
-    public partial class Initialization : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,11 +12,12 @@ namespace Xplicity_Holidays.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: false),
-                    Surname = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(nullable: false),
-                    Phone = table.Column<string>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CompanyName = table.Column<string>(maxLength: 20, nullable: false),
+                    OwnerName = table.Column<string>(maxLength: 15, nullable: false),
+                    OwnerSurname = table.Column<string>(maxLength: 20, nullable: false),
+                    OwnerEmail = table.Column<string>(nullable: false),
+                    OwnerPhone = table.Column<string>(maxLength: 12, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -25,46 +25,29 @@ namespace Xplicity_Holidays.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Teams",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: false),
-                    ClientId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teams", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Teams_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: false),
-                    Surname = table.Column<string>(nullable: false),
-                    TeamId = table.Column<int>(nullable: true),
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(maxLength: 15, nullable: false),
+                    Surname = table.Column<string>(maxLength: 20, nullable: false),
+                    ClientId = table.Column<int>(nullable: true),
                     WorksFromDate = table.Column<DateTime>(nullable: false),
+                    BirthdayDate = table.Column<DateTime>(nullable: false),
                     DaysOfVacation = table.Column<double>(nullable: false),
                     Email = table.Column<string>(nullable: false),
-                    Password = table.Column<string>(nullable: false)
+                    Password = table.Column<string>(nullable: false),
+                    Role = table.Column<string>(nullable: true),
+                    Token = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Employees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Employees_Teams_TeamId",
-                        column: x => x.TeamId,
-                        principalTable: "Teams",
+                        name: "FK_Employees_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -74,12 +57,11 @@ namespace Xplicity_Holidays.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     EmployeeId = table.Column<int>(nullable: false),
                     Type = table.Column<string>(nullable: false),
                     From = table.Column<DateTime>(nullable: false),
-                    To = table.Column<DateTime>(nullable: false),
-                    Days = table.Column<int>(nullable: false)
+                    To = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -93,21 +75,14 @@ namespace Xplicity_Holidays.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employees_TeamId",
+                name: "IX_Employees_ClientId",
                 table: "Employees",
-                column: "TeamId");
+                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Holidays_EmployeeId",
                 table: "Holidays",
                 column: "EmployeeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Teams_ClientId",
-                table: "Teams",
-                column: "ClientId",
-                unique: true,
-                filter: "[ClientId] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -117,9 +92,6 @@ namespace Xplicity_Holidays.Migrations
 
             migrationBuilder.DropTable(
                 name: "Employees");
-
-            migrationBuilder.DropTable(
-                name: "Teams");
 
             migrationBuilder.DropTable(
                 name: "Clients");
