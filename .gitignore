@@ -260,3 +260,8 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+.vs
+/Xplicity Holidays/Xplicity Holidays/obj
+bin
+*.user
+.vs
