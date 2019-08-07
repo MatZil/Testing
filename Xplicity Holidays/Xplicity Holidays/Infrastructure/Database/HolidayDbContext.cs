@@ -8,8 +8,6 @@ namespace Xplicity_Holidays.Infrastructure.Database
         public DbSet<Client> Clients { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Holiday> Holidays { get; set; }
-        public DbSet<Team> Teams { get; set; }
-
         public HolidayDbContext(DbContextOptions<HolidayDbContext> options): base(options)
         { }
 

@@ -2,7 +2,7 @@
 
 namespace Xplicity_Holidays.Dtos.Holidays
 {
-    public class HolidayAddDto
+    public class NewHolidayDto
     {
         public int EmployeeId { get; set; }
         public string Type { get; set; }

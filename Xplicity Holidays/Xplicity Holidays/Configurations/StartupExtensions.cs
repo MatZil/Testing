@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using Xplicity_Holidays.Infrastructure.Database;
@@ -32,10 +33,10 @@ namespace Xplicity_Holidays.Configurations
             });
         }
 
-        public static void SetUpDatabase(this IServiceCollection services)
+        public static void SetUpDatabase(this IServiceCollection service, IConfiguration configuration)
         {
-            const string connection = @"Server=localhost\SQLEXPRESS;Database=HolidayDB;Trusted_Connection=True;";
-            services.AddDbContext<HolidayDbContext>(options => options.UseSqlServer(connection));
+            var connectionString = configuration["Database:ConnectionString"];
+            service.AddDbContext<HolidayDbContext>(options => options.UseSqlite(connectionString));
         }
 
         public static void SetUpAutoMapper(this IServiceCollection services)

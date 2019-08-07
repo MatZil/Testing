@@ -6,7 +6,7 @@ namespace Xplicity_Holidays.Dtos.Employees
     {
         public string Name { get; set; }
         public string Surname { get; set; }
-        public int ClientId { get; set; }
+        public int? ClientId { get; set; }
         public DateTime WorksFromDate { get; set; }
         public DateTime BirthdayDate { get; set; }
         public double DaysOfVacation { get; set; }

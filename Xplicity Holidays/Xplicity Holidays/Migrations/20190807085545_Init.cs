@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Xplicity_Holidays.Migrations
@@ -13,12 +12,12 @@ namespace Xplicity_Holidays.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CompanyName = table.Column<string>(nullable: false),
-                    OwnerName = table.Column<string>(nullable: false),
-                    OwnerSurname = table.Column<string>(nullable: false),
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CompanyName = table.Column<string>(maxLength: 20, nullable: false),
+                    OwnerName = table.Column<string>(maxLength: 15, nullable: false),
+                    OwnerSurname = table.Column<string>(maxLength: 20, nullable: false),
                     OwnerEmail = table.Column<string>(nullable: false),
-                    OwnerPhone = table.Column<string>(nullable: false)
+                    OwnerPhone = table.Column<string>(maxLength: 12, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -26,27 +25,14 @@ namespace Xplicity_Holidays.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Teams",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teams", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: false),
-                    Surname = table.Column<string>(nullable: false),
-                    ClientId = table.Column<int>(nullable: false),
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(maxLength: 15, nullable: false),
+                    Surname = table.Column<string>(maxLength: 20, nullable: false),
+                    ClientId = table.Column<int>(nullable: true),
                     WorksFromDate = table.Column<DateTime>(nullable: false),
                     BirthdayDate = table.Column<DateTime>(nullable: false),
                     DaysOfVacation = table.Column<double>(nullable: false),
@@ -63,7 +49,7 @@ namespace Xplicity_Holidays.Migrations
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,7 +57,7 @@ namespace Xplicity_Holidays.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     EmployeeId = table.Column<int>(nullable: false),
                     Type = table.Column<string>(nullable: false),
                     From = table.Column<DateTime>(nullable: false),
@@ -103,9 +89,6 @@ namespace Xplicity_Holidays.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Holidays");
-
-            migrationBuilder.DropTable(
-                name: "Teams");
 
             migrationBuilder.DropTable(
                 name: "Employees");

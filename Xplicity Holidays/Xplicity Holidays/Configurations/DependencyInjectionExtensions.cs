@@ -20,15 +20,15 @@ namespace Xplicity_Holidays.Configurations
             return service
                 .AddScoped<IRepository<Client>, ClientsRepository>()
                 .AddScoped<IRepository<Employee>, EmployeesRepository>()
-                .AddScoped<IRepository<Holiday>, HolidaysRepository>()
-                .AddScoped<IRepository<Team>, TeamsRepository>();
+                .AddScoped<IRepository<Holiday>, HolidaysRepository>();
         }
 
         public static IServiceCollection AddApplicationDependencies(this IServiceCollection service)
         {
             return service
                 .AddScoped<IClientsService, ClientsService>()
-                .AddScoped<IEmployeesService, EmployeesService>();
+                .AddScoped<IEmployeesService, EmployeesService>()
+                .AddScoped<IHolidaysService, HolidaysService>();
         }
     }
 }

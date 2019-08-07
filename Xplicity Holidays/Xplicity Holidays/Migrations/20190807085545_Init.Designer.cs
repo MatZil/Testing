@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Xplicity_Holidays.Infrastructure.Database;
@@ -10,37 +9,38 @@ using Xplicity_Holidays.Infrastructure.Database;
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20190806175703_Init")]
+    [Migration("20190807085545_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
 
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Client", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("CompanyName")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.Property<string>("OwnerEmail")
                         .IsRequired();
 
                     b.Property<string>("OwnerName")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.Property<string>("OwnerPhone")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(12);
 
                     b.Property<string>("OwnerSurname")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.HasKey("Id");
 
@@ -50,12 +50,11 @@ namespace Xplicity_Holidays.Migrations
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Employee", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("BirthdayDate");
 
-                    b.Property<int>("ClientId");
+                    b.Property<int?>("ClientId");
 
                     b.Property<double>("DaysOfVacation");
 
@@ -63,7 +62,8 @@ namespace Xplicity_Holidays.Migrations
                         .IsRequired();
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.Property<string>("Password")
                         .IsRequired();
@@ -71,7 +71,8 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<string>("Role");
 
                     b.Property<string>("Surname")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.Property<string>("Token");
 
@@ -87,8 +88,7 @@ namespace Xplicity_Holidays.Migrations
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Holiday", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("EmployeeId");
 
@@ -106,26 +106,11 @@ namespace Xplicity_Holidays.Migrations
                     b.ToTable("Holidays");
                 });
 
-            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Team", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Teams");
-                });
-
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Employee", b =>
                 {
                     b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.Client", "Client")
                         .WithMany("Employees")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ClientId");
                 });
 
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Holiday", b =>

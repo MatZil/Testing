@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Xplicity_Holidays.Dtos.Clients;
 using Xplicity_Holidays.Dtos.Employees;
+using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 
 namespace Xplicity_Holidays.Configurations
@@ -21,6 +22,9 @@ namespace Xplicity_Holidays.Configurations
 
             CreateMap<GetEmployeeDto, Employee>(MemberList.None);
             CreateMap<Employee, GetEmployeeDto>(MemberList.None);
+
+            CreateMap<NewHolidayDto, Holiday>(MemberList.None);
+            CreateMap<Holiday, NewHolidayDto>(MemberList.None);
         }
             
     }

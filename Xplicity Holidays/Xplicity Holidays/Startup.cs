@@ -22,7 +22,7 @@ namespace Xplicity_Holidays
 
             services.SetUpAutoMapper();
             services.AddAllDependencies();
-            services.SetUpDatabase();
+            services.SetUpDatabase(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwagger();
         }

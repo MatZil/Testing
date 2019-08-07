@@ -16,4 +16,5 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public DateTime To { get; set; }
     }
+
 }
