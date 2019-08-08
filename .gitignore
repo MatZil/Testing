@@ -261,8 +261,8 @@ paket-files/
 __pycache__/
 *.pyc
 .vs
-/Xplicity Holidays/Xplicity Holidays/obj
+Xplicity Holidays/obj
 bin
 *.user
 .vs
-/Xplicity Holidays/Xplicity Holidays/*.db
+Xplicity Holidays/*.db

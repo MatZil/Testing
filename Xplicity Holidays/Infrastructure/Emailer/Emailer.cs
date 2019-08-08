@@ -12,11 +12,11 @@ namespace Xplicity_Holidays.Infrastructure.Emailer
         {
             _configuration = configuration;
         }
-        public void SendMail(string mailTo, string subject, string body, string displayName)
+        public void SendMail(string mailTo, string subject, string body)
         {
             MailMessage message = new MailMessage()
             {
-                From = new MailAddress(_configuration["EmailConfig:FromEmail"], displayName),
+                From = new MailAddress(_configuration["EmailConfig:FromEmail"], _configuration["EmailConfig:DisplayName"]),
                 Subject = subject,
                 Body = body
             };
