@@ -20,7 +20,7 @@
     "Xplicity_Holidays": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "holidays",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
