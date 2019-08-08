@@ -45,16 +45,6 @@ namespace Xplicity_Holidays.Services
             return user;
         }
 
-        public Task<AuthenticateResult> AuthenticateAsync(HttpContext context, string scheme)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task ChallengeAsync(HttpContext context, string scheme, AuthenticationProperties properties)
-        {
-            throw new NotImplementedException();
-        }
-
         public string CreateJtwToken(Employee employee)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

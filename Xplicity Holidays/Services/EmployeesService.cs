@@ -25,6 +25,7 @@ namespace Xplicity_Holidays.Services
         public Employee Authenticate(string email, string password)
         {
             var employee = _authenticationService.Authenticate(_repository, email, password);
+            _repository.Update(employee);
 
             return employee;
         }
