@@ -20,9 +20,15 @@ namespace Xplicity_Holidays.Configurations
         {
             return service
                 .AddScoped<IRepository<Client>, ClientsRepository>()
+<<<<<<< HEAD:Xplicity Holidays/Xplicity Holidays/Configurations/DependencyInjectionExtensions.cs
                 .AddScoped<IRepository<Employee>, EmployeesRepository>()
                 .AddScoped<IRepository<Holiday>, HolidaysRepository>()
                 .AddScoped<IEmailer, Emailer>();
+=======
+                .AddScoped<IEmployeeRepository, EmployeesRepository>()
+                .AddScoped<IAuthService, AuthenticationService>()
+                .AddScoped<IRepository<Holiday>, HolidaysRepository>();
+>>>>>>> c1b852590414910084dd910a7b17a6c877db0dfa:Xplicity Holidays/Configurations/DependencyInjectionExtensions.cs
         }
 
         public static IServiceCollection AddApplicationDependencies(this IServiceCollection service)

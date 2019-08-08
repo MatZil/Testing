@@ -21,12 +21,14 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public DateTime BirthdayDate { get; set; }
         [Required]
-        public double DaysOfVacation { get; set; }
+        public int DaysOfVacation { get; set; } // An amount of free workdays over a year
         [Required]
         [MinLength(4)]
         public string Email { get; set; }
         [Required]
-        public string Password { get; set; }
+        public byte[] PasswordHash { get; set; }
+        [Required]
+        public byte[] PasswordSalt { get; set; }
         public string Role { get; set; }
         public string Token { get; set; }
         public ICollection<Holiday> Holidays { get; set; }

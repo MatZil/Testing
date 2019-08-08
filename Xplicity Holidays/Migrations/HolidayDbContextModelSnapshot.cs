@@ -2,17 +2,15 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Xplicity_Holidays.Infrastructure.Database;
 
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20190807085545_Init")]
-    partial class Init
+    partial class HolidayDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,7 +54,7 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<int?>("ClientId");
 
-                    b.Property<double>("DaysOfVacation");
+                    b.Property<int>("DaysOfVacation");
 
                     b.Property<string>("Email")
                         .IsRequired();
@@ -65,7 +63,10 @@ namespace Xplicity_Holidays.Migrations
                         .IsRequired()
                         .HasMaxLength(15);
 
-                    b.Property<string>("Password")
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired();
+
+                    b.Property<byte[]>("PasswordSalt")
                         .IsRequired();
 
                     b.Property<string>("Role");

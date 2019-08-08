@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
@@ -8,6 +9,7 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         [MinLength(3)]
         [MaxLength(20)]
+      //  [Index(IsUnique=true)]
         public string CompanyName { get; set; }
         [Required]
         [MinLength(3)]
