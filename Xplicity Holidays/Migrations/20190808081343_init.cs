@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Xplicity_Holidays.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -35,9 +35,10 @@ namespace Xplicity_Holidays.Migrations
                     ClientId = table.Column<int>(nullable: true),
                     WorksFromDate = table.Column<DateTime>(nullable: false),
                     BirthdayDate = table.Column<DateTime>(nullable: false),
-                    DaysOfVacation = table.Column<double>(nullable: false),
+                    DaysOfVacation = table.Column<int>(nullable: false),
                     Email = table.Column<string>(nullable: false),
-                    Password = table.Column<string>(nullable: false),
+                    PasswordHash = table.Column<byte[]>(nullable: false),
+                    PasswordSalt = table.Column<byte[]>(nullable: false),
                     Role = table.Column<string>(nullable: true),
                     Token = table.Column<string>(nullable: true)
                 },
