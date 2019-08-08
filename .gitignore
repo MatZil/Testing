@@ -5,7 +5,7 @@
 *.suo
 *.user
 *.userosscache
-*.sln.docstates
+*.sln.docstatesff
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -265,4 +265,4 @@ __pycache__/
 bin
 *.user
 .vs
-/Xplicity Holidays/Xplicity Holidays/*.db
+/Xplicity Holidays/*.db
