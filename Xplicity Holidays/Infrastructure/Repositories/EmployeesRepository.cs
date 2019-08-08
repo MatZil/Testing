@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Database.Models;
+using System.Linq;
 
 namespace Xplicity_Holidays.Infrastructure.Repositories
 {
@@ -54,6 +55,12 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
         {
             var employee = await Context.Employees.SingleOrDefaultAsync(x => x.Email == email);
             return employee;
+        }
+
+        public List<Holiday> GetHolidays(int employeeId)
+        {
+            var holidays = Context.Holidays.Where(holiday => holiday.EmployeeId == employeeId).ToList();
+            return holidays;
         }
     }
 }
