@@ -64,6 +64,17 @@ namespace Xplicity_Holidays.Configurations
             services.AddSingleton(mapper);
         }
 
+
+        public static void UseCorsExt(this IApplicationBuilder app)
+        {
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+            );
+        }
+
         public static IServiceCollection SetupJtwAuthentication(this IServiceCollection services, IConfiguration Configuration)
         {
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -91,6 +102,7 @@ namespace Xplicity_Holidays.Configurations
             });
 
             return services;
+
         }
     }
 }
