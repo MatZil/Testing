@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Xplicity_Holidays.Dtos;
 using Xplicity_Holidays.Dtos.Employees;
 using Xplicity_Holidays.Services.Interfaces;
 
@@ -17,13 +18,14 @@ namespace Xplicity_Holidays.Controllers
             _service = service;
         }
 
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate(string email, string password)
+        [HttpPost]
+        [Route("authenticate")]
+        public IActionResult Authenticate(AuthenticateDTO request)
         {
-            var employee = _service.Authenticate(email, password);
+            var employee = _service.Authenticate(request.Email, request.Password);
 
             if (employee == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+                return BadRequest(new { message = "Email or password is incorrect" });
 
             // return basic user info (without password) and token to store client side
             return Ok(new
