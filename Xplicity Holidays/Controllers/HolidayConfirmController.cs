@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Services.Interfaces;
@@ -20,10 +16,17 @@ namespace Xplicity_Holidays.Controllers
             _service = service;
         }
         [HttpPost]
-        [Produces(typeof(NewHolidayDto))]
-        public IActionResult Post(NewHolidayDto newHolidayDto)
+        public async Task<IActionResult> ConfirmFromClient(NewHolidayDto newHolidayDto)
         {
-            _service.RequestClientApproval(newHolidayDto);
+            await _service.RequestClientApproval(newHolidayDto);
+
+            return Ok();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> ConfirmFromAdmin(int holidayId)
+        {
+            await _service.RequestAdminApproval(holidayId, "Employee's client has confirmed this holiday.");
 
             return Ok();
         }

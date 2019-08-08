@@ -53,7 +53,7 @@ namespace Xplicity_Holidays.Services
 
             int workDays = CalculateWorkDays(startCheckFrom, DateTime.Now);
             List<Holiday> employeesHolidays = _repository.GetHolidays(employee.Id);
-            int holidayCount = employeesHolidays.Sum(holiday => (holiday.To - holiday.From).Days);
+            int holidayCount = employeesHolidays.Sum(holiday => (holiday.ToExclusive - holiday.FromInclusive).Days);
             double totalWorkDays = workDays - holidayCount;
 
             double holidaysLeft = (holidaysPerYear / daysInYear) * totalWorkDays;

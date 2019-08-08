@@ -21,7 +21,7 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public DateTime BirthdayDate { get; set; }
         [Required]
-        public int DaysOfVacation { get; set; } // An amount of free workdays over a year
+        public int DaysOfVacation { get; set; } // An amount of free workdays over a year (either 20 or 25)
         [Required]
         [MinLength(4)]
         public string Email { get; set; }

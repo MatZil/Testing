@@ -9,7 +9,7 @@ namespace Xplicity_Holidays.Services.Interfaces
 {
     public interface IHolidayConfirmService
     {
-        void RequestClientApproval(NewHolidayDto holidayDto);
-       // void RequestAdminApproval(int holidayId, int adminId);
+        Task<bool> RequestClientApproval(NewHolidayDto holidayDto);
+        Task<bool> RequestAdminApproval(int holidayId, string clientStatus);
     }
 }

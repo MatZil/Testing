@@ -33,7 +33,9 @@ namespace Xplicity_Holidays.Configurations
                 .AddScoped<IClientsService, ClientsService>()
                 .AddScoped<IEmployeesService, EmployeesService>()
                 .AddScoped<IHolidaysService, HolidaysService>()
-                .AddScoped<IHolidayConfirmService, HolidayConfirmService>();
+                .AddScoped<IHolidayConfirmService, HolidayConfirmService>()
+                .AddScoped<IAuthService, AuthenticationService>()
+                .AddScoped<IEmailService, EmailService>();
         }
     }
 }

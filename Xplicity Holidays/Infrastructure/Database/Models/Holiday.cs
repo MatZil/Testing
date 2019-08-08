@@ -10,11 +10,21 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public int EmployeeId { get; set; }
         [Required]
-        public string Type { get; set; }
+        public HolidayType Type { get; set; }
         [Required]
-        public DateTime From { get; set; }
+        public DateTime FromInclusive { get; set; }
         [Required]
-        public DateTime To { get; set; }
+        public DateTime ToExclusive { get; set; }
+        [Required]
+        public bool IsConfirmed { get; set; }
+    }
+
+    public enum HolidayType
+    {
+        Annual,
+        Paternal,
+        Maternal,
+        Science
     }
 
 }

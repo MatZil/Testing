@@ -93,12 +93,13 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<int>("EmployeeId");
 
-                    b.Property<DateTime>("From");
+                    b.Property<DateTime>("FromInclusive");
 
-                    b.Property<DateTime>("To");
+                    b.Property<bool>("IsConfirmed");
 
-                    b.Property<string>("Type")
-                        .IsRequired();
+                    b.Property<DateTime>("ToExclusive");
+
+                    b.Property<int>("Type");
 
                     b.HasKey("Id");
 

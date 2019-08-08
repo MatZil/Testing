@@ -11,5 +11,7 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
         Task<Employee> FindByEmail(string email);
 
         List<Holiday> GetHolidays(int employeeId); 
+
+        Task<Employee> FindAnyAdmin();
     }
 }
