@@ -27,6 +27,13 @@ namespace Xplicity_Holidays
             services.AddCors();
             services.SetupJtwAuthentication(Configuration);
             services.AddAllDependencies();
+<<<<<<< HEAD
+=======
+
+            services.SetupJtwAuthentication(Configuration);
+            services.AddAllDependencies();
+
+>>>>>>> 4e9550d99882d6835adf46ec5de803df80e83896
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,10 +51,6 @@ namespace Xplicity_Holidays
 
             app.UseCorsExt();
             app.UseHttpsRedirection();
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc();
             app.ConfigureAndUseSwagger();

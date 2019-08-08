@@ -20,9 +20,16 @@ namespace Xplicity_Holidays.Configurations
         {
             return service
                 .AddScoped<IRepository<Client>, ClientsRepository>()
+<<<<<<< HEAD
                 .AddScoped<IRepository<Holiday>, HolidaysRepository>()
                 .AddScoped<IEmailer, Emailer>()
                 .AddScoped<IEmployeeRepository, EmployeesRepository>()
+=======
+
+                .AddScoped<IEmployeeRepository, EmployeesRepository>()
+                .AddScoped<IRepository<Holiday>, HolidaysRepository>()
+                .AddScoped<IEmailer, Emailer>()
+>>>>>>> 4e9550d99882d6835adf46ec5de803df80e83896
                 .AddScoped<IAuthService, AuthenticationService>();
         }
 
