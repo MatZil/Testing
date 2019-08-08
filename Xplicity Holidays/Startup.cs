@@ -24,7 +24,6 @@ namespace Xplicity_Holidays
             services.SetUpDatabase(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwagger();
-            services.AddCors();
             services.SetupJtwAuthentication(Configuration);
             services.AddAllDependencies();
         }
@@ -43,10 +42,6 @@ namespace Xplicity_Holidays
             }
 
             app.UseHttpsRedirection();
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc();
             app.ConfigureAndUseSwagger();
