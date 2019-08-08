@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Xplicity_Holidays.Configurations;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
@@ -38,14 +33,14 @@ namespace Xplicity_Holidays.Services
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
                 return null;
 
-            string tokenString = CreateJtwToken(user);
+            string tokenString = CreateJwtToken(user);
             user.Token = tokenString;
 
             // authentication successful
             return user;
         }
 
-        public string CreateJtwToken(Employee employee)
+        public string CreateJwtToken(Employee employee)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);

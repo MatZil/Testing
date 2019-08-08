@@ -9,5 +9,6 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
     public interface IEmployeeRepository : IRepository<Employee>
     {
         Task<Employee> FindByEmail(string email);
+        Task<Employee> FindAnyAdmin();
     }
 }

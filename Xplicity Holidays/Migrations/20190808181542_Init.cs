@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Xplicity_Holidays.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -60,9 +60,10 @@ namespace Xplicity_Holidays.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     EmployeeId = table.Column<int>(nullable: false),
-                    Type = table.Column<string>(nullable: false),
-                    From = table.Column<DateTime>(nullable: false),
-                    To = table.Column<DateTime>(nullable: false)
+                    Type = table.Column<int>(nullable: false),
+                    FromInclusive = table.Column<DateTime>(nullable: false),
+                    ToExclusive = table.Column<DateTime>(nullable: false),
+                    IsConfirmed = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
