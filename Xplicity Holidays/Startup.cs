@@ -27,8 +27,6 @@ namespace Xplicity_Holidays
             services.AddCors();
             services.SetupJtwAuthentication(Configuration);
             services.AddAllDependencies();
-            services.SetupJtwAuthentication(Configuration);
-            services.AddAllDependencies();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
