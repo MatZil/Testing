@@ -25,6 +25,7 @@ namespace Xplicity_Holidays
             services.SetUpDatabase(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwagger();
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,6 +41,7 @@ namespace Xplicity_Holidays
                 app.UseHsts();
             }
 
+            app.UseCorsExt();
             app.UseHttpsRedirection();
             app.UseMvc();
             app.ConfigureAndUseSwagger();
