@@ -64,7 +64,6 @@ namespace Xplicity_Holidays.Configurations
             services.AddSingleton(mapper);
         }
 
-
         public static void UseCorsExt(this IApplicationBuilder app)
         {
             app.UseCors(builder => builder
@@ -102,7 +101,6 @@ namespace Xplicity_Holidays.Configurations
             });
 
             return services;
-
         }
     }
 }

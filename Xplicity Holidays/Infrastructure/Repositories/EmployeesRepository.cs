@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting.Internal;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Database.Models;
@@ -54,6 +57,18 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
         {
             var employee = await Context.Employees.SingleOrDefaultAsync(x => x.Email == email);
             return employee;
+        }
+
+
+        public List<Holiday> GetHolidays(int employeeId)
+        {
+            var holidays = Context.Holidays.Where(holiday => holiday.EmployeeId == employeeId).ToList();
+            return holidays;
+        }
+        public async Task<Employee> FindAnyAdmin()
+        {
+            var admin = await Context.Employees.FirstOrDefaultAsync(obj => obj.Role == "Admin");
+            return admin;
         }
     }
 }
