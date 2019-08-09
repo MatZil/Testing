@@ -265,4 +265,4 @@ __pycache__/
 bin
 *.user
 .vs
-/Xplicity Holidays/Xplicity Holidays/*.db
+Xplicity Holidays/*.db
