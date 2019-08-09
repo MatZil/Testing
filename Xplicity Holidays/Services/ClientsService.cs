@@ -21,17 +21,17 @@ namespace Xplicity_Holidays.Services
             _mapper = mapper;
         }
 
-        public async Task<NewClientDto> GetById(int id)
+        public async Task<GetClientDto> GetById(int id)
         {
             var client = await _repository.GetById(id);
-            var clientDto = _mapper.Map<NewClientDto>(client);
+            var clientDto = _mapper.Map<GetClientDto>(client);
             return clientDto;
         }
 
-        public async Task<ICollection<NewClientDto>> GetAll()
+        public async Task<ICollection<GetClientDto>> GetAll()
         {
             var clients = await _repository.GetAll();
-            var clientsDto = _mapper.Map<NewClientDto[]>(clients);
+            var clientsDto = _mapper.Map<GetClientDto[]>(clients);
             return clientsDto;
         }
 

@@ -18,7 +18,7 @@ namespace Xplicity_Holidays.Controllers
 
         // GET: api/holidays
         [HttpGet]
-        [Produces(typeof(NewHolidayDto[]))]
+        [Produces(typeof(GetHolidayDto[]))]
         public async Task<IActionResult> Get()
         {
             var holidays = await _service.GetAll();
@@ -27,7 +27,7 @@ namespace Xplicity_Holidays.Controllers
 
         // GET: api/holidays/5
         [HttpGet("{id}")]
-        [Produces(typeof(NewHolidayDto))]
+        [Produces(typeof(GetHolidayDto))]
         public async Task<IActionResult> Get(int id)
         {
             var holiday = await _service.GetById(id);
