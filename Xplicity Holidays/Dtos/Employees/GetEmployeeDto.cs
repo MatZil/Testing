@@ -7,6 +7,7 @@ namespace Xplicity_Holidays.Dtos.Employees
 {
     public class GetEmployeeDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public int? ClientId { get; set; }
