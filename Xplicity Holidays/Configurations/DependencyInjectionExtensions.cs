@@ -23,7 +23,6 @@ namespace Xplicity_Holidays.Configurations
                 .AddScoped<IRepository<Holiday>, HolidaysRepository>()
                 .AddScoped<IEmailer, Emailer>()
                 .AddScoped<IEmployeeRepository, EmployeesRepository>()
-                .AddScoped<IAuthService, AuthenticationService>()
                 .AddScoped<IHolidayInfoService, HolidayInfoService>();
         }
 
