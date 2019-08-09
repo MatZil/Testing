@@ -16,5 +16,6 @@ namespace Xplicity_Holidays.Dtos.Employees
         public int DaysOfVacation { get; set; }
         public string Email { get; set; }
         public string Role { get; set; }
+        public string Position { get; set; }
     }
 }

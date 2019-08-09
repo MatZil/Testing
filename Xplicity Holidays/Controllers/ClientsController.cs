@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Dtos.Clients;
 using Xplicity_Holidays.Services.Interfaces;
 
@@ -11,7 +12,7 @@ namespace Xplicity_Holidays.Controllers
     {
         private readonly IClientsService _service;
 
-        public ClientsController(IClientsService service)
+        public ClientsController(IClientsService service, IConfiguration con)
         {
             _service = service;
         }

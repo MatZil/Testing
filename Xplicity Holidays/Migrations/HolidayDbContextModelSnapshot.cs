@@ -69,6 +69,9 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired();
 
+                    b.Property<string>("Position")
+                        .IsRequired();
+
                     b.Property<string>("Role");
 
                     b.Property<string>("Surname")
@@ -96,6 +99,8 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<DateTime>("FromInclusive");
 
                     b.Property<bool>("IsConfirmed");
+
+                    b.Property<string>("Status");
 
                     b.Property<DateTime>("ToExclusive");
 
