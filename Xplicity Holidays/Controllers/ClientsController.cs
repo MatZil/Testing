@@ -19,7 +19,6 @@ namespace Xplicity_Holidays.Controllers
 
         // GET: api/Clients
         [HttpGet]
-        [Route("api/clients/getall")]
         [Produces(typeof(GetClientDto[]))]
         public async Task<IActionResult> Get()
         {
