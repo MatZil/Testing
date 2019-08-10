@@ -20,7 +20,6 @@ export class ClientTableComponent implements OnInit {
   isVisibleCreator = false;
   isConfirmLoadingCreator = false;
   isVisibleEditor = false;
-  isConfirmLoadingEditor = false;
 
   confirmDeleteModal: NzModalRef;
 
@@ -30,19 +29,18 @@ export class ClientTableComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.clientService.getClient().subscribe(client => {
-      this.client = client;
-    }, error => {
-      console.error(error);
-      this.errorMessage = error.message;
-    });
+    this.refreshTable();
+  }
+
+  refreshTable() {
+    this.clientService.getClient().subscribe(clients => {
+      this.client = clients; });
   }
 
   onAddButtonClick(clien: Client) {
     this.clientService.addClient(clien)
-    .subscribe(savedClient => {
-      console.log(savedClient);
-      this.client.push(savedClient);
+    .subscribe(() => {
+      this.refreshTable();
     });
   }
 
@@ -66,14 +64,6 @@ export class ClientTableComponent implements OnInit {
     this.isVisibleEditor = true;
   }
 
-  handleOkEditor(): void {
-    this.isConfirmLoadingEditor = true;
-    setTimeout(() => {
-      this.isVisibleEditor = false;
-      this.isConfirmLoadingEditor = false;
-    }, 3000);
-  }
-
   handleCancelEditor(): void {
     this.isVisibleEditor = false;
   }
@@ -89,7 +79,9 @@ export class ClientTableComponent implements OnInit {
   }
 
   onDeleteButtonClick(id: number) {
-    this.clientService.deleteClient(id).subscribe();
+    this.clientService.deleteClient(id).subscribe(() => {
+      this.refreshTable();
+    });
   }
 
   onEditButtonClick(clien: Client) {
@@ -97,7 +89,9 @@ export class ClientTableComponent implements OnInit {
   }
 
   onEditConfirmButtonClick(client: Newclient, id: number) {
-    this.clientService.editClient(client, id).subscribe();
+    this.clientService.editClient(client, id).subscribe(() => {
+      this.refreshTable();
+    });
   }
 
   populateForm(clien: Client) {

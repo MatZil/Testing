@@ -13,7 +13,7 @@ namespace Xplicity_Holidays.Controllers
     {
         private readonly IClientsService _service;
 
-        public ClientsController(IClientsService service, IConfiguration con)
+        public ClientsController(IClientsService service)
         {
             _service = service;
         }

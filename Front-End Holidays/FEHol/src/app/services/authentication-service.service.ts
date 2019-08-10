@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 export class AuthenticationService {
     private currentUserSubject: BehaviorSubject<User>;
     public currentUser: Observable<User>;
-    private userId: number;
+    private thisUser: User;
 
     constructor(private http: HttpClient) {
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
@@ -28,7 +28,6 @@ export class AuthenticationService {
                 if (user && user.token) {
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject.next(user);
-                    this.userId = user.id;
                 }
                 return user;
             }));
@@ -41,6 +40,7 @@ export class AuthenticationService {
     }
 
     getUserId() {
-        return this.userId;
+        this.thisUser = JSON.parse(localStorage.getItem('currentUser'));
+        return this.thisUser.id;
     }
 }

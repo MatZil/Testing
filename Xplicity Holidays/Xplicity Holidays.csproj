@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pdfs\Orders\" />
     <Folder Include="Pdfs\Requests\" />
   </ItemGroup>
 

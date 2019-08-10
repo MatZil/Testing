@@ -27,7 +27,7 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
 
         public virtual async Task<TEntity> GetById(int id)
         {
-            var items = await ItemSet.FirstOrDefaultAsync();
+            var items = await ItemSet.FirstOrDefaultAsync(obj => obj.Id == id);
 
             return items;
         }

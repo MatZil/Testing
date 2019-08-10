@@ -7,7 +7,6 @@ import { AuthenticationService } from '../../services/authentication-service.ser
 import { UserService } from '../../services/user.service';
 import { Holidays } from '../../models/holidays';
 import { HolidaysService } from '../../services/holidays.service';
-import { stringify } from '@angular/compiler/src/util';
 
 @Component({ templateUrl: 'home.component.html', styleUrls: ['home.component.scss'] })
 export class HomeComponent implements OnInit {

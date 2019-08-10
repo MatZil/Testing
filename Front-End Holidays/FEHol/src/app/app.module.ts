@@ -25,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { ErrorPageComponent } from './components/error-page/error-page.component';
 
 registerLocaleData(en);
 
@@ -35,7 +36,8 @@ registerLocaleData(en);
     CalendarComponent,
     AlertComponent,
     LoginComponent,
-    ClientTableComponent
+    ClientTableComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,
