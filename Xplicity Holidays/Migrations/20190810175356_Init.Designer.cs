@@ -9,7 +9,7 @@ using Xplicity_Holidays.Infrastructure.Database;
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20190809141650_Init")]
+    [Migration("20190810175356_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,7 +102,10 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<bool>("IsConfirmed");
 
-                    b.Property<string>("Status");
+                    b.Property<DateTime>("RequestCreatedDate");
+
+                    b.Property<string>("Status")
+                        .IsRequired();
 
                     b.Property<DateTime>("ToExclusive");
 

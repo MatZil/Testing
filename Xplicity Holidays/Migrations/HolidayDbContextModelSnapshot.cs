@@ -100,7 +100,10 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<bool>("IsConfirmed");
 
-                    b.Property<string>("Status");
+                    b.Property<DateTime>("RequestCreatedDate");
+
+                    b.Property<string>("Status")
+                        .IsRequired();
 
                     b.Property<DateTime>("ToExclusive");
 
