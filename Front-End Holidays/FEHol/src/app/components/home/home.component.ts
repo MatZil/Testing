@@ -7,6 +7,7 @@ import { AuthenticationService } from '../../services/authentication-service.ser
 import { UserService } from '../../services/user.service';
 import { Holidays } from '../../models/holidays';
 import { HolidaysService } from '../../services/holidays.service';
+import { stringify } from '@angular/compiler/src/util';
 
 @Component({ templateUrl: 'home.component.html', styleUrls: ['home.component.scss'] })
 export class HomeComponent implements OnInit {
@@ -45,5 +46,15 @@ export class HomeComponent implements OnInit {
       console.error(error);
       this.errorMessage = error.message;
     });
+
+    this.userService.getUser(this.authenticationService.getUserId()).subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
+  isAdmin() {
+    if (this.currentUser.role === 'admin') {
+      return true;
+    }
   }
 }
