@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.PdfGeneration;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
@@ -85,7 +86,53 @@ namespace Xplicity_Holidays.Services
           holiday.FromInclusive.ToShortDateString(), holiday.ToExclusive.ToShortDateString(),
          (holiday.ToExclusive.Date - holiday.FromInclusive.Date).TotalDays, employee.Name, employee.Surname);
 
-            _generator.GeneratePdf(strBuilder.ToString(), holiday.Id);
+            _generator.GeneratePdf(strBuilder.ToString(), holiday.Id, "request");
+        }
+
+        public void CreateOrderPdf(Holiday holiday, Employee employee)
+        {
+            var strBuilder = new StringBuilder();
+            strBuilder.AppendFormat(@"<body>
+                                    < p class='big bold center over'>
+                UŽDAROSIOS AKCINĖS BENDROVĖS „XPLICITY“
+                </p>
+                <p class='big bold center'>
+                OPERACIJŲ IR PERSONALO VADOVĖ
+                </p>
+                <br /><br />
+                <p class='big bold center over'>
+                ĮSAKYMAS
+                </p>
+                <p class='big bold center'>
+                DĖL ATOSTOGŲ SUTEIKIMO NR. ....
+                </p>
+                <br />
+                <p class='center over'>
+                2019 m. ..... mėn ... d.
+                <p class='center'>
+                KAUNAS
+                </p>
+                <br /><br /><br /><br />
+                <p class='center'>
+                Atsižvelgiant į .... [data] .............. [darbuotojo vardas, pavardė] prašymą, suteikiu[darbuotojo vardas, pavardė] neapmokamas mokymosi atostogas nuo .... [data] iki ..... [data] (..... d.d. )
+                </p>
+                <br /><br /><br /><br /><br /><br /><br />
+                <p class='floatL'>
+                Operacijų ir personalo vadovė
+                </p>
+                <p class='floatL moveright'>
+                (Parašas)
+                </p>
+                <p class='floatR moveleft'>
+                Inga Rana
+                </p>
+                <br />
+                <p class='right small'> 
+                (Vardas ir pavardė)
+                </p>
+                </body>
+                </html>");
+            _generator.GeneratePdf(strBuilder.ToString(), holiday.Id, "order");
         }
     }
 }

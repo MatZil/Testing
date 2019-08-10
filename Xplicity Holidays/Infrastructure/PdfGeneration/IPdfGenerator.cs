@@ -2,6 +2,6 @@
 {
     public interface IPdfGenerator
     {
-        void GeneratePdf(string htmlString, int holidayId);
+        void GeneratePdf(string htmlString, int holidayId, string pdfType);
     }
 }
