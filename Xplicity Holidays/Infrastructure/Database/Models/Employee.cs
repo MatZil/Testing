@@ -31,6 +31,8 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         public byte[] PasswordSalt { get; set; }
         public string Role { get; set; }
         public string Token { get; set; }
+        [Required]
+        public string Position { get; set; }
         public ICollection<Holiday> Holidays { get; set; }
     }
 }
