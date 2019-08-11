@@ -65,7 +65,8 @@ namespace Xplicity_Holidays.Migrations
                     FromInclusive = table.Column<DateTime>(nullable: false),
                     ToExclusive = table.Column<DateTime>(nullable: false),
                     IsConfirmed = table.Column<bool>(nullable: false),
-                    Status = table.Column<string>(nullable: true)
+                    Status = table.Column<string>(nullable: false),
+                    RequestCreatedDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

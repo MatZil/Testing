@@ -5,6 +5,7 @@ using AutoMapper;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
+using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Services
@@ -13,11 +14,13 @@ namespace Xplicity_Holidays.Services
     {
         private readonly IRepository<Holiday> _repository;
         private readonly IMapper _mapper;
+        private readonly ITimeService _timeService;
 
-        public HolidaysService(IRepository<Holiday> repository, IMapper mapper)
+        public HolidaysService(IRepository<Holiday> repository, IMapper mapper, ITimeService timeService)
         {
             _repository = repository;
             _mapper = mapper;
+            _timeService = timeService;
         }
 
         public async Task<GetHolidayDto> GetById(int id)
@@ -34,15 +37,16 @@ namespace Xplicity_Holidays.Services
             return holidaysDto;
         }
 
-        public async Task<NewHolidayDto> Create(NewHolidayDto newHolidayDto)
+        public async Task<int> Create(NewHolidayDto newHolidayDto)
         {
             if (newHolidayDto == null) throw new ArgumentNullException(nameof(newHolidayDto));
 
             var newHoliday = _mapper.Map<Holiday>(newHolidayDto);
-            await _repository.Create(newHoliday);
-
-            var holidayDto = _mapper.Map<NewHolidayDto>(newHoliday);
-            return holidayDto;
+            newHoliday.RequestCreatedDate = _timeService.GetCurrentTime();
+            newHoliday.IsConfirmed = false;
+            newHoliday.Status = "Unconfirmed";
+            var holidayId = await _repository.Create(newHoliday);
+            return holidayId;
         }
 
         public async Task<bool> Delete(int id)
@@ -55,7 +59,7 @@ namespace Xplicity_Holidays.Services
             return deleted;
         }
 
-        public async Task Update(int id, NewHolidayDto updateData)
+        public async Task Update(int id, UpdateHolidayDto updateData)
         {
             if (updateData == null)
                 throw new ArgumentNullException(nameof(updateData));

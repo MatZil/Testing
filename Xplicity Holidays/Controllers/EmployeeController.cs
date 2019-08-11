@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Xplicity_Holidays.Dtos;
 using Xplicity_Holidays.Dtos.Employees;
@@ -11,18 +10,18 @@ namespace Xplicity_Holidays.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private readonly IEmployeesService _service;
+        private readonly IEmployeesService _employeesService;
 
-        public EmployeesController(IEmployeesService service)
+        public EmployeesController(IEmployeesService employeesService)
         {
-            _service = service;
+            _employeesService = employeesService;
         }
 
         [HttpPost]
         [Route("authenticate")]
         public IActionResult Authenticate(AuthenticateDTO request)
         {
-            var employee = _service.Authenticate(request.Email, request.Password);
+            var employee = _employeesService.Authenticate(request.Email, request.Password);
 
             if (employee == null)
                 return BadRequest(new { message = "Email or password is incorrect" });
@@ -41,7 +40,7 @@ namespace Xplicity_Holidays.Controllers
         [Produces(typeof(GetEmployeeDto[]))]
         public async Task<IActionResult> Get()
         {
-            var clients = await _service.GetAll();
+            var clients = await _employeesService.GetAll();
             return Ok(clients);
         }
 
@@ -50,7 +49,7 @@ namespace Xplicity_Holidays.Controllers
         [Produces(typeof(GetEmployeeDto))]
         public async Task<IActionResult> Get(int id)
         {
-            var employee = await _service.GetById(id);
+            var employee = await _employeesService.GetById(id);
 
             if (employee == null)
             {
@@ -64,7 +63,7 @@ namespace Xplicity_Holidays.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] NewEmployeeDto newEmployeeDto)
         {
-            await _service.Update(id, newEmployeeDto);
+            await _employeesService.Update(id, newEmployeeDto);
 
             return NoContent();
         }
@@ -74,7 +73,7 @@ namespace Xplicity_Holidays.Controllers
         [Produces(typeof(NewEmployeeDto))]
         public async Task<IActionResult> Post(NewEmployeeDto newEmployeeDto)
         {
-            var createdEmployee = await _service.Create(newEmployeeDto);
+            var createdEmployee = await _employeesService.Create(newEmployeeDto);
 
             return Ok(createdEmployee);
         }
@@ -83,7 +82,7 @@ namespace Xplicity_Holidays.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _service.Delete(id);
+            await _employeesService.Delete(id);
 
             return NoContent();
         }

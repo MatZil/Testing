@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Dtos.Clients;
 using Xplicity_Holidays.Services.Interfaces;
 
@@ -11,11 +10,11 @@ namespace Xplicity_Holidays.Controllers
     [ApiController]
     public class ClientsController : ControllerBase
     {
-        private readonly IClientsService _service;
+        private readonly IClientsService _clientsService;
 
-        public ClientsController(IClientsService service)
+        public ClientsController(IClientsService clientsService)
         {
-            _service = service;
+            _clientsService = clientsService;
         }
 
         // GET: api/Clients
@@ -24,7 +23,7 @@ namespace Xplicity_Holidays.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Get()
         {
-            var clients = await _service.GetAll();
+            var clients = await _clientsService.GetAll();
             return Ok(clients);
         }
 
@@ -33,7 +32,7 @@ namespace Xplicity_Holidays.Controllers
         [Produces(typeof(GetClientDto))]
         public async Task<IActionResult> Get(int id)
         {
-            var client = await _service.GetById(id);
+            var client = await _clientsService.GetById(id);
 
             if (client == null)
             {
@@ -47,7 +46,7 @@ namespace Xplicity_Holidays.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] NewClientDto newClient)
         {
-            await _service.Update(id, newClient);
+            await _clientsService.Update(id, newClient);
 
             return NoContent();
         }
@@ -57,7 +56,7 @@ namespace Xplicity_Holidays.Controllers
         [Produces(typeof(NewClientDto))]
         public async Task<IActionResult> Post(NewClientDto newClient)
         {
-            var createdClient = await _service.Create(newClient);
+            var createdClient = await _clientsService.Create(newClient);
 
             return Ok(createdClient);
         }
@@ -66,7 +65,7 @@ namespace Xplicity_Holidays.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _service.Delete(id);
+            await _clientsService.Delete(id);
 
             return NoContent();
         }
