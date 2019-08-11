@@ -79,7 +79,7 @@ namespace Xplicity_Holidays.Services
             return deleted;
         }
 
-        public async Task Update(int id, NewEmployeeDto updateData)
+        public async Task Update(int id, UpdateEmployeeDto updateData)
         {
             if (updateData == null)
                 throw new ArgumentNullException(nameof(updateData));
@@ -94,16 +94,6 @@ namespace Xplicity_Holidays.Services
                 // email has changed so check if the new email is already taken
                 if (_repository.FindByEmail(updateData.Email).Result != null)
                     throw new Exception("Email " + updateData.Email + " is already taken");
-            }
-
-            // update password if it was entered
-            if (!string.IsNullOrWhiteSpace(updateData.Password))
-            {
-                byte[] passwordHash, passwordSalt;
-                _authenticationService.CreatePasswordHash(updateData.Password, out passwordHash, out passwordSalt);
-
-                itemToUpdate.PasswordHash = passwordHash;
-                itemToUpdate.PasswordSalt = passwordSalt;
             }
 
             _mapper.Map(updateData, itemToUpdate);

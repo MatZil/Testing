@@ -61,9 +61,9 @@ namespace Xplicity_Holidays.Controllers
 
         // PUT: api/Employees/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] NewEmployeeDto newEmployeeDto)
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateEmployeeDto updateEmployeeDto)
         {
-            await _employeesService.Update(id, newEmployeeDto);
+            await _employeesService.Update(id, updateEmployeeDto);
 
             return NoContent();
         }
