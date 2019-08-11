@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
+using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Services
@@ -11,10 +12,12 @@ namespace Xplicity_Holidays.Services
     public class HolidayInfoService : IHolidayInfoService
     {
         private readonly IEmployeeRepository _repository;
+        private readonly ITimeService _timeService;
 
-        public HolidayInfoService(IEmployeeRepository repository)
+        public HolidayInfoService(IEmployeeRepository repository, ITimeService timeService)
         {
             _repository = repository;
+            _timeService = timeService;
         }
 
         public List<(string, double)> GetAllEmployeesHolidaysLeft()
@@ -51,7 +54,7 @@ namespace Xplicity_Holidays.Services
             //else
             //    startCheckFrom = employee.LastCheckDate;
 
-            int workDays = CalculateWorkDays(startCheckFrom, DateTime.Now);
+            int workDays = CalculateWorkDays(startCheckFrom, _timeService.GetCurrentTime());
             List<Holiday> employeesHolidays = _repository.GetHolidays(employee.Id);
             int holidayCount = employeesHolidays.Sum(holiday => (holiday.ToExclusive - holiday.FromInclusive).Days);
             double totalWorkDays = workDays - holidayCount;

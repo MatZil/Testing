@@ -12,6 +12,6 @@ namespace Xplicity_Holidays.Services.Interfaces
         Employee Authenticate(IEmployeeRepository repository, string email, string password);
         void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
         bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt);
-        string CreateJwtToken(Employee employee);
+        string CreateJwt(Employee employee);
     }
 }
