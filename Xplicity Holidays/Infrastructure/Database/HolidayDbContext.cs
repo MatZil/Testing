@@ -11,5 +11,19 @@ namespace Xplicity_Holidays.Infrastructure.Database
         public HolidayDbContext(DbContextOptions<HolidayDbContext> options): base(options)
         { }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Client>(entity =>
+            {
+                entity.HasIndex(e => e.CompanyName).IsUnique();
+            });
+
+            builder.Entity<Employee>(entity =>
+            {
+                entity.HasIndex(e => e.Email).IsUnique(); 
+
+            });
+
+        }
     }
 }

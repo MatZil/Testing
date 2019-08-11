@@ -42,6 +42,9 @@ namespace Xplicity_Holidays.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyName")
+                        .IsUnique();
+
                     b.ToTable("Clients");
                 });
 
@@ -85,6 +88,9 @@ namespace Xplicity_Holidays.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Employees");
                 });

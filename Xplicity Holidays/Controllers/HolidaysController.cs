@@ -49,15 +49,6 @@ namespace Xplicity_Holidays.Controllers
             return NoContent();
         }
 
-        // POST: api/holidays
-        [HttpPost]
-        public async Task<IActionResult> Post(NewHolidayDto newHoliday)
-        {
-            await _holidaysService.Create(newHoliday);
-
-            return Ok();
-        }
-
         // DELETE: api/holidays/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
