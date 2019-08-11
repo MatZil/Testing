@@ -9,11 +9,11 @@ namespace Xplicity_Holidays.Controllers
     [ApiController]
     public class HolidaysController : ControllerBase
     {
-        private readonly IHolidaysService _service;
+        private readonly IHolidaysService _holidaysService;
 
-        public HolidaysController(IHolidaysService service)
+        public HolidaysController(IHolidaysService holidaysService)
         {
-            _service = service;
+            _holidaysService = holidaysService;
         }
 
         // GET: api/holidays
@@ -21,7 +21,7 @@ namespace Xplicity_Holidays.Controllers
         [Produces(typeof(GetHolidayDto[]))]
         public async Task<IActionResult> Get()
         {
-            var holidays = await _service.GetAll();
+            var holidays = await _holidaysService.GetAll();
             return Ok(holidays);
         }
 
@@ -30,7 +30,7 @@ namespace Xplicity_Holidays.Controllers
         [Produces(typeof(GetHolidayDto))]
         public async Task<IActionResult> Get(int id)
         {
-            var holiday = await _service.GetById(id);
+            var holiday = await _holidaysService.GetById(id);
 
             if (holiday == null)
             {
@@ -42,28 +42,18 @@ namespace Xplicity_Holidays.Controllers
 
         // PUT: api/holidays/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] NewHolidayDto newHoliday)
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateHolidayDto newHoliday)
         {
-            await _service.Update(id, newHoliday);
+            await _holidaysService.Update(id, newHoliday);
 
             return NoContent();
-        }
-
-        // POST: api/holidays
-        [HttpPost]
-        [Produces(typeof(NewHolidayDto))]
-        public async Task<IActionResult> Post(NewHolidayDto newHoliday)
-        {
-            var createdHoliday = await _service.Create(newHoliday);
-
-            return Ok(createdHoliday);
         }
 
         // DELETE: api/holidays/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _service.Delete(id);
+            await _holidaysService.Delete(id);
 
             return NoContent();
         }

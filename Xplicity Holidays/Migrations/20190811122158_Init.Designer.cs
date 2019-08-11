@@ -9,7 +9,7 @@ using Xplicity_Holidays.Infrastructure.Database;
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20190809141650_Init")]
+    [Migration("20190811122158_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,6 +43,9 @@ namespace Xplicity_Holidays.Migrations
                         .HasMaxLength(20);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyName")
+                        .IsUnique();
 
                     b.ToTable("Clients");
                 });
@@ -88,6 +91,9 @@ namespace Xplicity_Holidays.Migrations
 
                     b.HasIndex("ClientId");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Employees");
                 });
 
@@ -102,7 +108,10 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<bool>("IsConfirmed");
 
-                    b.Property<string>("Status");
+                    b.Property<DateTime>("RequestCreatedDate");
+
+                    b.Property<string>("Status")
+                        .IsRequired();
 
                     b.Property<DateTime>("ToExclusive");
 

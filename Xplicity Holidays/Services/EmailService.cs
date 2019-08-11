@@ -20,8 +20,8 @@ namespace Xplicity_Holidays.Services
                 $"on {((holiday.Type.ToString() == "Paternal") ? "Paternal/Maternal" : holiday.Type.ToString())} " +
                 $"holidays from {holiday.FromInclusive.ToShortDateString()} (inclusive) to " +
                 $"{holiday.ToExclusive.ToShortDateString()} (exclusive).\n" +
-                $"Click this link to confirm the holiday:\n" +
-                $"Click this link to decline the holiday:");
+                $"Click this link to confirm the holiday: https://localhost:44374/api/holidayclient?holidayid={holiday.Id} \n" +
+                $"Click this link to decline the holiday: https://localhost:44374/api/holidaydecline?holidayid={holiday.Id}");
         }
 
         public void ConfirmHolidayWithAdmin(Employee admin, Employee employee, Holiday holiday, string clientStatus)
@@ -31,8 +31,8 @@ namespace Xplicity_Holidays.Services
                 $"{((holiday.Type.ToString() == "Paternal") ? "Paternal/Maternal" : holiday.Type.ToString())} " +
                 $"holidays from {holiday.FromInclusive.ToShortDateString()} (inclusive) to {holiday.ToExclusive.ToShortDateString()} " +
                 $"(exclusive). " + clientStatus +
-                "\nClick this link to confirm the holiday:\n" +
-                "Click this link to decline the holiday:");
+                $"\nClick this link to confirm the holiday: https://localhost:44374/api/holidayconfirm?holidayid={holiday.Id} \n" +
+                $"Click this link to decline the holiday: https://localhost:44374/api/holidaydecline?holidayid={holiday.Id}");
         }
 
         public void SendThisMonthsHolidayInfo(Employee admin, List<Holiday> holidays)

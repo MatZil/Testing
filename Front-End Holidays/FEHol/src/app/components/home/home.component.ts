@@ -45,5 +45,15 @@ export class HomeComponent implements OnInit {
       console.error(error);
       this.errorMessage = error.message;
     });
+
+    this.userService.getUser(this.authenticationService.getUserId()).subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
+  isAdmin() {
+    if (this.currentUser.role === 'admin') {
+      return true;
+    }
   }
 }

@@ -42,6 +42,9 @@ namespace Xplicity_Holidays.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyName")
+                        .IsUnique();
+
                     b.ToTable("Clients");
                 });
 
@@ -86,6 +89,9 @@ namespace Xplicity_Holidays.Migrations
 
                     b.HasIndex("ClientId");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Employees");
                 });
 
@@ -100,7 +106,10 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<bool>("IsConfirmed");
 
-                    b.Property<string>("Status");
+                    b.Property<DateTime>("RequestCreatedDate");
+
+                    b.Property<string>("Status")
+                        .IsRequired();
 
                     b.Property<DateTime>("ToExclusive");
 

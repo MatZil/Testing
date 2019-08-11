@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Dtos.Holidays;
-using Xplicity_Holidays.Infrastructure.Database.Models;
-using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers
@@ -12,31 +13,50 @@ namespace Xplicity_Holidays.Controllers
     [ApiController]
     public class HolidayConfirmController : ControllerBase
     {
-        private readonly IHolidayConfirmService _service;
-        private readonly IRepository<Holiday> _repositoryHolidays;
+        private readonly IHolidayConfirmService _confirmationService;
         private readonly IMapper _mapper;
-        public HolidayConfirmController(IHolidayConfirmService service, IRepository<Holiday> repositoryHolidays, IMapper mapper)
+        private readonly IConfiguration _configuration;
+        private readonly IHolidaysService _holidaysService;
+
+        public HolidayConfirmController(IHolidayConfirmService confirmationService, IMapper mapper, IConfiguration configuration, 
+                                        IHolidaysService holidaysService)
         {
-            _service = service;
-            _repositoryHolidays = repositoryHolidays;
+            _confirmationService = confirmationService;
             _mapper = mapper;
+            _configuration = configuration;
+            _holidaysService = holidaysService;
         }
+
         [HttpPost]
-        public async Task<IActionResult> ConfirmFromClient(NewHolidayDto newHolidayDto)
+        public async Task<IActionResult> RequestConfirmationFromClient(NewHolidayDto newHolidayDto)
         {
-            var holiday = _mapper.Map<Holiday>(newHolidayDto);
-            var holidayId = await _repositoryHolidays.Create(holiday);
-            await _service.RequestClientApproval(newHolidayDto, holidayId);
-            await _service.CreatePdf(newHolidayDto, holidayId);
-            return Ok();
+            var holidayId = await _holidaysService.Create(newHolidayDto);
+
+            await _confirmationService.RequestClientApproval(holidayId);
+
+            await _confirmationService.CreateRequestPdf(newHolidayDto, holidayId);
+
+            var path = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + @"\Pdfs\Requests\";
+            var fileName = $"Holiday_Request_{holidayId}.pdf";
+            var stream = new FileStream(path + fileName, FileMode.Open);
+            return File(stream, "application/pdf", fileName);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> ConfirmFromAdmin(int holidayId)
+        [HttpGet]
+        public async Task<IActionResult> ConfirmHoliday(int holidayId)
         {
-            await _service.RequestAdminApproval(holidayId, "Employee's client has confirmed this holiday.");
+            var getHolidayDto = await _holidaysService.GetById(holidayId);
+            var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(getHolidayDto);
+            updateHolidayDto.IsConfirmed = true;
+            updateHolidayDto.Status = "Confirmed";
+            await _holidaysService.Update(holidayId, updateHolidayDto);
 
-            return Ok();
+            await _confirmationService.CreateOrderPdf(holidayId);
+
+            var path = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + @"\Pdfs\Orders\";
+            var fileName = $"Holiday_Order_{holidayId}.pdf";
+            var stream = new FileStream(path + fileName, FileMode.Open);
+            return File(stream, "application/pdf", fileName);
         }
     }
 }

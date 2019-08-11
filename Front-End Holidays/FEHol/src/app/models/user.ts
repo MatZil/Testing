@@ -1,11 +1,12 @@
 export class User {
-    Name: string;
-    Surname: string;
-    ClientId: number;
-    WorksFromDate: Date;
-    BirthDayDate: Date;
-    DaysOfVacation: number;
-    Email: string;
-    Role: string;
+    id: number;
+    name: string;
+    surname: string;
+    clientId: number;
+    worksFromDate: Date;
+    birthDayDate: Date;
+    daysOfVacation: number;
+    email: string;
+    role: string;
     token: string;
 }

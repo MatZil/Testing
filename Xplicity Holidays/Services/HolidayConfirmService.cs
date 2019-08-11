@@ -26,10 +26,10 @@ namespace Xplicity_Holidays.Services
             _repositoryHolidays = repositoryHolidays;
             _pdfService = pdfService;
         }
-        public async Task<bool> RequestClientApproval(NewHolidayDto holidayDto, int holidayId)
+        public async Task<bool> RequestClientApproval(int holidayId)
         {
-            var holiday = _mapper.Map<Holiday>(holidayDto);
-            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
+            var holiday = await _repositoryHolidays.GetById(holidayId);
+            var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
 
             if (employee.ClientId == null)
             {
@@ -51,12 +51,20 @@ namespace Xplicity_Holidays.Services
             return true;
         }
 
-        public async Task<bool> CreatePdf(NewHolidayDto holidayDto, int holidayId)
+        public async Task<bool> CreateRequestPdf(NewHolidayDto holidayDto, int holidayId)
         {
             var holiday = _mapper.Map<Holiday>(holidayDto);
             holiday.Id = holidayId;
             var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
             _pdfService.CreateRequestPdf(holiday, employee);
+            return true;
+        }
+
+        public async Task<bool> CreateOrderPdf(int holidayId)
+        {
+            var holiday = await _repositoryHolidays.GetById(holidayId);
+            var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
+            _pdfService.CreateOrderPdf(holiday, employee);
             return true;
         }
     }

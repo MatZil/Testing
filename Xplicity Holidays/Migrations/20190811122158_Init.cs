@@ -65,7 +65,8 @@ namespace Xplicity_Holidays.Migrations
                     FromInclusive = table.Column<DateTime>(nullable: false),
                     ToExclusive = table.Column<DateTime>(nullable: false),
                     IsConfirmed = table.Column<bool>(nullable: false),
-                    Status = table.Column<string>(nullable: true)
+                    Status = table.Column<string>(nullable: false),
+                    RequestCreatedDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,9 +80,21 @@ namespace Xplicity_Holidays.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Clients_CompanyName",
+                table: "Clients",
+                column: "CompanyName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Employees_ClientId",
                 table: "Employees",
                 column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_Email",
+                table: "Employees",
+                column: "Email",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Holidays_EmployeeId",
