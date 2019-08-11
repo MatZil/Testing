@@ -26,11 +26,11 @@ export class HomeComponent implements OnInit {
   }
 
   deleteUser(id: number) {
-    this.userService.delete(id).pipe(first()).subscribe(() => this.loadAllUsers());
+    this.userService.deleteUser(id).pipe(first()).subscribe(() => this.loadAllUsers());
   }
 
   private loadAllUsers() {
-    this.userService.getAll().pipe(first()).subscribe(users => this.users = users);
+    this.userService.getAllUsers().pipe(first()).subscribe(users => this.users = users);
   }
 
   logout() {

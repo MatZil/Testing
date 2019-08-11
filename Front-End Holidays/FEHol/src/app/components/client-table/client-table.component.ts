@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Client } from '../../models/client';
 import { Newclient } from '../../models/newclient';
@@ -15,8 +15,8 @@ export class ClientTableComponent implements OnInit {
   client: Client[];
   formData: Client = new Client();
   formDataNoId: Newclient;
-  errorMessage: string;
   newClient: Newclient = new Newclient();
+
   isVisibleCreator = false;
   isConfirmLoadingCreator = false;
   isVisibleEditor = false;
@@ -38,10 +38,8 @@ export class ClientTableComponent implements OnInit {
   }
 
   onAddButtonClick(clien: Client) {
-    this.clientService.addClient(clien)
-    .subscribe(() => {
-      this.refreshTable();
-    });
+    this.clientService.addClient(clien).subscribe(() => {
+      this.refreshTable(); });
   }
 
   showModalCreator(): void {
@@ -80,8 +78,7 @@ export class ClientTableComponent implements OnInit {
 
   onDeleteButtonClick(id: number) {
     this.clientService.deleteClient(id).subscribe(() => {
-      this.refreshTable();
-    });
+      this.refreshTable(); });
   }
 
   onEditButtonClick(clien: Client) {
@@ -90,8 +87,7 @@ export class ClientTableComponent implements OnInit {
 
   onEditConfirmButtonClick(client: Newclient, id: number) {
     this.clientService.editClient(client, id).subscribe(() => {
-      this.refreshTable();
-    });
+      this.refreshTable(); });
   }
 
   populateForm(clien: Client) {

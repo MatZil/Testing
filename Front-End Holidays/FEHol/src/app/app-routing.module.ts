@@ -5,6 +5,7 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { LoginComponent } from './components/login/login.component';
 import { ClientTableComponent } from './components/client-table/client-table.component';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
+import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
 
 import { AuthGuard } from './helpers/auth-guard';
 import { RoleGuard } from './helpers/role-guard';
@@ -21,6 +22,10 @@ const routes: Routes = [
    children: [
      {path: '', component: ClientTableComponent, canActivate: [AuthGuard]}
       ]},
+  {path: 'employees', component: HomeComponent, canActivate: [AuthGuard],
+   children: [
+     {path: '', component: EmployeesTableComponent, canActivate: [AuthGuard]}
+   ]},
   {path: '**', component: ErrorPageComponent}
 ];
 

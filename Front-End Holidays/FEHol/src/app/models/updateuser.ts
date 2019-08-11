@@ -1,5 +1,4 @@
-export class User {
-    id: number;
+export class Updateuser {
     name: string;
     surname: string;
     clientId: number;

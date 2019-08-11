@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { User } from '../models/user';
+import { Newuser } from '../models/newuser';
+import { Updateuser } from '../models/updateuser';
 
 @Injectable({ providedIn: 'root' })
 
@@ -19,7 +21,7 @@ export class UserService {
 
     constructor(private http: HttpClient) { }
 
-    getAll(): Observable<User[]> {
+    getAllUsers(): Observable<User[]> {
         return this.http.get<User[]>(this.userApi);
     }
 
@@ -27,11 +29,15 @@ export class UserService {
         return this.http.get<User>(`${this.userApi}/${id}`);
     }
 
-    register(user: User): Observable<User[]> {
+    registerUser(user: User): Observable<User[]> {
         return this.http.post<User[]>(this.userApi, user);
     }
 
-    delete(id: number) {
-        return this.http.delete(this.userApi);
+    deleteUser(id: number) {
+        return this.http.delete(`${this.userApi}/${id}`);
+    }
+
+    editUser(user: Updateuser, id: number) {
+        return this.http.put(`${this.userApi}/${id}`, user);
     }
 }

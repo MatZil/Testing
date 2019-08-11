@@ -1,5 +1,4 @@
-export class User {
-    id: number;
+export class Newuser {
     name: string;
     surname: string;
     clientId: number;
@@ -7,6 +6,7 @@ export class User {
     birthdayDate: Date;
     daysOfVacation: number;
     email: string;
+    password: string;
     role: string;
     position: string;
     token: string;
