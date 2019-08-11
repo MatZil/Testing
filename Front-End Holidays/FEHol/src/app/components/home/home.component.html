@@ -12,11 +12,23 @@
           <i nz-icon nzType="calendar"></i>
           <span>Calendar</span>
         </li>
+        <div *ngIf="isAdmin()">
         <li nz-menu-item>
           <a routerLink="/clients" routerLinkActive="active"></a>
           <i nz-icon nzType="team"></i>
           <span>Clients</span>
         </li>
+        <li nz-menu-item>
+          <a routerLink="/employees" routerLinkActive="active"></a>
+          <i nz-icon nzType="solution"></i>
+          <span>Employees</span>
+        </li>
+        <li nz-menu-item>
+          <a routerLink="/holidays" routerLinkActive="active"></a>
+          <i nz-icon nzType="smile"></i>
+          <span>Holidays</span>
+        </li>
+        </div>
         <li nz-submenu nzTitle="User" nzIcon="user">
         <ul>
           <li nz-menu-item>

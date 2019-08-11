@@ -9,7 +9,7 @@ import { User } from '../models/user';
 
 export class UserService {
 
-    private readonly userApi = `${environment.webApiUrl}/employee`;
+    private readonly userApi = `${environment.webApiUrl}/Employees`;
 
     private readonly httpOptions = {
         headers: new HttpHeaders({
@@ -21,6 +21,10 @@ export class UserService {
 
     getAll(): Observable<User[]> {
         return this.http.get<User[]>(this.userApi);
+    }
+
+    getUser(id: number): Observable<User> {
+        return this.http.get<User>(`${this.userApi}/${id}`);
     }
 
     register(user: User): Observable<User[]> {
