@@ -25,6 +25,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
+
+import { ErrorPageComponent } from './components/error-page/error-page.component';
+import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
 
 registerLocaleData(en);
 
@@ -35,7 +39,9 @@ registerLocaleData(en);
     CalendarComponent,
     AlertComponent,
     LoginComponent,
-    ClientTableComponent
+    ClientTableComponent,
+    ErrorPageComponent,
+    EmployeesTableComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +58,9 @@ registerLocaleData(en);
     MatIconModule,
     MatSelectModule,
     MatTableModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US },
               { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

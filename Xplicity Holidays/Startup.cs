@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xplicity_Holidays.Configurations;
+using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays
 {
@@ -29,7 +30,7 @@ namespace Xplicity_Holidays
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IBackgroundService backgroundService)
         {
             if (env.IsDevelopment())
             {
@@ -46,6 +47,8 @@ namespace Xplicity_Holidays
             app.UseAuthentication();
             app.UseMvc();
             app.ConfigureAndUseSwagger();
+
+            var _ = backgroundService.RunBackgroundServices();
         }
     }
 }

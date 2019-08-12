@@ -62,7 +62,7 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
 
         public List<Holiday> GetHolidays(int employeeId)
         {
-            var holidays = Context.Holidays.Where(holiday => holiday.EmployeeId == employeeId).ToList();
+            var holidays = Context.Holidays.Where(holiday => holiday.EmployeeId == employeeId && holiday.IsConfirmed == true).ToList();
             return holidays;
         }
         public async Task<Employee> FindAnyAdmin()

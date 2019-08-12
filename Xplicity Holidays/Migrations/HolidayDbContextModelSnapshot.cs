@@ -42,6 +42,9 @@ namespace Xplicity_Holidays.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyName")
+                        .IsUnique();
+
                     b.ToTable("Clients");
                 });
 
@@ -69,6 +72,9 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired();
 
+                    b.Property<string>("Position")
+                        .IsRequired();
+
                     b.Property<string>("Role");
 
                     b.Property<string>("Surname")
@@ -83,6 +89,9 @@ namespace Xplicity_Holidays.Migrations
 
                     b.HasIndex("ClientId");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Employees");
                 });
 
@@ -96,6 +105,11 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<DateTime>("FromInclusive");
 
                     b.Property<bool>("IsConfirmed");
+
+                    b.Property<DateTime>("RequestCreatedDate");
+
+                    b.Property<string>("Status")
+                        .IsRequired();
 
                     b.Property<DateTime>("ToExclusive");
 

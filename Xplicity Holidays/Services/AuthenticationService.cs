@@ -33,14 +33,14 @@ namespace Xplicity_Holidays.Services
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
                 return null;
 
-            string tokenString = CreateJwtToken(user);
+            string tokenString = CreateJwt(user);
             user.Token = tokenString;
 
             // authentication successful
             return user;
         }
 
-        public string CreateJwtToken(Employee employee)
+        public string CreateJwt(Employee employee)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -51,7 +51,7 @@ namespace Xplicity_Holidays.Services
                     new Claim(ClaimTypes.Name, employee.Id.ToString()),
                     new Claim(ClaimTypes.Role, employee.Role)
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

@@ -13,7 +13,7 @@ namespace Xplicity_Holidays.Services.Interfaces
         Task<GetEmployeeDto> GetById(int id);
         Task<ICollection<GetEmployeeDto>> GetAll();
         Task<NewEmployeeDto> Create(NewEmployeeDto newClient);
-        Task Update(int id, NewEmployeeDto updateData);
+        Task Update(int id, UpdateEmployeeDto updateData);
         Task<bool> Delete(int id);
     }
 }

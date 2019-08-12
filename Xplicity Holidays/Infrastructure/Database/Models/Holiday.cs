@@ -17,14 +17,16 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         public DateTime ToExclusive { get; set; }
         [Required]
         public bool IsConfirmed { get; set; }
+        [Required]
+        public string Status { get; set; }
+        [Required]
+        public DateTime RequestCreatedDate { get; set; }
     }
 
     public enum HolidayType
     {
         Annual,
         Paternal,
-        Maternal,
         Science
     }
-
 }

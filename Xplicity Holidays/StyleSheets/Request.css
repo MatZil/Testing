@@ -1,0 +1,25 @@
+﻿.center {
+    text-align: center;
+}
+.right {
+    text-align: right;
+}
+.left {
+    text-align: left;
+}
+.bold {
+    font-weight: bold;
+}
+.big {
+    font-size: large;
+}
+.small {
+    font-size: small;
+}
+.over {
+    line-height: 1pt;
+}
+.moveleft {
+    position: relative;
+    left: -30px;
+}

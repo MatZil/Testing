@@ -26,11 +26,11 @@ export class HomeComponent implements OnInit {
   }
 
   deleteUser(id: number) {
-    this.userService.delete(id).pipe(first()).subscribe(() => this.loadAllUsers());
+    this.userService.deleteUser(id).pipe(first()).subscribe(() => this.loadAllUsers());
   }
 
   private loadAllUsers() {
-    this.userService.getAll().pipe(first()).subscribe(users => this.users = users);
+    this.userService.getAllUsers().pipe(first()).subscribe(users => this.users = users);
   }
 
   logout() {
@@ -45,5 +45,15 @@ export class HomeComponent implements OnInit {
       console.error(error);
       this.errorMessage = error.message;
     });
+
+    this.userService.getUser(this.authenticationService.getUserId()).subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
+  isAdmin() {
+    if (this.currentUser.role === 'admin') {
+      return true;
+    }
   }
 }

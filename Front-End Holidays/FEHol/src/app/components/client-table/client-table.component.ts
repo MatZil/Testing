@@ -1,8 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Client } from '../../models/client';
+import { Newclient } from '../../models/newclient';
 import { ClientService } from '../../services/client.service';
 import { NgForm } from '@angular/forms';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-client-table',
@@ -10,36 +12,34 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./client-table.component.scss']
 })
 export class ClientTableComponent implements OnInit {
-  @Output()
-  addButtonClick = new EventEmitter<Client>();
-
   client: Client[];
-  errorMessage: string;
-  newClient: Client = new Client();
+  formData: Client = new Client();
+  formDataNoId: Newclient;
+  newClient: Newclient = new Newclient();
+
   isVisibleCreator = false;
   isConfirmLoadingCreator = false;
   isVisibleEditor = false;
-  isConfirmLoadingEditor = false;
+
+  confirmDeleteModal: NzModalRef;
 
   constructor(
-    private clientService: ClientService
+    private clientService: ClientService,
+    private modal: NzModalService
   ) { }
 
   ngOnInit() {
-    this.clientService.getClient().subscribe(client => {
-      this.client = client;
-    }, error => {
-      console.error(error);
-      this.errorMessage = error.message;
-    });
+    this.refreshTable();
+  }
+
+  refreshTable() {
+    this.clientService.getClient().subscribe(clients => {
+      this.client = clients; });
   }
 
   onAddButtonClick(clien: Client) {
-    this.clientService.addClient(clien)
-    .subscribe(savedClient => {
-      console.log(savedClient);
-      this.client.push(savedClient);
-    });
+    this.clientService.addClient(clien).subscribe(() => {
+      this.refreshTable(); });
   }
 
   showModalCreator(): void {
@@ -62,14 +62,6 @@ export class ClientTableComponent implements OnInit {
     this.isVisibleEditor = true;
   }
 
-  handleOkEditor(): void {
-    this.isConfirmLoadingEditor = true;
-    setTimeout(() => {
-      this.isVisibleEditor = false;
-      this.isConfirmLoadingEditor = false;
-    }, 3000);
-  }
-
   handleCancelEditor(): void {
     this.isVisibleEditor = false;
   }
@@ -78,12 +70,44 @@ export class ClientTableComponent implements OnInit {
     form.resetForm();
   }
 
-  onDeleteButtonClick(clien: Client) {
-    this.clientService.deleteClient(clien.clientId)
-    .subscribe();
+  updateField() {
+    this.clientService.getClient().subscribe(client => {
+      this.client = client;
+    });
+  }
+
+  onDeleteButtonClick(id: number) {
+    this.clientService.deleteClient(id).subscribe(() => {
+      this.refreshTable(); });
   }
 
   onEditButtonClick(clien: Client) {
-    this.clientService.getClientById(clien.clientId).subscribe();
+    this.clientService.getClientById(clien.id).subscribe();
+  }
+
+  onEditConfirmButtonClick(client: Newclient, id: number) {
+    this.clientService.editClient(client, id).subscribe(() => {
+      this.refreshTable(); });
+  }
+
+  populateForm(clien: Client) {
+    this.formData = Object.assign({}, clien);
+  }
+
+  populateFormNoId(client: Newclient) {
+    this.formDataNoId = Object.assign({}, client);
+  }
+
+  deleteClientOnModalClose(id: number) {
+    this.onDeleteButtonClick(id);
+    this.handleCancelEditor();
+  }
+
+  showDeleteConfirm(id: number): void {
+    this.confirmDeleteModal = this.modal.confirm({
+      nzTitle: 'Do you want to delete this client?',
+      nzContent: 'When clicked the OK button this client will be deleted',
+      nzOnOk: () => this.deleteClientOnModalClose(id)
+    });
   }
 }

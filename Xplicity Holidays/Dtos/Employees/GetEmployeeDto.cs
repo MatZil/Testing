@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Xplicity_Holidays.Dtos.Employees
 {
@@ -16,5 +13,6 @@ namespace Xplicity_Holidays.Dtos.Employees
         public int DaysOfVacation { get; set; }
         public string Email { get; set; }
         public string Role { get; set; }
+        public string Position { get; set; }
     }
 }

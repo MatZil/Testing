@@ -4,12 +4,14 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { User } from '../models/user';
+import { Newuser } from '../models/newuser';
+import { Updateuser } from '../models/updateuser';
 
 @Injectable({ providedIn: 'root' })
 
 export class UserService {
 
-    private readonly userApi = `${environment.webApiUrl}/employee`;
+    private readonly userApi = `${environment.webApiUrl}/Employees`;
 
     private readonly httpOptions = {
         headers: new HttpHeaders({
@@ -19,15 +21,23 @@ export class UserService {
 
     constructor(private http: HttpClient) { }
 
-    getAll(): Observable<User[]> {
+    getAllUsers(): Observable<User[]> {
         return this.http.get<User[]>(this.userApi);
     }
 
-    register(user: User): Observable<User[]> {
+    getUser(id: number): Observable<User> {
+        return this.http.get<User>(`${this.userApi}/${id}`);
+    }
+
+    registerUser(user: User): Observable<User[]> {
         return this.http.post<User[]>(this.userApi, user);
     }
 
-    delete(id: number) {
-        return this.http.delete(this.userApi);
+    deleteUser(id: number) {
+        return this.http.delete(`${this.userApi}/${id}`);
+    }
+
+    editUser(user: Updateuser, id: number) {
+        return this.http.put(`${this.userApi}/${id}`, user);
     }
 }
