@@ -35,7 +35,7 @@ namespace Xplicity_Holidays.Services
                 $"Click this link to decline the holiday: https://localhost:44374/api/holidaydecline?holidayid={holiday.Id}");
         }
 
-        public void SendThisMonthsHolidayInfo(Employee admin, List<Holiday> holidays)
+        public void SendThisMonthsHolidayInfo(Employee admin, ICollection<Holiday> holidays)
         {
             string holidayInfo = string.Empty;
 
@@ -48,7 +48,7 @@ namespace Xplicity_Holidays.Services
             _emailer.SendMail(admin.Email, "This months holiday summary", holidayInfo);
         }
 
-        public void InformEmployeesAboutHoliday(List<Employee> employees, List<Holiday> upcomingHolidays)
+        public void InformEmployeesAboutHoliday(ICollection<Employee> employees, ICollection<Holiday> upcomingHolidays)
         {
             foreach (var employee in employees)
             {

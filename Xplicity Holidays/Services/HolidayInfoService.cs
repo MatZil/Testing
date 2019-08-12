@@ -49,19 +49,16 @@ namespace Xplicity_Holidays.Services
             double daysInYear = 365;
             DateTime startCheckFrom;
 
-            //if (employee.LastCheckDate == null)
-                startCheckFrom = employee.WorksFromDate;
-            //else
-            //    startCheckFrom = employee.LastCheckDate;
+            startCheckFrom = employee.WorksFromDate;
 
             int workDays = _timeService.GetWorkDays(startCheckFrom, _timeService.GetCurrentTime());
-            List<Holiday> employeesHolidays = _repository.GetHolidays(employee.Id);
-            int holidayCount = employeesHolidays.Sum(holiday => (holiday.ToExclusive - holiday.FromInclusive).Days);
-            double totalWorkDays = workDays - holidayCount;
+            List<Holiday> employeesHolidays = _repository.GetHolidays(employee.Id).Where(h => h.IsConfirmed == true).ToList();
+            int daysOnHoliday = employeesHolidays.Sum(h => (h.ToExclusive - h.FromInclusive).Days);
 
-            double holidaysLeft = (holidaysPerYear / daysInYear) * totalWorkDays;
-            //employee.LastCheckDate = DateTime.Now;
-            //_repository.Update(employee);
+            int holidayCount = employeesHolidays.Select(h => (h.ToExclusive - h.FromInclusive).Days).Sum();
+            double totalWorkDays = workDays - daysOnHoliday;
+
+            double holidaysLeft = (holidaysPerYear / daysInYear) * totalWorkDays - holidayCount;
             holidaysLeft = Math.Round(holidaysLeft, 2);
             return holidaysLeft;
 
