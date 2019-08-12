@@ -62,7 +62,6 @@ namespace Xplicity_Holidays.Services
             double holidaysLeft = (holidaysPerYear / daysInYear) * totalWorkDays;
             //employee.LastCheckDate = DateTime.Now;
             //_repository.Update(employee);
-            holidaysLeft = Math.Round(holidaysLeft, 2);
             return holidaysLeft;
 
         }
