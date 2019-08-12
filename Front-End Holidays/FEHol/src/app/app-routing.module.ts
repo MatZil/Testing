@@ -6,6 +6,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ClientTableComponent } from './components/client-table/client-table.component';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
+import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
 import { PolicyComponent } from './components/policy/policy.component';
 import { AuthGuard } from './helpers/auth-guard';
 import { RoleGuard } from './helpers/role-guard';
@@ -29,6 +30,10 @@ const routes: Routes = [
   {path: 'employees', component: HomeComponent, canActivate: [AuthGuard],
    children: [
      {path: '', component: EmployeesTableComponent, canActivate: [AuthGuard]}
+   ]},
+   {path: 'holidays', component: HomeComponent, canActivate: [AuthGuard],
+   children: [
+     {path: '', component: HolidaysTableComponent, canActivate: [AuthGuard]}
    ]},
    {path: 'profile', component: HomeComponent, canActivate: [AuthGuard],
    children: [

@@ -1,5 +1,4 @@
-export class Holidays {
-    id: number;
+export class Newholidays {
     employeeId: number;
     type: string;
     fromInclusive: Date;
