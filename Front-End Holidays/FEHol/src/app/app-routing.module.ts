@@ -9,6 +9,7 @@ import { EmployeesTableComponent } from './components/employees-table/employees-
 import { PolicyComponent } from './components/policy/policy.component';
 import { AuthGuard } from './helpers/auth-guard';
 import { RoleGuard } from './helpers/role-guard';
+import { ProfileComponent } from './components/profile/profile.component';
 
 
 const routes: Routes = [
@@ -29,8 +30,12 @@ const routes: Routes = [
    children: [
      {path: '', component: EmployeesTableComponent, canActivate: [AuthGuard]}
    ]},
+   {path: 'profile', component: HomeComponent, canActivate: [AuthGuard],
+   children: [
+     {path: '', component: ProfileComponent, canActivate: [AuthGuard]}
+   ]},
   {path: '', redirectTo: 'home', pathMatch: 'full'},
-  {path: '**', component: ErrorPageComponent}
+  {path: '**', component: ErrorPageComponent},
 ];
 
 @NgModule({

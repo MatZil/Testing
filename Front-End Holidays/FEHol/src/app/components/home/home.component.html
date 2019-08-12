@@ -1,18 +1,18 @@
 <nz-layout>
-    <nz-sider nzCollapsible [nzCollapsed]="isCollapsed" [nzTrigger]="null">
+  <nz-sider nzCollapsible [nzCollapsed]="isCollapsed" [nzTrigger]="null">
     <div class="logo"></div>
-      <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-        <li nz-menu-item>
-          <a routerLink="/home" routerLinkActive="active"></a>
-          <i nz-icon nzType="home"></i>
-          <span>Home</span>
-        </li>
-        <li nz-menu-item>
-          <a routerLink="/calendar" routerLinkActive="active"></a>
-          <i nz-icon nzType="calendar"></i>
-          <span>Calendar</span>
-        </li>
-        <div *ngIf="isAdmin()">
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-menu-item>
+        <a routerLink="/home" routerLinkActive="active"></a>
+        <i nz-icon nzType="home"></i>
+        <span>Home</span>
+      </li>
+      <li nz-menu-item>
+        <a routerLink="/calendar" routerLinkActive="active"></a>
+        <i nz-icon nzType="calendar"></i>
+        <span>Calendar</span>
+      </li>
+      <div *ngIf="isAdmin()">
         <li nz-menu-item>
           <a routerLink="/clients" routerLinkActive="active"></a>
           <i nz-icon nzType="team"></i>
@@ -28,10 +28,11 @@
           <i nz-icon nzType="smile"></i>
           <span>Holidays</span>
         </li>
-        </div>
-        <li nz-submenu nzTitle="{{currentUser.name}}" nzIcon="user">
+      </div>
+      <li nz-submenu nzTitle="{{currentUser.name}}" nzIcon="user">
         <ul>
           <li nz-menu-item>
+            <a routerLink="/profile" routerLinkActive="active"></a>
             <i nz-icon nzType="bars"></i>
             <span>Profile</span>
           </li>
@@ -41,21 +42,17 @@
             <span>Log off</span>
           </li>
         </ul>
-        </li>
-      </ul>
-    </nz-sider>
-    <nz-layout>
-      <nz-header>
-        <i
-        class="trigger"
-        nz-icon
-        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-        (click)="isCollapsed = !isCollapsed"
-        ></i>
-      </nz-header>
-      <router-outlet></router-outlet>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        (click)="isCollapsed = !isCollapsed"></i>
+    </nz-header>
+    <router-outlet></router-outlet>
   </nz-layout>
-  </nz-layout>
-  <ng-template #zeroTrigger>
+</nz-layout>
+<ng-template #zeroTrigger>
   <i nz-icon nzType="menu-fold" nzTheme="outline"></i>
-  </ng-template>
+</ng-template>
