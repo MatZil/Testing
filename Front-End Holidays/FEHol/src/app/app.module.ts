@@ -31,6 +31,7 @@ import { ErrorPageComponent } from './components/error-page/error-page.component
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
 import { PolicyComponent } from './components/policy/policy.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
 
 registerLocaleData(en);
 
@@ -45,7 +46,8 @@ registerLocaleData(en);
     ErrorPageComponent,
     EmployeesTableComponent,
     PolicyComponent,
-    ProfileComponent
+    ProfileComponent,
+    HolidaysTableComponent
   ],
   imports: [
     BrowserModule,

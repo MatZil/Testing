@@ -31,6 +31,10 @@ const routes: Routes = [
    children: [
      {path: '', component: EmployeesTableComponent, canActivate: [AuthGuard]}
    ]},
+   {path: 'holidays', component: HomeComponent, canActivate: [AuthGuard],
+   children: [
+     {path: '', component: HolidaysTableComponent, canActivate: [AuthGuard]}
+   ]},
    {path: 'profile', component: HomeComponent, canActivate: [AuthGuard],
    children: [
      {path: '', component: ProfileComponent, canActivate: [AuthGuard]}
