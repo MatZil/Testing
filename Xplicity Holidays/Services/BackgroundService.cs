@@ -53,9 +53,9 @@ namespace Xplicity_Holidays.Services
         {
             var currentTime = _timeservice.GetCurrentTime();
             var thisMonthsHolidays = holidays.Where(h => h.IsConfirmed == true && (h.FromInclusive.Year == currentTime.Year
-                                                  || h.ToExclusive.Year == currentTime.AddDays(1).Year)
+                                                  || h.ToExclusive.AddDays(-1).Year == currentTime.Year)
                                                   && (h.FromInclusive.Month == currentTime.Month
-                                                  || h.ToExclusive.Month == currentTime.AddDays(1).Month)).ToList();
+                                                  || h.ToExclusive.AddDays(-1).Month == currentTime.Month)).ToList();
 
             DateTime nextDay = currentTime.AddDays(1);
 
