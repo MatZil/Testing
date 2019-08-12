@@ -9,5 +9,24 @@ namespace Xplicity_Holidays.Infrastructure.Utils
         {
             return DateTime.Now;
         }
+
+        public int GetWorkDays(DateTime from, DateTime to)
+        {
+            int workDays = 0;
+
+            while (from < to)
+            {
+                if (from.DayOfWeek == DayOfWeek.Saturday || from.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    from = from.AddDays(1);
+                    continue;
+                }
+                workDays++;
+                from = from.AddDays(1);
+            }
+            workDays--; //Subtract today
+
+            return workDays;
+        }
     }
 }
