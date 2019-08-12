@@ -1,11 +1,22 @@
-.footerCenter{
-    position: fixed;
-    left: 0;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
+.policyDownload{
+    position: absolute;
+    right: 25px;
+    font-size: 20px;
 }
-.holidaysLeft{
-    position: fixed;
-     left: 225px;
+.holidaysCount{
+    position: absolute;
+     left: 25px;
+     font-size: 20px;
+     color: white;
+}
+.titleCenter{
+    position: absolute;
+    color: lightgreen;
+    font-size: 70px;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.container{
+    position: relative;
 }

@@ -11,10 +11,11 @@ import { User } from '../../models/user';
 export class PolicyComponent implements OnInit {
   holidaysCount: number;
   user: User;
-
+  image: string;
   constructor(private policyService: PolicyService, private authenticationService: AuthenticationService
   ) {
     this.authenticationService.currentUser.subscribe(currentUser => this.user = currentUser);
+    this.image = 'assets/bg.jpg';
   }
 
   ngOnInit() {
