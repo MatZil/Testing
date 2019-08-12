@@ -54,7 +54,7 @@ namespace Xplicity_Holidays.Services
             //else
             //    startCheckFrom = employee.LastCheckDate;
 
-            int workDays = CalculateWorkDays(startCheckFrom, _timeService.GetCurrentTime());
+            int workDays = _timeService.GetWorkDays(startCheckFrom, _timeService.GetCurrentTime());
             List<Holiday> employeesHolidays = _repository.GetHolidays(employee.Id);
             int holidayCount = employeesHolidays.Sum(holiday => (holiday.ToExclusive - holiday.FromInclusive).Days);
             double totalWorkDays = workDays - holidayCount;
@@ -65,26 +65,5 @@ namespace Xplicity_Holidays.Services
             return holidaysLeft;
 
         }
-
-        private int CalculateWorkDays(DateTime dateFrom, DateTime dateTo)
-        {
-            int workDays = 0;
-
-            while(dateFrom < dateTo)
-            {
-                if (dateFrom.DayOfWeek == DayOfWeek.Saturday || dateFrom.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    dateFrom = dateFrom.AddDays(1);
-                    continue;
-                }
-
-                workDays++;
-                dateFrom = dateFrom.AddDays(1);
-            }
-            workDays--; //Subtract today
-
-            return workDays;
-        }
-
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting.Internal;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Database.Models;
@@ -67,7 +65,7 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
         }
         public async Task<Employee> FindAnyAdmin()
         {
-            var admin = await Context.Employees.FirstOrDefaultAsync(obj => obj.Role == "Admin");
+            var admin = await Context.Employees.FirstOrDefaultAsync(obj => obj.Role == "admin");
             return admin;
         }
     }
