@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,63 +13,69 @@ namespace Xplicity_Holidays.Services
     public class BackgroundService : IBackgroundService
     {
         private readonly ITimeService _timeservice;
-        private readonly IRepository<Holiday> _holidayRepository;
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IEmailService _emailService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public BackgroundService(ITimeService timeService, IRepository<Holiday> holidayRepository
-                               , IEmployeeRepository employeeRepository, IEmailService emailService)
+        public BackgroundService(ITimeService timeService, IServiceScopeFactory serviceScopeFactory)
         {
+            _serviceScopeFactory = serviceScopeFactory;
             _timeservice = timeService;
-            _holidayRepository = holidayRepository;
-            _employeeRepository = employeeRepository;
-            _emailService = emailService;
         }
 
         public async Task RunBackgroundServices()
         {
-            var currentTime = _timeservice.GetCurrentTime();
-            var holidays = _holidayRepository.GetAll().Result.ToList();
-
-            var thisMonthsHolidays = holidays.Where(h =>
-                                   (h.FromInclusive.Year == currentTime.Year || h.ToExclusive.Year == currentTime.Year)
-                                   && (h.FromInclusive.Month == currentTime.Month || h.ToExclusive.Month == currentTime.Month)).ToList();
-
-            var employees = _employeeRepository.GetAll().Result.ToList();
-            var admin = _employeeRepository.FindAnyAdmin().Result;
-
             while (true)
             {
-                await Task.Run(() => CheckForLastMonthDay(admin, thisMonthsHolidays));
+                await DoBackGroundChecks();
 
-                await Task.Run(() => CheckUpcomingHolidays(employees, holidays));
-
-                await Task.Delay(TimeSpan.FromHours(3));
+                await Task.Delay(TimeSpan.FromDays(1));
             }
         }
 
-        public void CheckForLastMonthDay(Employee admin, List<Holiday> holidays)
+        public async Task DoBackGroundChecks()
         {
-            DateTime currentTIme = _timeservice.GetCurrentTime();
-            DateTime nextDay = currentTIme.AddDays(1);
-
-            if (currentTIme.Month != nextDay.Month)
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
-                //_emailService.SendThisMonthsHolidayInfo(admin, holidays);
+                var employeeRepository = scope.ServiceProvider.GetService<IEmployeeRepository>();
+                var holidayRepository = scope.ServiceProvider.GetService<IRepository<Holiday>>();
+                var emailService = scope.ServiceProvider.GetService<IEmailService>();
+
+                var holidays = await holidayRepository.GetAll();
+                var employees = await employeeRepository.GetAll();
+                var admin = await employeeRepository.FindAnyAdmin();
+
+                await Task.Run(() => CheckForLastMonthDay(admin, holidays, emailService));
+
+                await Task.Run(() => CheckUpcomingHolidays(employees, holidays, emailService));
             }
         }
 
-        public void CheckUpcomingHolidays(List<Employee> employees, List<Holiday> holidays)
+        public void CheckForLastMonthDay(Employee admin, ICollection<Holiday> holidays, IEmailService emailService)
+        {
+            var currentTime = _timeservice.GetCurrentTime();
+            var thisMonthsHolidays = holidays.Where(h => h.IsConfirmed == true && (h.FromInclusive.Year == currentTime.Year
+                                                  || h.ToExclusive.Year == currentTime.AddDays(1).Year)
+                                                  && (h.FromInclusive.Month == currentTime.Month
+                                                  || h.ToExclusive.Month == currentTime.AddDays(1).Month)).ToList();
+
+            DateTime nextDay = currentTime.AddDays(1);
+
+            if (currentTime.Month != nextDay.Month)
+            {
+                //emailService.SendThisMonthsHolidayInfo(admin, thisMonthsHolidays);
+            }
+        }
+
+        public void CheckUpcomingHolidays(ICollection<Employee> employees, ICollection<Holiday> holidays, IEmailService emailService)
         {
             DateTime currentTime = _timeservice.GetCurrentTime();
 
             var upcomingHolidays = holidays.Where(holiday => holiday.IsConfirmed == true
-                                && holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
-                                .ToList();
+                                                  && holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
+                                                  .ToList();
 
             if (upcomingHolidays.Count != 0)
             {
-                //_emailService.InformEmployeesAboutHoliday(employees, upcomingHolidays);
+                //emailService.InformEmployeesAboutHoliday(employees, upcomingHolidays);
             }
         }
 

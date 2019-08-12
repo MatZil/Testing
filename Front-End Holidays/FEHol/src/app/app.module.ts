@@ -30,7 +30,7 @@ import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
 import { PolicyComponent } from './components/policy/policy.component';
-import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 registerLocaleData(en);
 
@@ -45,7 +45,7 @@ registerLocaleData(en);
     ErrorPageComponent,
     EmployeesTableComponent,
     PolicyComponent,
-    HolidaysTableComponent
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
