@@ -13,7 +13,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 })
 export class ClientTableComponent implements OnInit {
   client: Client[];
-  formData: Client = new Client();
+  formData: Client;
   formDataNoId: Newclient;
   newClient: Newclient = new Newclient();
 
@@ -105,8 +105,8 @@ export class ClientTableComponent implements OnInit {
 
   showDeleteConfirm(id: number): void {
     this.confirmDeleteModal = this.modal.confirm({
-      nzTitle: 'Do you want to delete this client?',
-      nzContent: 'When clicked the OK button this client will be deleted',
+      nzTitle: 'Do you want to delete this section?',
+      nzContent: 'When clicked the OK button this section will be deleted',
       nzOnOk: () => this.deleteClientOnModalClose(id)
     });
   }

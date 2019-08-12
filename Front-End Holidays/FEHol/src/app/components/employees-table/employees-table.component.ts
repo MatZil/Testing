@@ -19,7 +19,7 @@ import { DateAdapter } from '@angular/material/core';
 })
 export class EmployeesTableComponent implements OnInit {
   users: User[];
-  formDataUsers: User = new User();
+  formDataUsers: User;
   formDataUsersNoId: Updateuser;
   newUser: Newuser = new Newuser();
 
@@ -40,7 +40,10 @@ export class EmployeesTableComponent implements OnInit {
 
   ngOnInit() {
     this.refreshTable();
-    this.getClientsDetails();
+
+    this.clientService.getClient().subscribe(clients => {
+      this.clients = clients;
+    });
   }
 
   refreshTable() {
@@ -74,8 +77,8 @@ export class EmployeesTableComponent implements OnInit {
 
   showDeleteConfirm(id: number): void {
     this.confirmDeleteModal = this.modal.confirm({
-      nzTitle: 'Do you want to delete this client?',
-      nzContent: 'When clicked the OK button this client will be deleted',
+      nzTitle: 'Do you want to delete this section?',
+      nzContent: 'When clicked the OK button this section will be deleted',
       nzOnOk: () => this.deleteEmployeeOnModalClose(id)
     });
   }
@@ -116,20 +119,13 @@ export class EmployeesTableComponent implements OnInit {
     this.isVisibleEditor = false;
   }
 
-  getClientsDetails() {
-    this.clientService.getClient().subscribe(clients => {
-      this.clients = clients;
-    });
-  }
-
-  getClientByTheId(id: number) {
-    this.clientService.getClientById(id).subscribe(client => {
-      this.oneClient = client;
-    });
-  }
-
   getClientName(id: number) {
-    this.getClientByTheId(id);
-    return this.oneClient.companyName;
+    for (const client of this.clients) {
+      if (id != null && client.id === id) {
+        return client.companyName;
+      }
+    }
+
+    return 'No client';
   }
 }
