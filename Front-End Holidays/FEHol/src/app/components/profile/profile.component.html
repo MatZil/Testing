@@ -1,7 +1,11 @@
 <div class="employeesInfo">
-<p>Name {{ currentUser.name }}</p>
-<p>Surname {{ currentUser.surname }}</p>
-<p>Email {{ currentUser.email }}</p>
-<p>Possition {{ currentUser.possition }}</p>
-<p>BirthdayDate {{ currentUser.birthdayDate | date}}</p>
+    <h1><b>Profile information</b></h1>
+<p><b>Name</b>: {{ currentUser.name }}</p>
+<p><b>Surname</b>: {{ currentUser.surname }}</p>
+<p><b>Email</b>: {{ currentUser.email }}</p>
+<p><b>Position</b>: {{ currentUser.position }}</p>
+<p><b>BirthdayDate</b>: {{ currentUser.birthdayDate | date }}</p>
+<p><b>Works from</b>: {{ currentUser.worksFromDate | date }}</p>
+<p><b>Maximum days</b>: of vacation per year: {{ currentUser.daysOfVacation }}</p>
+<P><b>Role</b>: {{ currentUser.role }}</P>
 </div>
