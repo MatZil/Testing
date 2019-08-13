@@ -4,9 +4,6 @@
 .right {
     text-align: right;
 }
-.left {
-    text-align: left;
-}
 .bold {
     font-weight: bold;
 }
@@ -19,7 +16,9 @@
 .over {
     line-height: 1pt;
 }
-.moveleft {
-    position: relative;
-    left: -30px;
+.floatL {
+    float: left;
+}
+.floatR {
+    float:right;
 }

@@ -65,15 +65,24 @@ namespace Xplicity_Holidays.Services
             Atostoginius prašau sumokėti kartu su atlyginimu.
         </p>
         <br /><br /><br /><br />
-        <p class='center over'>
-            ................................ {9} {10}
+        <p class='floatR'>
+            {9} {10}
         </p>
-        <p class='center small moveleft'>
+        <p class='center over'>
+            ................................ 
+        </p>
+        <p class='center small'>
             (parašas)
         </p>
         <br /><br /><br /><br /><br /><br />
+        <p class='floatL'>
+            Tvirtinu:
+        </p>
+        <p class='floatR'>
+            Inga Rana
+        </p>
         <p class='center over'>
-            Tvirtinu: ..................................... Inga Rana
+            ..................................... 
         </p>
         <p class='center small'>
             (parašas)
