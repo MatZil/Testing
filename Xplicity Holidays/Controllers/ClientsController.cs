@@ -35,9 +35,7 @@ namespace Xplicity_Holidays.Controllers
             var client = await _clientsService.GetById(id);
 
             if (client == null)
-            {
                 return NotFound();
-            }
 
             return Ok(client);
         }

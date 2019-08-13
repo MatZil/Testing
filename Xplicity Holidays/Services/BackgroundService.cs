@@ -54,7 +54,7 @@ namespace Xplicity_Holidays.Services
         private void CheckForLastMonthDay(Employee admin, ICollection<Holiday> holidays, IEmailService emailService)
         {
             var currentTime = _timeService.GetCurrentTime();
-            var thisMonthsHolidays = holidays.Where(h => h.IsConfirmed == true && (h.FromInclusive.Year == currentTime.Year
+            var thisMonthsHolidays = holidays.Where(h => h.Status == "Confirmed" && (h.FromInclusive.Year == currentTime.Year
                                                   || h.ToExclusive.AddDays(-1).Year == currentTime.Year)
                                                   && (h.FromInclusive.Month == currentTime.Month
                                                   || h.ToExclusive.AddDays(-1).Month == currentTime.Month)).ToList();
@@ -71,8 +71,8 @@ namespace Xplicity_Holidays.Services
         {
             DateTime currentTime = _timeService.GetCurrentTime();
 
-            var upcomingHolidays = holidays.Where(holiday => holiday.IsConfirmed == true
-                                                  && holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
+            var upcomingHolidays = holidays.Where(holiday => holiday.Status == "string" && 
+                                                             holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
                                                   .ToList();
 
             if (upcomingHolidays.Count != 0)

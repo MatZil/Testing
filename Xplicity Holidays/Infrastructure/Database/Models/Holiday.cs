@@ -16,8 +16,6 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public DateTime ToExclusive { get; set; }
         [Required]
-        public bool IsConfirmed { get; set; }
-        [Required]
         public string Status { get; set; }
         [Required]
         public DateTime RequestCreatedDate { get; set; }
@@ -26,7 +24,7 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
     public enum HolidayType
     {
         Annual,
-        Paternal,
+        Parental,
         Science
     }
 }

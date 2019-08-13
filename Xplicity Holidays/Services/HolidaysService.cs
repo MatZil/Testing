@@ -43,7 +43,6 @@ namespace Xplicity_Holidays.Services
 
             var newHoliday = _mapper.Map<Holiday>(newHolidayDto);
             newHoliday.RequestCreatedDate = _timeService.GetCurrentTime();
-            newHoliday.IsConfirmed = false;
             newHoliday.Status = "Unconfirmed";
             var holidayId = await _repository.Create(newHoliday);
             return holidayId;

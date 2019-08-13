@@ -23,7 +23,6 @@ namespace Xplicity_Holidays.Infrastructure.Database
                 entity.HasIndex(e => e.Email).IsUnique(); 
 
             });
-
         }
     }
 }

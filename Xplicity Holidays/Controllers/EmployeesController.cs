@@ -19,7 +19,7 @@ namespace Xplicity_Holidays.Controllers
 
         [HttpPost]
         [Route("authenticate")]
-        public IActionResult Authenticate(AuthenticateDTO request)
+        public IActionResult Authenticate(AuthenticateDto request)
         {
             var employee = _employeesService.Authenticate(request.Email, request.Password);
 
@@ -52,9 +52,7 @@ namespace Xplicity_Holidays.Controllers
             var employee = await _employeesService.GetById(id);
 
             if (employee == null)
-            {
                 return NotFound();
-            }
 
             return Ok(employee);
         }

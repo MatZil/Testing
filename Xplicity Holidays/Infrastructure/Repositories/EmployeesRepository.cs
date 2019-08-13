@@ -57,12 +57,12 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
             return employee;
         }
 
-
         public List<Holiday> GetHolidays(int employeeId)
         {
-            var holidays = Context.Holidays.Where(holiday => holiday.EmployeeId == employeeId && holiday.IsConfirmed == true).ToList();
+            var holidays = Context.Holidays.Where(holiday => holiday.EmployeeId == employeeId && holiday.Status == "Confirmed").ToList();
             return holidays;
         }
+
         public async Task<Employee> FindAnyAdmin()
         {
             var admin = await Context.Employees.FirstOrDefaultAsync(obj => obj.Role == "admin");

@@ -99,7 +99,6 @@ namespace Xplicity_Holidays.Configurations
                     ValidateAudience = false
                 };
             });
-
             return services;
         }
     }

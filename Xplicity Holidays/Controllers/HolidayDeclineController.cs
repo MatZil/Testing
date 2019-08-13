@@ -18,6 +18,7 @@ namespace Xplicity_Holidays.Controllers
             _holidaysService = holidaysService;
             _mapper = mapper;
         }
+
         [HttpGet]
         public async Task<IActionResult> DeclineHoliday(int holidayId)
         {

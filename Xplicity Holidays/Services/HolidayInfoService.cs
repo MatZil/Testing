@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
@@ -52,7 +51,7 @@ namespace Xplicity_Holidays.Services
             DateTime startCheckFrom = employee.WorksFromDate;
 
             int workDays = _timeService.GetWorkDays(startCheckFrom, currentTime) - 1;
-            List<Holiday> employeesHolidays = _repository.GetHolidays(employee.Id).Where(h => h.IsConfirmed == true).ToList();
+            List<Holiday> employeesHolidays = _repository.GetHolidays(employee.Id).Where(h => h.Status == "Confirmed").ToList();
             int daysOnHoliday = employeesHolidays.Sum(h => (h.ToExclusive - h.FromInclusive).Days);
 
             double holidaysLeft = (holidaysPerYear / workDaysPerYear) * workDays - daysOnHoliday;

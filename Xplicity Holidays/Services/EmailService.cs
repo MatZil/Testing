@@ -13,11 +13,12 @@ namespace Xplicity_Holidays.Services
         {
             _emailer = emailer;
         }
+
         public void ConfirmHolidayWithClient(Client client, Employee employee, Holiday holiday)
         {
             _emailer.SendMail(client.OwnerEmail, "A holiday request from your employee",
                 $"Hello, {client.OwnerName}\nOne of your employees, {employee.Name} {employee.Surname}, is intending to go " +
-                $"on {((holiday.Type.ToString() == "Paternal") ? "Paternal/Maternal" : holiday.Type.ToString())} " +
+                $"on {holiday.Type} " +
                 $"holidays from {holiday.FromInclusive.ToShortDateString()} (inclusive) to " +
                 $"{holiday.ToExclusive.ToShortDateString()} (exclusive).\n" +
                 $"Click this link to confirm the holiday: https://localhost:44374/api/holidayclient?holidayid={holiday.Id} \n" +
@@ -27,8 +28,7 @@ namespace Xplicity_Holidays.Services
         public void ConfirmHolidayWithAdmin(Employee admin, Employee employee, Holiday holiday, string clientStatus)
         {
             _emailer.SendMail(admin.Email, "A holiday request from an employee",
-                $"Hello, {admin.Name},\nAn employee {employee.Name} {employee.Surname} is intending to go on " +
-                $"{((holiday.Type.ToString() == "Paternal") ? "Paternal/Maternal" : holiday.Type.ToString())} " +
+                $"Hello, {admin.Name},\nAn employee {employee.Name} {employee.Surname} is intending to go on " + holiday.Type +
                 $"holidays from {holiday.FromInclusive.ToShortDateString()} (inclusive) to {holiday.ToExclusive.ToShortDateString()} " +
                 $"(exclusive). " + clientStatus +
                 $"\nClick this link to confirm the holiday: https://localhost:44374/api/holidayconfirm?holidayid={holiday.Id} \n" +
@@ -78,7 +78,5 @@ namespace Xplicity_Holidays.Services
                 }
             }
         }
-
-
     }
 }
