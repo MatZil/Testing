@@ -64,6 +64,21 @@ namespace Xplicity_Holidays.Services
             }
         }
 
+        public void SendBirthDayReminder(ICollection<Employee> employeesWithBirthdays, ICollection<Employee> employees)
+        {
+            foreach (var employee in employees)
+            {
+                foreach (var employeeWithBirthday in employeesWithBirthdays)
+                {
+                    if (employee.Name != employeeWithBirthday.Name && employee.Surname != employeeWithBirthday.Surname)
+                    {
+                        _emailer.SendMail(employee.Email, "Birthday reminder", $"Today is {employeeWithBirthday.Name} " +
+                                          $"{employeeWithBirthday.Surname} birthday today!\r\nMake sure to congratulate them.");
+                    }
+                }
+            }
+        }
+
 
     }
 }

@@ -12,13 +12,13 @@ namespace Xplicity_Holidays.Services
 {
     public class BackgroundService : IBackgroundService
     {
-        private readonly ITimeService _timeservice;
+        private readonly ITimeService _timeService;
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
         public BackgroundService(ITimeService timeService, IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
-            _timeservice = timeService;
+            _timeService = timeService;
         }
 
         public async Task RunBackgroundServices()
@@ -27,11 +27,11 @@ namespace Xplicity_Holidays.Services
             {
                 await DoBackGroundChecks();
 
-                await Task.Delay(TimeSpan.FromDays(1));
+                await Task.Delay(TimeSpan.FromSeconds(6));
             }
         }
 
-        public async Task DoBackGroundChecks()
+        private async Task DoBackGroundChecks()
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
@@ -46,12 +46,14 @@ namespace Xplicity_Holidays.Services
                 await Task.Run(() => CheckForLastMonthDay(admin, holidays, emailService));
 
                 await Task.Run(() => CheckUpcomingHolidays(employees, holidays, emailService));
+
+                await Task.Run(() => CheckBirthdays(employees, _timeService, emailService));
             }
         }
 
-        public void CheckForLastMonthDay(Employee admin, ICollection<Holiday> holidays, IEmailService emailService)
+        private void CheckForLastMonthDay(Employee admin, ICollection<Holiday> holidays, IEmailService emailService)
         {
-            var currentTime = _timeservice.GetCurrentTime();
+            var currentTime = _timeService.GetCurrentTime();
             var thisMonthsHolidays = holidays.Where(h => h.IsConfirmed == true && (h.FromInclusive.Year == currentTime.Year
                                                   || h.ToExclusive.AddDays(-1).Year == currentTime.Year)
                                                   && (h.FromInclusive.Month == currentTime.Month
@@ -65,9 +67,9 @@ namespace Xplicity_Holidays.Services
             }
         }
 
-        public void CheckUpcomingHolidays(ICollection<Employee> employees, ICollection<Holiday> holidays, IEmailService emailService)
+        private void CheckUpcomingHolidays(ICollection<Employee> employees, ICollection<Holiday> holidays, IEmailService emailService)
         {
-            DateTime currentTime = _timeservice.GetCurrentTime();
+            DateTime currentTime = _timeService.GetCurrentTime();
 
             var upcomingHolidays = holidays.Where(holiday => holiday.IsConfirmed == true
                                                   && holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
@@ -77,6 +79,23 @@ namespace Xplicity_Holidays.Services
             {
                 //emailService.InformEmployeesAboutHoliday(employees, upcomingHolidays);
             }
+        }
+
+        private void CheckBirthdays(ICollection<Employee> employees, ITimeService _timeService, IEmailService emailService)
+        {
+            List<Employee> employeesWithBirthdays = new List<Employee>();
+            var currentTime = _timeService.GetCurrentTime();
+
+            foreach (Employee employee in employees)
+            {
+                if (employee.BirthdayDate.Month == currentTime.Month && employee.BirthdayDate.Day == currentTime.Day)
+                {
+                    employeesWithBirthdays.Add(employee);
+                }
+            }
+
+            //if (employeesWithBirthdays.Count != 0)
+                //emailService.SendBirthDayReminder(employeesWithBirthdays, employees);
         }
 
 
