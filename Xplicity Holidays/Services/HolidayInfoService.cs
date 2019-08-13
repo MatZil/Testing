@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
@@ -20,22 +21,24 @@ namespace Xplicity_Holidays.Services
             _timeService = timeService;
         }
 
-        public List<(string, double)> GetAllEmployeesHolidaysLeft()
+        public ICollection<HolidaysLeftDto> GetAllEmployeesHolidaysLeft()
         {
             List<Employee> employees = _repository.GetAll().Result.ToList();
 
             if (employees.Count == 0)
                 return null;
 
-            List<(string, double)> holidayDays = new List<(string, double)>();
+            List<HolidaysLeftDto> employeesHolidayCount = new List<HolidaysLeftDto>();
 
             foreach (var employee in employees)
             {
-                double holidaysLeft = GetNumberOfHolidaysLeft(employee.Id);
-                holidayDays.Add((employee.Name + " " + employee.Surname, holidaysLeft));
+                var holidaysLeftDto = new HolidaysLeftDto();
+                holidaysLeftDto.EmployeeId = employee.Id;
+                holidaysLeftDto.HolidaysLeft = GetNumberOfHolidaysLeft(employee.Id);
+                employeesHolidayCount.Add(holidaysLeftDto);
             }
 
-            return holidayDays;
+            return employeesHolidayCount;
         }
 
         public double GetNumberOfHolidaysLeft(int id)
