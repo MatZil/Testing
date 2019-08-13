@@ -32,6 +32,8 @@ import { EmployeesTableComponent } from './components/employees-table/employees-
 import { PolicyComponent } from './components/policy/policy.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
+import { PdfComponent } from './components/pdf/pdf.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 registerLocaleData(en);
 
@@ -47,7 +49,8 @@ registerLocaleData(en);
     EmployeesTableComponent,
     PolicyComponent,
     ProfileComponent,
-    HolidaysTableComponent
+    HolidaysTableComponent,
+    PdfComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +69,8 @@ registerLocaleData(en);
     MatTableModule,
     MatToolbarModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    PdfViewerModule
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US },
               { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
