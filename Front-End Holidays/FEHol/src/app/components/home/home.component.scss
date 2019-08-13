@@ -12,8 +12,15 @@
   
   .logo {
     height: 32px;
-    background: rgba(255, 255, 255, 0.2);
     margin: 16px;
+  }
+  .logoText{
+    text-align: center;
+    top: 25%;
+    position: relative;
+    color: lightgreen;
+    font-family: 'Arial';
+    font-size: large;
   }
   
   nz-header {
