@@ -12,5 +12,6 @@ namespace Xplicity_Holidays.Services.Interfaces
         void ConfirmHolidayWithAdmin(Employee admin, Employee employee, Holiday holiday, string clientStatus);
         void SendThisMonthsHolidayInfo(Employee admin, ICollection<Holiday> holidays);
         void InformEmployeesAboutHoliday(ICollection<Employee> employees, ICollection<Holiday> upcomingHolidays);
+        void SendBirthDayReminder(ICollection<Employee> employeesWithBirthdays, ICollection<Employee> employees);
     }
 }

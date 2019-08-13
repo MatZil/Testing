@@ -93,7 +93,7 @@ namespace Xplicity_Holidays.Services
          _timeService.GetCurrentTime().ToShortDateString(), 
          (holiday.Type.ToString() == "Annual") ? "kasmetinių" : (holiday.Type.ToString() == "Science") ? "mokslo" : "tėvystės/motinystės",
           holiday.FromInclusive.ToShortDateString(), holiday.ToExclusive.ToShortDateString(),
-         _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive) + 1, employee.Name, employee.Surname);
+         _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive), employee.Name, employee.Surname);
 
             _generator.GeneratePdf(strBuilder.ToString(), holiday.Id, "request");
         }
@@ -148,7 +148,7 @@ namespace Xplicity_Holidays.Services
           holiday.RequestCreatedDate.ToShortDateString(), employee.Name, employee.Surname, employee.Name, employee.Surname, 
           (holiday.Type.ToString() == "Annual" ? "kasmetines" :  (holiday.Type.ToString() == "Science" ? "mokslo" : "tėvystės/motinystės")),
           holiday.FromInclusive.ToShortDateString(), holiday.ToExclusive.ToShortDateString(), 
-          _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive) + 1);
+          _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive));
             _generator.GeneratePdf(strBuilder.ToString(), holiday.Id, "order");
         }
     }

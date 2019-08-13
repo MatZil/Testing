@@ -45,17 +45,17 @@ namespace Xplicity_Holidays.Services
             if (employee == null)
                 return 0;
 
+            var currentTime = _timeService.GetCurrentTime();
             double holidaysPerYear = employee.DaysOfVacation;
-            double daysInYear = 365;
+            double workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1)
+                                                             ,new DateTime(currentTime.AddYears(1).Year, 1, 1));
             DateTime startCheckFrom = employee.WorksFromDate;
 
-            int workDays = _timeService.GetWorkDays(startCheckFrom, _timeService.GetCurrentTime());
+            int workDays = _timeService.GetWorkDays(startCheckFrom, currentTime) - 1;
             List<Holiday> employeesHolidays = _repository.GetHolidays(employee.Id).Where(h => h.IsConfirmed == true).ToList();
             int daysOnHoliday = employeesHolidays.Sum(h => (h.ToExclusive - h.FromInclusive).Days);
 
-            double totalWorkDays = workDays - daysOnHoliday;
-
-            double holidaysLeft = (holidaysPerYear / daysInYear) * totalWorkDays - daysOnHoliday;
+            double holidaysLeft = (holidaysPerYear / workDaysPerYear) * workDays - daysOnHoliday;
             holidaysLeft = Math.Round(holidaysLeft, 2);
             return holidaysLeft;
         }

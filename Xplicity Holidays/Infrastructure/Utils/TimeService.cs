@@ -24,7 +24,6 @@ namespace Xplicity_Holidays.Infrastructure.Utils
                 workDays++;
                 from = from.AddDays(1);
             }
-            workDays--; //Subtract today
 
             return workDays;
         }
