@@ -15,7 +15,7 @@ namespace Xplicity_Holidays.Controllers
     {
         private readonly IHolidayConfirmService _confirmationService;
         private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration; 
         private readonly IHolidaysService _holidaysService;
 
         public HolidayConfirmController(IHolidayConfirmService confirmationService, IMapper mapper, IConfiguration configuration, 
