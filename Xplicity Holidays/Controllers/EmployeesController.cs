@@ -41,6 +41,7 @@ namespace Xplicity_Holidays.Controllers
         public async Task<IActionResult> Get()
         {
             var clients = await _employeesService.GetAll();
+
             return Ok(clients);
         }
 

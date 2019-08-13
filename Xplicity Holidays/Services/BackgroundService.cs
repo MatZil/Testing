@@ -59,39 +59,33 @@ namespace Xplicity_Holidays.Services
                                                   && (h.FromInclusive.Month == currentTime.Month
                                                   || h.ToExclusive.AddDays(-1).Month == currentTime.Month)).ToList();
 
-            DateTime nextDay = currentTime.AddDays(1);
+            var nextDay = currentTime.AddDays(1);
 
-            if (currentTime.Month != nextDay.Month)
-            {
+            //if(currentTime.Month != nextDay.Month)
                 //emailService.SendThisMonthsHolidayInfo(admin, thisMonthsHolidays);
-            }
         }
 
         private void CheckUpcomingHolidays(ICollection<Employee> employees, ICollection<Holiday> holidays, IEmailService emailService)
         {
-            DateTime currentTime = _timeService.GetCurrentTime();
+            var currentTime = _timeService.GetCurrentTime();
 
             var upcomingHolidays = holidays.Where(holiday => holiday.Status == "string" && 
-                                                             holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
+                                                 holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
                                                   .ToList();
 
-            if (upcomingHolidays.Count != 0)
-            {
+            //if(upcomingHolidays.Count != 0)
                 //emailService.InformEmployeesAboutHoliday(employees, upcomingHolidays);
             }
-        }
 
         private void CheckBirthdays(ICollection<Employee> employees, ITimeService _timeService, IEmailService emailService)
         {
-            List<Employee> employeesWithBirthdays = new List<Employee>();
+            var employeesWithBirthdays = new List<Employee>();
             var currentTime = _timeService.GetCurrentTime();
 
-            foreach (Employee employee in employees)
+            foreach (var employee in employees)
             {
                 if (employee.BirthdayDate.Month == currentTime.Month && employee.BirthdayDate.Day == currentTime.Day)
-                {
                     employeesWithBirthdays.Add(employee);
-                }
             }
 
             //if (employeesWithBirthdays.Count != 0)

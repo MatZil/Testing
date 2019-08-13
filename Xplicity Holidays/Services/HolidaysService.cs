@@ -27,6 +27,7 @@ namespace Xplicity_Holidays.Services
         {
             var holiday = await _repository.GetById(id);
             var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
+
             return holidayDto;
         }
 
@@ -34,6 +35,7 @@ namespace Xplicity_Holidays.Services
         {
             var holidays = await _repository.GetAll();
             var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays);
+
             return holidaysDto;
         }
 
@@ -45,16 +47,19 @@ namespace Xplicity_Holidays.Services
             newHoliday.RequestCreatedDate = _timeService.GetCurrentTime();
             newHoliday.Status = "Unconfirmed";
             var holidayId = await _repository.Create(newHoliday);
+
             return holidayId;
         }
 
         public async Task<bool> Delete(int id)
         {
             var item = await _repository.GetById(id);
+
             if (item == null)
                 return false;
 
             var deleted = await _repository.Delete(item);
+
             return deleted;
         }
 

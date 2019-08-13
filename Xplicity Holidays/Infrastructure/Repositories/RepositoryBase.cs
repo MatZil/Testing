@@ -34,6 +34,7 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
         {
             ItemSet.Add(entity);
             await Context.SaveChangesAsync();
+
             return entity.Id;
         }
 
@@ -41,6 +42,7 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
         {
             ItemSet.Attach(entity);
             var changes = await Context.SaveChangesAsync();
+
             return changes > 0;
         }
 
@@ -48,6 +50,7 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
         {
             ItemSet.Remove(entity);
             var changes = await Context.SaveChangesAsync();
+
             return changes > 0;
         }
     }

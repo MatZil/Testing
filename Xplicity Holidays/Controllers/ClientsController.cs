@@ -24,6 +24,7 @@ namespace Xplicity_Holidays.Controllers
         public async Task<IActionResult> Get()
         {
             var clients = await _clientsService.GetAll();
+
             return Ok(clients);
         }
 
@@ -67,6 +68,5 @@ namespace Xplicity_Holidays.Controllers
 
             return NoContent();
         }
-
     }
 }

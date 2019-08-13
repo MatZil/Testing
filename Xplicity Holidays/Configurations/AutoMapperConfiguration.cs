@@ -40,6 +40,5 @@ namespace Xplicity_Holidays.Configurations
             CreateMap<UpdateEmployeeDto, Employee>(MemberList.None);
             CreateMap<Employee, UpdateEmployeeDto>(MemberList.None);
         }
-            
     }
 }

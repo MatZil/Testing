@@ -104,8 +104,6 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<DateTime>("FromInclusive");
 
-                    b.Property<bool>("IsConfirmed");
-
                     b.Property<DateTime>("RequestCreatedDate");
 
                     b.Property<string>("Status")

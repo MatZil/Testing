@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xplicity_Holidays.Infrastructure.Database.Models;
+using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
@@ -19,22 +19,27 @@ namespace Xplicity_Holidays.Services
             _timeService = timeService;
         }
 
-        public List<(string, double)> GetAllEmployeesHolidaysLeft()
+        public ICollection<HolidaysLeftDto> GetAllEmployeesHolidaysLeft()
         {
-            List<Employee> employees = _repository.GetAll().Result.ToList();
+            var employees = _repository.GetAll().Result.ToList();
 
             if (employees.Count == 0)
                 return null;
 
-            List<(string, double)> holidayDays = new List<(string, double)>();
+            var employeesHolidayCount = new List<HolidaysLeftDto>();
 
             foreach (var employee in employees)
             {
-                double holidaysLeft = GetNumberOfHolidaysLeft(employee.Id);
-                holidayDays.Add((employee.Name + " " + employee.Surname, holidaysLeft));
+                var holidaysLeftDto = new HolidaysLeftDto
+                {
+                    EmployeeId = employee.Id,
+                    HolidaysLeft = GetNumberOfHolidaysLeft(employee.Id)
+                };
+
+                employeesHolidayCount.Add(holidaysLeftDto);
             }
 
-            return holidayDays;
+            return employeesHolidayCount;
         }
 
         public double GetNumberOfHolidaysLeft(int id)
@@ -48,14 +53,15 @@ namespace Xplicity_Holidays.Services
             double holidaysPerYear = employee.DaysOfVacation;
             double workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1)
                                                              ,new DateTime(currentTime.AddYears(1).Year, 1, 1));
-            DateTime startCheckFrom = employee.WorksFromDate;
+            var startCheckFrom = employee.WorksFromDate;
 
-            int workDays = _timeService.GetWorkDays(startCheckFrom, currentTime) - 1;
-            List<Holiday> employeesHolidays = _repository.GetHolidays(employee.Id).Where(h => h.Status == "Confirmed").ToList();
-            int daysOnHoliday = employeesHolidays.Sum(h => (h.ToExclusive - h.FromInclusive).Days);
+            var workDays = _timeService.GetWorkDays(startCheckFrom, currentTime) - 1;
+            var employeesHolidays = _repository.GetHolidays(employee.Id).Where(h => h.Status == "Confirmed").ToList();
+            var daysOnHoliday = employeesHolidays.Sum(h => (h.ToExclusive - h.FromInclusive).Days);
 
-            double holidaysLeft = (holidaysPerYear / workDaysPerYear) * workDays - daysOnHoliday;
+            var holidaysLeft = (holidaysPerYear / workDaysPerYear) * workDays - daysOnHoliday;
             holidaysLeft = Math.Round(holidaysLeft, 2);
+
             return holidaysLeft;
         }
     }

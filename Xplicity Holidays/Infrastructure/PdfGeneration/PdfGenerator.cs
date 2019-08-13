@@ -23,7 +23,7 @@ namespace Xplicity_Holidays.Infrastructure.PdfGeneration
             var globalSettings = SetGlobalSettings(holidayId.ToString(), pdfType);
             var objectSettings = SetObjectSettings(htmlString, pdfType);
 
-            var pdf = new HtmlToPdfDocument()
+            var pdf = new HtmlToPdfDocument
             {
                 GlobalSettings = globalSettings,
                 Objects = { objectSettings }
@@ -44,9 +44,9 @@ namespace Xplicity_Holidays.Infrastructure.PdfGeneration
                 Margins = new MarginSettings { Top = 10 },
                 DocumentTitle = _configuration[(pdfType == "request") ? "PdfConfig:RequestTitle" : "PdfConfig:OrderTitle"],
                 Out = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + 
-                                                ((pdfType == "request") ? 
-                                                        @"\Pdfs\Requests\Holiday_Request_" + $"{holidayId}.pdf":
-                                                        @"\Pdfs\Orders\Holiday_Order_" + $"{holidayId}.pdf")
+                      (pdfType == "request" ? 
+                          @"\Pdfs\Requests\Holiday_Request_" + $"{holidayId}.pdf":
+                          @"\Pdfs\Orders\Holiday_Order_" + $"{holidayId}.pdf")
             };
         }
 
@@ -56,17 +56,17 @@ namespace Xplicity_Holidays.Infrastructure.PdfGeneration
             {
                 PagesCount = _configuration.GetValue<bool>("PdfConfig:PagesCount"),
                 HtmlContent = htmlString,
-                WebSettings = {DefaultEncoding = _configuration["PdfConfig:DefaultEncoding"],
-                UserStyleSheet = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) +
-                                 ((pdfType == "request") ? @"\StyleSheets\Request.css" : @"\StyleSheets\Order.css")},
-                HeaderSettings =
-                {
+                WebSettings = {
+                    DefaultEncoding = _configuration["PdfConfig:DefaultEncoding"],
+                    UserStyleSheet = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) +
+                                    (pdfType == "request" ? @"\StyleSheets\Request.css" : @"\StyleSheets\Order.css")
+                },
+                HeaderSettings = {
                     FontName = _configuration["PdfConfig:FontName"],
                     FontSize = _configuration.GetValue<int>("PdfConfig:FontSize"),
                     Line = _configuration.GetValue<bool>("PdfConfig:Line")
                 },
-                FooterSettings =
-                {
+                FooterSettings = {
                     FontName = _configuration["PdfConfig:FontName"],
                     FontSize = _configuration.GetValue<int>("PdfConfig:FontSize"),
                     Line = _configuration.GetValue<bool>("PdfConfig:Line")
@@ -77,8 +77,9 @@ namespace Xplicity_Holidays.Infrastructure.PdfGeneration
         internal void LoadDll()
         {
             var context = new CustomAssemblyLoadContext();
+
             context.LoadUnmanagedLibrary(_configuration.GetValue<string>(WebHostDefaults.ContentRootKey) +
-                                                    @"\Infrastructure\PdfGeneration\Pdf Gen Helpers\libwkhtmltox.dll");
+                                         @"\Infrastructure\PdfGeneration\Pdf Gen Helpers\libwkhtmltox.dll");
         }
 
         internal class CustomAssemblyLoadContext : AssemblyLoadContext
@@ -88,7 +89,7 @@ namespace Xplicity_Holidays.Infrastructure.PdfGeneration
                 return LoadUnmanagedDll(absolutePath);
             }
 
-            protected override IntPtr LoadUnmanagedDll(String unmanagedDllName)
+            protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
             {
                 return LoadUnmanagedDllFromPath(unmanagedDllName);
             }

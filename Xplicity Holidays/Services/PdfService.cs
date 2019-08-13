@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.PdfGeneration;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
@@ -17,6 +16,7 @@ namespace Xplicity_Holidays.Services
             _generator = generator;
             _timeService = timeService;
         }
+
         public void CreateRequestPdf(Holiday holiday, Employee employee)
         {
             var strBuilder = new StringBuilder();
@@ -89,9 +89,9 @@ namespace Xplicity_Holidays.Services
         </p>
     </body>
 </html>", employee.Position, employee.Name, employee.Surname,
-         (holiday.Type.ToString() == "Annual") ? "KASMETINIŲ" : (holiday.Type.ToString() == "Science") ? "MOKSLO" : "TĖVYSTĖS/MOTINYSTĖS", 
+          holiday.Type.ToString() == "Annual" ? "KASMETINIŲ" : holiday.Type.ToString() == "Science" ? "MOKSLO" : "TĖVYSTĖS/MOTINYSTĖS", 
          _timeService.GetCurrentTime().ToShortDateString(), 
-         (holiday.Type.ToString() == "Annual") ? "kasmetinių" : (holiday.Type.ToString() == "Science") ? "mokslo" : "tėvystės/motinystės",
+          holiday.Type.ToString() == "Annual" ? "kasmetinių" : holiday.Type.ToString() == "Science" ? "mokslo" : "tėvystės/motinystės",
           holiday.FromInclusive.ToShortDateString(), holiday.ToExclusive.ToShortDateString(),
          _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive), employee.Name, employee.Surname);
 
@@ -146,9 +146,10 @@ namespace Xplicity_Holidays.Services
     </body>
 </html>", holiday.Id, _timeService.GetCurrentTime().Year, _timeService.GetCurrentTime().Month, _timeService.GetCurrentTime().Day,
           holiday.RequestCreatedDate.ToShortDateString(), employee.Name, employee.Surname, employee.Name, employee.Surname, 
-          (holiday.Type.ToString() == "Annual" ? "kasmetines" :  (holiday.Type.ToString() == "Science" ? "mokslo" : "tėvystės/motinystės")),
+          holiday.Type.ToString() == "Annual" ? "kasmetines" :  holiday.Type.ToString() == "Science" ? "mokslo" : "tėvystės/motinystės",
           holiday.FromInclusive.ToShortDateString(), holiday.ToExclusive.ToShortDateString(), 
           _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive));
+
             _generator.GeneratePdf(strBuilder.ToString(), holiday.Id, "order");
         }
     }

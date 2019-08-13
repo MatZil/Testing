@@ -9,19 +9,18 @@ using System.Text;
 using Xplicity_Holidays.Infrastructure.Database;
 using Swashbuckle.AspNetCore.Filters;
 
-
 namespace Xplicity_Holidays.Configurations
 {
     public static class StartupExtensions
     {
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("holidays", new Info { Title = "Xplicity holidays", Version = "v1" });
+            services.AddSwaggerGen(options => {
+                options.SwaggerDoc("holidays", new Info { Title = "Xplicity holidays", Version = "v1" });
 
-                c.OperationFilter<SecurityRequirementsOperationFilter>();
-                c.AddSecurityDefinition("oauth2", new ApiKeyScheme
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
+
+                options.AddSecurityDefinition("oauth2", new ApiKeyScheme
                 {
                     Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
                     In = "header",
@@ -37,13 +36,12 @@ namespace Xplicity_Holidays.Configurations
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
+
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
             // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                //                c.SwaggerEndpoint("/swagger/v1/swagger.json", "version_demo");
-                c.SwaggerEndpoint("/swagger/holidays/swagger.json", "Xplicity");
-                c.RoutePrefix = "holidays";
+            app.UseSwaggerUI(options => {
+                options.SwaggerEndpoint("/swagger/holidays/swagger.json", "Xplicity");
+                options.RoutePrefix = "holidays";
             });
         }
 
@@ -59,6 +57,7 @@ namespace Xplicity_Holidays.Configurations
             {
                 cfg.AddProfile(new AutoMapperConfiguration());
             });
+
             var mapper = config.CreateMapper();
 
             services.AddSingleton(mapper);
@@ -82,23 +81,24 @@ namespace Xplicity_Holidays.Configurations
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            services.AddAuthentication(auth =>
-            {
-                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(bearer =>
-            {
-                bearer.RequireHttpsMetadata = false;
-                bearer.SaveToken = true;
-                bearer.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+
+            services
+                .AddAuthentication(auth => {
+                    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(bearer => {
+                    bearer.RequireHttpsMetadata = false;
+                    bearer.SaveToken = true;
+                    bearer.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
             return services;
         }
     }

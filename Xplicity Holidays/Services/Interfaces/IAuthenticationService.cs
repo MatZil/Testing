@@ -3,11 +3,9 @@ using Xplicity_Holidays.Infrastructure.Repositories;
 
 namespace Xplicity_Holidays.Services.Interfaces
 {
-    public interface IAuthService
+    public interface IAuthenticationService
     {
         Employee Authenticate(IEmployeeRepository repository, string email, string password);
         void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
-        bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt);
-        string CreateJwt(Employee employee);
     }
 }

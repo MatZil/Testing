@@ -9,7 +9,6 @@ using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Services
 {
-    
     public class ClientsService : IClientsService
     {
         private readonly IRepository<Client> _repository;
@@ -25,6 +24,7 @@ namespace Xplicity_Holidays.Services
         {
             var client = await _repository.GetById(id);
             var clientDto = _mapper.Map<GetClientDto>(client);
+
             return clientDto;
         }
 
@@ -32,23 +32,26 @@ namespace Xplicity_Holidays.Services
         {
             var clients = await _repository.GetAll();
             var clientsDto = _mapper.Map<GetClientDto[]>(clients);
+
             return clientsDto;
         }
 
         public async Task<NewClientDto> Create(NewClientDto newClientDto)
         {
-            if (newClientDto == null) throw new ArgumentNullException(nameof(newClientDto));
+            if (newClientDto == null)
+                throw new ArgumentNullException(nameof(newClientDto));
 
             var newClient = _mapper.Map<Client>(newClientDto);
             await _repository.Create(newClient);
-
             var clientDto = _mapper.Map<NewClientDto>(newClient);
+
             return clientDto;
         }
 
         public async Task<bool> Delete(int id)
         {
             var item = await _repository.GetById(id);
+
             if (item == null)
                 return false;
 
