@@ -24,6 +24,7 @@ namespace Xplicity_Holidays.Controllers
         public async Task<IActionResult> Get()
         {
             var clients = await _clientsService.GetAll();
+
             return Ok(clients);
         }
 
@@ -35,9 +36,7 @@ namespace Xplicity_Holidays.Controllers
             var client = await _clientsService.GetById(id);
 
             if (client == null)
-            {
                 return NotFound();
-            }
 
             return Ok(client);
         }
@@ -69,6 +68,5 @@ namespace Xplicity_Holidays.Controllers
 
             return NoContent();
         }
-
     }
 }

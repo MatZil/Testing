@@ -13,9 +13,9 @@ namespace Xplicity_Holidays.Services
     {
         private readonly IEmployeeRepository _repository;
         private readonly IMapper _mapper;
-        private readonly IAuthService _authenticationService;
+        private readonly IAuthenticationService _authenticationService;
 
-        public EmployeesService(IEmployeeRepository repository, IAuthService authenticationService, IMapper mapper)
+        public EmployeesService(IEmployeeRepository repository, IAuthenticationService authenticationService, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -25,6 +25,7 @@ namespace Xplicity_Holidays.Services
         public Employee Authenticate(string email, string password)
         {
             var employee = _authenticationService.Authenticate(_repository, email, password);
+
             _repository.Update(employee);
 
             return employee;
@@ -34,6 +35,7 @@ namespace Xplicity_Holidays.Services
         {
             var employee = await _repository.GetById(id);
             var employeeDto = _mapper.Map<GetEmployeeDto>(employee);
+
             return employeeDto;
         }
 
@@ -41,13 +43,16 @@ namespace Xplicity_Holidays.Services
         {
             var employees = await _repository.GetAll();
             var employeesDto = _mapper.Map<GetEmployeeDto[]>(employees);
+
             return employeesDto;
         }
 
         public async Task<NewEmployeeDto> Create(NewEmployeeDto newEmployeeDto)
         {
-            if (newEmployeeDto == null) throw new ArgumentNullException(nameof(newEmployeeDto));
-            string password = newEmployeeDto.Password;
+            if (newEmployeeDto == null)
+                throw new ArgumentNullException(nameof(newEmployeeDto));
+
+            var password = newEmployeeDto.Password;
 
             if (string.IsNullOrWhiteSpace(password))
                 throw new Exception("Password is required");
@@ -72,10 +77,12 @@ namespace Xplicity_Holidays.Services
         public async Task<bool> Delete(int id)
         {
             var item = await _repository.GetById(id);
+
             if (item == null)
                 return false;
 
             var deleted = await _repository.Delete(item);
+
             return deleted;
         }
 

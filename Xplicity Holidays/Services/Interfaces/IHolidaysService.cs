@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xplicity_Holidays.Dtos.Holidays;
+
 namespace Xplicity_Holidays.Services.Interfaces
 {
     public interface IHolidaysService
