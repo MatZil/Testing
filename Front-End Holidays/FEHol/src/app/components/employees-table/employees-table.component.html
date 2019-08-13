@@ -1,7 +1,7 @@
 <button nz-button nzType="primary" (click)=showModalCreator()>Add new employee</button>
 <form #newClientForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(newClientForm)">
-    <nz-modal [(nzVisible)]="isVisibleCreator" [nzTitle]="modalTitl" [nzContent]="modalConten"
-        [nzFooter]="modalFoote" (nzOnCancel)="handleCancelCreator()">
+    <nz-modal [(nzVisible)]="isVisibleCreator" [nzTitle]="modalTitl" [nzContent]="modalConten" [nzFooter]="modalFoote"
+        (nzOnCancel)="handleCancelCreator()">
         <ng-template #modalTitl>
             Add new employee
         </ng-template>
@@ -68,16 +68,17 @@
                 </div>
                 <div>
                     <mat-form-field>
-                        <input matInput [(ngModel)]="newUser.email" type="text" name="email"
-                            placeholder="Employee email" required #nameInput="ngModel">
+                        <input matInput [(ngModel)]="newUser.email" type="email" name="email"
+                            placeholder="Employee email" required #nameInput="ngModel"
+                            pattern="[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}">
                         <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-                            Employee email cannot be empty.
+                            Employee email is invalid.
                         </mat-error>
                     </mat-form-field>
                 </div>
                 <div>
                     <mat-form-field>
-                        <input matInput [(ngModel)]="newUser.password" type="text" name="password"
+                        <input matInput [(ngModel)]="newUser.password" type="password" name="password"
                             placeholder="Employee password" required #nameInput="ngModel">
                         <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
                             Employee password cannot be empty.
@@ -86,11 +87,15 @@
                 </div>
                 <div>
                     <mat-form-field>
-                        <input matInput [(ngModel)]="newUser.role" type="text" name="role" placeholder="Employee role"
-                            required #nameInput="ngModel">
-                        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-                            Employee role cannot be empty.
-                        </mat-error>
+                        <mat-select [(ngModel)]="newUser.role" name="role" placeholder="Employee role" required
+                            #nameInput="ngModel">
+                            <mat-option [value]="'admin'">Admin</mat-option>
+                            <mat-option [value]="'employee'">Employee</mat-option>
+                            <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                class="error">
+                                Employee role cannot be empty.
+                            </mat-error>
+                        </mat-select>
                     </mat-form-field>
                 </div>
                 <div>
@@ -107,8 +112,8 @@
 
         <ng-template #modalFoote>
             <button nz-button nzType="default" (click)="handleCancelCreator()">Cancel</button>
-            <button nz-button nzType="primary" (click)="onAddButtonClick(newUser)" (click)="handleOkCreator()"
-                [nzLoading]="isConfirmLoadingCreator" [disabled]="newClientForm.form.invalid">Add employee</button>
+            <button nz-button nzType="primary" (click)="onAddButtonClick(newUser)" [nzLoading]="isConfirmLoadingCreator"
+                [disabled]="newClientForm.form.invalid">Add employee</button>
         </ng-template>
     </nz-modal>
 </form>
@@ -117,7 +122,11 @@
     <thead>
         <tr>
             <th>Name</th>
-            <th>Surname</th>
+            <th nzCustomFilter>Surname
+                <i class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                    [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                    nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+            </th>
             <th>Client</th>
             <th>Works from</th>
             <th>Birthday date</th>
@@ -141,7 +150,7 @@
                     (click)="populateUserForm(user); showModalEditor(); populateUserFormNoId(user)">Edit</button>
             </td>
         </tr>
-        <form #newUsersForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(newUsersForm)">
+        <form #editUsersForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(editUsersForm)">
             <nz-modal [(nzVisible)]="isVisibleEditor" [nzTitle]="modalTitle" [nzContent]="modalContent"
                 [nzFooter]="modalFooter" (nzOnCancel)="handleCancelEditor()">
                 <ng-template #modalTitle>
@@ -182,8 +191,8 @@
                         </div>
                         <div>
                             <mat-form-field>
-                                <input matInput [(ngModel)]="formDataUsersNoId.worksFromDate" type="date"
-                                    name="worksFromDate" placeholder="Started working from date" required
+                                <input matInput [ngModel]="formDataUsersNoId.worksFromDate | date: 'yyyy/MM/dd'"
+                                    type="date" name="worksFromDate" placeholder="Started working from date" required
                                     #nameInput="ngModel">
                                 <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                     class="error">
@@ -218,10 +227,11 @@
                         <div>
                             <mat-form-field>
                                 <input matInput [(ngModel)]="formDataUsersNoId.email" type="text" name="email"
-                                    placeholder="Employee email" required #nameInput="ngModel">
+                                    placeholder="Employee email" required #nameInput="ngModel"
+                                    pattern="[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}">
                                 <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                     class="error">
-                                    Employee email cannot be empty.
+                                    Employee email is invalid.
                                 </mat-error>
                             </mat-form-field>
                         </div>
@@ -251,11 +261,21 @@
                 <ng-template #modalFooter>
                     <button nz-button nzType="default" (click)="handleCancelEditor()">Cancel</button>
                     <button nz-button nzType="danger" (click)="showDeleteConfirm(formDataUsers.id)">Delete</button>
-                    <button nz-button nzType="primary" (click)="handleCancelEditor()"
+                    <button nz-button nzType="primary"
                         (click)="onEditConfirmButtonClick(formDataUsersNoId, formDataUsers.id)"
-                        [disabled]="newClientForm.form.invalid">Confirm edit</button>
+                        [disabled]="editUsersForm.form.invalid">Confirm edit</button>
                 </ng-template>
             </nz-modal>
         </form>
     </tbody>
 </nz-table>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+    <div class="search-box">
+        <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
+        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+            Search
+        </button>
+        <button nz-button nzSize="small" (click)="reset()">Reset</button>
+    </div>
+</nz-dropdown-menu>

@@ -33,6 +33,8 @@ import { PolicyComponent } from './components/policy/policy.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
 
+import { DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService} from '@syncfusion/ej2-angular-schedule';
+
 registerLocaleData(en);
 
 @NgModule({
@@ -70,7 +72,13 @@ registerLocaleData(en);
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US },
               { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-              { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
+              { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+              DayService,
+              WeekService,
+              WorkWeekService,
+              MonthService,
+              AgendaService,
+              MonthAgendaService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

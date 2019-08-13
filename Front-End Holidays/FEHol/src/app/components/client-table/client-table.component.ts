@@ -5,6 +5,7 @@ import { Newclient } from '../../models/newclient';
 import { ClientService } from '../../services/client.service';
 import { NgForm } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
+import { NzNotificationService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-client-table',
@@ -12,7 +13,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd';
   styleUrls: ['./client-table.component.scss']
 })
 export class ClientTableComponent implements OnInit {
-  client: Client[];
+  client: Client[] = [];
   formData: Client;
   formDataNoId: Newclient;
   newClient: Newclient = new Newclient();
@@ -23,9 +24,16 @@ export class ClientTableComponent implements OnInit {
 
   confirmDeleteModal: NzModalRef;
 
+  searchValue = '';
+  listOfSearchAddress: string[] = [];
+  sortName: string | null = null;
+  sortValue: string | null = null;
+  listOfData: Client[] = [];
+
   constructor(
     private clientService: ClientService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private notification: NzNotificationService
   ) { }
 
   ngOnInit() {
@@ -34,12 +42,18 @@ export class ClientTableComponent implements OnInit {
 
   refreshTable() {
     this.clientService.getClient().subscribe(clients => {
-      this.client = clients; });
+      this.client = clients;
+      this.listOfData = [...this.client];
+    });
   }
 
   onAddButtonClick(clien: Client) {
     this.clientService.addClient(clien).subscribe(() => {
-      this.refreshTable(); });
+      this.refreshTable();
+      this.handleOkCreator();
+    }, error => {
+      this.createBasicNotification();
+    });
   }
 
   showModalCreator(): void {
@@ -78,7 +92,8 @@ export class ClientTableComponent implements OnInit {
 
   onDeleteButtonClick(id: number) {
     this.clientService.deleteClient(id).subscribe(() => {
-      this.refreshTable(); });
+      this.refreshTable();
+    });
   }
 
   onEditButtonClick(clien: Client) {
@@ -87,7 +102,11 @@ export class ClientTableComponent implements OnInit {
 
   onEditConfirmButtonClick(client: Newclient, id: number) {
     this.clientService.editClient(client, id).subscribe(() => {
-      this.refreshTable(); });
+      this.refreshTable();
+      this.handleCancelEditor();
+    }, error => {
+      this.createBasicNotification();
+    });
   }
 
   populateForm(clien: Client) {
@@ -109,5 +128,41 @@ export class ClientTableComponent implements OnInit {
       nzContent: 'When clicked the OK button this section will be deleted',
       nzOnOk: () => this.deleteClientOnModalClose(id)
     });
+  }
+
+  createBasicNotification(): void {
+    this.notification.blank(
+      'Form error',
+      'A client with this company name already exists'
+    );
+  }
+
+  reset(): void {
+    this.searchValue = '';
+    this.search();
+  }
+
+  search(): void {
+    const filterFunc = (item: { companyName: string; ownerName: string; ownerSurname: string;
+                                ownerEmail: string; ownerPhone: string; }) => {
+      return (
+        (this.listOfSearchAddress.length
+          ? this.listOfSearchAddress.some(ownerName => item.ownerName.indexOf(ownerName) !== -1)
+          : true) && item.companyName.indexOf(this.searchValue) !== -1
+      );
+    };
+    const data = this.listOfData.filter((item: { companyName: string; ownerName: string; ownerSurname: string;
+                                             ownerEmail: string; ownerPhone: string; }) => filterFunc(item));
+    this.client = data.sort((a, b) =>
+      this.sortValue === 'ascend'
+        // tslint:disable-next-line:no-non-null-assertion
+        ? a[this.sortName!] > b[this.sortName!]
+          ? 1
+          : -1
+        // tslint:disable-next-line:no-non-null-assertion
+        : b[this.sortName!] > a[this.sortName!]
+          ? 1
+          : -1
+    );
   }
 }

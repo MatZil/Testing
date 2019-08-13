@@ -10,7 +10,7 @@ import { ClientService } from '../../services/client.service';
 
 import { NgForm } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
-import { DateAdapter } from '@angular/material/core';
+import { NzNotificationService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-employees-table',
@@ -23,7 +23,7 @@ export class EmployeesTableComponent implements OnInit {
   formDataUsersNoId: Updateuser;
   newUser: Newuser = new Newuser();
 
-  clients: Client[];
+  clients: Client[] = [];
   oneClient: Client;
 
   isVisibleCreator = false;
@@ -32,10 +32,17 @@ export class EmployeesTableComponent implements OnInit {
 
   confirmDeleteModal: NzModalRef;
 
+  searchValue = '';
+  listOfSearchAddress: string[] = [];
+  sortName: string | null = null;
+  sortValue: string | null = null;
+  listOfData: User[] = [];
+
   constructor(
     private userService: UserService,
     private clientService: ClientService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private notification: NzNotificationService
   ) { }
 
   ngOnInit() {
@@ -48,12 +55,16 @@ export class EmployeesTableComponent implements OnInit {
 
   refreshTable() {
     this.userService.getAllUsers().subscribe(users => {
-      this.users = users; });
+      this.users = users;
+      this.listOfData = [...this.users]; });
   }
 
   onAddButtonClick(user: User) {
     this.userService.registerUser(user).subscribe(() => {
-      this.refreshTable(); });
+      this.refreshTable();
+      this.handleOkCreator(); }, error => {
+        this.createBasicNotification();
+      });
   }
 
   onDeleteButtonClick(id: number) {
@@ -67,7 +78,10 @@ export class EmployeesTableComponent implements OnInit {
 
   onEditConfirmButtonClick(user: Updateuser, id: number) {
     this.userService.editUser(user, id).subscribe(() => {
-      this.refreshTable(); });
+      this.refreshTable();
+      this.handleCancelEditor(); }, error => {
+        this.createBasicNotification();
+      });
   }
 
   deleteEmployeeOnModalClose(id: number) {
@@ -127,5 +141,73 @@ export class EmployeesTableComponent implements OnInit {
     }
 
     return 'No client';
+  }
+
+  createBasicNotification(): void {
+    this.notification.blank(
+      'Form error',
+      'An employee with this email already exists'
+    );
+  }
+
+  formatDate(date: Date) {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) {
+      month = '0' + month;
+    }
+    if (day.length < 2) {
+      day = '0' + day;
+    }
+
+    return [year, month, day].join('-');
+  }
+
+  reset(): void {
+    this.searchValue = '';
+    this.search();
+  }
+
+  search(): void {
+    const filterFunc = (item: {
+      name: string;
+      surname: string;
+      clientId: number;
+      worksFromDate: Date;
+      birthdayDate: Date;
+      daysOfVacation: number;
+      email: string;
+      role: string;
+      position: string; }) => {
+      return (
+        (this.listOfSearchAddress.length
+          ? this.listOfSearchAddress.some(name => item.name.indexOf(name) !== -1)
+          : true) && item.surname.indexOf(this.searchValue) !== -1
+      );
+    };
+    const data = this.listOfData.filter((item: {
+      name: string;
+      surname: string;
+      clientId: number;
+      worksFromDate: Date;
+      birthdayDate: Date;
+      daysOfVacation: number;
+      email: string;
+      role: string;
+      position: string; }) => filterFunc(item));
+    this.users = data.sort((a, b) =>
+      this.sortValue === 'ascend'
+        // tslint:disable-next-line:no-non-null-assertion
+        ? a[this.sortName!] > b[this.sortName!]
+          ? 1
+          : -1
+        // tslint:disable-next-line:no-non-null-assertion
+        : b[this.sortName!] > a[this.sortName!]
+          ? 1
+          : -1
+    );
   }
 }
