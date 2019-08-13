@@ -12,7 +12,7 @@ namespace Xplicity_Holidays.Infrastructure.Utils
 
         public int GetWorkDays(DateTime from, DateTime to)
         {
-            int workDays = 0;
+            var workDays = 0;
 
             while (from < to)
             {

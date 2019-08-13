@@ -34,11 +34,13 @@ namespace Xplicity_Holidays.Services
             if (employee.ClientId == null)
             {
                 await RequestAdminApproval(holidayId, "This employee has no client that needs to confirm it.");
+
                 return true;
             }
 
             var client = await _repositoryClients.GetById(employee.ClientId.GetValueOrDefault());
             _emailService.ConfirmHolidayWithClient(client, employee, holiday);
+
             return true;
         }
 
@@ -48,6 +50,7 @@ namespace Xplicity_Holidays.Services
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
             var admin = await _repositoryEmployees.FindAnyAdmin();
             _emailService.ConfirmHolidayWithAdmin(admin, employee, holiday, clientStatus);
+
             return true;
         }
 
@@ -57,6 +60,7 @@ namespace Xplicity_Holidays.Services
             holiday.Id = holidayId;
             var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
             _pdfService.CreateRequestPdf(holiday, employee);
+
             return true;
         }
 
@@ -65,6 +69,7 @@ namespace Xplicity_Holidays.Services
             var holiday = await _repositoryHolidays.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
             _pdfService.CreateOrderPdf(holiday, employee);
+
             return true;
         }
     }

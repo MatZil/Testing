@@ -47,7 +47,6 @@ namespace Xplicity_Holidays.Controllers
         {
             var getHolidayDto = await _holidaysService.GetById(holidayId);
             var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(getHolidayDto);
-            updateHolidayDto.IsConfirmed = true;
             updateHolidayDto.Status = "Confirmed";
             await _holidaysService.Update(holidayId, updateHolidayDto);
 

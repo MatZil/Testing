@@ -9,9 +9,8 @@ namespace Xplicity_Holidays.Configurations
     public class AutoMapperConfiguration : Profile
     {
         public AutoMapperConfiguration() : this("Holidays")
-        {
+        { }
 
-        }
         protected AutoMapperConfiguration(string name) : base(name)
         {
             CreateMap<NewClientDto, Client>(MemberList.None);
@@ -41,6 +40,5 @@ namespace Xplicity_Holidays.Configurations
             CreateMap<UpdateEmployeeDto, Employee>(MemberList.None);
             CreateMap<Employee, UpdateEmployeeDto>(MemberList.None);
         }
-            
     }
 }

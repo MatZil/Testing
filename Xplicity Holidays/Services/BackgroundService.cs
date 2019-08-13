@@ -54,44 +54,38 @@ namespace Xplicity_Holidays.Services
         private void CheckForLastMonthDay(Employee admin, ICollection<Holiday> holidays, IEmailService emailService)
         {
             var currentTime = _timeService.GetCurrentTime();
-            var thisMonthsHolidays = holidays.Where(h => h.IsConfirmed == true && (h.FromInclusive.Year == currentTime.Year
+            var thisMonthsHolidays = holidays.Where(h => h.Status == "Confirmed" && (h.FromInclusive.Year == currentTime.Year
                                                   || h.ToExclusive.AddDays(-1).Year == currentTime.Year)
                                                   && (h.FromInclusive.Month == currentTime.Month
                                                   || h.ToExclusive.AddDays(-1).Month == currentTime.Month)).ToList();
 
-            DateTime nextDay = currentTime.AddDays(1);
+            var nextDay = currentTime.AddDays(1);
 
-            if (currentTime.Month != nextDay.Month)
-            {
+            //if(currentTime.Month != nextDay.Month)
                 //emailService.SendThisMonthsHolidayInfo(admin, thisMonthsHolidays);
-            }
         }
 
         private void CheckUpcomingHolidays(ICollection<Employee> employees, ICollection<Holiday> holidays, IEmailService emailService)
         {
-            DateTime currentTime = _timeService.GetCurrentTime();
+            var currentTime = _timeService.GetCurrentTime();
 
-            var upcomingHolidays = holidays.Where(holiday => holiday.IsConfirmed == true
-                                                  && holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
+            var upcomingHolidays = holidays.Where(holiday => holiday.Status == "string" && 
+                                                 holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
                                                   .ToList();
 
-            if (upcomingHolidays.Count != 0)
-            {
+            //if(upcomingHolidays.Count != 0)
                 //emailService.InformEmployeesAboutHoliday(employees, upcomingHolidays);
             }
-        }
 
         private void CheckBirthdays(ICollection<Employee> employees, ITimeService _timeService, IEmailService emailService)
         {
-            List<Employee> employeesWithBirthdays = new List<Employee>();
+            var employeesWithBirthdays = new List<Employee>();
             var currentTime = _timeService.GetCurrentTime();
 
-            foreach (Employee employee in employees)
+            foreach (var employee in employees)
             {
                 if (employee.BirthdayDate.Month == currentTime.Month && employee.BirthdayDate.Day == currentTime.Day)
-                {
                     employeesWithBirthdays.Add(employee);
-                }
             }
 
             //if (employeesWithBirthdays.Count != 0)

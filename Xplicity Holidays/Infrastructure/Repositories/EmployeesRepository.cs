@@ -18,54 +18,60 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
 
         public async Task<ICollection<Employee>> GetAll()
         {
-            var items = await Context.Employees.ToArrayAsync();
+            var employees = await Context.Employees.ToArrayAsync();
 
-            return items;
+            return employees;
         }
 
         public async Task<Employee> GetById(int id)
         {
-            var items = await Context.Employees.FindAsync(id);
+            var employee = await Context.Employees.FindAsync(id);
 
-            return items;
+            return employee;
         }
 
-        public async Task<int> Create(Employee entity)
+        public async Task<int> Create(Employee newEmployee)
         {
-            Context.Employees.Add(entity);
+            Context.Employees.Add(newEmployee);
             await Context.SaveChangesAsync();
-            return entity.Id;
+
+            return newEmployee.Id;
         }
 
-        public async Task<bool> Update(Employee entity)
+        public async Task<bool> Update(Employee employee)
         {
-            Context.Employees.Attach(entity);
+            Context.Employees.Attach(employee);
             var changes = await Context.SaveChangesAsync();
+
             return changes > 0;
         }
 
-        public async Task<bool> Delete(Employee entity)
+        public async Task<bool> Delete(Employee employee)
         {
-            Context.Employees.Remove(entity);
+            Context.Employees.Remove(employee);
             var changes = await Context.SaveChangesAsync();
+
             return changes > 0;
         }
 
         public async Task<Employee> FindByEmail(string email)
         {
-            var employee = await Context.Employees.SingleOrDefaultAsync(x => x.Email == email);
+            var employee = await Context.Employees.SingleOrDefaultAsync(emp => emp.Email == email);
+
             return employee;
         }
 
-
         public List<Holiday> GetHolidays(int employeeId)
         {
-            var holidays = Context.Holidays.Where(holiday => holiday.EmployeeId == employeeId && holiday.IsConfirmed == true).ToList();
+            var holidays = Context.Holidays.Where(holiday => holiday.EmployeeId == employeeId && holiday.Status == "Confirmed").ToList();
+
             return holidays;
         }
+
         public async Task<Employee> FindAnyAdmin()
         {
-            var admin = await Context.Employees.FirstOrDefaultAsync(obj => obj.Role == "admin");
+            var admin = await Context.Employees.FirstOrDefaultAsync(employee => employee.Role == "admin");
+
             return admin;
         }
     }
