@@ -74,7 +74,7 @@ namespace Xplicity_Holidays.Services
         {
             var currentTime = _timeService.GetCurrentTime();
 
-            var upcomingHolidays = holidays.Where(holiday => holiday.Status == "string" && 
+            var upcomingHolidays = holidays.Where(holiday => holiday.Status == "Confirmed" && 
                                                  holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
                                                   .ToList();
 
