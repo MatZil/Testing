@@ -15,7 +15,7 @@ export class RoleGuard implements CanActivate {
     }
 
     // navigate to not found page
-    this.router.navigate(['/home'], { queryParams: { returnUrl: state.url }});
+    this.router.navigate(['/home'], { queryParams: { returnUrl: state.url } });
     return false;
   }
 }

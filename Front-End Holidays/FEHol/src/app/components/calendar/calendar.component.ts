@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 
-import { ScheduleComponent, WeekService, MonthService, AgendaService, TimelineViewsService,
-         TimelineMonthService, EventSettingsModel, GroupModel } from '@syncfusion/ej2-angular-schedule';
+import {
+  ScheduleComponent, WeekService, MonthService, AgendaService, TimelineViewsService,
+  TimelineMonthService, EventSettingsModel, GroupModel
+} from '@syncfusion/ej2-angular-schedule';
 
 @Component({ templateUrl: 'calendar.component.html', styleUrls: ['calendar.component.scss'] })
 

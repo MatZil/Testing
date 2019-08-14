@@ -46,7 +46,7 @@ export class HolidaysTableComponent implements OnInit {
     this.currentUser = this.authenticationService.currentUserValue;
     this.currentUserId = this.currentUser.id;
     this.requestHolidays.employeeId = this.currentUser.id;
-   }
+  }
 
   ngOnInit() {
     this.refreshTable();
@@ -62,7 +62,8 @@ export class HolidaysTableComponent implements OnInit {
 
   refreshTable() {
     this.holidayService.getHolidays().subscribe(holidays => {
-      this.holidays = holidays; });
+      this.holidays = holidays;
+    });
   }
 
   onAddButtonClick(holidays: Requestholidays) {
@@ -102,12 +103,14 @@ export class HolidaysTableComponent implements OnInit {
 
   onDeleteButtonClick(id: number) {
     this.holidayService.deleteHolidays(id).subscribe(() => {
-      this.refreshTable(); });
+      this.refreshTable();
+    });
   }
 
   onEditConfirmButtonClick(holidays: Newholidays, id: number) {
     this.holidayService.editHolidays(holidays, id).subscribe(() => {
-      this.refreshTable(); });
+      this.refreshTable();
+    });
   }
 
   populateForm(holidays: Holidays) {

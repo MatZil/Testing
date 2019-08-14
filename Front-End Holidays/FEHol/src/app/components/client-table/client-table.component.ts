@@ -143,16 +143,20 @@ export class ClientTableComponent implements OnInit {
   }
 
   search(): void {
-    const filterFunc = (item: { companyName: string; ownerName: string; ownerSurname: string;
-                                ownerEmail: string; ownerPhone: string; }) => {
+    const filterFunc = (item: {
+      companyName: string; ownerName: string; ownerSurname: string;
+      ownerEmail: string; ownerPhone: string;
+    }) => {
       return (
         (this.listOfSearchAddress.length
           ? this.listOfSearchAddress.some(ownerName => item.ownerName.indexOf(ownerName) !== -1)
           : true) && item.companyName.indexOf(this.searchValue) !== -1
       );
     };
-    const data = this.listOfData.filter((item: { companyName: string; ownerName: string; ownerSurname: string;
-                                             ownerEmail: string; ownerPhone: string; }) => filterFunc(item));
+    const data = this.listOfData.filter((item: {
+      companyName: string; ownerName: string; ownerSurname: string;
+      ownerEmail: string; ownerPhone: string;
+    }) => filterFunc(item));
     this.client = data.sort((a, b) =>
       this.sortValue === 'ascend'
         // tslint:disable-next-line:no-non-null-assertion

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-pdf',
@@ -17,10 +17,10 @@ export class PdfComponent implements OnInit {
 
   onButtonClick() {
     this.showPdf = !this.showPdf;
-    let img: any = document.querySelector(this.pdfSrc);
+    const img: any = document.querySelector(this.pdfSrc);
 
-    if (typeof(FileReader) !== 'undefined') {
-      let reader = new FileReader();
+    if (typeof (FileReader) !== 'undefined') {
+      const reader = new FileReader();
 
       reader.onload = (e: any) => {
         this.pdfSrc = e.target.result;
