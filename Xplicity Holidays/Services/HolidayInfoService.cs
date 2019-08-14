@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xplicity_Holidays.Dtos.Holidays;
+using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
@@ -10,18 +12,20 @@ namespace Xplicity_Holidays.Services
 {
     public class HolidayInfoService : IHolidayInfoService
     {
-        private readonly IEmployeeRepository _repository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly ITimeService _timeService;
+        private readonly IRepository<Client> _clientRepository;
 
-        public HolidayInfoService(IEmployeeRepository repository, ITimeService timeService)
+        public HolidayInfoService(IEmployeeRepository repository, ITimeService timeService, IRepository<Client> clientRepository)
         {
-            _repository = repository;
+            _employeeRepository = repository;
             _timeService = timeService;
+            _clientRepository = clientRepository;
         }
 
         public ICollection<HolidaysLeftDto> GetAllEmployeesHolidaysLeft()
         {
-            var employees = _repository.GetAll().Result.ToList();
+            var employees = _employeeRepository.GetAll().Result.ToList();
 
             if (employees.Count == 0)
                 return null;
@@ -44,7 +48,7 @@ namespace Xplicity_Holidays.Services
 
         public double GetNumberOfHolidaysLeft(int id)
         {
-            var employee = _repository.GetById(id).Result;
+            var employee = _employeeRepository.GetById(id).Result;
 
             if (employee == null)
                 return 0;
@@ -56,13 +60,26 @@ namespace Xplicity_Holidays.Services
             var startCheckFrom = employee.WorksFromDate;
 
             var workDays = _timeService.GetWorkDays(startCheckFrom, currentTime) - 1;
-            var employeesHolidays = _repository.GetHolidays(employee.Id).Where(h => h.Status == "Confirmed").ToList();
+            var employeesHolidays = _employeeRepository.GetHolidays(employee.Id).Where(h => h.Status == "Confirmed").ToList();
             var daysOnHoliday = employeesHolidays.Sum(h => (h.ToExclusive - h.FromInclusive).Days);
 
             var holidaysLeft = (holidaysPerYear / workDaysPerYear) * workDays - daysOnHoliday;
             holidaysLeft = Math.Round(holidaysLeft, 2);
 
             return holidaysLeft;
+        }
+
+        public async Task<List<(Holiday, Client)>> GetClientsAndHolidays(ICollection<Holiday> holidays)
+        {
+            List<(Holiday, Client)> clientsWithHolidays = new List<(Holiday, Client)>();
+            foreach (var holiday in holidays)
+            {
+                var employee = await _employeeRepository.GetById(holiday.EmployeeId);
+                var client = await _clientRepository.GetById((int)employee.ClientId);
+                clientsWithHolidays.Add((holiday, client));
+            }
+
+            return clientsWithHolidays;
         }
     }
 }

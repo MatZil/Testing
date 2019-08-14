@@ -2,6 +2,7 @@
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Emailer;
 using Xplicity_Holidays.Services.Interfaces;
+using System.Linq;
 
 namespace Xplicity_Holidays.Services
 {
@@ -35,18 +36,24 @@ namespace Xplicity_Holidays.Services
                 $"Click this link to decline the holiday: https://localhost:44374/api/holidaydecline?holidayid={holiday.Id}");
         }
 
-        public void SendThisMonthsHolidayInfo(Employee admin, ICollection<Holiday> holidays)
+        public void SendThisMonthsHolidayInfo(Employee admin, List<(Holiday, Client)> holidays)
         {
             var holidayInfo = string.Empty;
+            var groupedHolidays = holidays.GroupBy(h => h.Item2);
 
-            foreach (var h in holidays)
+            foreach (var client in groupedHolidays)
             {
-                holidayInfo += $"{h.Employee.Name} {h.Employee.Surname} was on holiday, from " +
-                               $"{h.FromInclusive.ToShortDateString()} to {h.ToExclusive.ToShortDateString()}, " +
-                               $"holiday type - {h.Type} \r\n";
+                holidayInfo += $"{client.Key.CompanyName}'s team's this months holidays\r\n\r\n";
+                foreach (var holiday in client)
+                {
+                    holidayInfo += $"{holiday.Item1.Employee.Name} {holiday.Item1.Employee.Surname} was on holiday, from " +
+                                   $"{holiday.Item1.FromInclusive.ToShortDateString()} to {holiday.Item1.ToExclusive.ToShortDateString()}, " +
+                                   $"holiday type - {holiday.Item1.Type} \r\n";
+                }
+                holidayInfo += "\r\n";
             }
 
-            _emailer.SendMail(admin.Email, "This months holiday summary", holidayInfo);
+           _emailer.SendMail(admin.Email, "This months holiday summary", holidayInfo);
         }
 
         public void InformEmployeesAboutHoliday(ICollection<Employee> employees, ICollection<Holiday> upcomingHolidays)

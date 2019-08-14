@@ -75,6 +75,6 @@ namespace Xplicity_Holidays.Services
 
             _mapper.Map(updateData, itemToUpdate);
             await _repository.Update(itemToUpdate);
-        }
+        } 
     }
 }
