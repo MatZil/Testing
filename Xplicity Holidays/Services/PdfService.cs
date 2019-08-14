@@ -127,7 +127,7 @@ namespace Xplicity_Holidays.Services
         <br /><br /><br /><br />
         <p class='center'>
             Atsižvelgiant į {4} {5} {6} prašymą, suteikiu {7} {8}
-            neapmokamas {9} atostogas nuo {10} iki {11} ({12} d.d. )   
+            apmokamas {9} atostogas nuo {10} iki {11} ({12} d.d. )   
         </p>
         <br /><br /><br /><br /><br /><br /><br />
         <p class='floatL'>
