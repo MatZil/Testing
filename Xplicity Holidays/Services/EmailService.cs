@@ -46,7 +46,7 @@ namespace Xplicity_Holidays.Services
                 holidayInfo += $"{client.Key.CompanyName}'s team's this months holidays\r\n\r\n";
                 foreach (var holiday in client)
                 {
-                    holidayInfo += $"{holiday.Item1.Employee.Name} {holiday.Item1.Employee.Surname} was on holiday, from " +
+                    holidayInfo += $"   {holiday.Item1.Employee.Name} {holiday.Item1.Employee.Surname} was on holiday, from " +
                                    $"{holiday.Item1.FromInclusive.ToShortDateString()} to {holiday.Item1.ToExclusive.ToShortDateString()}, " +
                                    $"holiday type - {holiday.Item1.Type} \r\n";
                 }
