@@ -19,7 +19,7 @@ export class ProfileComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private policyService: PolicyService
-    ) {
+  ) {
     this.currentUser = this.authenticationService.currentUserValue;
   }
 

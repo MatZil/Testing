@@ -14,33 +14,45 @@ import { ProfileComponent } from './components/profile/profile.component';
 
 
 const routes: Routes = [
-  {path: 'home', component: HomeComponent, canActivate: [AuthGuard],
+  {
+    path: 'home', component: HomeComponent, canActivate: [AuthGuard],
     children: [
-      {path: '', component: PolicyComponent, canActivate: [AuthGuard]}
-    ]},
-  {path: 'login', component: LoginComponent},
-  {path: 'calendar', component: HomeComponent, canActivate: [AuthGuard],
-   children: [
-     {path: '', component: CalendarComponent, canActivate: [AuthGuard]}
-      ]},
-  {path: 'clients', component: HomeComponent, canActivate: [AuthGuard],
-   children: [
-     {path: '', component: ClientTableComponent, canActivate: [AuthGuard]}
-      ]},
-  {path: 'employees', component: HomeComponent, canActivate: [AuthGuard],
-   children: [
-     {path: '', component: EmployeesTableComponent, canActivate: [AuthGuard]}
-   ]},
-   {path: 'holidays', component: HomeComponent, canActivate: [AuthGuard],
-   children: [
-     {path: '', component: HolidaysTableComponent, canActivate: [AuthGuard]}
-   ]},
-   {path: 'profile', component: HomeComponent, canActivate: [AuthGuard],
-   children: [
-     {path: '', component: ProfileComponent, canActivate: [AuthGuard]}
-   ]},
-  {path: '', redirectTo: 'home', pathMatch: 'full'},
-  {path: '**', component: ErrorPageComponent},
+      { path: '', component: PolicyComponent, canActivate: [AuthGuard] }
+    ]
+  },
+  { path: 'login', component: LoginComponent },
+  {
+    path: 'calendar', component: HomeComponent, canActivate: [AuthGuard],
+    children: [
+      { path: '', component: CalendarComponent, canActivate: [AuthGuard] }
+    ]
+  },
+  {
+    path: 'clients', component: HomeComponent, canActivate: [AuthGuard],
+    children: [
+      { path: '', component: ClientTableComponent, canActivate: [AuthGuard] }
+    ]
+  },
+  {
+    path: 'employees', component: HomeComponent, canActivate: [AuthGuard],
+    children: [
+      { path: '', component: EmployeesTableComponent, canActivate: [AuthGuard] }
+    ]
+  },
+  {
+    path: 'holidays', component: HomeComponent, canActivate: [AuthGuard],
+    children: [
+      { path: '', component: HolidaysTableComponent, canActivate: [AuthGuard] }
+    ]
+  },
+  {
+    path: 'profile', component: HomeComponent, canActivate: [AuthGuard],
+    children: [
+      { path: '', component: ProfileComponent, canActivate: [AuthGuard] }
+    ]
+  },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', component: ErrorPageComponent },
 ];
 
 @NgModule({

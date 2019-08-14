@@ -35,8 +35,6 @@ import { HolidaysTableComponent } from './components/holidays-table/holidays-tab
 import { PdfComponent } from './components/pdf/pdf.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 
-import { DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService} from '@syncfusion/ej2-angular-schedule';
-
 registerLocaleData(en);
 
 @NgModule({
@@ -75,14 +73,8 @@ registerLocaleData(en);
     PdfViewerModule
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US },
-              { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-              { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-              DayService,
-              WeekService,
-              WorkWeekService,
-              MonthService,
-              AgendaService,
-              MonthAgendaService],
+  { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+  { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule {

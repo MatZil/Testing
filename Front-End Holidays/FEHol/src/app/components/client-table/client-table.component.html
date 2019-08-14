@@ -58,7 +58,8 @@
 
     <ng-template #modalFoote>
       <button nz-button nzType="default" (click)="handleCancelCreator()">Cancel</button>
-      <button nz-button nzType="primary" (click)="onAddButtonClick(newClient)" [nzLoading]="isConfirmLoadingCreator" [disabled]="newClientForm.form.invalid">Add client</button>
+      <button nz-button nzType="primary" (click)="onAddButtonClick(newClient)" [nzLoading]="isConfirmLoadingCreator"
+        [disabled]="newClientForm.form.invalid">Add client</button>
     </ng-template>
   </nz-modal>
 </form>
