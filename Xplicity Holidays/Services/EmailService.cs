@@ -3,37 +3,53 @@ using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Emailer;
 using Xplicity_Holidays.Services.Interfaces;
 using System.Linq;
+using Xplicity_Holidays.Infrastructure.Repositories;
 
 namespace Xplicity_Holidays.Services
 {
     public class EmailService: IEmailService
     {
         private readonly IEmailer _emailer;
+        private readonly IEmailTemplatesRepository _repository;
 
-        public EmailService(IEmailer emailer)
+        public EmailService(IEmailer emailer, IEmailTemplatesRepository repository)
         {
             _emailer = emailer;
+            _repository = repository;
         }
 
-        public void ConfirmHolidayWithClient(Client client, Employee employee, Holiday holiday)
+        public async void ConfirmHolidayWithClient(Client client, Employee employee, Holiday holiday)
         {
-            _emailer.SendMail(client.OwnerEmail, "A holiday request from your employee",
-                $"Hello, {client.OwnerName}\nOne of your employees, {employee.Name} {employee.Surname}, is intending to go " +
-                $"on {holiday.Type} " +
-                $"holidays from {holiday.FromInclusive.ToShortDateString()} (inclusive) to " +
-                $"{holiday.ToExclusive.ToShortDateString()} (exclusive).\n" +
-                $"Click this link to confirm the holiday: https://localhost:44374/api/holidayclient?holidayid={holiday.Id} \n" +
-                $"Click this link to decline the holiday: https://localhost:44374/api/holidaydecline?holidayid={holiday.Id}");
+            var template = await _repository.GetByPurpose("Client Confirmation");
+            var messageString = template.Template
+                                        .Replace("{client.email}", client.OwnerEmail)
+                                        .Replace("{client.name}", client.OwnerName)
+                                        .Replace("{employee.name}", employee.Name)
+                                        .Replace("{employee.surname}", employee.Surname)
+                                        .Replace("{holiday.type}", holiday.Type.ToString())
+                                        .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
+                                        .Replace("{holiday.to}", holiday.ToExclusive.ToShortDateString())
+                                        .Replace("{holiday.confirm}", $"https://localhost:44374/api/holidayclient?holidayid={holiday.Id}")
+                                        .Replace("{holiday.decline}", $"https://localhost:44374/api/holidaydecline?holidayid={holiday.Id}");
+
+            _emailer.SendMail(client.OwnerEmail, template.Subject, messageString);
         }
 
-        public void ConfirmHolidayWithAdmin(Employee admin, Employee employee, Holiday holiday, string clientStatus)
+        public async void ConfirmHolidayWithAdmin(Employee admin, Employee employee, Holiday holiday, string clientStatus)
         {
-            _emailer.SendMail(admin.Email, "A holiday request from an employee",
-                $"Hello, {admin.Name},\nAn employee {employee.Name} {employee.Surname} is intending to go on " + holiday.Type +
-                $"holidays from {holiday.FromInclusive.ToShortDateString()} (inclusive) to {holiday.ToExclusive.ToShortDateString()} " +
-                $"(exclusive). " + clientStatus +
-                $"\nClick this link to confirm the holiday: https://localhost:44374/api/holidayconfirm?holidayid={holiday.Id} \n" +
-                $"Click this link to decline the holiday: https://localhost:44374/api/holidaydecline?holidayid={holiday.Id}");
+            var template = await _repository.GetByPurpose("Admin Confirmation");
+            var messageString = template.Template
+                                        .Replace("{admin.name}", admin.Name)
+                                        .Replace("{employee.name}", employee.Name)
+                                        .Replace("{employee.surname}", employee.Surname)
+                                        .Replace("{holiday.type}", holiday.Type.ToString())
+                                        .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
+                                        .Replace("{holiday.to}", holiday.ToExclusive.ToShortDateString())
+                                        .Replace("{holiday.confirm}", $"https://localhost:44374/api/holidayconfirm?holidayid={holiday.Id}")
+                                        .Replace("{holiday.decline}", $"https://localhost:44374/api/holidaydecline?holidayid={holiday.Id}")
+                                        .Replace("{client.status}", clientStatus);
+
+            _emailer.SendMail(admin.Email, template.Subject, messageString);
         }
 
         public void SendThisMonthsHolidayInfo(Employee admin, List<(Holiday, Client)> holidays)

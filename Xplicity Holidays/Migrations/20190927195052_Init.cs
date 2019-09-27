@@ -25,6 +25,21 @@ namespace Xplicity_Holidays.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmailTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Purpose = table.Column<string>(nullable: false),
+                    Subject = table.Column<string>(nullable: false),
+                    Template = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailTemplates", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
@@ -85,6 +100,12 @@ namespace Xplicity_Holidays.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_EmailTemplates_Purpose",
+                table: "EmailTemplates",
+                column: "Purpose",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Employees_ClientId",
                 table: "Employees",
                 column: "ClientId");
@@ -103,6 +124,9 @@ namespace Xplicity_Holidays.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "EmailTemplates");
+
             migrationBuilder.DropTable(
                 name: "Holidays");
 

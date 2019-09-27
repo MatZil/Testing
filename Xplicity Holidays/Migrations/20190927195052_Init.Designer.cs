@@ -9,7 +9,7 @@ using Xplicity_Holidays.Infrastructure.Database;
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20190813161500_Init")]
+    [Migration("20190927195052_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,28 @@ namespace Xplicity_Holidays.Migrations
                         .IsUnique();
 
                     b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.EmailTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Purpose")
+                        .IsRequired();
+
+                    b.Property<string>("Subject")
+                        .IsRequired();
+
+                    b.Property<string>("Template")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Purpose")
+                        .IsUnique();
+
+                    b.ToTable("EmailTemplates");
                 });
 
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Employee", b =>

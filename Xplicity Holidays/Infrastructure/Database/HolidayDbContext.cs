@@ -8,6 +8,8 @@ namespace Xplicity_Holidays.Infrastructure.Database
         public DbSet<Client> Clients { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Holiday> Holidays { get; set; }
+        public DbSet<EmailTemplate> EmailTemplates { get; set; }
+
         public HolidayDbContext(DbContextOptions options): base(options)
         { }
 
@@ -19,6 +21,10 @@ namespace Xplicity_Holidays.Infrastructure.Database
 
             builder.Entity<Employee>(entity => {
                 entity.HasIndex(e => e.Email).IsUnique();
+            });
+
+            builder.Entity<EmailTemplate>(entity => {
+                entity.HasIndex(e => e.Purpose).IsUnique();
             });
         }
     }
