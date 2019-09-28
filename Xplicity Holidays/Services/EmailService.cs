@@ -52,53 +52,64 @@ namespace Xplicity_Holidays.Services
             _emailer.SendMail(admin.Email, template.Subject, messageString);
         }
 
-        public void SendThisMonthsHolidayInfo(Employee admin, List<(Holiday, Client)> holidays)
+        public async void SendThisMonthsHolidayInfo(Employee admin, List<(Holiday, Client)> holidays)
         {
             var holidayInfo = string.Empty;
             var groupedHolidays = holidays.GroupBy(h => h.Item2);
-
+            var template = await _repository.GetByPurpose("Monthly Holidays' Report");
+            int titleEnd = template.Template.IndexOf('\n', 0);
             foreach (var client in groupedHolidays)
             {
-                holidayInfo += $"{client.Key.CompanyName}'s team's this months holidays\r\n\r\n";
+                holidayInfo += template.Template.Substring(0, titleEnd).Replace("{client.name}", client.Key.CompanyName) + '\n';
                 foreach (var holiday in client)
                 {
-                    holidayInfo += $"   {holiday.Item1.Employee.Name} {holiday.Item1.Employee.Surname} was on holiday, from " +
-                                   $"{holiday.Item1.FromInclusive.ToShortDateString()} to {holiday.Item1.ToExclusive.ToShortDateString()}, " +
-                                   $"holiday type - {holiday.Item1.Type} \r\n";
+                    var messageString = template.Template.Substring(titleEnd)
+                                                        .Replace("{employee.name}", holiday.Item1.Employee.Name)
+                                                        .Replace("{employee.surname}", holiday.Item1.Employee.Surname)
+                                                        .Replace("{holiday.type}", holiday.Item1.Type.ToString())
+                                                        .Replace("{holiday.from}", holiday.Item1.FromInclusive.ToShortDateString())
+                                                        .Replace("{holiday.to}", holiday.Item1.ToExclusive.ToShortDateString());
+                    holidayInfo += messageString;
                 }
-                holidayInfo += "\r\n";
+                holidayInfo += "\n\n";
             }
-
-           _emailer.SendMail(admin.Email, "This months holiday summary", holidayInfo);
+            _emailer.SendMail(admin.Email, template.Subject, holidayInfo);
         }
 
-        public void InformEmployeesAboutHoliday(ICollection<Employee> employees, ICollection<Holiday> upcomingHolidays)
+        public async void InformEmployeesAboutHoliday(ICollection<Employee> employees, ICollection<Holiday> upcomingHolidays)
         {
+            var template = await _repository.GetByPurpose("Upcoming Holiday Reminder");
             foreach (var employee in employees)
             {
                 foreach (var h in upcomingHolidays)
                 {
                     if (h.Employee.Name != employee.Name && h.Employee.Surname != employee.Surname)
                     {
-                        _emailer.SendMail(employee.Email, "Co-worker leaving on holiday",
-                                    $"{h.Employee.Name} {h.Employee.Surname} is going on holiday next work day, from " +
-                                         $"{h.FromInclusive.ToShortDateString()} to {h.ToExclusive.ToShortDateString()}");
+                        var messageString = template.Template
+                                                    .Replace("{employee.name}", h.Employee.Name)
+                                                    .Replace("{employee.surname}", h.Employee.Surname)
+                                                    .Replace("{holiday.from}", h.FromInclusive.ToShortDateString())
+                                                    .Replace("{holiday.to}", h.ToExclusive.ToShortDateString());
+
+                        _emailer.SendMail(employee.Email, template.Subject, messageString);
                     }
                 }
             }
         }
 
-        public void SendBirthDayReminder(ICollection<Employee> employeesWithBirthdays, ICollection<Employee> employees)
+        public async void SendBirthDayReminder(ICollection<Employee> employeesWithBirthdays, ICollection<Employee> employees)
         {
+            var template = await _repository.GetByPurpose("Birthday Reminder");
             foreach (var employee in employees)
             {
                 foreach (var employeeWithBirthday in employeesWithBirthdays)
                 {
                     if (employee.Name != employeeWithBirthday.Name && employee.Surname != employeeWithBirthday.Surname)
                     {
-                        _emailer.SendMail(employee.Email, "Birthday reminder", 
-                                    $"Today is {employeeWithBirthday.Name} " + 
-                                         $"{employeeWithBirthday.Surname} birthday today!\r\nMake sure to congratulate them.");
+                        var messageString = template.Template
+                                                    .Replace("{employee.name}", employeeWithBirthday.Name)
+                                                    .Replace("{employee.surname}", employeeWithBirthday.Surname);
+                        _emailer.SendMail(employee.Email, template.Subject, messageString);
                     }
                 }
             }
