@@ -7,6 +7,7 @@ import { ClientTableComponent } from './components/client-table/client-table.com
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
+import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
 import { PolicyComponent } from './components/policy/policy.component';
 import { AuthGuard } from './helpers/auth-guard';
 import { RoleGuard } from './helpers/role-guard';
@@ -43,6 +44,12 @@ const routes: Routes = [
     path: 'holidays', component: HomeComponent, canActivate: [AuthGuard],
     children: [
       { path: '', component: HolidaysTableComponent, canActivate: [AuthGuard] }
+    ]
+  },
+  {
+    path: 'emailtemplates', component: HomeComponent, canActivate: [AuthGuard],
+    children: [
+      { path: '', component: EmailtemplatesTableComponent, canActivate: [AuthGuard] }
     ]
   },
   {

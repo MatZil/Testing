@@ -1,0 +1,20 @@
+<nz-table #basicTable [nzData]="emailTemplates">
+  <thead class="oneLine">
+    <tr>
+      <th width="300px">Purpose</th>
+      <th width="300px">Subject</th>
+      <th>Beginning of template</th>
+    </tr>
+  </thead>
+  <tbody class="oneLine">
+    <tr *ngFor="let emailTemplate of basicTable.data">
+      <td>{{emailTemplate.purpose}}</td>
+      <td>{{emailTemplate.subject}}</td>
+      <td>
+          <div class="oneLine">
+            {{emailTemplate.template}}
+          </div>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

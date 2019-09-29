@@ -34,6 +34,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
 import { PdfComponent } from './components/pdf/pdf.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
 
 registerLocaleData(en);
 
@@ -50,7 +51,8 @@ registerLocaleData(en);
     PolicyComponent,
     ProfileComponent,
     HolidaysTableComponent,
-    PdfComponent
+    PdfComponent,
+    EmailtemplatesTableComponent
   ],
   imports: [
     BrowserModule,

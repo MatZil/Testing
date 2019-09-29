@@ -1,0 +1,8 @@
+.oneLine{
+    position: relative;
+    text-align: justify;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
