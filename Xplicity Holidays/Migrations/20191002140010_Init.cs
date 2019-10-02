@@ -32,7 +32,8 @@ namespace Xplicity_Holidays.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Purpose = table.Column<string>(nullable: false),
                     Subject = table.Column<string>(nullable: false),
-                    Template = table.Column<string>(nullable: false)
+                    Template = table.Column<string>(nullable: false),
+                    Instructions = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {

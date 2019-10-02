@@ -53,6 +53,9 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Instructions")
+                        .IsRequired();
+
                     b.Property<string>("Purpose")
                         .IsRequired();
 

@@ -22,7 +22,6 @@ namespace Xplicity_Holidays.Services
         {
             var template = await _repository.GetByPurpose("Client Confirmation");
             var messageString = template.Template
-                                        .Replace("{client.email}", client.OwnerEmail)
                                         .Replace("{client.name}", client.OwnerName)
                                         .Replace("{employee.name}", employee.Name)
                                         .Replace("{employee.surname}", employee.Surname)

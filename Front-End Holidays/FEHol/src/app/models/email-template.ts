@@ -3,4 +3,5 @@ export class EmailTemplate {
     purpose: string;
     subject: string;
     template: string;
+    instructions: string;
 }

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { EmailTemplate } from '../../models/email-template';
 import { NewEmailTemplate } from '../../models/new-email-template';
 import { NgForm } from '@angular/forms';
-import { NzModalRef, NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { EmailTemplatesService } from 'src/app/services/email-templates.service';
 
 @Component({
@@ -10,28 +9,15 @@ import { EmailTemplatesService } from 'src/app/services/email-templates.service'
   templateUrl: './emailtemplates-table.component.html',
   styleUrls: ['./emailtemplates-table.component.scss']
 })
+
 export class EmailtemplatesTableComponent implements OnInit {
   emailTemplates: EmailTemplate[] = [];
-  formData: EmailTemplate;
-  formDataNoId: NewEmailTemplate;
-  newEmailTemplate: NewEmailTemplate = new NewEmailTemplate();
+  formObject: NewEmailTemplate;
 
-  isVisibleCreator = false;
-  isConfirmLoadingCreator = false;
   isVisibleEditor = false;
 
-  confirmDeleteModal: NzModalRef;
-
-  searchValue = '';
-  listOfSearchAddress: string[] = [];
-  sortName: string | null = null;
-  sortValue: string | null = null;
-  listOfData: EmailTemplate[] = [];
-
   constructor(
-    private emailTemplatesService: EmailTemplatesService,
-    private modal: NzModalService,
-    private notification: NzNotificationService
+    private emailTemplatesService: EmailTemplatesService
   ) { }
 
   ngOnInit() {
@@ -41,7 +27,29 @@ export class EmailtemplatesTableComponent implements OnInit {
   refreshTable() {
     this.emailTemplatesService.getEmailTemplates().subscribe(templates => {
       this.emailTemplates = templates;
-      this.listOfData = [...this.emailTemplates];
+    });
+  }
+
+  showModalEditor(): void {
+    this.isVisibleEditor = true;
+  }
+
+  handleCancelEditor(): void {
+    this.isVisibleEditor = false;
+  }
+
+  createFormObject(emailTemplate: NewEmailTemplate) {
+    this.formObject = Object.assign({}, emailTemplate);
+  }
+
+  onSubmit(form: NgForm) {
+    form.resetForm();
+  }
+
+  onEditConfirmButtonClick(emailTemplate: NewEmailTemplate, id: number) {
+    this.emailTemplatesService.editEmailTemplate(emailTemplate, id).subscribe(() => {
+      this.refreshTable();
+      this.handleCancelEditor();
     });
   }
 }

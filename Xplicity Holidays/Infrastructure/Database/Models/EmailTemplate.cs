@@ -12,5 +12,8 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
 
         [Required]
         public string Template { get; set; }
+
+        [Required]
+        public string Instructions { get; set; }
     }
 }
