@@ -1,40 +1,45 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 
 namespace Xplicity_Holidays.Infrastructure.Database
 {
-    public class HolidayDbContext: IdentityDbContext
+    public class HolidayDbContext : IdentityDbContext
     {
         public DbSet<Client> Clients { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Holiday> Holidays { get; set; }
-        public HolidayDbContext(DbContextOptions options): base(options)
-        { }
+        private readonly IConfiguration _configuration;
+
+        public HolidayDbContext(DbContextOptions options, IConfiguration configuration) : base(options)
+        {
+            _configuration = configuration;
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            const string adminId = "53ec4767-d79f-452e-ab70-4bbe27c44fc0";
-            const string roleId = "ebf2ee18-d97a-49fe-9301-e6cd31957140";
+            string adminId = _configuration["AdminConfig:AdminGuid"];
+            string roleId = _configuration["AdminConfig:RoleGuid"];
             builder.Entity<IdentityRole>().HasData(new IdentityRole
             {
                 Id = roleId,
-                Name = "admin",
-                NormalizedName = "admin"
+                Name = _configuration["AdminConfig:RoleName"],
+                NormalizedName = _configuration["AdminConfig:RoleName"]
             });
 
             var hasher = new PasswordHasher<IdentityUser>();
             builder.Entity<IdentityUser>().HasData(new IdentityUser
             {
                 Id = adminId,
-                UserName = "inga@xplicity.com",
-                NormalizedUserName = "inga@xplicity.com",
-                Email = "inga@xplicity.com",
-                NormalizedEmail = "inga@xplicity.com",
+                UserName = _configuration["AdminConfig:AdminEmail"],
+                NormalizedUserName = _configuration["AdminConfig:AdminEmail"],
+                Email = _configuration["AdminConfig:AdminEmail"],
+                NormalizedEmail = _configuration["AdminConfig:AdminEmail"],
                 EmailConfirmed = true,
-                PasswordHash = hasher.HashPassword(null, "password"),
+                PasswordHash = hasher.HashPassword(null, _configuration["AdminConfig:AdminPassword"]),
                 SecurityStamp = string.Empty
             });
 
