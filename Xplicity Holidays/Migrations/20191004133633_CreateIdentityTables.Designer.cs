@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Xplicity_Holidays.Infrastructure.Database;
 
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    partial class HolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191004133633_CreateIdentityTables")]
+    partial class CreateIdentityTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,15 +39,6 @@ namespace Xplicity_Holidays.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "ebf2ee18-d97a-49fe-9301-e6cd31957140",
-                            ConcurrencyStamp = "9ebf9b00-6a40-4b3f-9839-4c170a2c9ec4",
-                            Name = "admin",
-                            NormalizedName = "admin"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -115,24 +108,6 @@ namespace Xplicity_Holidays.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "53ec4767-d79f-452e-ab70-4bbe27c44fc0",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "c9fa0221-dde6-436f-8df4-339e0559126a",
-                            Email = "inga@xplicity.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "inga@xplicity.com",
-                            NormalizedUserName = "inga@xplicity.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPeUL679nGeKPD6u7UZfV1CT+4Ycuh5f7K6h3iMhVAO+rNtcM/YyYjixKqYiC8lXng==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "",
-                            TwoFactorEnabled = false,
-                            UserName = "inga@xplicity.com"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -183,13 +158,6 @@ namespace Xplicity_Holidays.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "53ec4767-d79f-452e-ab70-4bbe27c44fc0",
-                            RoleId = "ebf2ee18-d97a-49fe-9301-e6cd31957140"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

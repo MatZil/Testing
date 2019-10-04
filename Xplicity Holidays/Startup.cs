@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xplicity_Holidays.Configurations;
+using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays
@@ -20,6 +22,8 @@ namespace Xplicity_Holidays
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                    .AddEntityFrameworkStores<HolidayDbContext>();
             services.SetUpAutoMapper();
             services.SetUpDatabase(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
