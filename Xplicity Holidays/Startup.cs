@@ -24,6 +24,16 @@ namespace Xplicity_Holidays
         {
             services.AddIdentity<IdentityUser, IdentityRole>()
                     .AddEntityFrameworkStores<HolidayDbContext>();
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredUniqueChars = 0;
+            });
+                
+            
             services.SetUpAutoMapper();
             services.SetUpDatabase(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -34,7 +44,7 @@ namespace Xplicity_Holidays
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IBackgroundService backgroundService)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IBackgroundService backgroundService, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -51,7 +61,7 @@ namespace Xplicity_Holidays
             app.UseAuthentication();
             app.UseMvc();
             app.ConfigureAndUseSwagger();
-
+            IdentityDataSeeder.SeedData(userManager, roleManager, Configuration);
             var _ = backgroundService.RunBackgroundServices();
         }
     }

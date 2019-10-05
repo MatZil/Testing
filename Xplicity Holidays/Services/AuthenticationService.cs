@@ -2,8 +2,11 @@
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Xplicity_Holidays.Configurations;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
@@ -39,6 +42,23 @@ namespace Xplicity_Holidays.Services
 
             // authentication successful
             return user;
+        }
+
+        public async Task<IdentityUser> Authenticate(UserManager<IdentityUser> userManager, string email, string password)
+        {
+            var userToVerify = await userManager.FindByEmailAsync(email); //Kazkodel neveikia
+            //var userToVerify = userManager.Users.FirstOrDefault(x => x.Email == email);
+            if (userToVerify == null)
+            {
+                return null;
+            }
+
+            if (await userManager.CheckPasswordAsync(userToVerify, password))
+            {
+                return userToVerify;
+            }
+
+            return null;
         }
 
         public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
