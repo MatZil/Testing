@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Xplicity_Holidays.Migrations
@@ -12,7 +13,7 @@ namespace Xplicity_Holidays.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CompanyName = table.Column<string>(maxLength: 20, nullable: false),
                     OwnerName = table.Column<string>(maxLength: 15, nullable: false),
                     OwnerSurname = table.Column<string>(maxLength: 20, nullable: false),
@@ -29,7 +30,7 @@ namespace Xplicity_Holidays.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Purpose = table.Column<string>(nullable: false),
                     Subject = table.Column<string>(nullable: false),
                     Template = table.Column<string>(nullable: false),
@@ -45,7 +46,7 @@ namespace Xplicity_Holidays.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 15, nullable: false),
                     Surname = table.Column<string>(maxLength: 20, nullable: false),
                     ClientId = table.Column<int>(nullable: true),
@@ -75,7 +76,7 @@ namespace Xplicity_Holidays.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     EmployeeId = table.Column<int>(nullable: false),
                     Type = table.Column<int>(nullable: false),
                     FromInclusive = table.Column<DateTime>(nullable: false),

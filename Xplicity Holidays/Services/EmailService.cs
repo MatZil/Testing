@@ -4,6 +4,7 @@ using Xplicity_Holidays.Infrastructure.Emailer;
 using Xplicity_Holidays.Services.Interfaces;
 using System.Linq;
 using Xplicity_Holidays.Infrastructure.Repositories;
+using Microsoft.Extensions.Configuration;
 
 namespace Xplicity_Holidays.Services
 {
@@ -11,11 +12,13 @@ namespace Xplicity_Holidays.Services
     {
         private readonly IEmailer _emailer;
         private readonly IEmailTemplatesRepository _repository;
+        private readonly IConfiguration _configuration;
 
-        public EmailService(IEmailer emailer, IEmailTemplatesRepository repository)
+        public EmailService(IEmailer emailer, IEmailTemplatesRepository repository, IConfiguration configuration)
         {
             _emailer = emailer;
             _repository = repository;
+            _configuration = configuration;
         }
 
         public async void ConfirmHolidayWithClient(Client client, Employee employee, Holiday holiday)
@@ -28,8 +31,8 @@ namespace Xplicity_Holidays.Services
                                         .Replace("{holiday.type}", holiday.Type.ToString())
                                         .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
                                         .Replace("{holiday.to}", holiday.ToExclusive.ToShortDateString())
-                                        .Replace("{holiday.confirm}", $"https://localhost:44374/api/holidayclient?holidayid={holiday.Id}")
-                                        .Replace("{holiday.decline}", $"https://localhost:44374/api/holidaydecline?holidayid={holiday.Id}");
+                                        .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/holidayclient?holidayid={holiday.Id}")
+                                        .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/holidaydecline?holidayid={holiday.Id}");
 
             _emailer.SendMail(client.OwnerEmail, template.Subject, messageString);
         }
@@ -44,8 +47,8 @@ namespace Xplicity_Holidays.Services
                                         .Replace("{holiday.type}", holiday.Type.ToString())
                                         .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
                                         .Replace("{holiday.to}", holiday.ToExclusive.ToShortDateString())
-                                        .Replace("{holiday.confirm}", $"https://localhost:44374/api/holidayconfirm?holidayid={holiday.Id}")
-                                        .Replace("{holiday.decline}", $"https://localhost:44374/api/holidaydecline?holidayid={holiday.Id}")
+                                        .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/holidayconfirm?holidayid={holiday.Id}")
+                                        .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/holidaydecline?holidayid={holiday.Id}")
                                         .Replace("{client.status}", clientStatus);
 
             _emailer.SendMail(admin.Email, template.Subject, messageString);

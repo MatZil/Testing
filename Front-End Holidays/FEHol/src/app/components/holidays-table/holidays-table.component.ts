@@ -45,7 +45,6 @@ export class HolidaysTableComponent implements OnInit {
   ) {
     this.currentUser = this.authenticationService.currentUserValue;
     this.currentUserId = this.currentUser.id;
-    this.requestHolidays.employeeId = this.currentUser.id;
   }
 
   ngOnInit() {
@@ -66,8 +65,9 @@ export class HolidaysTableComponent implements OnInit {
     });
   }
 
-  onAddButtonClick(holidays: Requestholidays) {
-    this.holidayService.addHolidays(holidays).subscribe(response => {
+  onAddButtonClick() {
+    this.requestHolidays.employeeId = this.currentUser.id;
+    this.holidayService.addHolidays(this.requestHolidays).subscribe(response => {
       saveAs(response, 'Holidays_Request');
       this.refreshTable();
     });
