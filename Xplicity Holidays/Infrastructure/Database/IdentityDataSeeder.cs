@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Protocols;
 using System.Configuration;
 using System.Security.Policy;
+using Xplicity_Holidays.Infrastructure.Database.Models;
 
 namespace Xplicity_Holidays.Infrastructure.Database
 {
@@ -14,7 +15,7 @@ namespace Xplicity_Holidays.Infrastructure.Database
     {
 
 
-        public static void SeedData(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public static void SeedData(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             SeedRoles(roleManager, configuration);
             SeedUser(userManager, configuration);
@@ -30,15 +31,16 @@ namespace Xplicity_Holidays.Infrastructure.Database
             }
         }
 
-        public static void SeedUser(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public static void SeedUser(UserManager<User> userManager, IConfiguration configuration)
         {
             if (userManager.FindByEmailAsync(configuration.GetValue<string>("AdminData:AdminEmail")).Result == null)
             {
-                IdentityUser user = new IdentityUser();
+                User user = new User();
                 user.UserName = configuration.GetValue<string>("AdminData:AdminEmail");
                 user.Email = configuration.GetValue<string>("AdminData:AdminEmail");
+                user.EmployeeId = 1;
                 IdentityResult result = userManager.CreateAsync(user, configuration.GetValue<string>("AdminData:AdminPassword")).Result;
-
+                
                 if (result.Succeeded)
                 {
                     userManager.AddToRoleAsync(user, configuration.GetValue<string>("AdminData:RoleName")).Wait();

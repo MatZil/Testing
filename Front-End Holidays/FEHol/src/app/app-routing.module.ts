@@ -30,7 +30,9 @@ const routes: Routes = [
   {
     path: 'clients', component: HomeComponent, canActivate: [AuthGuard],
     children: [
-      { path: '', component: ClientTableComponent, canActivate: [AuthGuard] }
+      {
+        path: '', component: ClientTableComponent, canActivate: [RoleGuard]
+      }
     ]
   },
   {

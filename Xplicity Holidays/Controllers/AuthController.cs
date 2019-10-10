@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Xplicity_Holidays.Dtos;
+using Xplicity_Holidays.Infrastructure.Database.Models;
 using IAuthenticationService = Xplicity_Holidays.Services.Interfaces.IAuthenticationService;
 
 namespace Xplicity_Holidays.Controllers
@@ -15,19 +17,28 @@ namespace Xplicity_Holidays.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
-        private readonly UserManager<IdentityUser> _userManager;
-        public AuthController(IAuthenticationService authenticationService, UserManager<IdentityUser> userManager)
+        public AuthController(IAuthenticationService authenticationService, UserManager<User> userManager)
         {
             _authenticationService = authenticationService;
-            _userManager = userManager;
         }
 
         [Route("login")]
         [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login(AuthenticateDto request)
         {
-            var result = await _authenticationService.Authenticate(_userManager, email, password);
-            return Ok(result);
+            if (request.Email != null && request.Password != null)
+            {
+                var result = await _authenticationService.Authenticate(request.Email, request.Password);
+
+                if (result != null)
+                {
+                    return Ok(result.Employee);
+                }
+
+                return Unauthorized();
+            }
+
+            return BadRequest();
         }
     }
 }

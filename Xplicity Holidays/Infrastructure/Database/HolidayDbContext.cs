@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,7 +8,7 @@ using Xplicity_Holidays.Infrastructure.Database.Models;
 
 namespace Xplicity_Holidays.Infrastructure.Database
 {
-    public class HolidayDbContext : IdentityDbContext
+    public class HolidayDbContext : IdentityDbContext<User>
     {
         public DbSet<Client> Clients { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -20,6 +22,7 @@ namespace Xplicity_Holidays.Infrastructure.Database
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
             builder.Entity<Client>(entity =>
             {
                 entity.HasIndex(e => e.CompanyName).IsUnique();
@@ -30,6 +33,22 @@ namespace Xplicity_Holidays.Infrastructure.Database
                 entity.HasIndex(e => e.Email).IsUnique();
             });
             base.OnModelCreating(builder);
+
+            builder.Entity<Employee>().HasData(
+                new Employee
+                {
+                    Id = 1,
+                    Name = "Inga",
+                    Surname = "Rana",
+                    WorksFromDate = DateTime.Today,
+                    BirthdayDate = DateTime.Today,
+                    DaysOfVacation = 20,
+                    Email = "Inga@xplicity.com",
+                    PasswordHash = new byte[111000],
+                    PasswordSalt = new byte[111000],
+                    Position = "Position"
+                }
+            );
         }
     }
 }

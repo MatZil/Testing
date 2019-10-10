@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xplicity_Holidays.Configurations;
 using Xplicity_Holidays.Infrastructure.Database;
+using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays
@@ -22,7 +23,7 @@ namespace Xplicity_Holidays
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>()
                     .AddEntityFrameworkStores<HolidayDbContext>();
             services.Configure<IdentityOptions>(options =>
             {
@@ -44,7 +45,7 @@ namespace Xplicity_Holidays
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IBackgroundService backgroundService, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IBackgroundService backgroundService, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {

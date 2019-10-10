@@ -22,14 +22,14 @@ namespace Xplicity_Holidays.Services
             _authenticationService = authenticationService;
         }
 
-        public Employee Authenticate(string email, string password)
-        {
-            var employee = _authenticationService.Authenticate(_repository, email, password);
+        //public Employee Authenticate(string email, string password)
+        //{
+        //    var employee = _authenticationService.Authenticate(_repository, email, password);
 
-            _repository.Update(employee);
+        //    _repository.Update(employee);
 
-            return employee;
-        }
+        //    return employee;
+        //}
 
         public async Task<GetEmployeeDto> GetById(int id)
         {
@@ -62,11 +62,11 @@ namespace Xplicity_Holidays.Services
 
             var newEmployee = _mapper.Map<Employee>(newEmployeeDto);
 
-            byte[] passwordHash, passwordSalt;
-            _authenticationService.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            //byte[] passwordHash, passwordSalt;
+           // _authenticationService.CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-            newEmployee.PasswordHash = passwordHash;
-            newEmployee.PasswordSalt = passwordSalt;
+           // newEmployee.PasswordHash = passwordHash;
+            //newEmployee.PasswordSalt = passwordSalt;
 
             await _repository.Create(newEmployee);
 

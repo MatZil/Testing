@@ -7,8 +7,6 @@ namespace Xplicity_Holidays.Services.Interfaces
 {
     public interface IAuthenticationService
     {
-        Employee Authenticate(IEmployeeRepository repository, string email, string password);
-        Task<IdentityUser> Authenticate(UserManager<IdentityUser> userManager, string email, string password);
-        void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
+        Task<User> Authenticate(string email, string password);
     }
 }

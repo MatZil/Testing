@@ -9,6 +9,10 @@
   <ItemGroup>
     <Compile Remove="Migrations\20191004134227_SeedInitialAdmin.cs" />
     <Compile Remove="Migrations\20191004134227_SeedInitialAdmin.Designer.cs" />
+    <Compile Remove="Migrations\20191008084547_AddEmployeeAndIdentityRelation.cs" />
+    <Compile Remove="Migrations\20191008084547_AddEmployeeAndIdentityRelation.Designer.cs" />
+    <Compile Remove="Migrations\20191008100357_AddEmployeeAndIdentityRelation2.cs" />
+    <Compile Remove="Migrations\20191008100357_AddEmployeeAndIdentityRelation2.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

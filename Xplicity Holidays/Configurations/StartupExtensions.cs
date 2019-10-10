@@ -48,7 +48,7 @@ namespace Xplicity_Holidays.Configurations
         public static void SetUpDatabase(this IServiceCollection service, IConfiguration configuration)
         {
             var connectionString = configuration["Database:ConnectionString"];
-            service.AddDbContext<HolidayDbContext>(options => options.UseSqlite(connectionString));
+            service.AddDbContext<HolidayDbContext>(options => options.UseSqlServer(connectionString));
         }
 
         public static void SetUpAutoMapper(this IServiceCollection services)

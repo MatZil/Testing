@@ -7,7 +7,7 @@ namespace Xplicity_Holidays.Services.Interfaces
 {
     public interface IEmployeesService
     {
-        Employee Authenticate(string email, string password);
+        //Employee Authenticate(string email, string password);
         Task<GetEmployeeDto> GetById(int id);
         Task<ICollection<GetEmployeeDto>> GetAll();
         Task<NewEmployeeDto> Create(NewEmployeeDto newClient);

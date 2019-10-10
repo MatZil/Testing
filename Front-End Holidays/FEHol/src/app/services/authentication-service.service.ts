@@ -22,7 +22,7 @@ export class AuthenticationService {
     }
 
     login(email, password) {
-        return this.http.post<any>(`${environment.webApiUrl}/Employees/authenticate`, { email, password })
+        return this.http.post<any>(`${environment.webApiUrl}/Auth/login`, { email, password })
             .pipe(map(user => {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 if (user && user.token) {

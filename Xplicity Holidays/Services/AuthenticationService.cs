@@ -1,128 +1,84 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Configurations;
+using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Services
 {
-    public class AuthenticationService: IAuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly AppSettings _appSettings;
-        public AuthenticationService(IOptions<AppSettings> appSettings)
+        private readonly UserManager<User> _userManager;
+        private readonly HolidayDbContext _context;
+        public AuthenticationService(IOptions<AppSettings> appSettings, UserManager<User> userManager, HolidayDbContext context)
         {
+            _userManager = userManager;
+            _context = context;
             _appSettings = appSettings.Value;
         }
 
-        public Employee Authenticate(IEmployeeRepository repository, string email, string password)
+
+
+        public async Task<User> Authenticate(string email, string password)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-                return null;
+            var userToVerify = await _userManager.FindByEmailAsync(email);
 
-            var user = repository.FindByEmail(email).Result;
-
-            // check if username exists
-            if (user == null)
-                return null;
-
-            // check if password is correct
-            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-                return null;
-
-            string tokenString = CreateJwt(user);
-            user.Token = tokenString;
-
-            // authentication successful
-            return user;
-        }
-
-        public async Task<IdentityUser> Authenticate(UserManager<IdentityUser> userManager, string email, string password)
-        {
-            var userToVerify = await userManager.FindByEmailAsync(email); //Kazkodel neveikia
-            //var userToVerify = userManager.Users.FirstOrDefault(x => x.Email == email);
             if (userToVerify == null)
             {
                 return null;
             }
 
-            if (await userManager.CheckPasswordAsync(userToVerify, password))
+            if (await _userManager.CheckPasswordAsync(userToVerify, password))
             {
-                return userToVerify;
+                var user = await _userManager.Users.Include(e => e.Employee).SingleAsync(x => x.Email == email);
+                user.Employee.Token = await CreateJwt(user);
+                return user;
             }
 
             return null;
         }
 
-        public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        private async Task<string> CreateJwt(User user)
         {
-            if (password == null)
-                throw new ArgumentNullException(nameof(password));
-
-            if (string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("Value cannot be empty or whitespace only string.", nameof(password));
-
-            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            var claims = new List<Claim>
             {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
-        }
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
 
-        internal string CreateJwt(Employee employee)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, employee.Id.ToString()),
-                    new Claim(ClaimTypes.Role, employee.Role)
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), 
-                                                    SecurityAlgorithms.HmacSha256Signature)
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
 
-            return tokenString;
+            var roles = await _userManager.GetRolesAsync(user);
+            claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Secret));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddMinutes(30);
+
+            var token = new JwtSecurityToken(
+                "Issuer",
+                "Issuer",
+                claims,
+                expires: expires,
+                signingCredentials: credentials
+                );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        internal bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
-        {
-            if (password == null)
-                throw new ArgumentNullException(nameof(password));
 
-            if (string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("Value cannot be empty or whitespace only string.", nameof(password));
-
-            if (storedHash.Length != 64)
-                throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
-
-            if (storedSalt.Length != 128)
-                throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
-
-            using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-
-                for (var i = 0; i < computedHash.Length; i++)
-                {
-                    if (computedHash[i] != storedHash[i])
-                        return false;
-                }
-            }
-
-            return true;
-        }
     }
 }
