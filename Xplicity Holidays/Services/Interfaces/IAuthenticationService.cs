@@ -7,6 +7,6 @@ namespace Xplicity_Holidays.Services.Interfaces
 {
     public interface IAuthenticationService
     {
-        Task<User> Authenticate(string email, string password);
+        Task<string> Authenticate(string email, string password);
     }
 }

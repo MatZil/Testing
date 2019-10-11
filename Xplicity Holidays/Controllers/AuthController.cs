@@ -17,7 +17,7 @@ namespace Xplicity_Holidays.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
-        public AuthController(IAuthenticationService authenticationService, UserManager<User> userManager)
+        public AuthController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
         }
@@ -32,7 +32,7 @@ namespace Xplicity_Holidays.Controllers
 
                 if (result != null)
                 {
-                    return Ok(result.Employee);
+                    return Ok(result);
                 }
 
                 return Unauthorized();

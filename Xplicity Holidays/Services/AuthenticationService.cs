@@ -32,7 +32,7 @@ namespace Xplicity_Holidays.Services
 
 
 
-        public async Task<User> Authenticate(string email, string password)
+        public async Task<string> Authenticate(string email, string password)
         {
             var userToVerify = await _userManager.FindByEmailAsync(email);
 
@@ -43,9 +43,10 @@ namespace Xplicity_Holidays.Services
 
             if (await _userManager.CheckPasswordAsync(userToVerify, password))
             {
-                var user = await _userManager.Users.Include(e => e.Employee).SingleAsync(x => x.Email == email);
-                user.Employee.Token = await CreateJwt(user);
-                return user;
+                //var user = await _userManager.Users.Include(e => e.Employee).SingleAsync(x => x.Email == email);
+                //user.Employee.Token = await CreateJwt(user);
+                //return user;
+                return await CreateJwt(userToVerify);
             }
 
             return null;
