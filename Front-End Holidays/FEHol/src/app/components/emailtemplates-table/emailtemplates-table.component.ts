@@ -13,6 +13,7 @@ import { EmailTemplatesService } from 'src/app/services/email-templates.service'
 export class EmailtemplatesTableComponent implements OnInit {
   emailTemplates: EmailTemplate[] = [];
   formObject: NewEmailTemplate;
+  editId: number;
 
   isVisibleEditor = false;
 
@@ -40,6 +41,10 @@ export class EmailtemplatesTableComponent implements OnInit {
 
   createFormObject(emailTemplate: NewEmailTemplate) {
     this.formObject = Object.assign({}, emailTemplate);
+  }
+
+  setEditId(id: number) {
+    this.editId = id;
   }
 
   onSubmit(form: NgForm) {

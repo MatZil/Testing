@@ -31,12 +31,12 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
             return emailTemplate;
         }
 
-        public async Task<int> Create(EmailTemplate newEmployee)
+        public async Task<int> Create(EmailTemplate newEmailTemplate)
         {
-            _context.EmailTemplates.Add(newEmployee);
+            _context.EmailTemplates.Add(newEmailTemplate);
             await _context.SaveChangesAsync();
 
-            return newEmployee.Id;
+            return newEmailTemplate.Id;
         }
 
         public async Task<bool> Update(EmailTemplate emailTemplate)

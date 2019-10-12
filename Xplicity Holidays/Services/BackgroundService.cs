@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace Xplicity_Holidays.Services
     {
         private readonly ITimeService _timeService;
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public BackgroundService(ITimeService timeService, IServiceScopeFactory serviceScopeFactory)
+        public BackgroundService(ITimeService timeService, IServiceScopeFactory serviceScopeFactory, IHostingEnvironment hostingEnvironment)
         {
             _serviceScopeFactory = serviceScopeFactory;
             _timeService = timeService;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public async Task RunBackgroundServices()
@@ -55,8 +58,11 @@ namespace Xplicity_Holidays.Services
         private void CheckForLastMonthDay(Employee admin, ICollection<Holiday> holidays, IEmailService emailService,
                                           IHolidayInfoService holidayInfoService)
         {
-            //var currentTime = _timeService.GetCurrentTime();
-            var currentTime = new DateTime(2019, 9, 15);
+            DateTime currentTime;
+            if(_hostingEnvironment.IsProduction())
+                currentTime = _timeService.GetCurrentTime();
+            else
+                currentTime = new DateTime(2019, 10, 1);
             var thisMonthsHolidays = holidays.Where(h => h.Status == "Confirmed" && (h.FromInclusive.Year == currentTime.Year
                                                   || h.ToExclusive.AddDays(-1).Year == currentTime.Year)
                                                   && (h.FromInclusive.Month == currentTime.Month
@@ -72,7 +78,11 @@ namespace Xplicity_Holidays.Services
 
         private void CheckUpcomingHolidays(ICollection<Employee> employees, ICollection<Holiday> holidays, IEmailService emailService)
         {
-            var currentTime = _timeService.GetCurrentTime();
+            DateTime currentTime;
+            if (_hostingEnvironment.IsProduction())
+                currentTime = _timeService.GetCurrentTime();
+            else
+                currentTime = new DateTime(2019, 9, 3);
 
             var upcomingHolidays = holidays.Where(holiday => holiday.Status == "Confirmed" && 
                                                  holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
@@ -85,8 +95,11 @@ namespace Xplicity_Holidays.Services
         private void CheckBirthdays(ICollection<Employee> employees, ITimeService _timeService, IEmailService emailService)
         {
             var employeesWithBirthdays = new List<Employee>();
-            //var currentTime = _timeService.GetCurrentTime();
-            var currentTime = new DateTime(2019, 05, 30);
+            DateTime currentTime;
+            if (_hostingEnvironment.IsProduction())
+                currentTime = _timeService.GetCurrentTime();
+            else
+                currentTime = new DateTime(2019, 2, 1);
 
             foreach (var employee in employees)
             {
