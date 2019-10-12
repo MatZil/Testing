@@ -3,21 +3,25 @@ using AutoMapper;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
+using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Services
 {
     public class HolidayConfirmService: IHolidayConfirmService
     {
-        private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
         private readonly IPdfService _pdfService;
+        private readonly IHolidaysService _holidaysService;
+        private readonly ITimeService _timeService;
         private readonly IEmployeeRepository _repositoryEmployees;
         private readonly IRepository<Client> _repositoryClients;
         private readonly IRepository<Holiday> _repositoryHolidays;
 
         public HolidayConfirmService(IEmailService emailService, IMapper mapper, IRepository<Holiday> repositoryHolidays, 
-            IPdfService pdfService, IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients)
+            IPdfService pdfService, IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
+            IHolidaysService holidaysService, ITimeService timeService)
         {
             _emailService = emailService;
             _mapper = mapper;
@@ -25,6 +29,8 @@ namespace Xplicity_Holidays.Services
             _repositoryClients = repositoryClients;
             _repositoryHolidays = repositoryHolidays;
             _pdfService = pdfService;
+            _holidaysService = holidaysService;
+            _timeService = timeService;
         }
         public async Task<bool> RequestClientApproval(int holidayId)
         {
@@ -71,6 +77,25 @@ namespace Xplicity_Holidays.Services
             _pdfService.CreateOrderPdf(holiday, employee);
 
             return true;
+        }
+
+        public async Task ConfirmHoliday(int holidayId)
+        {
+            var getHolidayDto = await _holidaysService.GetById(holidayId);
+            var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(getHolidayDto);
+            updateHolidayDto.Status = "Confirmed";
+            await _holidaysService.Update(holidayId, updateHolidayDto);
+
+            if (getHolidayDto.Type == 0 && getHolidayDto.Paid)
+                await UpdateEmployeesWorkdays(getHolidayDto);
+        }
+
+        private async Task UpdateEmployeesWorkdays(GetHolidayDto holidayDto)
+        {
+            var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
+            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
+            employee.FreeWorkDays -= workdays;
+            await _repositoryEmployees.Update(employee);
         }
     }
 }

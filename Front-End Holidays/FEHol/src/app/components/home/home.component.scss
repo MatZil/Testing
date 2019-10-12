@@ -1,41 +1,18 @@
-.trigger {
-    font-size: 18px;
-    line-height: 64px;
-    padding: 0 24px;
-    cursor: pointer;
-    transition: color 0.3s;
-  }
-  
-  .trigger:hover {
-    color: #1890ff;
-  }
-  
-  .logo {
-    height: 32px;
-    margin: 16px;
-  }
-  .logoText{
-    text-align: center;
-    top: 25%;
+.holidaysCount{
+    position: absolute;
+     left: 25px;
+     font-size: 20px;
+     color: black;
+     top: 6em;
+}
+.titleCenter{
+    position: absolute;
+    color: midnightblue;
+    font-size: 70px;
+    top: 0.5em;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.container{
     position: relative;
-    color: rgb(255, 255, 255);
-    font-family: 'Arial';
-    font-size: medium;
-  }
-  
-  nz-header {
-    background: #fff;
-    padding: 0;
-  }
-  
-  nz-footer {
-    line-height: 1.5;
-  }
-  
-  nz-layout {
-    height: 100vh;
-  }
-  
-  nz-content {
-    margin: 24px 16px 0;
-  }
+}

@@ -10,7 +10,7 @@
                 <mat-card>
                     <div>
                         <mat-form-field>
-                            <mat-select [(ngModel)]="requestHolidays.type" name="type" placeholder="Holidays type"
+                            <mat-select [(ngModel)]="requestHolidays.type" name="type" placeholder="Holiday's type"
                                 required #nameInput="ngModel">
                                 <mat-option [value]="0">Annual</mat-option>
                                 <mat-option [value]="1">Parental</mat-option>
@@ -42,6 +42,9 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
+                    <div>
+                        <mat-checkbox [checked]="requestHolidays.paid" (change)="setPaid()">Paid</mat-checkbox>
+                    </div>
                 </mat-card>
             </ng-template>
 
@@ -60,6 +63,7 @@
             <tr>
                 <th>Employee</th>
                 <th>Holidays type</th>
+                <th>Paid</th>
                 <th>Date from</th>
                 <th>Date to</th>
                 <th>Status</th>
@@ -70,6 +74,14 @@
             <tr *ngFor="let hol of basicTable.data">
                 <td>{{getUserNameById(hol.employeeId)}}</td>
                 <td>{{checkWhatTypeOfHoliday(hol.type)}}</td>
+                <td>
+                    <div *ngIf="hol.paid">
+                        Yes
+                    </div>
+                    <div *ngIf="!hol.paid">
+                        No
+                    </div>
+                </td>
                 <td>{{hol.fromInclusive | date}}</td>
                 <td>{{hol.toExclusive | date}}</td>
                 <td>{{hol.status}}</td>
@@ -88,6 +100,7 @@
         <thead>
             <tr>
                 <th>Holidays type</th>
+                <th>Paid</th>
                 <th>Date from</th>
                 <th>Date to</th>
                 <th>Status</th>
@@ -98,6 +111,14 @@
             <tr *ngFor="let hol of basicTable.data">
                 <ng-container *ngIf="isTheRightId(hol)">
                     <td>{{checkWhatTypeOfHoliday(hol.type)}}</td>
+                    <td>
+                        <div *ngIf="hol.paid">
+                            Yes
+                        </div>
+                        <div *ngIf="!hol.paid">
+                            No
+                        </div>
+                    </td>
                     <td>{{hol.fromInclusive | date}}</td>
                     <td>{{hol.toExclusive | date}}</td>
                     <td>{{hol.status}}</td>

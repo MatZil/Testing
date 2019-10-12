@@ -5,6 +5,7 @@ using AutoMapper;
 using Xplicity_Holidays.Dtos.Employees;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
+using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Services
@@ -14,12 +15,15 @@ namespace Xplicity_Holidays.Services
         private readonly IEmployeeRepository _repository;
         private readonly IMapper _mapper;
         private readonly IAuthenticationService _authenticationService;
+        private readonly ITimeService _timeService;
 
-        public EmployeesService(IEmployeeRepository repository, IAuthenticationService authenticationService, IMapper mapper)
+        public EmployeesService(IEmployeeRepository repository, IAuthenticationService authenticationService, IMapper mapper, 
+                                ITimeService timeService)
         {
             _repository = repository;
             _mapper = mapper;
             _authenticationService = authenticationService;
+            _timeService = timeService;
         }
 
         public Employee Authenticate(string email, string password)
@@ -67,6 +71,15 @@ namespace Xplicity_Holidays.Services
 
             newEmployee.PasswordHash = passwordHash;
             newEmployee.PasswordSalt = passwordSalt;
+
+            var currentTime = _timeService.GetCurrentTime();
+
+            var workedTime = _timeService.GetWorkDays(newEmployee.WorksFromDate, currentTime);
+
+            var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1), 
+                                                            new DateTime(currentTime.AddYears(1).Year, 1, 1));
+
+            newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
 
             await _repository.Create(newEmployee);
 

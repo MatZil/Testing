@@ -45,10 +45,7 @@ namespace Xplicity_Holidays.Controllers
         [HttpGet]
         public async Task<IActionResult> ConfirmHoliday(int holidayId)
         {
-            var getHolidayDto = await _holidaysService.GetById(holidayId);
-            var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(getHolidayDto);
-            updateHolidayDto.Status = "Confirmed";
-            await _holidaysService.Update(holidayId, updateHolidayDto);
+            await _confirmationService.ConfirmHoliday(holidayId);
 
             await _confirmationService.CreateOrderPdf(holidayId);
 

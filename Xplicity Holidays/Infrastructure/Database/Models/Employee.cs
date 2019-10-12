@@ -23,6 +23,8 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public int DaysOfVacation { get; set; } // An amount of free workdays over a year (either 20 or 25)
         [Required]
+        public double FreeWorkDays { get; set; } //Current amount of free workdays left.
+        [Required]
         [MinLength(4)]
         public string Email { get; set; }
         [Required]
@@ -34,5 +36,6 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public string Position { get; set; }
         public ICollection<Holiday> Holidays { get; set; }
+
     }
 }

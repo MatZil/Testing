@@ -9,7 +9,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
-import { HomeComponent } from './components/home/home.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { LoginComponent } from './components/login/login.component';
@@ -25,11 +25,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
+import { MatDatepickerModule, MatNativeDateModule, MatCheckbox, MatCheckboxModule } from '@angular/material';
 
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
-import { PolicyComponent } from './components/policy/policy.component';
+import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
 import { PdfComponent } from './components/pdf/pdf.component';
@@ -41,14 +41,14 @@ registerLocaleData(en);
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
+    SidebarComponent,
     CalendarComponent,
     AlertComponent,
     LoginComponent,
     ClientTableComponent,
     ErrorPageComponent,
     EmployeesTableComponent,
-    PolicyComponent,
+    HomeComponent,
     ProfileComponent,
     HolidaysTableComponent,
     PdfComponent,
@@ -63,6 +63,7 @@ registerLocaleData(en);
     HttpClientModule,
     BrowserAnimationsModule,
     MatInputModule,
+    MatCheckboxModule,
     MatButtonModule,
     MatCardModule,
     MatChipsModule,

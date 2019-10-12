@@ -7,7 +7,6 @@ import { environment } from '../../environments/environment';
 import { Holidays } from '../models/holidays';
 import { Requestholidays } from '../models/requestholidays';
 import { Newholidays } from '../models/newholidays';
-import { Holidaysinfo } from '../models/holidaysinfo';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,6 @@ export class HolidaysService {
 
   private readonly holidaysApiBase = `${environment.webApiUrl}/Holidays`;
   private readonly holidaysApiRequest = `${environment.webApiUrl}/HolidayConfirm`;
-  private readonly holidaysApiInfo = `${environment.webApiUrl}/HolidayInfo`;
 
   private readonly httpOptions = {
     headers: new HttpHeaders({
@@ -48,9 +46,5 @@ export class HolidaysService {
 
   deleteHolidays(id: number): Observable<Holidays> {
     return this.http.delete<Holidays>(`${this.holidaysApiBase}/${id}`);
-  }
-
-  getHolidaysInfo(): Observable<Holidaysinfo[]> {
-    return this.http.get<Holidaysinfo[]>(this.holidaysApiInfo);
   }
 }
