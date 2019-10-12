@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit {
     private userService: UserService,
     private policyService: PolicyService
   ) {
-    this.currentUser = this.authenticationService.currentUserValue;
+
   }
 
   ngOnInit() {

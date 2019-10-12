@@ -5,12 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node",
+            "type": "chrome",
             "request": "launch",
             "name": "Launch Program",
-            "webRoot": "${workspaceFolder}/src",
-            "url": "http://localhost:4200",
-            "breakOnLoad": true
+            "webRoot": "${workspaceFolder}/",
+            "url": "http://localhost:4200"
         }
     ]
 }

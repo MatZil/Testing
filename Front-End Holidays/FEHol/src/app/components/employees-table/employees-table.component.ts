@@ -4,6 +4,7 @@ import { User } from '../../models/user';
 import { Newuser } from '../../models/newuser';
 import { Updateuser } from '../../models/updateuser';
 import { UserService } from '../../services/user.service';
+import { AuthenticationService } from '../../services/authentication-service.service';
 
 import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
@@ -14,6 +15,7 @@ import { HolidaysService } from '../../services/holidays.service';
 import { NgForm } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { NzNotificationService } from 'ng-zorro-antd';
+import { Role } from '../../models/role';
 
 @Component({
   selector: 'app-employees-table',
@@ -22,6 +24,7 @@ import { NzNotificationService } from 'ng-zorro-antd';
 })
 export class EmployeesTableComponent implements OnInit {
   users: User[];
+  roles: Role[];
   formDataUsers: User;
   formDataUsersNoId: Updateuser;
   newUser: Newuser = new Newuser();
@@ -48,12 +51,13 @@ export class EmployeesTableComponent implements OnInit {
     private clientService: ClientService,
     private holidayService: HolidaysService,
     private modal: NzModalService,
-    private notification: NzNotificationService
+    private notification: NzNotificationService,
+    private authenticationService: AuthenticationService
   ) { }
 
   ngOnInit() {
     this.refreshTable();
-
+    this.getAllRoles();
     this.clientService.getClient().subscribe(clients => {
       this.clients = clients;
     });
@@ -70,6 +74,11 @@ export class EmployeesTableComponent implements OnInit {
     });
   }
 
+  getAllRoles() {
+    this.authenticationService.getRoles().subscribe(roles => {
+      this.roles = roles;
+    });
+  }
   onAddButtonClick(user: User) {
     this.userService.registerUser(user).subscribe(() => {
       this.refreshTable();

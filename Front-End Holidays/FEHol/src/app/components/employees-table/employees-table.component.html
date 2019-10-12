@@ -89,8 +89,7 @@
                     <mat-form-field>
                         <mat-select [(ngModel)]="newUser.role" name="role" placeholder="Employee role" required
                             #nameInput="ngModel">
-                            <mat-option [value]="'admin'">Admin</mat-option>
-                            <mat-option [value]="'employee'">Employee</mat-option>
+                            <mat-option *ngFor="let role of roles" [value]="role.id">{{role.name}}</mat-option>
                             <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                 class="error">
                                 Employee role cannot be empty.

@@ -9,7 +9,7 @@ import { EmployeesTableComponent } from './components/employees-table/employees-
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
 import { PolicyComponent } from './components/policy/policy.component';
 import { AuthGuard } from './helpers/auth-guard';
-import { RoleGuard } from './helpers/role-guard';
+import { RoleGuardService } from './helpers/role-guard';
 import { ProfileComponent } from './components/profile/profile.component';
 
 
@@ -22,16 +22,22 @@ const routes: Routes = [
   },
   { path: 'login', component: LoginComponent },
   {
-    path: 'calendar', component: HomeComponent, canActivate: [AuthGuard],
+    path: 'calendar', component: HomeComponent, canActivate: [RoleGuardService], data: {
+      expectedRole: 'employee'
+    },
     children: [
-      { path: '', component: CalendarComponent, canActivate: [AuthGuard] }
+      {
+        path: '', component: CalendarComponent, canActivate: [RoleGuardService], data: {
+          expectedRole: 'employee'
+        }
+      }
     ]
   },
   {
     path: 'clients', component: HomeComponent, canActivate: [AuthGuard],
     children: [
       {
-        path: '', component: ClientTableComponent, canActivate: [RoleGuard]
+        path: '', component: ClientTableComponent, canActivate: [AuthGuard]
       }
     ]
   },

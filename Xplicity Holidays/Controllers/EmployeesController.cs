@@ -17,24 +17,6 @@ namespace Xplicity_Holidays.Controllers
             _employeesService = employeesService;
         }
 
-        //[HttpPost]
-        //[Route("authenticate")]
-        //public IActionResult Authenticate(AuthenticateDto request)
-        //{
-        //    var employee = _employeesService.Authenticate(request.Email, request.Password);
-
-        //    if (employee == null)
-        //        return BadRequest(new { message = "Email or password is incorrect" });
-
-        //    // return basic user info (without password) and token to store client side
-        //    return Ok(new
-        //    {
-        //        employee.Id,
-        //        Username = employee.Name,
-        //        employee.Token
-        //    });
-        //}
-
         // GET: api/Employees
         [HttpGet]
         [Produces(typeof(GetEmployeeDto[]))]

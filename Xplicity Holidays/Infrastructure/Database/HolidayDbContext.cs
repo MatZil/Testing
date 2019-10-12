@@ -44,8 +44,6 @@ namespace Xplicity_Holidays.Infrastructure.Database
                     BirthdayDate = DateTime.Today,
                     DaysOfVacation = 20,
                     Email = "Inga@xplicity.com",
-                    PasswordHash = new byte[111000],
-                    PasswordSalt = new byte[111000],
                     Position = "Position"
                 }
             );

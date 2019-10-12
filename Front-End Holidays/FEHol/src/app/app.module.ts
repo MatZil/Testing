@@ -16,7 +16,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ErrorInterceptor } from './helpers/error-interceptor';
 import { ClientTableComponent } from './components/client-table/client-table.component';
 import { JwtInterceptor } from './helpers/jwt-interceptor';
-
+import { JwtModule } from '@auth0/angular-jwt';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -36,7 +36,9 @@ import { PdfComponent } from './components/pdf/pdf.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 registerLocaleData(en);
-
+export function tokenGetter() {
+  return localStorage.getItem("token");
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,12 +72,23 @@ registerLocaleData(en);
     MatToolbarModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    PdfViewerModule
+    PdfViewerModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ["http://localhost:4200"],
+        blacklistedRoutes: ["example.com/examplebadroute/"]
+      }
+    })
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US },
   { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
+
+
+
+
 export class AppModule {
 }

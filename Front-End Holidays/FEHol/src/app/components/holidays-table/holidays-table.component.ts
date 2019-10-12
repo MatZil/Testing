@@ -43,9 +43,8 @@ export class HolidaysTableComponent implements OnInit {
     private holidayService: HolidaysService,
     private modal: NzModalService
   ) {
-    this.currentUser = this.authenticationService.currentUserValue;
-    this.currentUserId = this.currentUser.id;
-    this.requestHolidays.employeeId = this.currentUser.id;
+    this.currentUserId = this.authenticationService.getUserId();
+    this.requestHolidays.employeeId = this.currentUserId;
   }
 
   ngOnInit() {
@@ -134,11 +133,7 @@ export class HolidaysTableComponent implements OnInit {
     });
   }
 
-  isAdmin() {
-    if (this.currentUser.role === 'admin') {
-      return true;
-    }
-  }
+
 
   isTheRightId(holidays: Holidays) {
     if (this.currentUserId === holidays.employeeId) {

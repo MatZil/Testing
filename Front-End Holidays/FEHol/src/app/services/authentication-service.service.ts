@@ -3,44 +3,51 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { User } from '../models/user';
 import { environment } from '../../environments/environment';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Role } from '../models/role';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-    private currentUserSubject: BehaviorSubject<User>;
-    public currentUser: Observable<User>;
-    private thisUser: User;
 
-    constructor(private http: HttpClient) {
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
-        this.currentUser = this.currentUserSubject.asObservable();
-    }
+  private thisUser: number;
+  public token: string;
 
-    public get currentUserValue(): User {
-        return this.currentUserSubject.value;
-    }
 
-    login(email, password) {
-        return this.http.post<any>(`${environment.webApiUrl}/Auth/login`, { email, password })
-            .pipe(map(user => {
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
-                if (user && user.token) {
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                    this.currentUserSubject.next(user);
-                }
-                return user;
-            }));
-    }
+  constructor(private http: HttpClient, public jwtHelper: JwtHelperService) {
 
-    logout() {
-        // remove user from local storage and set current user to null
-        localStorage.removeItem('currentUser');
-        this.currentUserSubject.next(null);
-    }
+  }
 
-    getUserId() {
-        this.thisUser = JSON.parse(localStorage.getItem('currentUser'));
-        return this.thisUser.id;
-    }
+
+
+  public isAuthenticated(): boolean {
+    const token = localStorage.getItem('token');
+    // Check whether the token is expired and return
+    // true or false
+    return !this.jwtHelper.isTokenExpired(token);
+  }
+
+  login(email, password) {
+    return this.http.post<any>(`${environment.webApiUrl}/Auth/login`, { email, password })
+      .pipe(map(it => {
+        localStorage.setItem('userId', JSON.stringify(it.employeeId));
+        localStorage.setItem('token', it.token);
+      }));
+
+  }
+
+  logout() {
+    // remove user from local storage and set current user to null
+    localStorage.removeItem('userId');
+    localStorage.removeItem('token');
+  }
+
+  getUserId() {
+    this.thisUser = JSON.parse(localStorage.getItem('userId'));
+    return this.thisUser;
+  }
+
+  getRoles(): Observable<Role[]> {
+    return this.http.get<Role[]>(`${environment.webApiUrl}/Auth/roles`);
+  }
 }

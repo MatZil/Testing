@@ -7,15 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20191004134227_SeedInitialAdmin.cs" />
-    <Compile Remove="Migrations\20191004134227_SeedInitialAdmin.Designer.cs" />
-    <Compile Remove="Migrations\20191008084547_AddEmployeeAndIdentityRelation.cs" />
-    <Compile Remove="Migrations\20191008084547_AddEmployeeAndIdentityRelation.Designer.cs" />
-    <Compile Remove="Migrations\20191008100357_AddEmployeeAndIdentityRelation2.cs" />
-    <Compile Remove="Migrations\20191008100357_AddEmployeeAndIdentityRelation2.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
     <PackageReference Include="DinkToPdf" Version="1.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.App" />

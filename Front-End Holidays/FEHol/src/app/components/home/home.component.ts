@@ -21,9 +21,9 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private holidaysService: HolidaysService,
     private userService: UserService
-  ) {
-    this.currentUser = this.authenticationService.currentUserValue;
-  }
+  ) { }
+
+
 
   deleteUser(id: number) {
     this.userService.deleteUser(id).pipe(first()).subscribe(() => this.loadAllUsers());
@@ -51,9 +51,4 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  isAdmin() {
-    if (this.currentUser.role === 'admin') {
-      return true;
-    }
-  }
 }

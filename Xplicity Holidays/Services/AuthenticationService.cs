@@ -22,17 +22,15 @@ namespace Xplicity_Holidays.Services
     {
         private readonly AppSettings _appSettings;
         private readonly UserManager<User> _userManager;
-        private readonly HolidayDbContext _context;
-        public AuthenticationService(IOptions<AppSettings> appSettings, UserManager<User> userManager, HolidayDbContext context)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public AuthenticationService(IOptions<AppSettings> appSettings, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
-            _context = context;
+            _roleManager = roleManager;
             _appSettings = appSettings.Value;
         }
 
-
-
-        public async Task<string> Authenticate(string email, string password)
+        public async Task<User> Authenticate(string email, string password)
         {
             var userToVerify = await _userManager.FindByEmailAsync(email);
 
@@ -43,10 +41,9 @@ namespace Xplicity_Holidays.Services
 
             if (await _userManager.CheckPasswordAsync(userToVerify, password))
             {
-                //var user = await _userManager.Users.Include(e => e.Employee).SingleAsync(x => x.Email == email);
-                //user.Employee.Token = await CreateJwt(user);
-                //return user;
-                return await CreateJwt(userToVerify);
+                var user = await _userManager.Users.Include(e => e.Employee).SingleAsync(x => x.Email == email);
+                user.Employee.Token = await CreateJwt(user);
+                return user;
             }
 
             return null;
@@ -78,8 +75,11 @@ namespace Xplicity_Holidays.Services
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+            
         }
-
-
+        public async Task<List<IdentityRole>> GetAllRoles()
+        {
+            return await _roleManager.Roles.ToListAsync();
+        }
     }
 }

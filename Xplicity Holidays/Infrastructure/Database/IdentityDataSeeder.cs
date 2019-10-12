@@ -29,6 +29,13 @@ namespace Xplicity_Holidays.Infrastructure.Database
                 role.Name = configuration.GetValue<string>("AdminData:RoleName");
                 IdentityResult result = roleManager.CreateAsync(role).Result;
             }
+
+            if (!roleManager.RoleExistsAsync("Employee").Result)
+            {
+                IdentityRole role = new IdentityRole();
+                role.Name = "Employee";
+                IdentityResult result = roleManager.CreateAsync(role).Result;
+            }
         }
 
         public static void SeedUser(UserManager<User> userManager, IConfiguration configuration)
