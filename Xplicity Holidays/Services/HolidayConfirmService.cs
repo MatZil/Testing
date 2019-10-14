@@ -3,6 +3,7 @@ using AutoMapper;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
+using Xplicity_Holidays.Infrastructure.Static_Files;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Services
@@ -33,13 +34,13 @@ namespace Xplicity_Holidays.Services
 
             if (employee.ClientId == null)
             {
-                await RequestAdminApproval(holidayId, "This employee has no client that needs to confirm it");
+                await RequestAdminApproval(holidayId, EmployeeClientStatus.HAS_NO_CLIENT);
 
                 return true;
             }
 
             var client = await _repositoryClients.GetById(employee.ClientId.GetValueOrDefault());
-            _emailService.ConfirmHolidayWithClient(client, employee, holiday);
+            await _emailService.ConfirmHolidayWithClient(client, employee, holiday);
 
             return true;
         }
@@ -49,7 +50,7 @@ namespace Xplicity_Holidays.Services
             var holiday = await _repositoryHolidays.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
             var admin = await _repositoryEmployees.FindAnyAdmin();
-            _emailService.ConfirmHolidayWithAdmin(admin, employee, holiday, clientStatus);
+            await _emailService.ConfirmHolidayWithAdmin(admin, employee, holiday, clientStatus);
 
             return true;
         }

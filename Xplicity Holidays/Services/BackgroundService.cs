@@ -47,15 +47,15 @@ namespace Xplicity_Holidays.Services
                 var employees = await employeeRepository.GetAll();
                 var admin = await employeeRepository.FindAnyAdmin();
 
-                await Task.Run(() => CheckForLastMonthDay(admin, holidays, emailService, holidayInfoService));
+                await Task.Run(async() => await CheckForLastMonthDay(admin, holidays, emailService, holidayInfoService));
 
-                await Task.Run(() => CheckUpcomingHolidays(employees, holidays, emailService));
+                await Task.Run(async() => await CheckUpcomingHolidays(employees, holidays, emailService));
 
-                await Task.Run(() => CheckBirthdays(employees, _timeService, emailService));
+                await Task.Run(async() => await CheckBirthdays(employees, _timeService, emailService));
             }
         }
 
-        private void CheckForLastMonthDay(Employee admin, ICollection<Holiday> holidays, IEmailService emailService,
+        private async Task CheckForLastMonthDay(Employee admin, ICollection<Holiday> holidays, IEmailService emailService,
                                           IHolidayInfoService holidayInfoService)
         {
             DateTime currentTime;
@@ -68,38 +68,38 @@ namespace Xplicity_Holidays.Services
                                                   && (h.FromInclusive.Month == currentTime.Month
                                                   || h.ToExclusive.AddDays(-1).Month == currentTime.Month)).ToList();
 
-            var holidaysWithClients = holidayInfoService.GetClientsAndHolidays(thisMonthsHolidays).Result;
+            var holidaysWithClients = await holidayInfoService.GetClientsAndHolidays(thisMonthsHolidays);
 
             var nextDay = currentTime.AddDays(1);
 
             if(currentTime.Month != nextDay.Month)
-                emailService.SendThisMonthsHolidayInfo(admin, holidaysWithClients);
+                await emailService.SendThisMonthsHolidayInfo(admin, holidaysWithClients);
         }
 
-        private void CheckUpcomingHolidays(ICollection<Employee> employees, ICollection<Holiday> holidays, IEmailService emailService)
+        private async Task CheckUpcomingHolidays(ICollection<Employee> employees, ICollection<Holiday> holidays, IEmailService emailService)
         {
             DateTime currentTime;
             if (_hostingEnvironment.IsProduction())
                 currentTime = _timeService.GetCurrentTime();
             else
-                currentTime = new DateTime(2019, 9, 3);
+                currentTime = new DateTime(2019, 10,14);
 
             var upcomingHolidays = holidays.Where(holiday => holiday.Status == "Confirmed" && 
                                                  holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
                                                   .ToList();
 
             if (upcomingHolidays.Count != 0)
-                emailService.InformEmployeesAboutHoliday(employees, upcomingHolidays);
+                await emailService.InformEmployeesAboutHoliday(employees, upcomingHolidays);
         }
 
-        private void CheckBirthdays(ICollection<Employee> employees, ITimeService _timeService, IEmailService emailService)
+        private async Task CheckBirthdays(ICollection<Employee> employees, ITimeService _timeService, IEmailService emailService)
         {
             var employeesWithBirthdays = new List<Employee>();
             DateTime currentTime;
             if (_hostingEnvironment.IsProduction())
                 currentTime = _timeService.GetCurrentTime();
             else
-                currentTime = new DateTime(2019, 2, 1);
+                currentTime = new DateTime(2019, 10, 14);
 
             foreach (var employee in employees)
             {
@@ -108,7 +108,7 @@ namespace Xplicity_Holidays.Services
             }
 
             if (employeesWithBirthdays.Count != 0)
-                emailService.SendBirthDayReminder(employeesWithBirthdays, employees);
+                await emailService.SendBirthDayReminder(employeesWithBirthdays, employees);
         }
 
 

@@ -5,6 +5,8 @@ using Xplicity_Holidays.Services.Interfaces;
 using System.Linq;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using Xplicity_Holidays.Infrastructure.Static_Files;
 
 namespace Xplicity_Holidays.Services
 {
@@ -21,9 +23,9 @@ namespace Xplicity_Holidays.Services
             _configuration = configuration;
         }
 
-        public async void ConfirmHolidayWithClient(Client client, Employee employee, Holiday holiday)
+        public async Task ConfirmHolidayWithClient(Client client, Employee employee, Holiday holiday)
         {
-            var template = await _repository.GetByPurpose("Client Confirmation");
+            var template = await _repository.GetByPurpose(EmailPurposes.CLIENT_CONFIRMATION);
             var messageString = template.Template
                                         .Replace("{client.name}", client.OwnerName)
                                         .Replace("{employee.name}", employee.Name)
@@ -37,9 +39,9 @@ namespace Xplicity_Holidays.Services
             _emailer.SendMail(client.OwnerEmail, template.Subject, messageString);
         }
 
-        public async void ConfirmHolidayWithAdmin(Employee admin, Employee employee, Holiday holiday, string clientStatus)
+        public async Task ConfirmHolidayWithAdmin(Employee admin, Employee employee, Holiday holiday, string clientStatus)
         {
-            var template = await _repository.GetByPurpose("Admin Confirmation");
+            var template = await _repository.GetByPurpose(EmailPurposes.ADMIN_CONFIRMATION);
             var messageString = template.Template
                                         .Replace("{admin.name}", admin.Name)
                                         .Replace("{employee.name}", employee.Name)
@@ -54,15 +56,16 @@ namespace Xplicity_Holidays.Services
             _emailer.SendMail(admin.Email, template.Subject, messageString);
         }
 
-        public async void SendThisMonthsHolidayInfo(Employee admin, List<(Holiday, Client)> holidays)
+        public async Task SendThisMonthsHolidayInfo(Employee admin, List<(Holiday, Client)> holidays)
         {
             var holidayInfo = string.Empty;
             var groupedHolidays = holidays.GroupBy(h => h.Item2);
-            var template = await _repository.GetByPurpose("Monthly Holidays' Report");
+            var template = await _repository.GetByPurpose(EmailPurposes.MONTHLY_HOLIDAYS_REPORT);
             int titleEnd = template.Template.IndexOf('\n', 0);
             foreach (var client in groupedHolidays)
             {
-                holidayInfo += template.Template.Substring(0, titleEnd).Replace("{client.name}", client.Key.CompanyName) + '\n';
+                holidayInfo += template.Template.Substring(0, titleEnd)
+                                                .Replace("{client.name}", (client == null) ? client.Key.CompanyName : "No-Client") + '\n';
                 foreach (var holiday in client)
                 {
                     var messageString = template.Template.Substring(titleEnd)
@@ -78,9 +81,9 @@ namespace Xplicity_Holidays.Services
             _emailer.SendMail(admin.Email, template.Subject, holidayInfo);
         }
 
-        public async void InformEmployeesAboutHoliday(ICollection<Employee> employees, ICollection<Holiday> upcomingHolidays)
+        public async Task InformEmployeesAboutHoliday(ICollection<Employee> employees, ICollection<Holiday> upcomingHolidays)
         {
-            var template = await _repository.GetByPurpose("Upcoming Holiday Reminder");
+            var template = await _repository.GetByPurpose(EmailPurposes.HOLIDAY_REMINDER);
             foreach (var employee in employees)
             {
                 foreach (var h in upcomingHolidays)
@@ -99,9 +102,9 @@ namespace Xplicity_Holidays.Services
             }
         }
 
-        public async void SendBirthDayReminder(ICollection<Employee> employeesWithBirthdays, ICollection<Employee> employees)
+        public async Task SendBirthDayReminder(ICollection<Employee> employeesWithBirthdays, ICollection<Employee> employees)
         {
-            var template = await _repository.GetByPurpose("Birthday Reminder");
+            var template = await _repository.GetByPurpose(EmailPurposes.BIRTHDAY_REMINDER);
             foreach (var employee in employees)
             {
                 foreach (var employeeWithBirthday in employeesWithBirthdays)
