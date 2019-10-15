@@ -62,7 +62,7 @@ namespace Xplicity_Holidays.Services
             if(_hostingEnvironment.IsProduction())
                 currentTime = _timeService.GetCurrentTime();
             else
-                currentTime = new DateTime(2019, 10, 1);
+                currentTime = DateTime.MinValue; //makes sure that it's not month's last day.
             var thisMonthsHolidays = holidays.Where(h => h.Status == "Confirmed" && (h.FromInclusive.Year == currentTime.Year
                                                   || h.ToExclusive.AddDays(-1).Year == currentTime.Year)
                                                   && (h.FromInclusive.Month == currentTime.Month
@@ -82,7 +82,7 @@ namespace Xplicity_Holidays.Services
             if (_hostingEnvironment.IsProduction())
                 currentTime = _timeService.GetCurrentTime();
             else
-                currentTime = new DateTime(2019, 10,14);
+                currentTime = DateTime.MinValue; //makes sure that none of employees go to holidays next workday.
 
             var upcomingHolidays = holidays.Where(holiday => holiday.Status == "Confirmed" && 
                                                  holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
@@ -99,7 +99,7 @@ namespace Xplicity_Holidays.Services
             if (_hostingEnvironment.IsProduction())
                 currentTime = _timeService.GetCurrentTime();
             else
-                currentTime = new DateTime(2019, 10, 14);
+                currentTime = DateTime.MinValue; //makes sure that none of employees have their birthday today.
 
             foreach (var employee in employees)
             {
