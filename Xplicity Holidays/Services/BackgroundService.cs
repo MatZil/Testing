@@ -47,11 +47,11 @@ namespace Xplicity_Holidays.Services
                 var employees = await employeeRepository.GetAll();
                 var admin = await employeeRepository.FindAnyAdmin();
 
-                await Task.Run(async() => await CheckForLastMonthDay(admin, holidays, emailService, holidayInfoService));
+                await CheckForLastMonthDay(admin, holidays, emailService, holidayInfoService);
 
-                await Task.Run(async() => await CheckUpcomingHolidays(employees, holidays, emailService));
+                await CheckUpcomingHolidays(employees, holidays, emailService);
 
-                await Task.Run(async() => await CheckBirthdays(employees, _timeService, emailService));
+                await CheckBirthdays(employees, _timeService, emailService);
             }
         }
 
