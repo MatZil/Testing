@@ -10,7 +10,7 @@ using Xplicity_Holidays.Infrastructure.Database;
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20191012102111_Init")]
+    [Migration("20191015145507_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -164,6 +164,32 @@ namespace Xplicity_Holidays.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.EmailTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Instructions")
+                        .IsRequired();
+
+                    b.Property<string>("Purpose")
+                        .IsRequired();
+
+                    b.Property<string>("Subject")
+                        .IsRequired();
+
+                    b.Property<string>("Template")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Purpose")
+                        .IsUnique();
+
+                    b.ToTable("EmailTemplates");
+                });
+
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Employee", b =>
                 {
                     b.Property<int>("Id")
@@ -204,13 +230,13 @@ namespace Xplicity_Holidays.Migrations
                         new
                         {
                             Id = 1,
-                            BirthdayDate = new DateTime(2019, 10, 12, 0, 0, 0, 0, DateTimeKind.Local),
+                            BirthdayDate = new DateTime(2019, 10, 15, 0, 0, 0, 0, DateTimeKind.Local),
                             DaysOfVacation = 20,
                             Email = "Inga@xplicity.com",
                             Name = "Inga",
                             Position = "Position",
                             Surname = "Rana",
-                            WorksFromDate = new DateTime(2019, 10, 12, 0, 0, 0, 0, DateTimeKind.Local)
+                            WorksFromDate = new DateTime(2019, 10, 15, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 

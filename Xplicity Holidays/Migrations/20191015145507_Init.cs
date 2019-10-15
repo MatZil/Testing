@@ -40,6 +40,22 @@ namespace Xplicity_Holidays.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmailTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Purpose = table.Column<string>(nullable: false),
+                    Subject = table.Column<string>(nullable: false),
+                    Template = table.Column<string>(nullable: false),
+                    Instructions = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailTemplates", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -230,7 +246,7 @@ namespace Xplicity_Holidays.Migrations
             migrationBuilder.InsertData(
                 table: "Employees",
                 columns: new[] { "Id", "BirthdayDate", "ClientId", "DaysOfVacation", "Email", "Name", "Position", "Surname", "WorksFromDate" },
-                values: new object[] { 1, new DateTime(2019, 10, 12, 0, 0, 0, 0, DateTimeKind.Local), null, 20, "Inga@xplicity.com", "Inga", "Position", "Rana", new DateTime(2019, 10, 12, 0, 0, 0, 0, DateTimeKind.Local) });
+                values: new object[] { 1, new DateTime(2019, 10, 15, 0, 0, 0, 0, DateTimeKind.Local), null, 20, "Inga@xplicity.com", "Inga", "Position", "Rana", new DateTime(2019, 10, 15, 0, 0, 0, 0, DateTimeKind.Local) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -283,6 +299,12 @@ namespace Xplicity_Holidays.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_EmailTemplates_Purpose",
+                table: "EmailTemplates",
+                column: "Purpose",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Employees_ClientId",
                 table: "Employees",
                 column: "ClientId");
@@ -315,6 +337,9 @@ namespace Xplicity_Holidays.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "EmailTemplates");
 
             migrationBuilder.DropTable(
                 name: "Holidays");

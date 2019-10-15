@@ -228,13 +228,13 @@ namespace Xplicity_Holidays.Migrations
                         new
                         {
                             Id = 1,
-                            BirthdayDate = new DateTime(2019, 10, 12, 0, 0, 0, 0, DateTimeKind.Local),
+                            BirthdayDate = new DateTime(2019, 10, 15, 0, 0, 0, 0, DateTimeKind.Local),
                             DaysOfVacation = 20,
                             Email = "Inga@xplicity.com",
                             Name = "Inga",
                             Position = "Position",
                             Surname = "Rana",
-                            WorksFromDate = new DateTime(2019, 10, 12, 0, 0, 0, 0, DateTimeKind.Local)
+                            WorksFromDate = new DateTime(2019, 10, 15, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
