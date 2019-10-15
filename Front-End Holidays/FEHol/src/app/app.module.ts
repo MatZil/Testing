@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
@@ -34,7 +33,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
 import { PdfComponent } from './components/pdf/pdf.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
-
+import { RoleGuardService } from './helpers/role-guard';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -82,6 +81,7 @@ export function tokenGetter() {
     })
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US },
+  [RoleGuardService],
   { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
   bootstrap: [AppComponent]

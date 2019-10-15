@@ -25,6 +25,7 @@ import { Role } from '../../models/role';
 export class EmployeesTableComponent implements OnInit {
   users: User[];
   roles: Role[];
+  roleName: string;
   formDataUsers: User;
   formDataUsersNoId: Updateuser;
   newUser: Newuser = new Newuser();
@@ -79,6 +80,7 @@ export class EmployeesTableComponent implements OnInit {
       this.roles = roles;
     });
   }
+
   onAddButtonClick(user: User) {
     this.userService.registerUser(user).subscribe(() => {
       this.refreshTable();

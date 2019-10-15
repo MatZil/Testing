@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Xplicity_Holidays.Dtos;
 using Xplicity_Holidays.Dtos.Employees;
@@ -8,6 +9,7 @@ namespace Xplicity_Holidays.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles="admin")]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeesService _employeesService;

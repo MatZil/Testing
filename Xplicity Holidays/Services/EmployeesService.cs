@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
@@ -64,7 +65,10 @@ namespace Xplicity_Holidays.Services
             newUser.Email = newEmployeeDto.Email;
             newUser.UserName = newEmployeeDto.Email;
             var result = await _userManager.CreateAsync(newUser, newEmployeeDto.Password);
-
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(newUser, newEmployeeDto.Role);
+            }
             return employeeDto;
         }
 
@@ -85,20 +89,27 @@ namespace Xplicity_Holidays.Services
             if (updateData == null)
                 throw new ArgumentNullException(nameof(updateData));
 
-            var itemToUpdate = await _repository.GetById(id);
-
-            if (itemToUpdate == null)
+            var employeeToUpdate = await _repository.GetById(id);
+            var userToUpdate = await _userManager.Users.FirstOrDefaultAsync(x => x.EmployeeId == id);
+            
+            var currentRole = await _userManager.GetRolesAsync(userToUpdate); // Roles that the user has currently
+            if (!await _userManager.IsInRoleAsync(userToUpdate, updateData.Role))
+            {
+                await _userManager.AddToRoleAsync(userToUpdate, updateData.Role);
+                await _userManager.RemoveFromRolesAsync(userToUpdate, currentRole);
+            }
+            if (employeeToUpdate == null || userToUpdate == null)
                 throw new InvalidOperationException();
 
-            if (updateData.Email != itemToUpdate.Email)
+            if (updateData.Email != employeeToUpdate.Email)
             {
                 // email has changed so check if the new email is already taken
                 if (_repository.FindByEmail(updateData.Email).Result != null)
                     throw new Exception("Email " + updateData.Email + " is already taken");
             }
 
-            _mapper.Map(updateData, itemToUpdate);
-            await _repository.Update(itemToUpdate);
+            _mapper.Map(updateData, employeeToUpdate);
+            await _repository.Update(employeeToUpdate);
         }
 
     }

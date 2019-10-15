@@ -22,29 +22,37 @@ const routes: Routes = [
   },
   { path: 'login', component: LoginComponent },
   {
-    path: 'calendar', component: HomeComponent, canActivate: [RoleGuardService], data: {
-      expectedRole: 'employee'
+    path: 'calendar', component: HomeComponent, canActivate: [AuthGuard], data: {
+      expectedRole: 'Employee'
     },
     children: [
       {
-        path: '', component: CalendarComponent, canActivate: [RoleGuardService], data: {
-          expectedRole: 'employee'
+        path: '', component: CalendarComponent, canActivate: [AuthGuard]
+      }
+    ]
+  },
+  {
+    path: 'clients', component: HomeComponent, canActivate: [RoleGuardService], data: {
+      expectedRole: 'admin'
+    },
+    children: [
+      {
+        path: '', component: ClientTableComponent, canActivate: [RoleGuardService], data: {
+          expectedRole: 'admin'
         }
       }
     ]
   },
   {
-    path: 'clients', component: HomeComponent, canActivate: [AuthGuard],
+    path: 'employees', component: HomeComponent, canActivate: [RoleGuardService], data: {
+      expectedRole: 'admin'
+    },
     children: [
       {
-        path: '', component: ClientTableComponent, canActivate: [AuthGuard]
+        path: '', component: EmployeesTableComponent, canActivate: [RoleGuardService], data: {
+          expectedRole: 'admin'
+        }
       }
-    ]
-  },
-  {
-    path: 'employees', component: HomeComponent, canActivate: [AuthGuard],
-    children: [
-      { path: '', component: EmployeesTableComponent, canActivate: [AuthGuard] }
     ]
   },
   {
