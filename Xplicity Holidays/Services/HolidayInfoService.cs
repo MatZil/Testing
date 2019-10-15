@@ -23,8 +23,13 @@ namespace Xplicity_Holidays.Services
             foreach (var holiday in holidays)
             {
                 var employee = await _employeeRepository.GetById(holiday.EmployeeId);
-                var client = await _clientRepository.GetById((int)employee.ClientId);
-                clientsWithHolidays.Add((holiday, client));
+                if (employee.ClientId != null)
+                {
+                    var client = await _clientRepository.GetById((int)employee.ClientId);
+                    clientsWithHolidays.Add((holiday, client));
+                }
+                else
+                    clientsWithHolidays.Add((holiday, null));
             }
 
             return clientsWithHolidays;

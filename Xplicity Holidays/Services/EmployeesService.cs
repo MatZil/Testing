@@ -81,6 +81,9 @@ namespace Xplicity_Holidays.Services
 
             newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
 
+            newEmployee.CurrentAvailableLeaves = newEmployee.ParentalLeaveLimit;
+            newEmployee.NextMonthAvailableLeaves = newEmployee.ParentalLeaveLimit;
+
             await _repository.Create(newEmployee);
 
             var employeeDto = _mapper.Map<NewEmployeeDto>(newEmployee);
@@ -116,7 +119,12 @@ namespace Xplicity_Holidays.Services
                     throw new Exception("Email " + updateData.Email + " is already taken");
             }
 
+            var parentalLeaveDifference = updateData.ParentalLeaveLimit - itemToUpdate.ParentalLeaveLimit;
+            itemToUpdate.CurrentAvailableLeaves = Math.Max(itemToUpdate.CurrentAvailableLeaves + parentalLeaveDifference, 0);
+            itemToUpdate.NextMonthAvailableLeaves = Math.Max(itemToUpdate.NextMonthAvailableLeaves + parentalLeaveDifference, 0);
+
             _mapper.Map(updateData, itemToUpdate);
+
             await _repository.Update(itemToUpdate);
         }
     }

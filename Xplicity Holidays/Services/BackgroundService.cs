@@ -47,61 +47,63 @@ namespace Xplicity_Holidays.Services
                 var employees = await employeeRepository.GetAll();
                 var admin = await employeeRepository.FindAnyAdmin();
 
-                await Task.Run(() => CheckForLastMonthDay(admin, holidays, emailService, holidayInfoService));
+                await CheckForLastMonthDay(admin, holidays, emailService, holidayInfoService);
 
-                await Task.Run(() => CheckUpcomingHolidays(employees, holidays, emailService));
+                await CheckUpcomingHolidays(employees, holidays, emailService);
 
-                await Task.Run(() => CheckBirthdays(employees, _timeService, emailService));
+                await CheckBirthdays(employees, _timeService, emailService);
 
-                await Task.Run(() => AddFreeWorkDays(employees, _timeService, employeeRepository));
+                await AddFreeWorkDays(employees, _timeService, employeeRepository);
+
+                await ResetParentalLeaves(employees, _timeService, employeeRepository);
             }
         }
 
-        private void CheckForLastMonthDay(Employee admin, ICollection<Holiday> holidays, IEmailService emailService,
+        private async Task CheckForLastMonthDay(Employee admin, ICollection<Holiday> holidays, IEmailService emailService,
                                           IHolidayInfoService holidayInfoService)
         {
             DateTime currentTime;
             if(_hostingEnvironment.IsProduction())
                 currentTime = _timeService.GetCurrentTime();
             else
-                currentTime = new DateTime(2019, 10, 1);
+                currentTime = DateTime.MinValue; //makes sure that it's not month's last day.
             var thisMonthsHolidays = holidays.Where(h => h.Status == "Confirmed" && (h.FromInclusive.Year == currentTime.Year
                                                   || h.ToExclusive.AddDays(-1).Year == currentTime.Year)
                                                   && (h.FromInclusive.Month == currentTime.Month
                                                   || h.ToExclusive.AddDays(-1).Month == currentTime.Month)).ToList();
 
-            var holidaysWithClients = holidayInfoService.GetClientsAndHolidays(thisMonthsHolidays).Result;
+            var holidaysWithClients = await holidayInfoService.GetClientsAndHolidays(thisMonthsHolidays);
 
             var nextDay = currentTime.AddDays(1);
 
             if(currentTime.Month != nextDay.Month)
-                emailService.SendThisMonthsHolidayInfo(admin, holidaysWithClients);
+                await emailService.SendThisMonthsHolidayInfo(admin, holidaysWithClients);
         }
 
-        private void CheckUpcomingHolidays(ICollection<Employee> employees, ICollection<Holiday> holidays, IEmailService emailService)
+        private async Task CheckUpcomingHolidays(ICollection<Employee> employees, ICollection<Holiday> holidays, IEmailService emailService)
         {
             DateTime currentTime;
             if (_hostingEnvironment.IsProduction())
                 currentTime = _timeService.GetCurrentTime();
             else
-                currentTime = new DateTime(2019, 9, 3);
+                currentTime = DateTime.MinValue; //makes sure that none of employees go to holidays next workday.
 
             var upcomingHolidays = holidays.Where(holiday => holiday.Status == "Confirmed" && 
                                                  holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
                                                   .ToList();
 
             if (upcomingHolidays.Count != 0)
-                emailService.InformEmployeesAboutHoliday(employees, upcomingHolidays);
+                await emailService.InformEmployeesAboutHoliday(employees, upcomingHolidays);
         }
 
-        private void CheckBirthdays(ICollection<Employee> employees, ITimeService _timeService, IEmailService emailService)
+        private async Task CheckBirthdays(ICollection<Employee> employees, ITimeService _timeService, IEmailService emailService)
         {
             var employeesWithBirthdays = new List<Employee>();
             DateTime currentTime;
             if (_hostingEnvironment.IsProduction())
                 currentTime = _timeService.GetCurrentTime();
             else
-                currentTime = new DateTime(2019, 2, 1);
+                currentTime = DateTime.MinValue; //makes sure that none of employees have their birthday today.
 
             foreach (var employee in employees)
             {
@@ -110,10 +112,10 @@ namespace Xplicity_Holidays.Services
             }
 
             if (employeesWithBirthdays.Count != 0)
-                emailService.SendBirthDayReminder(employeesWithBirthdays, employees);
+                await emailService.SendBirthDayReminder(employeesWithBirthdays, employees);
         }
 
-        private async void AddFreeWorkDays(ICollection<Employee> employees, ITimeService _timeService, IEmployeeRepository _repository)
+        private async Task AddFreeWorkDays(ICollection<Employee> employees, ITimeService _timeService, IEmployeeRepository _repository)
         {
             var currentTime = _timeService.GetCurrentTime();
             if (currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.DayOfWeek != DayOfWeek.Sunday)
@@ -128,6 +130,18 @@ namespace Xplicity_Holidays.Services
             }
         }
 
-
+        private async Task ResetParentalLeaves(ICollection<Employee> employees, ITimeService timeService, IEmployeeRepository repository)
+        {
+            var currentTime = timeService.GetCurrentTime();
+            if (currentTime.Day == 1)
+            {
+                foreach (var employee in employees)
+                {
+                    employee.CurrentAvailableLeaves = employee.NextMonthAvailableLeaves;
+                    employee.NextMonthAvailableLeaves = employee.ParentalLeaveLimit;
+                    await repository.Update(employee);
+                }
+            }
+        }
     }
 }

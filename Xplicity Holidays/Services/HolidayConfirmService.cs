@@ -4,7 +4,9 @@ using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
+using Xplicity_Holidays.Infrastructure.Static_Files;
 using Xplicity_Holidays.Services.Interfaces;
+using System;
 
 namespace Xplicity_Holidays.Services
 {
@@ -39,13 +41,13 @@ namespace Xplicity_Holidays.Services
 
             if (employee.ClientId == null)
             {
-                await RequestAdminApproval(holidayId, "This employee has no client that needs to confirm it");
+                await RequestAdminApproval(holidayId, EmployeeClientStatus.HAS_NO_CLIENT);
 
                 return true;
             }
 
             var client = await _repositoryClients.GetById(employee.ClientId.GetValueOrDefault());
-            _emailService.ConfirmHolidayWithClient(client, employee, holiday);
+            await _emailService.ConfirmHolidayWithClient(client, employee, holiday);
 
             return true;
         }
@@ -55,7 +57,7 @@ namespace Xplicity_Holidays.Services
             var holiday = await _repositoryHolidays.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
             var admin = await _repositoryEmployees.FindAnyAdmin();
-            _emailService.ConfirmHolidayWithAdmin(admin, employee, holiday, clientStatus);
+            await _emailService.ConfirmHolidayWithAdmin(admin, employee, holiday, clientStatus);
 
             return true;
         }
@@ -86,7 +88,9 @@ namespace Xplicity_Holidays.Services
             updateHolidayDto.Status = "Confirmed";
             await _holidaysService.Update(holidayId, updateHolidayDto);
 
-            if (getHolidayDto.Type == 0 && getHolidayDto.Paid)
+            if (getHolidayDto.Type == HolidayType.Parental)
+                await UpdateParentalLeaves(getHolidayDto);
+            else if (getHolidayDto.Type == HolidayType.Annual && getHolidayDto.Paid)
                 await UpdateEmployeesWorkdays(getHolidayDto);
         }
 
@@ -96,6 +100,69 @@ namespace Xplicity_Holidays.Services
             var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
             employee.FreeWorkDays -= workdays;
             await _repositoryEmployees.Update(employee);
+        }
+
+        private async Task UpdateParentalLeaves(GetHolidayDto holidayDto)
+        {
+            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
+            var leaveTime = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
+            var currentTime = _timeService.GetCurrentTime();
+
+            if (holidayDto.FromInclusive.Month != holidayDto.ToExclusive.AddDays(-1).Month)
+            {
+                var leaveTimeCurrentMonth = _timeService.GetWorkDays(holidayDto.FromInclusive,
+                                        new DateTime(holidayDto.FromInclusive.AddMonths(1).Year, holidayDto.FromInclusive.AddMonths(1).Month, 1));
+
+                var leaveTimeNextMonth = leaveTime - leaveTimeCurrentMonth;
+                employee.CurrentAvailableLeaves -= leaveTimeCurrentMonth;
+                employee.NextMonthAvailableLeaves -= leaveTimeNextMonth;
+            }
+            else if (holidayDto.FromInclusive.Month == currentTime.Month)
+                employee.CurrentAvailableLeaves -= leaveTime;
+            else
+                employee.NextMonthAvailableLeaves -= leaveTime;
+
+            await _repositoryEmployees.Update(employee);
+        }
+
+        public async Task<bool> IsValid(object idOrDto)
+        {
+            Holiday holiday;
+
+            if (idOrDto.GetType() == typeof(int))
+                holiday = await _repositoryHolidays.GetById((int)idOrDto);
+            else if (idOrDto.GetType() == typeof(NewHolidayDto))
+                holiday = _mapper.Map<Holiday>((NewHolidayDto)idOrDto);
+            else
+                return false;
+
+            if (holiday.Status == "Confirmed")
+                return false;
+
+            var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
+
+            if (holiday.Type == HolidayType.Parental)
+            {
+                var leaveTime = _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive);
+                var currentTime = _timeService.GetCurrentTime();
+
+                if (holiday.FromInclusive.Month != holiday.ToExclusive.AddDays(-1).Month)
+                {
+                    var leaveTimeCurrentMonth = _timeService.GetWorkDays(holiday.FromInclusive,
+                        new DateTime(holiday.FromInclusive.AddMonths(1).Year, holiday.FromInclusive.AddMonths(1).Month, 1));
+
+                    var leaveTimeNextMonth = leaveTime - leaveTimeCurrentMonth;
+
+                    if (employee.CurrentAvailableLeaves < leaveTimeCurrentMonth || employee.NextMonthAvailableLeaves < leaveTimeNextMonth)
+                        return false;
+                }
+                else if (holiday.FromInclusive.Month == currentTime.Month && employee.CurrentAvailableLeaves < leaveTime)
+                    return false;
+                else if (holiday.FromInclusive.Month == currentTime.AddMonths(1).Month && employee.NextMonthAvailableLeaves < leaveTime)
+                    return false;
+            }
+
+            return true;
         }
     }
 }

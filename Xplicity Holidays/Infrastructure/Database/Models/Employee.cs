@@ -25,6 +25,12 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public double FreeWorkDays { get; set; } //Current amount of free workdays left.
         [Required]
+        public int ParentalLeaveLimit { get; set; } //Maximum amount of parental leaves employee can get in one month.
+        [Required]
+        public int CurrentAvailableLeaves { get; set; } //Number of parental leaves employee can get during current month.
+        [Required]
+        public int NextMonthAvailableLeaves { get; set; } //Number of parental leaves employee can get during next month.
+        [Required]
         [MinLength(4)]
         public string Email { get; set; }
         [Required]
