@@ -33,6 +33,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
 import { PdfComponent } from './components/pdf/pdf.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
+
 import { RoleGuardService } from './helpers/role-guard';
 registerLocaleData(en);
 export function tokenGetter() {
@@ -51,7 +53,8 @@ export function tokenGetter() {
     PolicyComponent,
     ProfileComponent,
     HolidaysTableComponent,
-    PdfComponent
+    PdfComponent,
+    EmailtemplatesTableComponent
   ],
   imports: [
     BrowserModule,
@@ -86,9 +89,5 @@ export function tokenGetter() {
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
-
-
-
-
 export class AppModule {
 }

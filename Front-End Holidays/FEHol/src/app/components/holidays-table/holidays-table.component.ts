@@ -65,8 +65,9 @@ export class HolidaysTableComponent implements OnInit {
     });
   }
 
-  onAddButtonClick(holidays: Requestholidays) {
-    this.holidayService.addHolidays(holidays).subscribe(response => {
+  onAddButtonClick() {
+    this.requestHolidays.employeeId = this.currentUser.id;
+    this.holidayService.addHolidays(this.requestHolidays).subscribe(response => {
       saveAs(response, 'Holidays_Request');
       this.refreshTable();
     });

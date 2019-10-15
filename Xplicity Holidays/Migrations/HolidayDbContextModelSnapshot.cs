@@ -162,6 +162,32 @@ namespace Xplicity_Holidays.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.EmailTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Instructions")
+                        .IsRequired();
+
+                    b.Property<string>("Purpose")
+                        .IsRequired();
+
+                    b.Property<string>("Subject")
+                        .IsRequired();
+
+                    b.Property<string>("Template")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Purpose")
+                        .IsUnique();
+
+                    b.ToTable("EmailTemplates");
+                });
+
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Employee", b =>
                 {
                     b.Property<int>("Id")

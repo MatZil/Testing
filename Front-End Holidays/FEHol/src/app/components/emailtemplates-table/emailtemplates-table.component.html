@@ -1,0 +1,68 @@
+<nz-table #basicTable [nzData]="emailTemplates">
+  <thead>
+    <tr>
+      <th>Purpose</th>
+      <th>Subject</th>
+      <th>Beginning of template</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let emailTemplate of basicTable.data">
+      <td>{{emailTemplate.purpose}}</td>
+      <td>{{emailTemplate.subject}}</td>
+      <td>
+        <div class="oneLine">
+          {{emailTemplate.template}}
+        </div>
+      </td>
+      <td>
+        <button nz-button nzType="primary" (click)="showModalEditor(); createFormObject(emailTemplate)">
+                Edit
+        </button>
+      </td>
+    </tr>
+    <form #editEmailTemplateForm="ngForm" (ngSubmit)="onSubmit(editEmailTemplateForm)">
+      <nz-modal [(nzVisible)]="isVisibleEditor" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
+                [nzWidth]="1000" [nzStyle]="{'top': '0'}" (nzOnCancel)="handleCancelEditor()">
+
+        <ng-template #modalTitle>
+          Edit email template
+        </ng-template>
+
+        <ng-template #modalContent>
+          <h2>Purpose: {{formObject.purpose}}</h2>
+          <mat-card>
+            <div>
+              <mat-form-field>
+                <input matInput [(ngModel)]="formObject.subject" type="text" name="subject"
+                  placeholder="Subject" required #nameInput="ngModel">
+                <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
+                  Subject cannot be empty.
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field>
+                <textarea matInput [(ngModel)]="formObject.template" name="template" rows="10"
+                          placeholder="Template" required #nameInput="ngModel"></textarea>
+                <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
+                  Email template cannot be empty.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </mat-card>
+          <div class="saveLines">
+              <br>Available aliases:<br><br>
+              {{formObject.instructions}}
+          </div>
+        </ng-template>
+
+        <ng-template #modalFooter>
+          <button nz-button nzType="default" (click)="handleCancelEditor()">Cancel</button>
+          <button nz-button nzType="primary" (click)="onEditConfirmButtonClick(formObject, formData.id)"
+                  [disabled]="editEmailTemplateForm.form.invalid">Confirm edit</button>
+        </ng-template>
+      </nz-modal>
+    </form>
+  </tbody>
+</nz-table>

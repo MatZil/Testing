@@ -32,6 +32,10 @@ namespace Xplicity_Holidays.Infrastructure.Database
             {
                 entity.HasIndex(e => e.Email).IsUnique();
             });
+
+            builder.Entity<EmailTemplate>(entity => {
+                entity.HasIndex(e => e.Purpose).IsUnique();
+            });
             base.OnModelCreating(builder);
 
             builder.Entity<Employee>().HasData(

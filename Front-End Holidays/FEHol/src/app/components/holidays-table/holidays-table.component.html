@@ -10,14 +10,6 @@
                 <mat-card>
                     <div>
                         <mat-form-field>
-                            <mat-select [(ngModel)]="requestHolidays.employeeId" name="employeeId"
-                                placeholder="Employee">
-                                <mat-option [value]="currentUserId">{{currentUser.name}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div>
-                        <mat-form-field>
                             <mat-select [(ngModel)]="requestHolidays.type" name="type" placeholder="Holidays type"
                                 required #nameInput="ngModel">
                                 <mat-option [value]="0">Annual</mat-option>
@@ -55,7 +47,7 @@
 
             <ng-template #modalFoote>
                 <button nz-button nzType="default" (click)="handleCancelCreator()">Cancel</button>
-                <button nz-button nzType="primary" (click)="onAddButtonClick(requestHolidays); handleOkCreator()"
+                <button nz-button nzType="primary" (click)="onAddButtonClick(); handleOkCreator()"
                     [nzLoading]="isConfirmLoadingCreator" [disabled]="newClientForm.form.invalid">Request</button>
             </ng-template>
         </nz-modal>

@@ -56,7 +56,7 @@ namespace Xplicity_Holidays.Services
                                           IHolidayInfoService holidayInfoService)
         {
             //var currentTime = _timeService.GetCurrentTime();
-            var currentTime = new DateTime(2019, 8, 31);
+            var currentTime = new DateTime(2019, 9, 15);
             var thisMonthsHolidays = holidays.Where(h => h.Status == "Confirmed" && (h.FromInclusive.Year == currentTime.Year
                                                   || h.ToExclusive.AddDays(-1).Year == currentTime.Year)
                                                   && (h.FromInclusive.Month == currentTime.Month
@@ -85,7 +85,8 @@ namespace Xplicity_Holidays.Services
         private void CheckBirthdays(ICollection<Employee> employees, ITimeService _timeService, IEmailService emailService)
         {
             var employeesWithBirthdays = new List<Employee>();
-            var currentTime = _timeService.GetCurrentTime();
+            //var currentTime = _timeService.GetCurrentTime();
+            var currentTime = new DateTime(2019, 05, 30);
 
             foreach (var employee in employees)
             {

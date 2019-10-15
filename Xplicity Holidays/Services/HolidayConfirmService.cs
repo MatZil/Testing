@@ -33,7 +33,7 @@ namespace Xplicity_Holidays.Services
 
             if (employee.ClientId == null)
             {
-                await RequestAdminApproval(holidayId, "This employee has no client that needs to confirm it.");
+                await RequestAdminApproval(holidayId, "This employee has no client that needs to confirm it");
 
                 return true;
             }

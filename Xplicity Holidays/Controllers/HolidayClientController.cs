@@ -18,7 +18,7 @@ namespace Xplicity_Holidays.Controllers
         [HttpGet]
         public async Task<IActionResult> RequestConfirmationFromAdmin(int holidayId)
         {
-            await _confirmationService.RequestAdminApproval(holidayId, "Employee's client has confirmed this holiday.");
+            await _confirmationService.RequestAdminApproval(holidayId, "Employee's client has confirmed this holiday");
 
             return Ok();
         }
