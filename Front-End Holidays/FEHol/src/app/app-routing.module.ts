@@ -34,24 +34,24 @@ const routes: Routes = [
   },
   {
     path: 'clients', component: HomeComponent, canActivate: [RoleGuardService], data: {
-      expectedRole: 'admin'
+      expectedRole: 'Admin'
     },
     children: [
       {
         path: '', component: ClientTableComponent, canActivate: [RoleGuardService], data: {
-          expectedRole: 'admin'
+          expectedRole: 'Admin'
         }
       }
     ]
   },
   {
     path: 'employees', component: HomeComponent, canActivate: [RoleGuardService], data: {
-      expectedRole: 'admin'
+      expectedRole: 'Admin'
     },
     children: [
       {
         path: '', component: EmployeesTableComponent, canActivate: [RoleGuardService], data: {
-          expectedRole: 'admin'
+          expectedRole: 'Admin'
         }
       }
     ]

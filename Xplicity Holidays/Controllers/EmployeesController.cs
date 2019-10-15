@@ -9,7 +9,7 @@ namespace Xplicity_Holidays.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles="admin")]
+    [Authorize(Roles="Admin")]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeesService _employeesService;
