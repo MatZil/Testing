@@ -21,8 +21,6 @@ import { saveAs } from 'file-saver';
 })
 export class HolidaysTableComponent implements OnInit {
   holidays: Holidays[];
-  formData: Holidays;
-  formDataNoId: Newholidays;
   requestHolidays: Requestholidays = new Requestholidays();
 
   isVisibleCreator = false;
@@ -101,36 +99,9 @@ export class HolidaysTableComponent implements OnInit {
     form.resetForm();
   }
 
-  onDeleteButtonClick(id: number) {
-    this.holidayService.deleteHolidays(id).subscribe(() => {
-      this.refreshTable();
-    });
-  }
-
   onEditConfirmButtonClick(holidays: Newholidays, id: number) {
     this.holidayService.editHolidays(holidays, id).subscribe(() => {
       this.refreshTable();
-    });
-  }
-
-  populateForm(holidays: Holidays) {
-    this.formData = Object.assign({}, holidays);
-  }
-
-  populateFormNoId(holidays: Newholidays) {
-    this.formDataNoId = Object.assign({}, holidays);
-  }
-
-  deleteClientOnModalClose(id: number) {
-    this.onDeleteButtonClick(id);
-    this.handleCancelEditor();
-  }
-
-  showDeleteConfirm(id: number): void {
-    this.confirmDeleteModal = this.modal.confirm({
-      nzTitle: 'Do you want to delete this section?',
-      nzContent: 'When clicked the OK button this section will be deleted',
-      nzOnOk: () => this.deleteClientOnModalClose(id)
     });
   }
 
@@ -170,7 +141,15 @@ export class HolidaysTableComponent implements OnInit {
     }
   }
 
-  setPaid() {
+  changePaid() {
     this.requestHolidays.paid = !this.requestHolidays.paid;
+  }
+
+  setPaid() {
+    if (this.requestHolidays.type === 1) {
+      this.requestHolidays.paid = true;
+    } else if (this.requestHolidays.type === 2) {
+      this.requestHolidays.paid = false;
+    }
   }
 }

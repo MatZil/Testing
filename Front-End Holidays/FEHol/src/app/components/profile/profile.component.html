@@ -7,9 +7,13 @@
     <p><b>BirthdayDate</b>: {{ currentUser.birthdayDate | date }}</p>
     <p><b>Works from</b>: {{ currentUser.worksFromDate | date }}</p>
     <p><b>Maximum days of vacation per year</b>: {{ currentUser.daysOfVacation }}</p>
-    <P><b>Role</b>: {{ currentUser.role }}</P>
+    <p><b>Free workdays left</b>: {{ currentUser.freeWorkDays | number : '.0-2' }}</p>
+    <p><b>Maximum parental leaves per month</b>: {{ currentUser.parentalLeaveLimit }}</p>
+    <div *ngIf="currentUser.parentalLeaveLimit">
+        <p><b>Available parental leaves this month</b>: {{ currentUser.currentAvailableLeaves }}</p>
+        <p><b>Available parental leaves next month</b>: {{ currentUser.nextMonthAvailableLeaves }}</p>
+    </div>
+    <p><b>Role</b>: {{ currentUser.role }}</p>
 </div>
-
-<p class="holidaysLeftMessage">You currently have <b>{{ currentUser.freeWorkDays }}</b> free workdays left!</p>
 
 <img src='assets/pfp.png' height="140px" width="140px">

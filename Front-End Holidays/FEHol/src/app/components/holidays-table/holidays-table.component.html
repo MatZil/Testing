@@ -11,9 +11,12 @@
                     <div>
                         <mat-form-field>
                             <mat-select [(ngModel)]="requestHolidays.type" name="type" placeholder="Holiday's type"
-                                required #nameInput="ngModel">
+                                required #nameInput="ngModel" [(value)]="selectedType">
                                 <mat-option [value]="0">Annual</mat-option>
-                                <mat-option [value]="1">Parental</mat-option>
+                                <mat-option 
+                                    *ngIf="currentUser.currentAvailableLeaves > 0 || currentUser.nextMonthAvailableLeaves > 0" [value]="1">
+                                    Parental
+                                </mat-option>
                                 <mat-option [value]="2">Science</mat-option>
                                 <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                     class="error">
@@ -42,15 +45,15 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-                    <div>
-                        <mat-checkbox [checked]="requestHolidays.paid" (change)="setPaid()">Paid</mat-checkbox>
+                    <div *ngIf="selectedType == 0">
+                        <mat-checkbox [checked]="requestHolidays.paid" (change)="changePaid()">Paid</mat-checkbox>
                     </div>
                 </mat-card>
             </ng-template>
 
             <ng-template #modalFoote>
                 <button nz-button nzType="default" (click)="handleCancelCreator()">Cancel</button>
-                <button nz-button nzType="primary" (click)="onAddButtonClick(); handleOkCreator()"
+                <button nz-button nzType="primary" (click)="setPaid(); onAddButtonClick(); handleOkCreator()"
                     [nzLoading]="isConfirmLoadingCreator" [disabled]="newClientForm.form.invalid">Request</button>
             </ng-template>
         </nz-modal>
@@ -86,10 +89,6 @@
                 <td>{{hol.toExclusive | date}}</td>
                 <td>{{hol.status}}</td>
                 <td>{{hol.requestCreatedDate | date}}</td>
-                <td>
-                    <button nz-button nzType="danger"
-                        (click)="populateForm(hol); showDeleteConfirm(formData.id); populateFormNoId(hol)">Delete</button>
-                </td>
             </tr>
         </tbody>
     </nz-table>
