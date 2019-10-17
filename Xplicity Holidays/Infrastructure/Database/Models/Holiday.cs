@@ -16,7 +16,7 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public DateTime ToExclusive { get; set; }
         [Required]
-        public string Status { get; set; }
+        public HolidayStatus Status { get; set; }
         [Required]
         public bool Paid { get; set; }
         [Required]
@@ -28,5 +28,12 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         Annual,
         Parental,
         Science
+    }
+
+    public enum HolidayStatus
+    {
+        Unconfirmed,
+        Declined,
+        Confirmed
     }
 }

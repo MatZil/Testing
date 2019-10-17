@@ -85,13 +85,17 @@ namespace Xplicity_Holidays.Services
         {
             var getHolidayDto = await _holidaysService.GetById(holidayId);
             var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(getHolidayDto);
-            updateHolidayDto.Status = "Confirmed";
+            updateHolidayDto.Status = HolidayStatus.Confirmed;
             await _holidaysService.Update(holidayId, updateHolidayDto);
 
             if (getHolidayDto.Type == HolidayType.Parental)
+            {
                 await UpdateParentalLeaves(getHolidayDto);
+            }
             else if (getHolidayDto.Type == HolidayType.Annual && getHolidayDto.Paid)
+            {
                 await UpdateEmployeesWorkdays(getHolidayDto);
+            }
         }
 
         private async Task UpdateEmployeesWorkdays(GetHolidayDto holidayDto)
@@ -118,9 +122,13 @@ namespace Xplicity_Holidays.Services
                 employee.NextMonthAvailableLeaves -= leaveTimeNextMonth;
             }
             else if (holidayDto.FromInclusive.Month == currentTime.Month)
+            {
                 employee.CurrentAvailableLeaves -= leaveTime;
+            }
             else
+            {
                 employee.NextMonthAvailableLeaves -= leaveTime;
+            }
 
             await _repositoryEmployees.Update(employee);
         }
@@ -130,36 +138,73 @@ namespace Xplicity_Holidays.Services
             Holiday holiday;
 
             if (idOrDto.GetType() == typeof(int))
+            {
                 holiday = await _repositoryHolidays.GetById((int)idOrDto);
+            }
             else if (idOrDto.GetType() == typeof(NewHolidayDto))
+            {
                 holiday = _mapper.Map<Holiday>((NewHolidayDto)idOrDto);
+            }
             else
+            {
                 return false;
+            }
 
-            if (holiday.Status == "Confirmed")
+            if (holiday.Status == HolidayStatus.Confirmed)
+            {
                 return false;
+            }
+
+            var currentTime = _timeService.GetCurrentTime();
+
+            if (!ValidDateInterval(holiday, currentTime))
+            {
+                return false;
+            }
 
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
 
-            if (holiday.Type == HolidayType.Parental)
+            if (holiday.Type == HolidayType.Parental && !EmployeeEligibleForParental(holiday, employee, currentTime))
             {
-                var leaveTime = _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive);
-                var currentTime = _timeService.GetCurrentTime();
+                return false;
+            }
 
-                if (holiday.FromInclusive.Month != holiday.ToExclusive.AddDays(-1).Month)
+            return true;
+        }
+
+        private bool ValidDateInterval(Holiday holiday, DateTime currentTime)
+        {
+            if(holiday.FromInclusive.Date <= currentTime.Date || holiday.ToExclusive.Date <= holiday.FromInclusive.Date)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool EmployeeEligibleForParental(Holiday holiday, Employee employee, DateTime currentTime)
+        {
+            var leaveTime = _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive);
+
+            if (holiday.FromInclusive.Month != holiday.ToExclusive.AddDays(-1).Month)
+            {
+                var leaveTimeCurrentMonth = _timeService.GetWorkDays(holiday.FromInclusive,
+                    new DateTime(holiday.FromInclusive.AddMonths(1).Year, holiday.FromInclusive.AddMonths(1).Month, 1));
+
+                var leaveTimeNextMonth = leaveTime - leaveTimeCurrentMonth;
+
+                if (employee.CurrentAvailableLeaves < leaveTimeCurrentMonth || employee.NextMonthAvailableLeaves < leaveTimeNextMonth)
                 {
-                    var leaveTimeCurrentMonth = _timeService.GetWorkDays(holiday.FromInclusive,
-                        new DateTime(holiday.FromInclusive.AddMonths(1).Year, holiday.FromInclusive.AddMonths(1).Month, 1));
-
-                    var leaveTimeNextMonth = leaveTime - leaveTimeCurrentMonth;
-
-                    if (employee.CurrentAvailableLeaves < leaveTimeCurrentMonth || employee.NextMonthAvailableLeaves < leaveTimeNextMonth)
-                        return false;
+                    return false;
                 }
-                else if (holiday.FromInclusive.Month == currentTime.Month && employee.CurrentAvailableLeaves < leaveTime)
-                    return false;
-                else if (holiday.FromInclusive.Month == currentTime.AddMonths(1).Month && employee.NextMonthAvailableLeaves < leaveTime)
-                    return false;
+            }
+            else if (holiday.FromInclusive.Month == currentTime.Month && employee.CurrentAvailableLeaves < leaveTime)
+            {
+                return false;
+            }
+            else if (holiday.FromInclusive.Month == currentTime.AddMonths(1).Month && employee.NextMonthAvailableLeaves < leaveTime)
+            {
+                return false;
             }
 
             return true;

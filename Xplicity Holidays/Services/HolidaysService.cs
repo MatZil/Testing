@@ -41,11 +41,14 @@ namespace Xplicity_Holidays.Services
 
         public async Task<int> Create(NewHolidayDto newHolidayDto)
         {
-            if (newHolidayDto == null) throw new ArgumentNullException(nameof(newHolidayDto));
+            if (newHolidayDto == null)
+            {
+                return -1;
+            }
 
             var newHoliday = _mapper.Map<Holiday>(newHolidayDto);
             newHoliday.RequestCreatedDate = _timeService.GetCurrentTime();
-            newHoliday.Status = "Unconfirmed";
+            newHoliday.Status = HolidayStatus.Unconfirmed;
             var holidayId = await _repository.Create(newHoliday);
 
             return holidayId;
@@ -56,25 +59,32 @@ namespace Xplicity_Holidays.Services
             var item = await _repository.GetById(id);
 
             if (item == null)
+            {
                 return false;
+            }
 
             var deleted = await _repository.Delete(item);
 
             return deleted;
         }
 
-        public async Task Update(int id, UpdateHolidayDto updateData)
+        public async Task<bool> Update(int id, UpdateHolidayDto updateData)
         {
             if (updateData == null)
-                throw new ArgumentNullException(nameof(updateData));
+            {
+                return false;
+            }
 
             var itemToUpdate = await _repository.GetById(id);
 
             if (itemToUpdate == null)
-                throw new InvalidOperationException();
+            {
+                return false;
+            }
 
             _mapper.Map(updateData, itemToUpdate);
-            await _repository.Update(itemToUpdate);
+            var successful = await _repository.Update(itemToUpdate);
+            return successful;
         } 
     }
 }

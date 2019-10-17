@@ -14,7 +14,7 @@
                                 required #nameInput="ngModel" [(value)]="selectedType">
                                 <mat-option [value]="0">Annual</mat-option>
                                 <mat-option 
-                                    *ngIf="currentUser.currentAvailableLeaves > 0 || currentUser.nextMonthAvailableLeaves > 0" [value]="1">
+                                    [value]="1" *ngIf="currentUser.currentAvailableLeaves > 0 || currentUser.nextMonthAvailableLeaves > 0">
                                     Parental
                                 </mat-option>
                                 <mat-option [value]="2">Science</mat-option>
@@ -87,7 +87,7 @@
                 </td>
                 <td>{{hol.fromInclusive | date}}</td>
                 <td>{{hol.toExclusive | date}}</td>
-                <td>{{hol.status}}</td>
+                <td>{{assignStatusString(hol.status)}}</td>
                 <td>{{hol.requestCreatedDate | date}}</td>
             </tr>
         </tbody>
@@ -120,7 +120,7 @@
                     </td>
                     <td>{{hol.fromInclusive | date}}</td>
                     <td>{{hol.toExclusive | date}}</td>
-                    <td>{{hol.status}}</td>
+                    <td>{{assignStatusString(hol.status)}}</td>
                     <td>{{hol.requestCreatedDate | date}}</td>
                 </ng-container>
             </tr>

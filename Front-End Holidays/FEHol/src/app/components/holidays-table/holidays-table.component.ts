@@ -34,6 +34,7 @@ export class HolidaysTableComponent implements OnInit {
   currentUserId: number;
 
   holidaysType: string;
+  holidaysStatus: string;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -131,6 +132,22 @@ export class HolidaysTableComponent implements OnInit {
     }
 
     return this.holidaysType;
+  }
+
+  assignStatusString(status: number) {
+    if (status === 0) {
+      this.holidaysStatus = 'Unconfirmed';
+    }
+
+    if (status === 1) {
+      this.holidaysStatus = 'Declined';
+    }
+
+    if (status === 2) {
+      this.holidaysStatus = 'Confirmed';
+    }
+
+    return this.holidaysStatus;
   }
 
   getUserNameById(id: number) {
