@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Xplicity_Holidays.Constants;
 using Xplicity_Holidays.Dtos.Employees;
 using Xplicity_Holidays.Infrastructure.Database.Models;
+using Xplicity_Holidays.Infrastructure.GeneratePDFByTemplate;
 
 namespace Xplicity_Holidays.Services.Interfaces
 {
@@ -13,5 +15,6 @@ namespace Xplicity_Holidays.Services.Interfaces
         Task<NewEmployeeDto> Create(NewEmployeeDto newClient);
         Task Update(int id, UpdateEmployeeDto updateData);
         Task<bool> Delete(int id);
+        Task GenerateByTemplate(int id, HolidayType holidayType, HolidayDocumentType holidayDocumentType);
     }
 }

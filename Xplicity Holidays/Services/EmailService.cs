@@ -52,8 +52,8 @@ namespace Xplicity_Holidays.Services
                 }
                 holidayInfo += "\r\n";
             }
-
-           _emailer.SendMail(admin.Email, "This months holiday summary", holidayInfo);
+            //TODO Check if admin is null
+            _emailer.SendMail(admin.Email, "This months holiday summary", holidayInfo);
         }
 
         public void InformEmployeesAboutHoliday(ICollection<Employee> employees, ICollection<Holiday> upcomingHolidays)

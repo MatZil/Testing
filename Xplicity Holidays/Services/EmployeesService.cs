@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Xplicity_Holidays.Constants;
 using Xplicity_Holidays.Dtos.Employees;
 using Xplicity_Holidays.Infrastructure.Database.Models;
+using Xplicity_Holidays.Infrastructure.GeneratePDF;
+using Xplicity_Holidays.Infrastructure.GeneratePDFByTemplate;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Services.Interfaces;
 
@@ -14,12 +17,15 @@ namespace Xplicity_Holidays.Services
         private readonly IEmployeeRepository _repository;
         private readonly IMapper _mapper;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IGenerateByTemplate _generateByTemplate;
 
-        public EmployeesService(IEmployeeRepository repository, IAuthenticationService authenticationService, IMapper mapper)
+        public EmployeesService(IEmployeeRepository repository, IAuthenticationService authenticationService, IMapper mapper,
+            IGenerateByTemplate generateByTemplate)
         {
             _repository = repository;
             _mapper = mapper;
             _authenticationService = authenticationService;
+            _generateByTemplate = generateByTemplate;
         }
 
         public Employee Authenticate(string email, string password)
@@ -105,6 +111,11 @@ namespace Xplicity_Holidays.Services
 
             _mapper.Map(updateData, itemToUpdate);
             await _repository.Update(itemToUpdate);
+        }
+
+        public async Task GenerateByTemplate(int id, HolidayType holidayType, HolidayDocumentType holidayDocumentType)
+        {
+            await _generateByTemplate.GenerateFileByTemplate(id, holidayType, holidayDocumentType);
         }
     }
 }
