@@ -5,6 +5,7 @@ export class Holidays {
     fromInclusive: Date;
     toExclusive: Date;
     isCofirmed: boolean;
+    paid: boolean;
     status: string;
     requestCreatedDate: Date;
 }

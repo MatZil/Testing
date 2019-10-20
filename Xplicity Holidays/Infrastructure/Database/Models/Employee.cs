@@ -24,6 +24,14 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public int DaysOfVacation { get; set; } // An amount of free workdays over a year (either 20 or 25)
         [Required]
+        public double FreeWorkDays { get; set; } //Current amount of free workdays left.
+        [Required]
+        public int ParentalLeaveLimit { get; set; } //Maximum amount of parental leaves employee can get in one month.
+        [Required]
+        public int CurrentAvailableLeaves { get; set; } //Number of parental leaves employee can get during current month.
+        [Required]
+        public int NextMonthAvailableLeaves { get; set; } //Number of parental leaves employee can get during next month.
+        [Required]
         [MinLength(4)]
         public string Email { get; set; }
 
@@ -31,5 +39,6 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         public string Token { get; set; }
         public string Position { get; set; }
         public ICollection<Holiday> Holidays { get; set; }
+
     }
 }

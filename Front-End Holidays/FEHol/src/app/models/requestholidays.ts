@@ -3,4 +3,5 @@ export class Requestholidays {
     type: number;
     fromInclusive: Date;
     toExclusive: Date;
+    paid: boolean;
 }

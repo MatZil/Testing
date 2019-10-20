@@ -9,9 +9,6 @@ import { AuthenticationService } from '../../services/authentication-service.ser
 import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
 
-import { Holidaysinfo } from '../../models/holidaysinfo';
-import { HolidaysService } from '../../services/holidays.service';
-
 import { NgForm } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { NzNotificationService } from 'ng-zorro-antd';
@@ -45,12 +42,9 @@ export class EmployeesTableComponent implements OnInit {
   sortValue: string | null = null;
   listOfData: User[] = [];
 
-  holidaysInfoByEmployees: Holidaysinfo[] = [];
-
   constructor(
     private userService: UserService,
     private clientService: ClientService,
-    private holidayService: HolidaysService,
     private modal: NzModalService,
     private notification: NzNotificationService,
     private authenticationService: AuthenticationService
@@ -61,10 +55,6 @@ export class EmployeesTableComponent implements OnInit {
     this.getAllRoles();
     this.clientService.getClient().subscribe(clients => {
       this.clients = clients;
-    });
-
-    this.holidayService.getHolidaysInfo().subscribe(info => {
-      this.holidaysInfoByEmployees = info;
     });
   }
 
@@ -236,13 +226,5 @@ export class EmployeesTableComponent implements OnInit {
           ? 1
           : -1
     );
-  }
-
-  getEmployeeDaysLeftById(id: number) {
-    for (const info of this.holidaysInfoByEmployees) {
-      if (info.employeeId === id) {
-        return info.holidaysLeft;
-      }
-    }
   }
 }

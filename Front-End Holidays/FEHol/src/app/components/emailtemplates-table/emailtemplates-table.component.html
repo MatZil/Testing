@@ -16,7 +16,8 @@
         </div>
       </td>
       <td>
-        <button nz-button nzType="primary" (click)="showModalEditor(); createFormObject(emailTemplate)">
+        <button nz-button nzType="primary" 
+                (click)="showModalEditor(); createFormObject(emailTemplate); setEditId(emailTemplate.id)">
                 Edit
         </button>
       </td>
@@ -59,7 +60,7 @@
 
         <ng-template #modalFooter>
           <button nz-button nzType="default" (click)="handleCancelEditor()">Cancel</button>
-          <button nz-button nzType="primary" (click)="onEditConfirmButtonClick(formObject, formData.id)"
+          <button nz-button nzType="primary" (click)="onEditConfirmButtonClick(formObject, editId)"
                   [disabled]="editEmailTemplateForm.form.invalid">Confirm edit</button>
         </ng-template>
       </nz-modal>

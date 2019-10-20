@@ -165,4 +165,8 @@ export class HolidaysTableComponent implements OnInit {
       }
     }
   }
+
+  setPaid() {
+    this.requestHolidays.paid = !this.requestHolidays.paid;
+  }
 }
