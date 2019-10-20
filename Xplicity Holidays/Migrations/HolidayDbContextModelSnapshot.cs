@@ -198,14 +198,22 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<int?>("ClientId");
 
+                    b.Property<int>("CurrentAvailableLeaves");
+
                     b.Property<int>("DaysOfVacation");
 
                     b.Property<string>("Email")
                         .IsRequired();
 
+                    b.Property<double>("FreeWorksDays");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(15);
+
+                    b.Property<int>("NextMonthAvailableLeaves");
+
+                    b.Property<int>("ParentalLeaveLimit");
 
                     b.Property<string>("Position");
 
@@ -247,6 +255,8 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<int>("EmployeeId");
 
                     b.Property<DateTime>("FromInclusive");
+
+                    b.Property<bool>("Paid");
 
                     b.Property<DateTime>("RequestCreatedDate");
 

@@ -18,12 +18,11 @@ namespace Xplicity_Holidays.Services
         private readonly IEmployeeRepository _repository;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
-        public EmployeesService(IEmployeeRepository repository, IMapper mapper, UserManager<User> userManager)
         private readonly IAuthenticationService _authenticationService;
         private readonly ITimeService _timeService;
 
         public EmployeesService(IEmployeeRepository repository, IAuthenticationService authenticationService, IMapper mapper, 
-                                ITimeService timeService)
+                                ITimeService timeService, UserManager<User> userManager)
         {
             _repository = repository;
             _mapper = mapper;
@@ -64,8 +63,7 @@ namespace Xplicity_Holidays.Services
             var newEmployee = _mapper.Map<Employee>(newEmployeeDto);
 
 
-            newEmployee.PasswordHash = passwordHash;
-            newEmployee.PasswordSalt = passwordSalt;
+
 
             var currentTime = _timeService.GetCurrentTime();
 
@@ -131,13 +129,13 @@ namespace Xplicity_Holidays.Services
                     throw new Exception("Email " + updateData.Email + " is already taken");
             }
 
-            var parentalLeaveDifference = updateData.ParentalLeaveLimit - itemToUpdate.ParentalLeaveLimit;
-            itemToUpdate.CurrentAvailableLeaves = Math.Max(itemToUpdate.CurrentAvailableLeaves + parentalLeaveDifference, 0);
-            itemToUpdate.NextMonthAvailableLeaves = Math.Max(itemToUpdate.NextMonthAvailableLeaves + parentalLeaveDifference, 0);
+            var parentalLeaveDifference = updateData.ParentalLeaveLimit - employeeToUpdate.ParentalLeaveLimit;
+            employeeToUpdate.CurrentAvailableLeaves = Math.Max(employeeToUpdate.CurrentAvailableLeaves + parentalLeaveDifference, 0);
+            employeeToUpdate.NextMonthAvailableLeaves = Math.Max(employeeToUpdate.NextMonthAvailableLeaves + parentalLeaveDifference, 0);
 
-            _mapper.Map(updateData, itemToUpdate);
+            _mapper.Map(updateData, employeeToUpdate);
 
-            await _repository.Update(itemToUpdate);
+            await _repository.Update(employeeToUpdate);
         }
 
     }
