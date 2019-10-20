@@ -63,9 +63,15 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'emailtemplates', component: HomeComponent, canActivate: [AuthGuard],
+    path: 'emailtemplates', component: HomeComponent, canActivate: [RoleGuardService], data: {
+      expectedRole: 'Admin'
+    },
     children: [
-      { path: '', component: EmailtemplatesTableComponent, canActivate: [AuthGuard] }
+      {
+        path: '', component: EmailtemplatesTableComponent, canActivate: [RoleGuardService], data: {
+          expectedRole: 'Admin'
+        }
+      }
     ]
   },
   {
