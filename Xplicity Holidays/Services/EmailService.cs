@@ -52,7 +52,7 @@ namespace Xplicity_Holidays.Services
                 }
                 holidayInfo += "\r\n";
             }
-            //TODO Check if admin is null
+
             _emailer.SendMail(admin.Email, "This months holiday summary", holidayInfo);
         }
 
