@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
@@ -34,12 +35,12 @@ namespace Xplicity_Holidays.Controllers
 
             await _confirmationService.RequestClientApproval(holidayId);
 
-            await _confirmationService.CreateRequestPdf(newHolidayDto, holidayId);
+            await _confirmationService.CreateRequestDocx(newHolidayDto, holidayId);
 
-            var path = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + @"\Pdfs\Requests\";
-            var fileName = $"Holiday_Request_{holidayId}.pdf";
+            var path = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + @"\Templates\GeneratedTemplates\";
+            var fileName = $"{holidayId}-Request{newHolidayDto.Type.ToString()}-{DateTime.Today.Date.ToShortDateString()}.docx";
             var stream = new FileStream(path + fileName, FileMode.Open);
-            return File(stream, "application/pdf", fileName);
+            return File(stream, "application/docx", fileName);
         }
 
         [HttpGet]
@@ -50,12 +51,12 @@ namespace Xplicity_Holidays.Controllers
             updateHolidayDto.Status = "Confirmed";
             await _holidaysService.Update(holidayId, updateHolidayDto);
 
-            await _confirmationService.CreateOrderPdf(holidayId);
+            await _confirmationService.CreateOrderDocx(holidayId);
 
-            var path = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + @"\Pdfs\Orders\";
-            var fileName = $"Holiday_Order_{holidayId}.pdf";
+            var path = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + @"\Templates\GeneratedTemplates\";
+            var fileName = $"{holidayId}-Order{updateHolidayDto.Type.ToString()}-{DateTime.Today.Date.ToShortDateString()}.docx";
             var stream = new FileStream(path + fileName, FileMode.Open);
-            return File(stream, "application/pdf", fileName);
+            return File(stream, "application/docx", fileName);
         }
     }
 }

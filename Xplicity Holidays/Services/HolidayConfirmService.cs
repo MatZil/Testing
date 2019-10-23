@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using Xplicity_Holidays.Constants;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
@@ -11,20 +12,20 @@ namespace Xplicity_Holidays.Services
     {
         private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
-        private readonly IPdfService _pdfService;
+        private readonly ITemplateGenerationService _templateGenerationService;
         private readonly IEmployeeRepository _repositoryEmployees;
         private readonly IRepository<Client> _repositoryClients;
         private readonly IRepository<Holiday> _repositoryHolidays;
 
         public HolidayConfirmService(IEmailService emailService, IMapper mapper, IRepository<Holiday> repositoryHolidays, 
-            IPdfService pdfService, IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients)
+            ITemplateGenerationService templateGenerationService, IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients)
         {
             _emailService = emailService;
             _mapper = mapper;
             _repositoryEmployees = repositoryEmployees;
             _repositoryClients = repositoryClients;
             _repositoryHolidays = repositoryHolidays;
-            _pdfService = pdfService;
+            _templateGenerationService = templateGenerationService;
         }
         public async Task<bool> RequestClientApproval(int holidayId)
         {
@@ -54,21 +55,21 @@ namespace Xplicity_Holidays.Services
             return true;
         }
 
-        public async Task<bool> CreateRequestPdf(NewHolidayDto holidayDto, int holidayId)
+        public async Task<bool> CreateRequestDocx(NewHolidayDto holidayDto, int holidayId)
         {
             var holiday = _mapper.Map<Holiday>(holidayDto);
             holiday.Id = holidayId;
             var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
-            _pdfService.CreateRequestPdf(holiday, employee);
+            await _templateGenerationService.TemplateGeneration(employee.Id, holiday.Type, HolidayDocumentType.Request);
 
             return true;
         }
 
-        public async Task<bool> CreateOrderPdf(int holidayId)
+        public async Task<bool> CreateOrderDocx(int holidayId)
         {
             var holiday = await _repositoryHolidays.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
-            _pdfService.CreateOrderPdf(holiday, employee);
+            await _templateGenerationService.TemplateGeneration(employee.Id, holiday.Type, HolidayDocumentType.Order);
 
             return true;
         }

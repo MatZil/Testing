@@ -7,7 +7,7 @@ namespace Xplicity_Holidays.Services.Interfaces
     {
         Task<bool> RequestClientApproval(int holidayId);
         Task<bool> RequestAdminApproval(int holidayId, string clientStatus);
-        Task<bool> CreateRequestPdf(NewHolidayDto holidayDto, int holidayId);
-        Task<bool> CreateOrderPdf(int holidayId);
+        Task<bool> CreateRequestDocx(NewHolidayDto holidayDto, int holidayId);
+        Task<bool> CreateOrderDocx(int holidayId);
     }
 }
