@@ -1,10 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Xplicity_Holidays.Constants;
 using Xplicity_Holidays.Dtos;
 using Xplicity_Holidays.Dtos.Employees;
-using Xplicity_Holidays.Infrastructure.Database.Models;
-using Xplicity_Holidays.Infrastructure.GeneratePDFByTemplate;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers
@@ -86,15 +83,6 @@ namespace Xplicity_Holidays.Controllers
             await _employeesService.Delete(id);
 
             return NoContent();
-        }
-
-        [HttpGet]
-        [Route("generateByTemplate")]
-        public async Task<IActionResult> GenerateByTemplate(int id, HolidayType holidayType, HolidayDocumentType holidayDocumentType)
-        {
-            await _employeesService.GenerateByTemplate(id, holidayType, holidayDocumentType);
-
-            return Ok();
         }
     }
 }
