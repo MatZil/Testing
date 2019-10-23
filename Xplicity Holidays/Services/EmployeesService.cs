@@ -17,17 +17,14 @@ namespace Xplicity_Holidays.Services
     {
         private readonly IEmployeeRepository _repository;
         private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
-        private readonly IAuthenticationService _authenticationService;
         private readonly ITimeService _timeService;
-
-        public EmployeesService(IEmployeeRepository repository, IAuthenticationService authenticationService, IMapper mapper, 
-                                ITimeService timeService, UserManager<User> userManager)
+        private readonly IUserService _userService;
+        public EmployeesService(IEmployeeRepository repository, IMapper mapper,
+                                ITimeService timeService,  IUserService userService)
         {
             _repository = repository;
             _mapper = mapper;
-            _userManager = userManager;
-            _authenticationService = authenticationService;
+            _userService = userService;
             _timeService = timeService;
         }
 
@@ -62,34 +59,23 @@ namespace Xplicity_Holidays.Services
 
             var newEmployee = _mapper.Map<Employee>(newEmployeeDto);
 
-
-
-
             var currentTime = _timeService.GetCurrentTime();
 
             var workedTime = _timeService.GetWorkDays(newEmployee.WorksFromDate, currentTime);
 
-            var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1), 
+            var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
                                                             new DateTime(currentTime.AddYears(1).Year, 1, 1));
 
             newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
 
             newEmployee.CurrentAvailableLeaves = newEmployee.ParentalLeaveLimit;
             newEmployee.NextMonthAvailableLeaves = newEmployee.ParentalLeaveLimit;
-
+            
             await _repository.Create(newEmployee);
+            await _userService.Create(newEmployee, newEmployeeDto);
 
             var employeeDto = _mapper.Map<NewEmployeeDto>(newEmployee);
 
-            User newUser = new User();
-            newUser.Employee = newEmployee;
-            newUser.Email = newEmployeeDto.Email;
-            newUser.UserName = newEmployeeDto.Email;
-            var result = await _userManager.CreateAsync(newUser, newEmployeeDto.Password);
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(newUser, newEmployeeDto.Role);
-            }
             return employeeDto;
         }
 
@@ -111,17 +97,12 @@ namespace Xplicity_Holidays.Services
                 throw new ArgumentNullException(nameof(updateData));
 
             var employeeToUpdate = await _repository.GetById(id);
-            var userToUpdate = await _userManager.Users.FirstOrDefaultAsync(x => x.EmployeeId == id);
-            
-            var currentRole = await _userManager.GetRolesAsync(userToUpdate); // Roles that the user has currently
-            if (!await _userManager.IsInRoleAsync(userToUpdate, updateData.Role))
-            {
-                await _userManager.AddToRoleAsync(userToUpdate, updateData.Role);
-                await _userManager.RemoveFromRolesAsync(userToUpdate, currentRole);
-            }
-            if (employeeToUpdate == null || userToUpdate == null)
-                throw new InvalidOperationException();
 
+            if (employeeToUpdate == null)
+            {
+                throw new InvalidOperationException();
+            }
+            
             if (updateData.Email != employeeToUpdate.Email)
             {
                 // email has changed so check if the new email is already taken
@@ -136,6 +117,7 @@ namespace Xplicity_Holidays.Services
             _mapper.Map(updateData, employeeToUpdate);
 
             await _repository.Update(employeeToUpdate);
+            await _userService.Update(id, updateData);
         }
 
     }

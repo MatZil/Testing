@@ -22,7 +22,7 @@ export class SidebarComponent implements OnInit {
     private holidaysService: HolidaysService,
     private userService: UserService
   ) {
-    this.currentUser = this.authenticationService.currentUserValue;
+    this.currentUser = new User();
   }
 
   deleteUser(id: number) {

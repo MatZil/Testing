@@ -28,7 +28,7 @@ namespace Xplicity_Holidays.Services
         {
             while (true)
             {
-              //  await DoBackGroundChecks();
+                await DoBackGroundChecks();
 
                 await Task.Delay(TimeSpan.FromDays(1));
             }

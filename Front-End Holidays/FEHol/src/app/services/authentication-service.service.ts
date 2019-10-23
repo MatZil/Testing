@@ -10,8 +10,8 @@ import { Role } from '../models/role';
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
 
-  private thisUser: number;
-  public token: string;
+  private thisUserId: number;
+  private token: string;
 
 
   constructor(private http: HttpClient, public jwtHelper: JwtHelperService) {
@@ -43,8 +43,8 @@ export class AuthenticationService {
   }
 
   getUserId() {
-    this.thisUser = JSON.parse(localStorage.getItem('userId'));
-    return this.thisUser;
+    this.thisUserId = JSON.parse(localStorage.getItem('userId'));
+    return this.thisUserId;
   }
 
   getRoles(): Observable<Role[]> {

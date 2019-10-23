@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private userService: UserService
   ) {
-    this.currentUser = this.authenticationService.currentUserValue;
+    // this.currentUser = this.authenticationService.currentUserValue;
     this.image = 'assets/bg.jpg';
   }
 
