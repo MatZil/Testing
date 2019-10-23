@@ -7,6 +7,7 @@ using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Infrastructure.Static_Files;
 using Xplicity_Holidays.Services.Interfaces;
 using System;
+using Xplicity_Holidays.Infrastructure.Enums;
 
 namespace Xplicity_Holidays.Services
 {
@@ -133,23 +134,32 @@ namespace Xplicity_Holidays.Services
             await _repositoryEmployees.Update(employee);
         }
 
-        public async Task<bool> IsValid(object idOrDto)
+        public async Task<bool> IsValid(int id)
         {
-            Holiday holiday;
+            var holiday = await _repositoryHolidays.GetById(id);
 
-            if (idOrDto.GetType() == typeof(int))
-            {
-                holiday = await _repositoryHolidays.GetById((int)idOrDto);
-            }
-            else if (idOrDto.GetType() == typeof(NewHolidayDto))
-            {
-                holiday = _mapper.Map<Holiday>((NewHolidayDto)idOrDto);
-            }
-            else
+            if (holiday == null)
             {
                 return false;
             }
 
+            return await IsValid(holiday) ? true : false;
+        }
+
+        public async Task<bool> IsValid(NewHolidayDto holidayDto)
+        {
+            if (holidayDto == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            var holiday = _mapper.Map<Holiday>(holidayDto);
+
+            return await IsValid(holiday) ? true : false;
+        }
+
+        private async Task<bool> IsValid(Holiday holiday)
+        { 
             if (holiday.Status == HolidayStatus.Confirmed)
             {
                 return false;

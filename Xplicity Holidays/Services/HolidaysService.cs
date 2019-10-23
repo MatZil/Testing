@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Database.Models;
+using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
@@ -43,7 +44,7 @@ namespace Xplicity_Holidays.Services
         {
             if (newHolidayDto == null)
             {
-                return -1;
+                throw new ArgumentNullException();
             }
 
             var newHoliday = _mapper.Map<Holiday>(newHolidayDto);
@@ -72,7 +73,7 @@ namespace Xplicity_Holidays.Services
         {
             if (updateData == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(updateData));
             }
 
             var itemToUpdate = await _repository.GetById(id);
@@ -85,6 +86,21 @@ namespace Xplicity_Holidays.Services
             _mapper.Map(updateData, itemToUpdate);
             var successful = await _repository.Update(itemToUpdate);
             return successful;
-        } 
+        }
+
+        public async Task<bool> Decline(int id)
+        {
+            var holiday = await _repository.GetById(id);
+
+            if (holiday == null)
+            {
+                return false;
+            }
+
+            holiday.Status = HolidayStatus.Declined;
+            var successful = await _repository.Update(holiday);
+
+            return successful;
+        }
     }
 }

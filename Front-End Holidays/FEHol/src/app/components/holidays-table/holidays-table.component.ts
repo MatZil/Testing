@@ -13,6 +13,7 @@ import { NgForm } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 
 import { saveAs } from 'file-saver';
+import { EnumToStringConverterService } from 'src/app/services/enum-to-string-converter.service';
 
 @Component({
   selector: 'app-holidays-table',
@@ -40,7 +41,8 @@ export class HolidaysTableComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private holidayService: HolidaysService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private enumConverter: EnumToStringConverterService
   ) {
     this.currentUser = this.authenticationService.currentUserValue;
     this.currentUserId = this.currentUser.id;
@@ -116,38 +118,6 @@ export class HolidaysTableComponent implements OnInit {
     if (this.currentUserId === holidays.employeeId) {
       return true;
     }
-  }
-
-  checkWhatTypeOfHoliday(type: number) {
-    if (type === 0) {
-      this.holidaysType = 'Annual';
-    }
-
-    if (type === 1) {
-      this.holidaysType = 'Parental';
-    }
-
-    if (type === 2) {
-      this.holidaysType = 'Science';
-    }
-
-    return this.holidaysType;
-  }
-
-  assignStatusString(status: number) {
-    if (status === 0) {
-      this.holidaysStatus = 'Unconfirmed';
-    }
-
-    if (status === 1) {
-      this.holidaysStatus = 'Declined';
-    }
-
-    if (status === 2) {
-      this.holidaysStatus = 'Confirmed';
-    }
-
-    return this.holidaysStatus;
   }
 
   getUserNameById(id: number) {

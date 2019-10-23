@@ -1,8 +1,5 @@
 ﻿using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Xplicity_Holidays.Dtos.Holidays;
-using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers
@@ -12,27 +9,22 @@ namespace Xplicity_Holidays.Controllers
     public class HolidayDeclineController : ControllerBase
     {
         private readonly IHolidaysService _holidaysService;
-        private readonly IMapper _mapper;
 
-        public HolidayDeclineController(IHolidaysService holidaysService, IMapper mapper)
+        public HolidayDeclineController(IHolidaysService holidaysService)
         {
             _holidaysService = holidaysService;
-            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> DeclineHoliday(int holidayId)
         {
-            var getHolidayDto = await _holidaysService.GetById(holidayId);
+            var successful = await _holidaysService.Decline(holidayId);
 
-            if (getHolidayDto == null)
+            if(!successful)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(getHolidayDto);
-            updateHolidayDto.Status = HolidayStatus.Declined;
-            await _holidaysService.Update(holidayId, updateHolidayDto);
             return Ok();
         }
     }

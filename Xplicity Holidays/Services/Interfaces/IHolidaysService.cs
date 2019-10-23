@@ -11,5 +11,6 @@ namespace Xplicity_Holidays.Services.Interfaces
         Task<int> Create(NewHolidayDto newClient);
         Task<bool> Update(int id, UpdateHolidayDto updateData);
         Task<bool> Delete(int id);
+        Task<bool> Decline(int id);
     }
 }

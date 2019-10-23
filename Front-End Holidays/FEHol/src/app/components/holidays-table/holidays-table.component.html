@@ -76,7 +76,7 @@
         <tbody>
             <tr *ngFor="let hol of basicTable.data">
                 <td>{{getUserNameById(hol.employeeId)}}</td>
-                <td>{{checkWhatTypeOfHoliday(hol.type)}}</td>
+                <td>{{enumConverter.determineHolidayType(hol.type)}}</td>
                 <td>
                     <div *ngIf="hol.paid">
                         Yes
@@ -87,7 +87,7 @@
                 </td>
                 <td>{{hol.fromInclusive | date}}</td>
                 <td>{{hol.toExclusive | date}}</td>
-                <td>{{assignStatusString(hol.status)}}</td>
+                <td>{{enumConverter.determineHolidayStatus(hol.status)}}</td>
                 <td>{{hol.requestCreatedDate | date}}</td>
             </tr>
         </tbody>
@@ -109,7 +109,7 @@
         <tbody>
             <tr *ngFor="let hol of basicTable.data">
                 <ng-container *ngIf="isTheRightId(hol)">
-                    <td>{{checkWhatTypeOfHoliday(hol.type)}}</td>
+                    <td>{{enumConverter.determineHolidayType(hol.type)}}</td>
                     <td>
                         <div *ngIf="hol.paid">
                             Yes
@@ -120,7 +120,7 @@
                     </td>
                     <td>{{hol.fromInclusive | date}}</td>
                     <td>{{hol.toExclusive | date}}</td>
-                    <td>{{assignStatusString(hol.status)}}</td>
+                    <td>{{enumConverter.determineHolidayStatus(hol.status)}}</td>
                     <td>{{hol.requestCreatedDate | date}}</td>
                 </ng-container>
             </tr>
