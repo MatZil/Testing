@@ -8,6 +8,7 @@ namespace Xplicity_Holidays.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class ClientsController : ControllerBase
     {
         private readonly IClientsService _clientsService;
@@ -20,7 +21,6 @@ namespace Xplicity_Holidays.Controllers
         // GET: api/Clients
         [HttpGet]
         [Produces(typeof(GetClientDto[]))]
-        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Get()
         {
             var clients = await _clientsService.GetAll();

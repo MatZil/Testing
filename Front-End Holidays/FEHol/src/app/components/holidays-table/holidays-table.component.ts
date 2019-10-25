@@ -43,9 +43,8 @@ export class HolidaysTableComponent implements OnInit {
     private holidayService: HolidaysService,
     private modal: NzModalService
   ) {
-    this.currentUser = this.authenticationService.currentUserValue;
-    this.currentUserId = this.currentUser.id;
-    this.requestHolidays.employeeId = this.currentUser.id;
+    this.currentUserId = this.authenticationService.getUserId();
+    this.requestHolidays.employeeId = this.currentUserId;
   }
 
   ngOnInit() {
@@ -66,8 +65,9 @@ export class HolidaysTableComponent implements OnInit {
     });
   }
 
-  onAddButtonClick(holidays: Requestholidays) {
-    this.holidayService.addHolidays(holidays).subscribe(response => {
+  onAddButtonClick() {
+    this.requestHolidays.employeeId = this.currentUser.id;
+    this.holidayService.addHolidays(this.requestHolidays).subscribe(response => {
       saveAs(response, 'Holidays_Request');
       this.refreshTable();
     });
@@ -134,11 +134,7 @@ export class HolidaysTableComponent implements OnInit {
     });
   }
 
-  isAdmin() {
-    if (this.currentUser.role === 'admin') {
-      return true;
-    }
-  }
+
 
   isTheRightId(holidays: Holidays) {
     if (this.currentUserId === holidays.employeeId) {
@@ -168,5 +164,9 @@ export class HolidaysTableComponent implements OnInit {
         return user.name + ' ' + user.surname;
       }
     }
+  }
+
+  setPaid() {
+    this.requestHolidays.paid = !this.requestHolidays.paid;
   }
 }

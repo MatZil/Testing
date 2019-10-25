@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Xplicity_Holidays.Dtos.Clients;
+using Xplicity_Holidays.Dtos.EmailTemplates;
 using Xplicity_Holidays.Dtos.Employees;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Database.Models;
@@ -39,6 +40,12 @@ namespace Xplicity_Holidays.Configurations
 
             CreateMap<UpdateEmployeeDto, Employee>(MemberList.None);
             CreateMap<Employee, UpdateEmployeeDto>(MemberList.None);
+
+            CreateMap<NewEmailTemplateDto, EmailTemplate>(MemberList.None);
+            CreateMap<EmailTemplate, NewEmailTemplateDto>(MemberList.None);
+
+            CreateMap<GetEmailTemplateDto, EmailTemplate>(MemberList.None);
+            CreateMap<EmailTemplate, GetEmailTemplateDto>(MemberList.None);
         }
     }
 }

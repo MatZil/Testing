@@ -30,6 +30,9 @@ namespace Xplicity_Holidays.Controllers
         [HttpPost]
         public async Task<IActionResult> RequestConfirmationFromClient(NewHolidayDto newHolidayDto)
         {
+            if (!await _confirmationService.IsValid(newHolidayDto))
+                return BadRequest();
+
             var holidayId = await _holidaysService.Create(newHolidayDto);
 
             await _confirmationService.RequestClientApproval(holidayId);
@@ -45,10 +48,10 @@ namespace Xplicity_Holidays.Controllers
         [HttpGet]
         public async Task<IActionResult> ConfirmHoliday(int holidayId)
         {
-            var getHolidayDto = await _holidaysService.GetById(holidayId);
-            var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(getHolidayDto);
-            updateHolidayDto.Status = "Confirmed";
-            await _holidaysService.Update(holidayId, updateHolidayDto);
+            if (!await _confirmationService.IsValid(holidayId))
+                return BadRequest();
+
+            await _confirmationService.ConfirmHoliday(holidayId);
 
             await _confirmationService.CreateOrderPdf(holidayId);
 
