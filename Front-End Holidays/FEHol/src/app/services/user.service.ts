@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { User } from '../models/user';
 import { Newuser } from '../models/newuser';
 import { Updateuser } from '../models/updateuser';
+import { NgForm } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 

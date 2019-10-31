@@ -12,4 +12,38 @@
 
 <p class="holidaysLeftMessage">You currently have <b>{{ currentUser.freeWorkDays }}</b> free workdays left!</p>
 
-<img src='assets/pfp.png' height="140px" width="140px">
+<mat-card class="passwordChange">
+    <mat-card-header>
+        Change Password
+    </mat-card-header>
+    <mat-card-content>
+        <form #passwordForm="ngForm" (ngSubmit)="changePassword(passwordForm)">
+            <div>
+                <mat-form-field>
+                    <input matInput placeholder="Current password" type="password" name="currentPassword"
+                        [ngModel]="currentPassword" #currentPasswordInput="ngModel" required>
+                    <mat-error *ngIf="currentPasswordInput.errors?.required">
+                        Please enter new password
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input matInput placeholder="New password" type="password" name="newPassword"
+                        [ngModel]="newPassword" #newPasswordInput="ngModel" required minlength="6">
+                    <mat-error *ngIf="newPasswordInput.errors?.required">
+                        Please enter new password
+                    </mat-error>
+                    <mat-error *ngIf="newPasswordInput.errors?.minlength">
+                        New password must be at least 6 characters long
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <button mat-button type="submit" [disabled]="passwordForm.invalid">Submit</button>
+            </div>
+
+        </form>
+    </mat-card-content>
+
+</mat-card>
