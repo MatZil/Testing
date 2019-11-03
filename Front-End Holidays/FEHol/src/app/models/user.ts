@@ -10,5 +10,5 @@ export class User {
     email: string;
     role: string;
     position: string;
-    token: string;
+    healthCheckDate: Date;
 }

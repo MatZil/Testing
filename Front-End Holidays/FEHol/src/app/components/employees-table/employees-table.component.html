@@ -105,6 +105,12 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
+                <div>
+                    <mat-form-field>
+                        <input matInput [(ngModel)]="newUser.healthCheckDate" type="date" name="healthCheckDate"
+                            placeholder="Employee health check-up date" #nameInput="ngModel">
+                    </mat-form-field>
+                </div>
             </mat-card>
         </ng-template>
 
@@ -132,6 +138,7 @@
             <th>Free workdays left</th>
             <th>Email</th>
             <th>Position</th>
+            <th>Health check-up date</th>
         </tr>
     </thead>
     <tbody>
@@ -145,6 +152,7 @@
             <td>{{user.freeWorkDays}}</td>
             <td>{{user.email}}</td>
             <td>{{user.position}}</td>
+            <td>{{user.healthCheckDate | date}}</td>
             <td>
                 <button nz-button nzType="primary"
                     (click)="populateUserForm(user); showModalEditor(); populateUserFormNoId(user)">Edit</button>
@@ -255,6 +263,13 @@
                                     class="error">
                                     Employee position cannot be empty.
                                 </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="formDataUsersNoId.healthCheckDate" type="date"
+                                    name="healthCheckDate" placeholder="Employee health check-up date"
+                                    #nameInput="ngModel">
                             </mat-form-field>
                         </div>
                     </mat-card>
