@@ -72,7 +72,7 @@ namespace Xplicity_Holidays.Controllers
             return NoContent();
         }
 
-        [HttpPost("{id}/Change_password")]
+        [HttpPost("{id}/ChangePassword")]
         public async Task<IActionResult> ChangePassword(int id, UpdatePasswordDto passwordDto)
         {
             await _userService.ChangePassword(id, passwordDto);

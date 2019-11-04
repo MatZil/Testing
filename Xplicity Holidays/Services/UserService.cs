@@ -60,8 +60,11 @@ namespace Xplicity_Holidays.Services
             {
                 throw new InvalidOperationException();
             }
-
             var result = await _userManager.ChangePasswordAsync(userToUpdate, updatePasswordDto.CurrentPassword, updatePasswordDto.NewPassword);
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException();
+            }
         }
     }
 }
