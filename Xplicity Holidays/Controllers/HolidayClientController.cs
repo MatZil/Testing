@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Xplicity_Holidays.Infrastructure.Static_Files;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers
@@ -18,7 +19,7 @@ namespace Xplicity_Holidays.Controllers
         [HttpGet]
         public async Task<IActionResult> RequestConfirmationFromAdmin(int holidayId)
         {
-            await _confirmationService.RequestAdminApproval(holidayId, "Employee's client has confirmed this holiday.");
+            await _confirmationService.RequestAdminApproval(holidayId, EmployeeClientStatus.CLIENT_CONFIRMED);
 
             return Ok();
         }

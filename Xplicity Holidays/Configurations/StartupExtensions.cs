@@ -6,8 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Xplicity_Holidays.Infrastructure.Database;
 using Swashbuckle.AspNetCore.Filters;
+using Xplicity_Holidays.Infrastructure.Database.Models;
 
 namespace Xplicity_Holidays.Configurations
 {
@@ -15,7 +17,8 @@ namespace Xplicity_Holidays.Configurations
     {
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
-            services.AddSwaggerGen(options => {
+            services.AddSwaggerGen(options =>
+            {
                 options.SwaggerDoc("holidays", new Info { Title = "Xplicity holidays", Version = "v1" });
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
@@ -39,16 +42,31 @@ namespace Xplicity_Holidays.Configurations
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
             // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(options => {
+            app.UseSwaggerUI(options =>
+            {
                 options.SwaggerEndpoint("/swagger/holidays/swagger.json", "Xplicity");
                 options.RoutePrefix = "holidays";
+            });
+        }
+
+        public static void SetUpIdentity(this IServiceCollection services)
+        {
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<HolidayDbContext>();
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredUniqueChars = 0;
             });
         }
 
         public static void SetUpDatabase(this IServiceCollection service, IConfiguration configuration)
         {
             var connectionString = configuration["Database:ConnectionString"];
-            service.AddDbContext<HolidayDbContext>(options => options.UseSqlite(connectionString));
+            service.AddDbContext<HolidayDbContext>(options => options.UseSqlServer(connectionString));
         }
 
         public static void SetUpAutoMapper(this IServiceCollection services)
@@ -83,11 +101,13 @@ namespace Xplicity_Holidays.Configurations
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
             services
-                .AddAuthentication(auth => {
+                .AddAuthentication(auth =>
+                {
                     auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddJwtBearer(bearer => {
+                .AddJwtBearer(bearer =>
+                {
                     bearer.RequireHttpsMetadata = false;
                     bearer.SaveToken = true;
                     bearer.TokenValidationParameters = new TokenValidationParameters

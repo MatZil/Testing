@@ -9,5 +9,7 @@ namespace Xplicity_Holidays.Services.Interfaces
         Task<bool> RequestAdminApproval(int holidayId, string clientStatus);
         Task<bool> CreateRequestDocx(NewHolidayDto holidayDto, int holidayId);
         Task<bool> CreateOrderDocx(int holidayId);
+        Task ConfirmHoliday(int holidayId);
+        Task<bool> IsValid(object idOrDto);
     }
 }

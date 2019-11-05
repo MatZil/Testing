@@ -1,34 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Dtos.Employees;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
+using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Services
 {
-    public class EmployeesService: IEmployeesService
+    public class EmployeesService : IEmployeesService
     {
         private readonly IEmployeeRepository _repository;
         private readonly IMapper _mapper;
-        private readonly IAuthenticationService _authenticationService;
-
-        public EmployeesService(IEmployeeRepository repository, IAuthenticationService authenticationService, IMapper mapper)
+        private readonly ITimeService _timeService;
+        private readonly IUserService _userService;
+        public EmployeesService(IEmployeeRepository repository, IMapper mapper,
+                                ITimeService timeService,  IUserService userService)
         {
             _repository = repository;
             _mapper = mapper;
-            _authenticationService = authenticationService;
-        }
-
-        public Employee Authenticate(string email, string password)
-        {
-            var employee = _authenticationService.Authenticate(_repository, email, password);
-
-            _repository.Update(employee);
-
-            return employee;
+            _userService = userService;
+            _timeService = timeService;
         }
 
         public async Task<GetEmployeeDto> GetById(int id)
@@ -62,15 +59,23 @@ namespace Xplicity_Holidays.Services
 
             var newEmployee = _mapper.Map<Employee>(newEmployeeDto);
 
-            byte[] passwordHash, passwordSalt;
-            _authenticationService.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            var currentTime = _timeService.GetCurrentTime();
 
-            newEmployee.PasswordHash = passwordHash;
-            newEmployee.PasswordSalt = passwordSalt;
+            var workedTime = _timeService.GetWorkDays(newEmployee.WorksFromDate, currentTime);
 
+            var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
+                                                            new DateTime(currentTime.AddYears(1).Year, 1, 1));
+
+            newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
+
+            newEmployee.CurrentAvailableLeaves = newEmployee.ParentalLeaveLimit;
+            newEmployee.NextMonthAvailableLeaves = newEmployee.ParentalLeaveLimit;
+            
             await _repository.Create(newEmployee);
+            await _userService.Create(newEmployee, newEmployeeDto);
 
             var employeeDto = _mapper.Map<NewEmployeeDto>(newEmployee);
+
             return employeeDto;
         }
 
@@ -91,20 +96,29 @@ namespace Xplicity_Holidays.Services
             if (updateData == null)
                 throw new ArgumentNullException(nameof(updateData));
 
-            var itemToUpdate = await _repository.GetById(id);
+            var employeeToUpdate = await _repository.GetById(id);
 
-            if (itemToUpdate == null)
+            if (employeeToUpdate == null)
+            {
                 throw new InvalidOperationException();
-
-            if (updateData.Email != itemToUpdate.Email)
+            }
+            
+            if (updateData.Email != employeeToUpdate.Email)
             {
                 // email has changed so check if the new email is already taken
                 if (_repository.FindByEmail(updateData.Email).Result != null)
                     throw new Exception("Email " + updateData.Email + " is already taken");
             }
 
-            _mapper.Map(updateData, itemToUpdate);
-            await _repository.Update(itemToUpdate);
+            var parentalLeaveDifference = updateData.ParentalLeaveLimit - employeeToUpdate.ParentalLeaveLimit;
+            employeeToUpdate.CurrentAvailableLeaves = Math.Max(employeeToUpdate.CurrentAvailableLeaves + parentalLeaveDifference, 0);
+            employeeToUpdate.NextMonthAvailableLeaves = Math.Max(employeeToUpdate.NextMonthAvailableLeaves + parentalLeaveDifference, 0);
+
+            _mapper.Map(updateData, employeeToUpdate);
+
+            await _repository.Update(employeeToUpdate);
+            await _userService.Update(id, updateData);
         }
+
     }
 }

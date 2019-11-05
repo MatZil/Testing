@@ -6,6 +6,7 @@ export class User {
     worksFromDate: Date;
     birthdayDate: Date;
     daysOfVacation: number;
+    freeWorkDays: number;
     email: string;
     role: string;
     position: string;

@@ -1,7 +1,7 @@
 <button nz-button nzType="primary" (click)=showModalCreator()>Add new employee</button>
 <form #newClientForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(newClientForm)">
     <nz-modal [(nzVisible)]="isVisibleCreator" [nzTitle]="modalTitl" [nzContent]="modalConten" [nzFooter]="modalFoote"
-        (nzOnCancel)="handleCancelCreator()">
+        (nzOnCancel)="handleCancelCreator()" [nzStyle]="{'top': '0'}">
         <ng-template #modalTitl>
             Add new employee
         </ng-template>
@@ -69,8 +69,7 @@
                 <div>
                     <mat-form-field>
                         <input matInput [(ngModel)]="newUser.email" type="email" name="email"
-                            placeholder="Employee email" required #nameInput="ngModel"
-                            pattern="[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}">
+                            placeholder="Employee email" required #nameInput="ngModel">
                         <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
                             Employee email is invalid.
                         </mat-error>
@@ -89,8 +88,7 @@
                     <mat-form-field>
                         <mat-select [(ngModel)]="newUser.role" name="role" placeholder="Employee role" required
                             #nameInput="ngModel">
-                            <mat-option [value]="'admin'">Admin</mat-option>
-                            <mat-option [value]="'employee'">Employee</mat-option>
+                            <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}</mat-option>
                             <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                 class="error">
                                 Employee role cannot be empty.
@@ -144,7 +142,7 @@
             <td>{{user.worksFromDate | date}}</td>
             <td>{{user.birthdayDate | date}}</td>
             <td>{{user.daysOfVacation}}</td>
-            <td>{{getEmployeeDaysLeftById(user.id)}}</td>
+            <td>{{user.freeWorkDays}}</td>
             <td>{{user.email}}</td>
             <td>{{user.position}}</td>
             <td>
@@ -154,7 +152,7 @@
         </tr>
         <form #editUsersForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(editUsersForm)">
             <nz-modal [(nzVisible)]="isVisibleEditor" [nzTitle]="modalTitle" [nzContent]="modalContent"
-                [nzFooter]="modalFooter" (nzOnCancel)="handleCancelEditor()">
+                [nzFooter]="modalFooter" (nzOnCancel)="handleCancelEditor()" [nzStyle]="{'top': '0'}">
                 <ng-template #modalTitle>
                     Edit employee
                 </ng-template>
@@ -228,9 +226,8 @@
                         </div>
                         <div>
                             <mat-form-field>
-                                <input matInput [(ngModel)]="formDataUsersNoId.email" type="text" name="email"
-                                    placeholder="Employee email" required #nameInput="ngModel"
-                                    pattern="[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}">
+                                <input matInput [(ngModel)]="formDataUsersNoId.email" type="email" name="email"
+                                    placeholder="Employee email" required #nameInput="ngModel">
                                 <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                     class="error">
                                     Employee email is invalid.
@@ -241,8 +238,8 @@
                             <mat-form-field>
                                 <mat-select [(ngModel)]="formDataUsersNoId.role" name="role" placeholder="Employee role"
                                     required #nameInput="ngModel">
-                                    <mat-option [value]="'admin'">Admin</mat-option>
-                                    <mat-option [value]="'employee'">Employee</mat-option>
+                                    <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}
+                                    </mat-option>
                                     <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                         class="error">
                                         Employee role cannot be empty.

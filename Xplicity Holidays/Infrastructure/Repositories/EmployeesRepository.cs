@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Database.Models;
@@ -10,10 +11,11 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
     public class EmployeesRepository: IEmployeeRepository
     {
         protected readonly HolidayDbContext Context;
-
-        public EmployeesRepository(HolidayDbContext context)
+        private readonly UserManager<User> _userManager;
+        public EmployeesRepository(HolidayDbContext context, UserManager<User> userManager)
         {
             Context = context;
+            _userManager = userManager;
         }
 
         public async Task<ICollection<Employee>> GetAll()
@@ -68,11 +70,10 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
             return holidays;
         }
 
-        public async Task<Employee> FindAnyAdmin()
+        public async  Task<Employee> FindAnyAdmin()
         {
-            var admin = await Context.Employees.FirstOrDefaultAsync(employee => employee.Role == "admin");
-
-            return admin;
+            var users = await _userManager.GetUsersInRoleAsync("Administrator");
+            return users[0].Employee;
         }
     }
 }

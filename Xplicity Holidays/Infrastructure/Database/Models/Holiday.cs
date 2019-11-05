@@ -18,6 +18,8 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public string Status { get; set; }
         [Required]
+        public bool Paid { get; set; }
+        [Required]
         public DateTime RequestCreatedDate { get; set; }
     }
 

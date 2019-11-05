@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Xplicity_Holidays.Dtos;
 using Xplicity_Holidays.Dtos.Employees;
@@ -8,6 +9,7 @@ namespace Xplicity_Holidays.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles="Admin")]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeesService _employeesService;
@@ -15,24 +17,6 @@ namespace Xplicity_Holidays.Controllers
         public EmployeesController(IEmployeesService employeesService)
         {
             _employeesService = employeesService;
-        }
-
-        [HttpPost]
-        [Route("authenticate")]
-        public IActionResult Authenticate(AuthenticateDto request)
-        {
-            var employee = _employeesService.Authenticate(request.Email, request.Password);
-
-            if (employee == null)
-                return BadRequest(new { message = "Email or password is incorrect" });
-
-            // return basic user info (without password) and token to store client side
-            return Ok(new
-            {
-                employee.Id,
-                Username = employee.Name,
-                employee.Token
-            });
         }
 
         // GET: api/Employees
