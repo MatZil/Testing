@@ -14,7 +14,7 @@ namespace Xplicity_Holidays.Infrastructure.TemplateGeneration
     public class TemplateGeneration : ITemplateGeneration
     {
         private readonly IEmployeeRepository _repository;
-
+        
         public TemplateGeneration(IEmployeeRepository repository)
         {
             _repository = repository;
@@ -26,9 +26,30 @@ namespace Xplicity_Holidays.Infrastructure.TemplateGeneration
             var holidays = _repository.GetHolidays(employeeId);
             var holiday = holidays?.Where(h => h != null).FirstOrDefault(h => h.Type == holidayType);
 
-            if (holiday == null) throw new ArgumentNullException(nameof(holiday), "Holiday does not exist");
-            
-            var values = new Dictionary<string, string>
+            if (holiday != null)
+            {
+                var templateValues = GenerateTemplateValues(holiday, employeeDto);
+
+                var fileName = GetTemplateName(holiday, holidayDocumentType);
+
+                var source = File.ReadAllText(fileName);
+                foreach (var templateWord in templateValues)
+                {
+                    source = source.Replace(templateWord.Key, templateWord.Value);
+                }
+
+                var localPath = Path.Combine("Templates", "GeneratedTemplates",
+                    $"{holiday.Id}-{holidayDocumentType.ToString()}{holiday.Type.ToString()}" +
+                    $"-{DateTime.Today.Date.ToShortDateString()}.docx");
+
+                return await Task.FromResult(ProcessTemplate(fileName, localPath, templateValues));
+            }
+            throw new ArgumentNullException(nameof(holiday), "Holiday does not exist");
+        }
+
+        private static Dictionary<string, string> GenerateTemplateValues(Holiday holiday, Employee employeeDto)
+        {
+            return new Dictionary<string, string>
             {
                 {"TITLE", employeeDto.Position},
                 {"HCREATEDAT", $"{holiday.RequestCreatedDate.ToShortDateString()}" },
@@ -38,24 +59,16 @@ namespace Xplicity_Holidays.Infrastructure.TemplateGeneration
                 {"HEND", holiday.ToExclusive.ToShortDateString()},
                 {"HWORKDAY", $"{(holiday.ToExclusive - holiday.FromInclusive).TotalDays}"},
             };
+        }
 
-            var fileName = GetTemplateName(holiday, holidayDocumentType);
-
-            var source = File.ReadAllText(fileName);
-            foreach (var templateWord in values)
-            {
-                source = source.Replace(templateWord.Key, templateWord.Value);
-            }
-
-            var localPath = Path.Combine("Templates", "GeneratedTemplates",
-                $"{holiday.Id}-{holidayDocumentType.ToString()}{holiday.Type.ToString()}" +
-                $"-{DateTime.Today.Date.ToShortDateString()}.docx");
+        private static string ProcessTemplate(string fileName, string localPath, Dictionary<string, string> templateValues)
+        {
             using (var document = WordprocessingDocument.CreateFromTemplate(fileName))
             {
                 var body = document.MainDocumentPart.Document.Body;
                 foreach (var templateFile in body.Descendants<Text>())
                 {
-                    foreach (var documentText in values)
+                    foreach (var documentText in templateValues)
                     {
                         if (templateFile.Text.Contains(documentText.Key))
                         {
@@ -64,10 +77,8 @@ namespace Xplicity_Holidays.Infrastructure.TemplateGeneration
                     }
                 }
                 document.SaveAs(localPath).Close();
+                return localPath;
             }
-
-            // TODO: What should return? Feedback
-            return await Task.FromResult(localPath);
         }
 
         private string GetTemplateName(Holiday holiday, HolidayDocumentType holidayDocumentType)
