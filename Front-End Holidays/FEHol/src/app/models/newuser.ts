@@ -9,5 +9,5 @@ export class Newuser {
     password: string;
     role: string;
     position: string;
-    token: string;
+    healthCheckDate: Date;
 }

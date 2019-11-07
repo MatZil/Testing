@@ -8,5 +8,5 @@ export class Updateuser {
     email: string;
     role: string;
     position: string;
-    token: string;
+    healthCheckDate: Date;
 }

@@ -34,11 +34,11 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         [MinLength(4)]
         public string Email { get; set; }
-
         [NotMapped]
         public string Token { get; set; }
         public string Position { get; set; }
         public ICollection<Holiday> Holidays { get; set; }
 
+        public DateTime HealthCheckDate { get; set; }
     }
 }

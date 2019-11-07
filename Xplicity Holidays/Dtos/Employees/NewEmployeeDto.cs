@@ -15,5 +15,7 @@ namespace Xplicity_Holidays.Dtos.Employees
         public string Password { get; set; }
         public string Role { get; set; }
         public string Position { get; set; }
+
+        public DateTime HealthCheckDate { get; set; }
     }
 }
