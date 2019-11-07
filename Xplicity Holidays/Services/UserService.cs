@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Dtos.Employees;
+using Xplicity_Holidays.Dtos.Users;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Services.Interfaces;
 
@@ -14,11 +15,9 @@ namespace Xplicity_Holidays.Services
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
-        private readonly IMapper _mapper;
-        public UserService(UserManager<User> userManager, IMapper mapper)
+        public UserService(UserManager<User> userManager)
         {
             _userManager = userManager;
-            _mapper = mapper;
         }
         public async Task<User> Create(Employee newEmployee, NewEmployeeDto newEmployeeDto)
         {
@@ -51,6 +50,20 @@ namespace Xplicity_Holidays.Services
             {
                 await _userManager.AddToRoleAsync(userToUpdate, updateEmployeeDto.Role);
                 await _userManager.RemoveFromRolesAsync(userToUpdate, currentRole);
+            }
+        }
+
+        public async Task ChangePassword(int id, UpdatePasswordDto updatePasswordDto)
+        {
+            var userToUpdate = await _userManager.Users.FirstOrDefaultAsync(x => x.EmployeeId == id);
+            if (userToUpdate == null)
+            {
+                throw new InvalidOperationException();
+            }
+            var result = await _userManager.ChangePasswordAsync(userToUpdate, updatePasswordDto.CurrentPassword, updatePasswordDto.NewPassword);
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException();
             }
         }
     }
