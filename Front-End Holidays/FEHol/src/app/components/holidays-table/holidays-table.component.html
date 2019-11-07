@@ -1,4 +1,4 @@
-<div *ngIf="!isAdmin()">
+<div>
     <button nz-button nzType="primary" (click)=showModalCreator()>Request holidays</button>
     <form #newClientForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(newClientForm)">
         <nz-modal [(nzVisible)]="isVisibleCreator" [nzTitle]="modalTitl" [nzContent]="modalConten"
@@ -60,7 +60,7 @@
     </form>
 </div>
 
-<div *ngIf="isAdmin()">
+<div>
     <nz-table #basicTable [nzData]="holidays">
         <thead>
             <tr>
@@ -94,7 +94,7 @@
     </nz-table>
 </div>
 
-<div *ngIf="!isAdmin()">
+<div>
     <nz-table #basicTable [nzData]="holidays">
         <thead>
             <tr>

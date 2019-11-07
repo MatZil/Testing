@@ -10,7 +10,7 @@ import { HolidaysTableComponent } from './components/holidays-table/holidays-tab
 import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './helpers/auth-guard';
-import { RoleGuard } from './helpers/role-guard';
+import { RoleGuardService } from './helpers/role-guard';
 import { ProfileComponent } from './components/profile/profile.component';
 
 
@@ -25,19 +25,29 @@ const routes: Routes = [
   {
     path: 'calendar', component: SidebarComponent, canActivate: [AuthGuard],
     children: [
-      { path: '', component: CalendarComponent, canActivate: [AuthGuard] }
+      {
+        path: '', component: CalendarComponent, canActivate: [AuthGuard]
+      }
     ]
   },
   {
     path: 'clients', component: SidebarComponent, canActivate: [AuthGuard],
     children: [
-      { path: '', component: ClientTableComponent, canActivate: [AuthGuard] }
+      {
+        path: '', component: ClientTableComponent, canActivate: [RoleGuardService], data: {
+          expectedRole: 'Admin'
+        }
+      }
     ]
   },
   {
     path: 'employees', component: SidebarComponent, canActivate: [AuthGuard],
     children: [
-      { path: '', component: EmployeesTableComponent, canActivate: [AuthGuard] }
+      {
+        path: '', component: EmployeesTableComponent, canActivate: [RoleGuardService], data: {
+          expectedRole: 'Admin'
+        }
+      }
     ]
   },
   {
@@ -49,7 +59,11 @@ const routes: Routes = [
   {
     path: 'emailtemplates', component: SidebarComponent, canActivate: [AuthGuard],
     children: [
-      { path: '', component: EmailtemplatesTableComponent, canActivate: [AuthGuard] }
+      {
+        path: '', component: EmailtemplatesTableComponent, canActivate: [RoleGuardService], data: {
+          expectedRole: 'Admin'
+        }
+      }
     ]
   },
   {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
@@ -33,15 +34,11 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         [MinLength(4)]
         public string Email { get; set; }
-        [Required]
-        public byte[] PasswordHash { get; set; }
-        [Required]
-        public byte[] PasswordSalt { get; set; }
-        public string Role { get; set; }
+        [NotMapped]
         public string Token { get; set; }
-        [Required]
         public string Position { get; set; }
         public ICollection<Holiday> Holidays { get; set; }
 
+        public DateTime HealthCheckDate { get; set; }
     }
 }

@@ -6,7 +6,8 @@ import { environment } from '../../environments/environment';
 import { User } from '../models/user';
 import { Newuser } from '../models/newuser';
 import { Updateuser } from '../models/updateuser';
-
+import { NgForm } from '@angular/forms';
+import { PasswordChangeModel } from '../models/password-change-model';
 @Injectable({ providedIn: 'root' })
 
 export class UserService {
@@ -39,5 +40,9 @@ export class UserService {
 
     editUser(user: Updateuser, id: number) {
         return this.http.put(`${this.userApi}/${id}`, user);
+    }
+
+    changePassword(id: number, passwordChangeModel: PasswordChangeModel) {
+        return this.http.post(`${this.userApi}/${id}/ChangePassword`, passwordChangeModel);
     }
 }

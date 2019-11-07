@@ -1,15 +1,17 @@
 .employeesInfo{
     position: fixed;
     font-size: 15px;
-    top: 14em;
+    top: 20em;
     left: 15em;
     border-style: solid;
     padding: 10px;
     background-color: azure;
 }
 
-img{
+.holidaysLeftMessage{
     position: fixed;
-    top: 4.75em;
-    left: 21.75em;
+    font-size: 15px;
+    top: 5em;
+    right: 5em;
 }
+

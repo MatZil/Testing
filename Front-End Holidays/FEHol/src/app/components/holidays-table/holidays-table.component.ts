@@ -44,8 +44,8 @@ export class HolidaysTableComponent implements OnInit {
     private modal: NzModalService,
     private enumConverter: EnumToStringConverterService
   ) {
-    this.currentUser = this.authenticationService.currentUserValue;
-    this.currentUserId = this.currentUser.id;
+    this.currentUserId = this.authenticationService.getUserId();
+    this.requestHolidays.employeeId = this.currentUserId;
   }
 
   ngOnInit() {
@@ -108,11 +108,36 @@ export class HolidaysTableComponent implements OnInit {
     });
   }
 
+<<<<<<< HEAD
   isAdmin() {
     if (this.currentUser.role === 'admin') {
       return true;
     }
   }
+=======
+  populateForm(holidays: Holidays) {
+    this.formData = Object.assign({}, holidays);
+  }
+
+  populateFormNoId(holidays: Newholidays) {
+    this.formDataNoId = Object.assign({}, holidays);
+  }
+
+  deleteClientOnModalClose(id: number) {
+    this.onDeleteButtonClick(id);
+    this.handleCancelEditor();
+  }
+
+  showDeleteConfirm(id: number): void {
+    this.confirmDeleteModal = this.modal.confirm({
+      nzTitle: 'Do you want to delete this section?',
+      nzContent: 'When clicked the OK button this section will be deleted',
+      nzOnOk: () => this.deleteClientOnModalClose(id)
+    });
+  }
+
+
+>>>>>>> cca941c0e779f9e4e22cefc14cceb91587dfa36e
 
   isTheRightId(holidays: Holidays) {
     if (this.currentUserId === holidays.employeeId) {

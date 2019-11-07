@@ -10,8 +10,8 @@ using Xplicity_Holidays.Infrastructure.Database;
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20191005114933_Init")]
-    partial class Init
+    [Migration("20191103151013_AddHealthCheckUp")]
+    partial class AddHealthCheckUp
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -200,14 +200,24 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<int?>("ClientId");
 
+                    b.Property<int>("CurrentAvailableLeaves");
+
                     b.Property<int>("DaysOfVacation");
 
                     b.Property<string>("Email")
                         .IsRequired();
 
+                    b.Property<double>("FreeWorkDays");
+
+                    b.Property<DateTime>("HealthCheckDate");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(15);
+
+                    b.Property<int>("NextMonthAvailableLeaves");
+
+                    b.Property<int>("ParentalLeaveLimit");
 
                     b.Property<string>("Position");
 
@@ -230,13 +240,18 @@ namespace Xplicity_Holidays.Migrations
                         new
                         {
                             Id = 1,
-                            BirthdayDate = new DateTime(2019, 10, 15, 0, 0, 0, 0, DateTimeKind.Local),
+                            BirthdayDate = new DateTime(2019, 11, 3, 0, 0, 0, 0, DateTimeKind.Local),
+                            CurrentAvailableLeaves = 0,
                             DaysOfVacation = 20,
                             Email = "Inga@xplicity.com",
+                            FreeWorkDays = 0.0,
+                            HealthCheckDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Inga",
+                            NextMonthAvailableLeaves = 0,
+                            ParentalLeaveLimit = 0,
                             Position = "Position",
                             Surname = "Rana",
-                            WorksFromDate = new DateTime(2019, 10, 15, 0, 0, 0, 0, DateTimeKind.Local)
+                            WorksFromDate = new DateTime(2019, 11, 3, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -249,6 +264,8 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<int>("EmployeeId");
 
                     b.Property<DateTime>("FromInclusive");
+
+                    b.Property<bool>("Paid");
 
                     b.Property<DateTime>("RequestCreatedDate");
 

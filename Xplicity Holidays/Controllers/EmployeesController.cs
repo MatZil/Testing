@@ -1,38 +1,24 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Xplicity_Holidays.Dtos;
 using Xplicity_Holidays.Dtos.Employees;
+using Xplicity_Holidays.Dtos.Users;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles="Admin")]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeesService _employeesService;
-
-        public EmployeesController(IEmployeesService employeesService)
+        private readonly IUserService _userService;
+        public EmployeesController(IEmployeesService employeesService, IUserService userService)
         {
             _employeesService = employeesService;
-        }
-
-        [HttpPost]
-        [Route("authenticate")]
-        public IActionResult Authenticate(AuthenticateDto request)
-        {
-            var employee = _employeesService.Authenticate(request.Email, request.Password);
-
-            if (employee == null)
-                return BadRequest(new { message = "Email or password is incorrect" });
-
-            // return basic user info (without password) and token to store client side
-            return Ok(new
-            {
-                employee.Id,
-                Username = employee.Name,
-                employee.Token
-            });
+            _userService = userService;
         }
 
         // GET: api/Employees
@@ -84,6 +70,13 @@ namespace Xplicity_Holidays.Controllers
             await _employeesService.Delete(id);
 
             return NoContent();
+        }
+
+        [HttpPost("{id}/ChangePassword")]
+        public async Task<IActionResult> ChangePassword(int id, UpdatePasswordDto passwordDto)
+        {
+            await _userService.ChangePassword(id, passwordDto);
+            return Ok();
         }
     }
 }
