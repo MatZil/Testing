@@ -34,7 +34,9 @@ namespace Xplicity_Holidays.Controllers
             var holiday = await _holidaysService.GetById(id);
 
             if (holiday == null)
+            {
                 return NotFound();
+            }
 
             return Ok(holiday);
         }
@@ -43,7 +45,12 @@ namespace Xplicity_Holidays.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] UpdateHolidayDto newHoliday)
         {
-            await _holidaysService.Update(id, newHoliday);
+            var succesful = await _holidaysService.Update(id, newHoliday);
+
+            if (!succesful)
+            {
+                return BadRequest();
+            }
 
             return NoContent();
         }
@@ -52,7 +59,12 @@ namespace Xplicity_Holidays.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _holidaysService.Delete(id);
+            var successful = await _holidaysService.Delete(id);
+
+            if(!successful)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

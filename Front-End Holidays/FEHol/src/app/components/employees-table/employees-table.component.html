@@ -68,6 +68,20 @@
                 </div>
                 <div>
                     <mat-form-field>
+                        <mat-select [(ngModel)]="newUser.parentalLeaveLimit" name="parentalLeaveLimit"
+                            placeholder="Parental leave limit" required #nameInput="ngModel">
+                            <mat-option [value]="0">0</mat-option>
+                            <mat-option [value]="1">1</mat-option>
+                            <mat-option [value]="2">2</mat-option>
+                            <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                class="error">
+                                Parental leave limit cannot be empty.
+                            </mat-error>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
                         <input matInput [(ngModel)]="newUser.email" type="email" name="email"
                             placeholder="Employee email" required #nameInput="ngModel">
                         <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
@@ -138,6 +152,9 @@
             <th>Free workdays left</th>
             <th>Email</th>
             <th>Position</th>
+            <th>Parental leave limit</th>
+            <th>Current available parental leaves</th>
+            <th>Next month's parental leaves</th>
             <th>Health check-up date</th>
             <th>Status</th>
         </tr>
@@ -150,9 +167,12 @@
             <td>{{user.worksFromDate | date}}</td>
             <td>{{user.birthdayDate | date}}</td>
             <td>{{user.daysOfVacation}}</td>
-            <td>{{user.freeWorkDays}}</td>
+            <td>{{user.freeWorkDays | number : '.0-2'}}</td>
             <td>{{user.email}}</td>
             <td>{{user.position}}</td>
+            <td>{{user.parentalLeaveLimit}}</td>
+            <td>{{user.currentAvailableLeaves}}</td>
+            <td>{{user.nextMonthAvailableLeaves}}</td>
             <td>{{user.healthCheckDate | date}}</td>
             <td>{{employeeStatus[user.status]}} employee</td>
             <td>
@@ -230,6 +250,20 @@
                                     <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                         class="error">
                                         Days cannot be empty.
+                                    </mat-error>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-select [(ngModel)]="formDataUsersNoId.parentalLeaveLimit" name="parentalLeaveLimit"
+                                    placeholder="Parental leave limit" required #nameInput="ngModel">
+                                    <mat-option [value]="0">0</mat-option>
+                                    <mat-option [value]="1">1</mat-option>
+                                    <mat-option [value]="2">2</mat-option>
+                                    <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                        class="error">
+                                        Parental leave limit cannot be empty.
                                     </mat-error>
                                 </mat-select>
                             </mat-form-field>

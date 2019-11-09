@@ -13,6 +13,8 @@ import { NgForm } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 
 import { saveAs } from 'file-saver';
+import { EnumToStringConverterService } from 'src/app/services/enum-to-string-converter.service';
+import { HolidayType } from 'src/app/enums/holidayType';
 
 @Component({
   selector: 'app-holidays-table',
@@ -21,8 +23,6 @@ import { saveAs } from 'file-saver';
 })
 export class HolidaysTableComponent implements OnInit {
   holidays: Holidays[];
-  formData: Holidays;
-  formDataNoId: Newholidays;
   requestHolidays: Requestholidays = new Requestholidays();
 
   isVisibleCreator = false;
@@ -36,12 +36,14 @@ export class HolidaysTableComponent implements OnInit {
   currentUserId: number;
 
   holidaysType: string;
+  holidaysStatus: string;
 
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private holidayService: HolidaysService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private enumConverter: EnumToStringConverterService
   ) {
     this.currentUserId = this.authenticationService.getUserId();
     this.requestHolidays.employeeId = this.currentUserId;
@@ -101,61 +103,22 @@ export class HolidaysTableComponent implements OnInit {
     form.resetForm();
   }
 
-  onDeleteButtonClick(id: number) {
-    this.holidayService.deleteHolidays(id).subscribe(() => {
-      this.refreshTable();
-    });
-  }
-
   onEditConfirmButtonClick(holidays: Newholidays, id: number) {
     this.holidayService.editHolidays(holidays, id).subscribe(() => {
       this.refreshTable();
     });
   }
 
-  populateForm(holidays: Holidays) {
-    this.formData = Object.assign({}, holidays);
+  isAdmin() {
+    if (this.currentUser.role === 'admin') {
+      return true;
+    }
   }
-
-  populateFormNoId(holidays: Newholidays) {
-    this.formDataNoId = Object.assign({}, holidays);
-  }
-
-  deleteClientOnModalClose(id: number) {
-    this.onDeleteButtonClick(id);
-    this.handleCancelEditor();
-  }
-
-  showDeleteConfirm(id: number): void {
-    this.confirmDeleteModal = this.modal.confirm({
-      nzTitle: 'Do you want to delete this section?',
-      nzContent: 'When clicked the OK button this section will be deleted',
-      nzOnOk: () => this.deleteClientOnModalClose(id)
-    });
-  }
-
-
 
   isTheRightId(holidays: Holidays) {
     if (this.currentUserId === holidays.employeeId) {
       return true;
     }
-  }
-
-  checkWhatTypeOfHoliday(type: number) {
-    if (type === 0) {
-      this.holidaysType = 'Annual';
-    }
-
-    if (type === 1) {
-      this.holidaysType = 'Parental';
-    }
-
-    if (type === 2) {
-      this.holidaysType = 'Science';
-    }
-
-    return this.holidaysType;
   }
 
   getUserNameById(id: number) {
@@ -166,7 +129,15 @@ export class HolidaysTableComponent implements OnInit {
     }
   }
 
-  setPaid() {
+  changePaid() {
     this.requestHolidays.paid = !this.requestHolidays.paid;
+  }
+
+  setPaid() {
+    if (this.requestHolidays.type === HolidayType.Parental) {
+      this.requestHolidays.paid = true;
+    } else if (this.requestHolidays.type === HolidayType.Science) {
+      this.requestHolidays.paid = false;
+    }
   }
 }

@@ -7,6 +7,7 @@ export class Updateuser {
     worksFromDate: Date;
     birthdayDate: Date;
     daysOfVacation: number;
+    parentalLeaveLimit: number;
     email: string;
     role: string;
     position: string;

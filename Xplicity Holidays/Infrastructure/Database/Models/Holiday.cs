@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Xplicity_Holidays.Infrastructure.Enums;
 
 namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
@@ -16,17 +17,11 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public DateTime ToExclusive { get; set; }
         [Required]
-        public string Status { get; set; }
+        public HolidayStatus Status { get; set; }
         [Required]
         public bool Paid { get; set; }
         [Required]
         public DateTime RequestCreatedDate { get; set; }
     }
 
-    public enum HolidayType
-    {
-        Annual,
-        Parental,
-        Science
-    }
 }
