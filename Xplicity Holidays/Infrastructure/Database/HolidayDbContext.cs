@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Infrastructure.Database.Models;
+using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Static_Files;
 
 namespace Xplicity_Holidays.Infrastructure.Database
@@ -51,7 +52,7 @@ namespace Xplicity_Holidays.Infrastructure.Database
                     DaysOfVacation = 20,
                     Email = _configuration.GetValue<string>("AdminData:AdminEmail"),
                     Position = "Administrator",
-                    Status = EmployeeStatus.Status.Current
+                    Status = EmployeeStatusEnum.Current
                 }
             );
         }
