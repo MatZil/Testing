@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HolidayType } from '../enums/holidayType';
+import { HolidayStatus } from '../enums/holidayStatus';
 
 @Injectable({
   providedIn: 'root'
@@ -9,26 +11,26 @@ export class EnumToStringConverterService {
 
   determineHolidayType(type: number): string {
     switch (type) {
-      case 0:
+      case HolidayType.Annual:
         return 'Annual';
 
-      case 1:
+      case HolidayType.Parental:
         return 'Parental';
 
-      case 2:
+      case HolidayType.Science:
         return 'Science';
     }
   }
 
   determineHolidayStatus(status: number): string {
     switch (status) {
-      case 0:
+      case HolidayStatus.Unconfirmed:
         return 'Unconfirmed';
 
-      case 1:
+      case HolidayStatus.Declined:
         return 'Declined';
 
-      case 2:
+      case HolidayStatus.Confirmed:
         return 'Confirmed';
     }
   }
