@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Dtos.Employees;
 using Xplicity_Holidays.Dtos.Users;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Xplicity_Holidays.Infrastructure.Database;
 
 namespace Xplicity_Holidays.Services
 {
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
+
         public UserService(UserManager<User> userManager)
         {
             _userManager = userManager;
@@ -34,7 +38,7 @@ namespace Xplicity_Holidays.Services
                 await _userManager.AddToRoleAsync(newUser, newEmployeeDto.Role);
                 return newUser;
             }
-
+            
             return null;
         }
 
@@ -55,6 +59,7 @@ namespace Xplicity_Holidays.Services
 
         public async Task ChangePassword(int id, UpdatePasswordDto updatePasswordDto)
         {
+            
             var userToUpdate = await _userManager.Users.FirstOrDefaultAsync(x => x.EmployeeId == id);
             if (userToUpdate == null)
             {
@@ -65,6 +70,16 @@ namespace Xplicity_Holidays.Services
             {
                 throw new InvalidOperationException();
             }
+        }
+
+        public async Task<Employee> GetCurrentUser(string email)
+        {
+            var currentUser = await _userManager.Users.Include(x => x.Employee).FirstOrDefaultAsync(x => x.Email == email);
+            if (currentUser == null)
+            {
+                throw new InvalidOperationException();
+            }
+            return currentUser.Employee;
         }
     }
 }

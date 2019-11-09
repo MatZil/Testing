@@ -46,7 +46,7 @@ export class SidebarComponent implements OnInit {
       this.errorMessage = error.message;
     });
 
-    this.userService.getUser(this.authenticationService.getUserId()).subscribe(user => {
+    this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
   }

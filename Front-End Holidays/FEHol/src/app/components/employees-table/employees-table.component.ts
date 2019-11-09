@@ -13,6 +13,7 @@ import { NgForm } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { Role } from '../../models/role';
+import { EmployeeStatus } from '../../models/employee-status.enum';
 
 @Component({
   selector: 'app-employees-table',
@@ -26,6 +27,8 @@ export class EmployeesTableComponent implements OnInit {
   formDataUsers: User;
   formDataUsersNoId: Updateuser;
   newUser: Newuser = new Newuser();
+  employeeStatus = EmployeeStatus;
+
 
   clients: Client[] = [];
   oneClient: Client;
@@ -72,6 +75,7 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   onAddButtonClick(user: User) {
+    user.status = this.employeeStatus.Current;
     this.userService.registerUser(user).subscribe(() => {
       this.refreshTable();
       this.handleOkCreator();

@@ -1,3 +1,5 @@
+import { EmployeeStatus } from './employee-status.enum';
+
 export class User {
     id: number;
     name: string;
@@ -11,4 +13,5 @@ export class User {
     role: string;
     position: string;
     healthCheckDate: Date;
+    status: EmployeeStatus;
 }

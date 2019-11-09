@@ -1,4 +1,5 @@
 ﻿using System;
+using Xplicity_Holidays.Infrastructure.Static_Files;
 
 namespace Xplicity_Holidays.Dtos.Employees
 {
@@ -17,5 +18,7 @@ namespace Xplicity_Holidays.Dtos.Employees
         public string Position { get; set; }
 
         public DateTime HealthCheckDate { get; set; }
+
+        public EmployeeStatus.Status Status { get; set; }
     }
 }

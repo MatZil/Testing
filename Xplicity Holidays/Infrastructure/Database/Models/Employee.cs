@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Xplicity_Holidays.Infrastructure.Static_Files;
 
 namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
@@ -40,5 +41,7 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         public ICollection<Holiday> Holidays { get; set; }
 
         public DateTime HealthCheckDate { get; set; }
+
+        public EmployeeStatus.Status Status { get; set; }
     }
 }

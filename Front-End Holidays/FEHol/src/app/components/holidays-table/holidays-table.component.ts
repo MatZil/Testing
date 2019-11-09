@@ -50,7 +50,7 @@ export class HolidaysTableComponent implements OnInit {
   ngOnInit() {
     this.refreshTable();
 
-    this.userService.getUser(this.authenticationService.getUserId()).subscribe(user => {
+    this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
 

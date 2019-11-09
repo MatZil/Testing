@@ -45,4 +45,8 @@ export class UserService {
     changePassword(id: number, passwordChangeModel: PasswordChangeModel) {
         return this.http.post(`${this.userApi}/${id}/ChangePassword`, passwordChangeModel);
     }
+
+    getCurrentUser(): Observable<User> {
+        return this.http.get<User>(`${this.userApi}/self`);
+    }
 }
