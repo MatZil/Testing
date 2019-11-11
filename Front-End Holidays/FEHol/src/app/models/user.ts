@@ -7,6 +7,9 @@ export class User {
     birthdayDate: Date;
     daysOfVacation: number;
     freeWorkDays: number;
+    parentalLeaveLimit: number;
+    currentAvailableLeaves: number;
+    nextMonthAvailableLeaves: number;
     email: string;
     role: string;
     position: string;

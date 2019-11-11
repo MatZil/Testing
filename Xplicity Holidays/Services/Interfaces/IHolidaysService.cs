@@ -9,7 +9,8 @@ namespace Xplicity_Holidays.Services.Interfaces
         Task<GetHolidayDto> GetById(int id);
         Task<ICollection<GetHolidayDto>> GetAll();
         Task<int> Create(NewHolidayDto newClient);
-        Task Update(int id, UpdateHolidayDto updateData);
+        Task<bool> Update(int id, UpdateHolidayDto updateData);
         Task<bool> Delete(int id);
+        Task<bool> Decline(int id);
     }
 }

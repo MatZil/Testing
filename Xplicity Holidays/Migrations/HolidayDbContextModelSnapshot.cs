@@ -267,8 +267,7 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<DateTime>("RequestCreatedDate");
 
-                    b.Property<string>("Status")
-                        .IsRequired();
+                    b.Property<int>("Status");
 
                     b.Property<DateTime>("ToExclusive");
 

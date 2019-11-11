@@ -14,15 +14,13 @@ namespace Xplicity_Holidays.Controllers
     public class HolidayConfirmController : ControllerBase
     {
         private readonly IHolidayConfirmService _confirmationService;
-        private readonly IMapper _mapper;
         private readonly IConfiguration _configuration; 
         private readonly IHolidaysService _holidaysService;
 
-        public HolidayConfirmController(IHolidayConfirmService confirmationService, IMapper mapper, IConfiguration configuration, 
+        public HolidayConfirmController(IHolidayConfirmService confirmationService, IConfiguration configuration, 
                                         IHolidaysService holidaysService)
         {
             _confirmationService = confirmationService;
-            _mapper = mapper;
             _configuration = configuration;
             _holidaysService = holidaysService;
         }
@@ -31,7 +29,9 @@ namespace Xplicity_Holidays.Controllers
         public async Task<IActionResult> RequestConfirmationFromClient(NewHolidayDto newHolidayDto)
         {
             if (!await _confirmationService.IsValid(newHolidayDto))
+            {
                 return BadRequest();
+            }
 
             var holidayId = await _holidaysService.Create(newHolidayDto);
 
@@ -49,7 +49,9 @@ namespace Xplicity_Holidays.Controllers
         public async Task<IActionResult> ConfirmHoliday(int holidayId)
         {
             if (!await _confirmationService.IsValid(holidayId))
+            {
                 return BadRequest();
+            }
 
             await _confirmationService.ConfirmHoliday(holidayId);
 
