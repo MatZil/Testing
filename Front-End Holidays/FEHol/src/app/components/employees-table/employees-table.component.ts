@@ -28,7 +28,7 @@ export class EmployeesTableComponent implements OnInit {
   formDataUsersNoId: Updateuser;
   newUser: Newuser = new Newuser();
   employeeStatus = EmployeeStatus;
-
+  selected;
 
   clients: Client[] = [];
   oneClient: Client;
@@ -84,6 +84,9 @@ export class EmployeesTableComponent implements OnInit {
     });
   }
 
+  getCurrentUserId() {
+    return this.authenticationService.getUserId();
+  }
   onDeleteButtonClick(id: number) {
     this.userService.deleteUser(id).subscribe(() => {
       this.refreshTable();
@@ -115,7 +118,13 @@ export class EmployeesTableComponent implements OnInit {
       nzOnOk: () => this.deleteEmployeeOnModalClose(id)
     });
   }
-
+  showStatusConfirm() {
+    this.confirmDeleteModal = this.modal.confirm({
+      nzTitle: 'Do you want to change status of this user?',
+      nzContent: 'When clicked the OK button the status will be changed',
+      nzOnOk: () => this.onEditConfirmButtonClick(this.formDataUsersNoId, this.formDataUsers.id)
+    });
+  }
   onSubmit(form: NgForm) {
     form.resetForm();
   }

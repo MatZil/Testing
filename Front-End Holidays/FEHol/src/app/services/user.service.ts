@@ -8,6 +8,7 @@ import { Newuser } from '../models/newuser';
 import { Updateuser } from '../models/updateuser';
 import { NgForm } from '@angular/forms';
 import { PasswordChangeModel } from '../models/password-change-model';
+import decode from 'jwt-decode';
 @Injectable({ providedIn: 'root' })
 
 export class UserService {
@@ -48,5 +49,12 @@ export class UserService {
 
     getCurrentUser(): Observable<User> {
         return this.http.get<User>(`${this.userApi}/self`);
+    }
+
+    getRole(): string {
+        const token = localStorage.getItem('token');
+        // decode the token to get its payload
+        const tokenPayload = decode(token);
+        return tokenPayload.role;
     }
 }

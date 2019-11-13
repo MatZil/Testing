@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Xplicity_Holidays.Dtos.Holidays;
@@ -13,11 +14,11 @@ namespace Xplicity_Holidays.Services
 {
     public class HolidaysService: IHolidaysService
     {
-        private readonly IRepository<Holiday> _repository;
+        private readonly IHolidaysRepository _repository;
         private readonly IMapper _mapper;
         private readonly ITimeService _timeService;
 
-        public HolidaysService(IRepository<Holiday> repository, IMapper mapper, ITimeService timeService)
+        public HolidaysService(IHolidaysRepository repository, IMapper mapper, ITimeService timeService)
         {
             _repository = repository;
             _mapper = mapper;
@@ -36,7 +37,7 @@ namespace Xplicity_Holidays.Services
         {
             var holidays = await _repository.GetAll();
             var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays);
-
+            
             return holidaysDto;
         }
 
@@ -101,6 +102,13 @@ namespace Xplicity_Holidays.Services
             var successful = await _repository.Update(holiday);
 
             return successful;
+        }
+
+        public async Task<ICollection<GetHolidayDto>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus)
+        {
+            var holidays = await _repository.GetByEmployeeStatus(employeeStatus);
+            var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays);
+            return holidaysDto;
         }
     }
 }
