@@ -15,6 +15,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { saveAs } from 'file-saver';
 import { EnumToStringConverterService } from 'src/app/services/enum-to-string-converter.service';
 import { HolidayType } from 'src/app/enums/holidayType';
+import { EmployeeStatus } from 'src/app/models/employee-status.enum';
 
 @Component({
   selector: 'app-holidays-table',
@@ -24,7 +25,7 @@ import { HolidayType } from 'src/app/enums/holidayType';
 export class HolidaysTableComponent implements OnInit {
   holidays: Holidays[];
   requestHolidays: Requestholidays = new Requestholidays();
-
+  selected = 1;
   isVisibleCreator = false;
   isConfirmLoadingCreator = false;
   isVisibleEditor = false;
@@ -34,9 +35,9 @@ export class HolidaysTableComponent implements OnInit {
   users: User[];
   currentUser: User;
   currentUserId: number;
-
   holidaysType: string;
   holidaysStatus: string;
+  role: string;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -50,19 +51,20 @@ export class HolidaysTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.refreshTable();
+    this.refreshTable(this.selected);
 
-    this.userService.getUser(this.authenticationService.getUserId()).subscribe(user => {
+    this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
 
     this.userService.getAllUsers().subscribe(users => {
       this.users = users;
     });
+    this.role = this.userService.getRole();
   }
 
-  refreshTable() {
-    this.holidayService.getHolidays().subscribe(holidays => {
+  refreshTable(status: number) {
+    this.holidayService.getHolidaysByStatus(status).subscribe(holidays => {
       this.holidays = holidays;
     });
   }
@@ -71,7 +73,7 @@ export class HolidaysTableComponent implements OnInit {
     this.requestHolidays.employeeId = this.currentUser.id;
     this.holidayService.addHolidays(this.requestHolidays).subscribe(response => {
       saveAs(response, 'Holidays_Request');
-      this.refreshTable();
+      this.refreshTable(this.selected);
     });
   }
 
@@ -105,14 +107,8 @@ export class HolidaysTableComponent implements OnInit {
 
   onEditConfirmButtonClick(holidays: Newholidays, id: number) {
     this.holidayService.editHolidays(holidays, id).subscribe(() => {
-      this.refreshTable();
+      this.refreshTable(this.selected);
     });
-  }
-
-  isAdmin() {
-    if (this.currentUser.role === 'admin') {
-      return true;
-    }
   }
 
   isTheRightId(holidays: Holidays) {
@@ -138,6 +134,19 @@ export class HolidaysTableComponent implements OnInit {
       this.requestHolidays.paid = true;
     } else if (this.requestHolidays.type === HolidayType.Science) {
       this.requestHolidays.paid = false;
+    }
+  }
+
+  changeStatus(data) {
+    this.refreshTable(this.selected);
+  }
+
+  isAdmin() {
+    if (this.role === 'Admin') {
+      return true;
+    }
+    else {
+      return false;
     }
   }
 }

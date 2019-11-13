@@ -38,7 +38,7 @@ export class ProfileComponent implements OnInit {
     return this.registerForm.get('passwords.passwordConfirm');
   }
   ngOnInit() {
-    this.userService.getUser(this.authenticationService.getUserId()).subscribe(user => {
+    this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
     this.createFormGroup();

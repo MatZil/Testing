@@ -1,12 +1,15 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Xplicity_Holidays.Dtos.Holidays;
+using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class HolidaysController : ControllerBase
     {
         private readonly IHolidaysService _holidaysService;
@@ -22,7 +25,15 @@ namespace Xplicity_Holidays.Controllers
         public async Task<IActionResult> Get()
         {
             var holidays = await _holidaysService.GetAll();
+            return Ok(holidays);
+        }
 
+        [HttpGet]
+        [Produces(typeof(GetHolidayDto[]))]
+        [Route("GetByStatus")]
+        public async Task<IActionResult> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus)
+        {
+            var holidays = await _holidaysService.GetByEmployeeStatus(employeeStatus);
             return Ok(holidays);
         }
 

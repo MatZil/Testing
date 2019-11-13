@@ -1,5 +1,17 @@
 <div>
     <button nz-button nzType="primary" (click)=showModalCreator()>Request holidays</button>
+    <div>
+
+        <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Employee status"
+            (selectionChange)="changeStatus($event.value)" [(value)]="selected">
+            <mat-option [value]="1">
+                Current employees
+            </mat-option>
+            <mat-option [value]="0">
+                Former employees
+            </mat-option>
+        </mat-select>
+    </div>
     <form #newClientForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(newClientForm)">
         <nz-modal [(nzVisible)]="isVisibleCreator" [nzTitle]="modalTitl" [nzContent]="modalConten"
             [nzFooter]="modalFoote" (nzOnCancel)="handleCancelCreator()">
@@ -13,8 +25,8 @@
                             <mat-select [(ngModel)]="requestHolidays.type" name="type" placeholder="Holiday's type"
                                 required #nameInput="ngModel" [(value)]="selectedType">
                                 <mat-option [value]="0">Annual</mat-option>
-                                <mat-option 
-                                    [value]="1" *ngIf="currentUser.currentAvailableLeaves > 0 || currentUser.nextMonthAvailableLeaves > 0">
+                                <mat-option [value]="1"
+                                    *ngIf="currentUser.currentAvailableLeaves > 0 || currentUser.nextMonthAvailableLeaves > 0">
                                     Parental
                                 </mat-option>
                                 <mat-option [value]="2">Science</mat-option>
@@ -61,7 +73,7 @@
 </div>
 
 <div>
-    <nz-table #basicTable [nzData]="holidays">
+    <nz-table *ngIf="isAdmin()" #basicTable [nzData]="holidays">
         <thead>
             <tr>
                 <th>Employee</th>
@@ -95,7 +107,7 @@
 </div>
 
 <div>
-    <nz-table #basicTable [nzData]="holidays">
+    <nz-table *ngIf="!isAdmin()" #basicTable [nzData]="holidays">
         <thead>
             <tr>
                 <th>Holidays type</th>

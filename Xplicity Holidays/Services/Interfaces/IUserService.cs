@@ -15,5 +15,7 @@ namespace Xplicity_Holidays.Services.Interfaces
         Task Update(int id, UpdateEmployeeDto updateEmployeeDto);
 
         Task ChangePassword(int id, UpdatePasswordDto updatePasswordDto);
+
+        Task<Employee> GetCurrentUser(string email);
     }
 }

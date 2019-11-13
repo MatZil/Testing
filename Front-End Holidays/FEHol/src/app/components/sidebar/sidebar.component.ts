@@ -15,7 +15,7 @@ export class SidebarComponent implements OnInit {
   users = [];
   holidays: Holidays[];
   errorMessage: string;
-
+  role: string;
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
@@ -46,14 +46,18 @@ export class SidebarComponent implements OnInit {
       this.errorMessage = error.message;
     });
 
-    this.userService.getUser(this.authenticationService.getUserId()).subscribe(user => {
+    this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
+    this.role = this.userService.getRole();
   }
 
   isAdmin() {
-    if (this.currentUser.role === 'admin') {
+    if (this.role === 'Admin') {
       return true;
+    }
+    else {
+      return false;
     }
   }
 }

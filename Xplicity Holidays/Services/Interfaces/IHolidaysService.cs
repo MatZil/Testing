@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xplicity_Holidays.Dtos.Holidays;
+using Xplicity_Holidays.Infrastructure.Enums;
 
 namespace Xplicity_Holidays.Services.Interfaces
 {
@@ -12,5 +13,6 @@ namespace Xplicity_Holidays.Services.Interfaces
         Task<bool> Update(int id, UpdateHolidayDto updateData);
         Task<bool> Delete(int id);
         Task<bool> Decline(int id);
+        Task<ICollection<GetHolidayDto>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus);
     }
 }

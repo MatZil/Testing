@@ -136,7 +136,7 @@
     </nz-modal>
 </form>
 
-<nz-table #basicTable [nzData]="users">
+<nz-table #basicTable [nzData]="users" [nzScroll]="{x: '100%'}">
     <thead>
         <tr>
             <th>Name</th>
@@ -156,6 +156,7 @@
             <th>Current available parental leaves</th>
             <th>Next month's parental leaves</th>
             <th>Health check-up date</th>
+            <th>Status</th>
         </tr>
     </thead>
     <tbody>
@@ -173,6 +174,7 @@
             <td>{{user.currentAvailableLeaves}}</td>
             <td>{{user.nextMonthAvailableLeaves}}</td>
             <td>{{user.healthCheckDate | date}}</td>
+            <td>{{employeeStatus[user.status]}} employee</td>
             <td>
                 <button nz-button nzType="primary"
                     (click)="populateUserForm(user); showModalEditor(); populateUserFormNoId(user)">Edit</button>
@@ -219,8 +221,8 @@
                         </div>
                         <div>
                             <mat-form-field>
-                                <input matInput [ngModel]="formDataUsersNoId.worksFromDate | date: 'yyyy/MM/dd'"
-                                    type="date" name="worksFromDate" placeholder="Started working from date" required
+                                <input matInput [(ngModel)]="formDataUsersNoId.worksFromDate" type="date"
+                                    name="worksFromDate" placeholder="Started working from date" required
                                     #nameInput="ngModel">
                                 <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                     class="error">
@@ -306,14 +308,33 @@
                                     #nameInput="ngModel">
                             </mat-form-field>
                         </div>
+                        <div>
+                            <mat-form-field>
+                                <mat-select [(ngModel)]="formDataUsersNoId.status" name="status"
+                                    placeholder="Employee status" required #nameInput="ngModel" [(value)]="selected"
+                                    [disabled]="formDataUsers.id === getCurrentUserId()">
+                                    <mat-option [value]="0">
+                                        Former employee
+                                    </mat-option>
+                                    <mat-option [value]="1">
+                                        Current employee
+                                    </mat-option>
+                                    <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                        class="error">
+                                        Employee status cannot be empty.
+                                    </mat-error>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
                     </mat-card>
                 </ng-template>
 
                 <ng-template #modalFooter>
                     <button nz-button nzType="default" (click)="handleCancelEditor()">Cancel</button>
-                    <button nz-button nzType="danger" (click)="showDeleteConfirm(formDataUsers.id)">Delete</button>
+                    <button nz-button nzType="danger" (click)="showDeleteConfirm(formDataUsers.id)"
+                        [disabled]="formDataUsers.id === getCurrentUserId()">Delete</button>
                     <button nz-button nzType="primary"
-                        (click)="onEditConfirmButtonClick(formDataUsersNoId, formDataUsers.id)"
+                        (click)="selected !== formDataUsers.status ? showStatusConfirm() : onEditConfirmButtonClick(formDataUsersNoId, formDataUsers.id)"
                         [disabled]="editUsersForm.form.invalid">Confirm edit</button>
                 </ng-template>
             </nz-modal>
