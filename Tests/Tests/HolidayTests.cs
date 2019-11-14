@@ -1,6 +1,5 @@
 ﻿using Xunit;
 using Xplicity_Holidays.Services;
-using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using AutoMapper;
@@ -8,10 +7,11 @@ using Xplicity_Holidays.Dtos.Holidays;
 using Xunit.Abstractions;
 using System;
 using Xplicity_Holidays.Infrastructure.Utils;
+using Xplicity_Holidays.Infrastructure.Enums;
 
 namespace Tests
 {
-    [TestCaseOrderer("Tests.Tests.HolidayTests.AlphabeticalOrderer", "Tests")]
+    [TestCaseOrderer("Tests.HolidayTests.AlphabeticalOrderer", "Tests")]
     public class HolidayTests
     {
         private readonly HolidayDbContext _context;

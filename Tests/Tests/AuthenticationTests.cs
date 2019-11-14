@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 
 namespace Tests
 {
-    [TestCaseOrderer("Tests.Tests.AuthenticationTests.AlphabeticalOrderer", "Tests")]
+    [TestCaseOrderer("Tests.AuthenticationTests.AlphabeticalOrderer", "Tests")]
     public class AuthenticationTests
     {
         private readonly HolidayDbContext _context;

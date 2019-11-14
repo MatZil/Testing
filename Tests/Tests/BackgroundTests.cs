@@ -16,7 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Tests
 {
-    [TestCaseOrderer("Tests.Tests.BackgroundTests.AlphabeticalOrderer", "Tests")]
+    [TestCaseOrderer("Tests.BackgroundTests.AlphabeticalOrderer", "Tests")]
     public class BackgroundTests
     {
         private readonly HolidayDbContext _context;

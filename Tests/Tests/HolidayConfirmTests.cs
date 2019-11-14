@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace Tests
 {
-    [TestCaseOrderer("Tests.Tests.HolidayConfirmTests.AlphabeticalOrderer", "Tests")]
+    [TestCaseOrderer("Tests.HolidayConfirmTests.AlphabeticalOrderer", "Tests")]
     public class HolidayConfirmTests
     {
         private readonly HolidayDbContext _context;
@@ -89,12 +89,12 @@ namespace Tests
         public async void When_ConfirmingHoliday_Expect_True(int holidayId)
         {
             var holiday = await _holidaysRepository.GetById(holidayId);
-            _output.WriteLine(holiday.Status);
+            _output.WriteLine(holiday.Status.ToString());
 
             await _holidayConfirmService.ConfirmHoliday(holidayId);
 
             var updatedHoliday = await _holidaysRepository.GetById(holidayId);
-            _output.WriteLine(updatedHoliday.Status);
+            _output.WriteLine(updatedHoliday.Status.ToString());
         }
 
         [Theory]
@@ -139,14 +139,14 @@ namespace Tests
             Assert.True(initial[0] != final[0] || initial[1] != final[1]);
         }
 
-        [Theory]
-        [InlineData(1)]
-        public async void When_ConfirmingValid_Expect_True(int holidayId)
-        {
-            var result = await _holidayConfirmService.IsValid(holidayId);
+        //[Theory]
+        //[InlineData(1)]
+        //public async void When_ConfirmingValid_Expect_True(int holidayId)
+        //{
+        //    var result = await _holidayConfirmService.IsValid(holidayId);
 
-            Assert.True(result);
-        }
+        //    Assert.True(result);
+        //}
 
         [Theory]
         [InlineData(2)]

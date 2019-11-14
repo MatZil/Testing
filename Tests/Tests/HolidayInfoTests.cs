@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Tests
 {
-    [TestCaseOrderer("Tests.Tests.HolidayInfoTests.AlphabeticalOrderer", "Tests")]
+    [TestCaseOrderer("Tests.HolidayInfoTests.AlphabeticalOrderer", "Tests")]
     public class HolidayInfoTests
     {
         private readonly HolidayDbContext _context;

@@ -11,14 +11,14 @@ using System;
 
 namespace Tests
 {
-    [TestCaseOrderer("Tests.Tests.UserTests.AlphabeticalOrderer", "Tests")]
+    [TestCaseOrderer("Tests.UserTests.AlphabeticalOrderer", "Tests")]
     public class UserTests
     {
         private readonly HolidayDbContext _context;
         private readonly ITestOutputHelper _output;
         private readonly UserService _usersService;
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        //private readonly RoleManager<IdentityRole> _roleManager;
         private readonly Set_up _setup;
 
         public UserTests(ITestOutputHelper output)
@@ -31,7 +31,7 @@ namespace Tests
             //_roleManager = _setup.InitializeRoleManager(_context);
   
             EmployeesRepository employeesRepository = new EmployeesRepository(_context, _userManager);
-            _usersService = new UserService(_userManager, mapper);
+            _usersService = new UserService(_userManager);
         }
 
         //[Theory]

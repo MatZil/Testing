@@ -14,6 +14,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Dtos.EmailTemplates;
+using Xplicity_Holidays.Infrastructure.Enums;
+using System.IO;
+using Microsoft.Extensions.Configuration.Json;
+
 
 namespace Tests
 {
@@ -37,7 +41,11 @@ namespace Tests
                 .UseInternalServiceProvider(serviceProvider)
                 .Options;
 
-            var configuration = new Mock<IConfiguration>().Object;
+            var builder = new ConfigurationBuilder()
+                          .SetBasePath(Directory.GetCurrentDirectory())
+                          .AddJsonFile("testSettings.json");
+            var configuration = builder.Build();
+
 
             context = new HolidayDbContext(options, configuration);
             Seed(context);
@@ -178,7 +186,7 @@ namespace Tests
                     Type = HolidayType.Parental,
                     FromInclusive = new DateTime(2019, 10, 01),
                     ToExclusive = new DateTime(2019, 10, 14),
-                    Status = "Unconfirmed",
+                    Status = HolidayStatus.Unconfirmed,
                     RequestCreatedDate = new DateTime(2019, 10, 13),
                 },
                 new Holiday()
@@ -188,7 +196,7 @@ namespace Tests
                     Type = HolidayType.Annual,
                     FromInclusive = new DateTime(2019,12,05),
                     ToExclusive = new DateTime(2019,12,11),
-                    Status = "Confirmed",
+                    Status = HolidayStatus.Confirmed,
                     RequestCreatedDate = new DateTime(2019, 10, 14),
                 },
             };

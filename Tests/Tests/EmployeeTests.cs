@@ -4,16 +4,15 @@ using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Services;
 using Xunit;
 using Xplicity_Holidays.Infrastructure.Database;
-using Xplicity_Holidays.Configurations;
 using Xunit.Abstractions;
-using Microsoft.Extensions.Options;
 using System;
 using Xplicity_Holidays.Infrastructure.Utils;
-
+using Xplicity_Holidays.Services.Interfaces;
+using Moq;
 
 namespace Tests
 {
-    [TestCaseOrderer("Tests.Tests.EmployeeTests.AlphabeticalOrderer", "Tests")]
+    [TestCaseOrderer("Tests.EmployeeTests.AlphabeticalOrderer", "Tests")]
     public class EmployeeTests
     {
         private readonly HolidayDbContext _context;
@@ -32,7 +31,8 @@ namespace Tests
             var timeService = new TimeService();
 
             var userManager = _setup.InitializeUserManager(_context);
-            var userService = new UserService(userManager, _mapper);
+            var userService = new Mock<IUserService>().Object;
+            //var userService = new UserService(userManager, _mapper);
 
             EmployeesRepository employeesRepository = new EmployeesRepository(_context, userManager);
             _employeesService = new EmployeesService(employeesRepository, _mapper, timeService, userService);

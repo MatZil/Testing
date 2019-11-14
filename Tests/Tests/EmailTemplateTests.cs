@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace Tests
 {
-    [TestCaseOrderer("Tests.Tests.EmailTemplateTests.AlphabeticalOrderer", "Tests")]
+    [TestCaseOrderer("Tests.EmailTemplateTests.AlphabeticalOrderer", "Tests")]
     public class EmailTemplateTests
     {
         private readonly HolidayDbContext _context;
@@ -17,9 +17,7 @@ namespace Tests
         private readonly Set_up _setup;
         private readonly ITestOutputHelper _output;
         private readonly int _templatesCount;
-
         private readonly IEmailTemplatesRepository _templatesRepository;
-        private readonly IMapper _mapper;
 
         public EmailTemplateTests(ITestOutputHelper output)
         {

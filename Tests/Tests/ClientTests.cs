@@ -11,7 +11,7 @@ using System;
 
 namespace Tests
 {
-    [TestCaseOrderer("Tests.Tests.ClientTests.AlphabeticalOrderer", "Tests")]
+    [TestCaseOrderer("Tests.ClientTests.AlphabeticalOrderer", "Tests")]
     public class ClientTests
     {
         private readonly HolidayDbContext _context;
