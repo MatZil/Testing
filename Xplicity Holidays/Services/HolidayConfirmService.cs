@@ -20,9 +20,9 @@ namespace Xplicity_Holidays.Services
         private readonly ITimeService _timeService;
         private readonly IEmployeeRepository _repositoryEmployees;
         private readonly IRepository<Client> _repositoryClients;
-        private readonly IRepository<Holiday> _repositoryHolidays;
+        private readonly IHolidaysRepository _repositoryHolidays;
 
-        public HolidayConfirmService(IEmailService emailService, IMapper mapper, IRepository<Holiday> repositoryHolidays, 
+        public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays, 
             IPdfService pdfService, IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
             IHolidaysService holidaysService, ITimeService timeService)
         {

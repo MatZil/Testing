@@ -74,8 +74,8 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
 
         public async  Task<Employee> FindAnyAdmin()
         {
-            var users = await _userManager.GetUsersInRoleAsync("Administrator");
-            return users[0].Employee;
+            var users = await _userManager.GetUsersInRoleAsync("Admin");
+            return await Context.Employees.Where(employees => employees.Id == users[0].EmployeeId).SingleOrDefaultAsync();
         }
     }
 }
