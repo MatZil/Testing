@@ -40,7 +40,7 @@ namespace Xplicity_Holidays.Services
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var employeeRepository = scope.ServiceProvider.GetService<IEmployeeRepository>();
-                var holidayRepository = scope.ServiceProvider.GetService<IRepository<Holiday>>();
+                var holidayRepository = scope.ServiceProvider.GetService<IHolidaysRepository>();
                 var emailService = scope.ServiceProvider.GetService<IEmailService>();
                 var holidayInfoService = scope.ServiceProvider.GetService<IHolidayInfoService>();
 
