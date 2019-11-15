@@ -79,8 +79,10 @@ If there are any errors, you can delete the Migrations folder, then in the conso
 Open the Server Management Studio > check out its Object Explorer window > expand Databases > check to see if there is a catalog entitled **XplicityHolidays**.
 If you expand it, you can find its tables, see their Design and edit Rows.
 
-#### Add initial data to the database
-//Manto dalis
+#### Initial admin data 
+Initial admin is created when you run update-database command and start your project.
+Email: gamma.holidays@gmail.com
+Password: password
 
 ## Run back-end files
 After all of the instructions above have been followed, go back to Visual Studio 2019 where the back-end project is open. Press **CTRL+F5** keys at the same time, the project will be compiled and built. Now the log-in window in the browser is interactive, you can log-in with .....
