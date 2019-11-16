@@ -1,0 +1,33 @@
+<mat-card>
+    <div class="auto-width">
+        <mat-form-field>
+            <mat-label>
+                Select file type
+            </mat-label>
+            <mat-select [(ngModel)]="selectedFileType">
+                <mat-option value="HOLIDAY_POLICY">
+                    Holiday policy
+                </mat-option>
+                <mat-option value="WORD_DOCUMENT">
+                    Word document
+                </mat-option>
+                <mat-option value="IMAGE">
+                    Image
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
+        <button mat-raised-button (click)="file.click()" [disabled]="!selectedFileType">Upload</button>
+    </div>
+    <div>
+        <span>
+            {{fileName}}
+        </span>
+    </div>
+    <div>
+        <mat-progress-bar *ngIf="progress > 0" value="{{progress}}">
+        </mat-progress-bar>
+    </div>
+</mat-card>

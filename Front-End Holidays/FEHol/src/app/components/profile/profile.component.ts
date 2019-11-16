@@ -19,6 +19,8 @@ export class ProfileComponent implements OnInit {
   hideFirstPassword = true;
   hideSecondPassword = true;
   registerForm: FormGroup;
+  isVisibleUploadModal: boolean;
+  isVisiblePasswordModal: boolean;
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
@@ -42,6 +44,20 @@ export class ProfileComponent implements OnInit {
       this.currentUser = user;
     });
     this.createFormGroup();
+  }
+
+  showUploadModal() {
+    this.isVisibleUploadModal = true;
+  }
+
+  closeUploadModal() {
+    this.isVisibleUploadModal = false;
+  }
+  closePasswordModal() {
+    this.isVisiblePasswordModal = false;
+  }
+  showPasswordModal() {
+    this.isVisiblePasswordModal = true;
   }
 
   createFormGroup() {
