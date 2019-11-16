@@ -66,7 +66,7 @@ namespace Xplicity_Holidays.Services
             foreach (var client in groupedHolidays)
             {
                 holidayInfo += template.Template.Substring(0, titleEnd)
-                                                .Replace("{client.name}", (client == null) ? client.Key.CompanyName : "No-Client") + '\n';
+                                                .Replace("{client.name}", (client.Key is null) ? TeamlessEmployeeTitle.TEAM_NAME : client.Key.CompanyName) + '\n';
                 foreach (var holiday in client)
                 {
                     var messageString = template.Template.Substring(titleEnd)

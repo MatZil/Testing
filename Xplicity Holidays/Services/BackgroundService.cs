@@ -81,10 +81,11 @@ namespace Xplicity_Holidays.Services
         {
             var currentTime = GetCurrentDateTime();
 
-            var thisMonthsHolidays = holidays.Where(h => h.Status == HolidayStatus.Confirmed && (h.FromInclusive.Year == currentTime.Year
-                                                  || h.ToExclusive.AddDays(-1).Year == currentTime.Year)
-                                                  && (h.FromInclusive.Month == currentTime.Month
-                                                  || h.ToExclusive.AddDays(-1).Month == currentTime.Month)).ToList();
+            var thisMonthsHolidays = holidays.Where(h => 
+                                                        h.Status == HolidayStatus.Confirmed && 
+                                                        h.FromInclusive.Year == currentTime.Year && 
+                                                        h.FromInclusive.Month == currentTime.Month
+                                                    ).ToList();
 
             var holidaysWithClients = await holidayInfoService.GetClientsAndHolidays(thisMonthsHolidays);
 
