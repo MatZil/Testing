@@ -23,6 +23,7 @@ namespace Xplicity_Holidays.Controllers
         }
         [HttpPost]
         [Route("Upload")]
+        [RequestSizeLimit(1048576)]
         public IActionResult Upload()
         {
             var file = Request.Form.Files[0];
@@ -33,6 +34,19 @@ namespace Xplicity_Holidays.Controllers
                 return Ok(new {filePath});
             }
             return BadRequest();
+        }
+
+        [HttpGet]
+        [Route("GetByType")]
+        public async Task<IActionResult> GetByType(string fileType)
+        {
+            var path = await _fileService.GetByType(fileType);
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return BadRequest();
+            }
+
+            return Ok(path);
         }
     }
 }

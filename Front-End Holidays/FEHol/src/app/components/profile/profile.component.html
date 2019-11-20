@@ -23,13 +23,13 @@
     <mat-tab label="Settings">
         <div>
             <div>
-                <button class="settings" mat-raised-button (click)=showUploadModal()>Upload file</button>
+                <button class="settings" mat-raised-button (click)="showUploadModal()">Upload file</button>
             </div>
             <div>
-                <button class="settings" mat-raised-button (click)=showPasswordModal()>Change password</button>
+                <button class="settings" mat-raised-button (click)="showPasswordModal()">Change password</button>
             </div>
             <nz-modal [(nzVisible)]="isVisibleUploadModal" [nzTitle]="uploadModal" [nzContent]="modalContent"
-                [nzFooter]="modalFooter">
+                [nzFooter]="modalFooter" (nzOnCancel)="closeUploadModal()">
                 <ng-template #uploadModal>
                     Upload file
                 </ng-template>
@@ -40,12 +40,12 @@
                     <button nz-button nzType="default" (click)="closeUploadModal()">Close</button>
                 </ng-template>
             </nz-modal>
-            <nz-modal [(nzVisible)]="isVisiblePasswordModal" [nzTitle]="passwordModal" [nzContent]="modalContent"
-                [nzFooter]="modalFooter">
+            <nz-modal [(nzVisible)]="isVisiblePasswordModal" [nzTitle]="passwordModal" [nzContent]="modalContent2"
+                [nzFooter]="modalFooter2" (nzOnCancel)="closePasswordModal()">
                 <ng-template #passwordModal>
                     Change password
                 </ng-template>
-                <ng-template #modalContent>
+                <ng-template #modalContent2>
                     <mat-dialog-content>
                         <form novalidate [formGroup]="registerForm">
                             <div formGroupName="passwords">
@@ -106,7 +106,7 @@
                             password</button>
                     </mat-dialog-actions>
                 </ng-template>
-                <ng-template #modalFooter>
+                <ng-template #modalFooter2>
                     <button nz-button nzType="default" (click)="closePasswordModal()">Close</button>
                 </ng-template>
             </nz-modal>

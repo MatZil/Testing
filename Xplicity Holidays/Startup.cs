@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Xplicity_Holidays.Configurations;
 using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Database.Models;
@@ -47,6 +50,7 @@ namespace Xplicity_Holidays
             }
 
             app.UseCorsExt();
+            app.SetUpStaticFiles();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
