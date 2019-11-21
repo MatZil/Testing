@@ -11,14 +11,10 @@ import { Role } from '../models/role';
 export class AuthenticationService {
 
   private thisUserId: number;
-  private token: string;
-
 
   constructor(private http: HttpClient, public jwtHelper: JwtHelperService) {
 
   }
-
-
 
   public isAuthenticated(): boolean {
     const token = localStorage.getItem('token');

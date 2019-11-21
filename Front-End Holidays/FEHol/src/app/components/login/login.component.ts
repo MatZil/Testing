@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import { AlertService } from '../../services/alert-service.service';
+import { AlertService } from '../../services/alert.service';
 import { AuthenticationService } from '../../services/authentication-service.service';
 
 @Component({ templateUrl: 'login.component.html' })
@@ -41,22 +40,20 @@ export class LoginComponent implements OnInit {
     onSubmit() {
         this.submitted = true;
 
-        // reset alerts on submit
-        this.alertService.clear();
-
         // stop here if form is invalid
         if (this.loginForm.invalid) {
             return;
         }
 
         this.loading = true;
+
         this.authenticationService.login(this.loginForm.value.email, this.loginForm.value.password)
             .subscribe(
                 data => {
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
-                    this.alertService.error(error);
+                    this.alertService.displayMessage('There was an error while logging in. Please check your credentials.');
                     this.loading = false;
                 });
     }
