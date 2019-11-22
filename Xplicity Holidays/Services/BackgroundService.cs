@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xplicity_Holidays.Infrastructure.Database.Models;
-using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
@@ -40,7 +39,7 @@ namespace Xplicity_Holidays.Services
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var employeeRepository = scope.ServiceProvider.GetService<IEmployeeRepository>();
-                var holidayRepository = scope.ServiceProvider.GetService<IHolidaysRepository>();
+                var holidayRepository = scope.ServiceProvider.GetService<IRepository<Holiday>>();
                 var emailService = scope.ServiceProvider.GetService<IEmailService>();
                 var holidayInfoService = scope.ServiceProvider.GetService<IHolidayInfoService>();
 
@@ -60,28 +59,15 @@ namespace Xplicity_Holidays.Services
             }
         }
 
-        private DateTime GetCurrentDateTime()
-        {
-            DateTime currentTime;
-
-            if (_hostingEnvironment.IsProduction())
-            {
-                currentTime = _timeService.GetCurrentTime();
-            }
-            else
-            {
-                currentTime = DateTime.MinValue; //makes sure that it's not month's last day.
-            }
-
-            return currentTime;
-        }
-
         private async Task CheckForLastMonthDay(Employee admin, ICollection<Holiday> holidays, IEmailService emailService,
                                           IHolidayInfoService holidayInfoService)
         {
-            var currentTime = GetCurrentDateTime();
-
-            var thisMonthsHolidays = holidays.Where(h => h.Status == HolidayStatus.Confirmed && (h.FromInclusive.Year == currentTime.Year
+            DateTime currentTime;
+            if(_hostingEnvironment.IsProduction())
+                currentTime = _timeService.GetCurrentTime();
+            else
+                currentTime = DateTime.MinValue; //makes sure that it's not month's last day.
+            var thisMonthsHolidays = holidays.Where(h => h.Status == "Confirmed" && (h.FromInclusive.Year == currentTime.Year
                                                   || h.ToExclusive.AddDays(-1).Year == currentTime.Year)
                                                   && (h.FromInclusive.Month == currentTime.Month
                                                   || h.ToExclusive.AddDays(-1).Month == currentTime.Month)).ToList();
@@ -90,43 +76,43 @@ namespace Xplicity_Holidays.Services
 
             var nextDay = currentTime.AddDays(1);
 
-            if (currentTime.Month != nextDay.Month)
-            {
+            if(currentTime.Month != nextDay.Month)
                 await emailService.SendThisMonthsHolidayInfo(admin, holidaysWithClients);
-            }
         }
 
         private async Task CheckUpcomingHolidays(ICollection<Employee> employees, ICollection<Holiday> holidays, IEmailService emailService)
         {
-            var currentTime = GetCurrentDateTime();
+            DateTime currentTime;
+            if (_hostingEnvironment.IsProduction())
+                currentTime = _timeService.GetCurrentTime();
+            else
+                currentTime = DateTime.MinValue; //makes sure that none of employees go to holidays next workday.
 
-            var upcomingHolidays = holidays.Where(holiday => holiday.Status == HolidayStatus.Confirmed && 
+            var upcomingHolidays = holidays.Where(holiday => holiday.Status == "Confirmed" && 
                                                  holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
                                                   .ToList();
 
             if (upcomingHolidays.Count != 0)
-            {
                 await emailService.InformEmployeesAboutHoliday(employees, upcomingHolidays);
-            }
         }
 
         private async Task CheckBirthdays(ICollection<Employee> employees, ITimeService _timeService, IEmailService emailService)
         {
             var employeesWithBirthdays = new List<Employee>();
-            var currentTime = GetCurrentDateTime();
+            DateTime currentTime;
+            if (_hostingEnvironment.IsProduction())
+                currentTime = _timeService.GetCurrentTime();
+            else
+                currentTime = DateTime.MinValue; //makes sure that none of employees have their birthday today.
 
             foreach (var employee in employees)
             {
                 if (employee.BirthdayDate.Month == currentTime.Month && employee.BirthdayDate.Day == currentTime.Day)
-                {
                     employeesWithBirthdays.Add(employee);
-                }
             }
 
             if (employeesWithBirthdays.Count != 0)
-            {
                 await emailService.SendBirthDayReminder(employeesWithBirthdays, employees);
-            }
         }
 
         private async Task AddFreeWorkDays(ICollection<Employee> employees, ITimeService _timeService, IEmployeeRepository _repository)

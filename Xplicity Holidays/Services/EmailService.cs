@@ -46,7 +46,6 @@ namespace Xplicity_Holidays.Services
                                         .Replace("{admin.name}", admin.Name)
                                         .Replace("{employee.name}", employee.Name)
                                         .Replace("{employee.surname}", employee.Surname)
-                                        .Replace("{employee.paid}", holiday.Paid ? "Paid" : "Unpaid")
                                         .Replace("{holiday.type}", holiday.Type.ToString())
                                         .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
                                         .Replace("{holiday.to}", holiday.ToExclusive.ToShortDateString())
@@ -72,7 +71,6 @@ namespace Xplicity_Holidays.Services
                     var messageString = template.Template.Substring(titleEnd)
                                                         .Replace("{employee.name}", holiday.Item1.Employee.Name)
                                                         .Replace("{employee.surname}", holiday.Item1.Employee.Surname)
-                                                        .Replace("{employee.paid}", holiday.Item1.Paid ? "Paid" : "Unpaid")
                                                         .Replace("{holiday.type}", holiday.Item1.Type.ToString())
                                                         .Replace("{holiday.from}", holiday.Item1.FromInclusive.ToShortDateString())
                                                         .Replace("{holiday.to}", holiday.Item1.ToExclusive.ToShortDateString());

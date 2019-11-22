@@ -29,9 +29,7 @@ namespace Xplicity_Holidays.Services
                     clientsWithHolidays.Add((holiday, client));
                 }
                 else
-                {
                     clientsWithHolidays.Add((holiday, null));
-                }
             }
 
             return clientsWithHolidays;

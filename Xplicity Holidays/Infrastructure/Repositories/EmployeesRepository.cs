@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Database.Models;
-using Xplicity_Holidays.Infrastructure.Enums;
 
 namespace Xplicity_Holidays.Infrastructure.Repositories
 {
@@ -64,18 +63,17 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
             return employee;
         }
 
-        public List<Holiday> GetConfirmedHolidays(int employeeId)
+        public List<Holiday> GetHolidays(int employeeId)
         {
-            var holidays = Context.Holidays.Where(holiday => 
-                                                    holiday.EmployeeId == employeeId && holiday.Status == HolidayStatus.Confirmed).ToList();
+            var holidays = Context.Holidays.Where(holiday => holiday.EmployeeId == employeeId && holiday.Status == "Confirmed").ToList();
 
             return holidays;
         }
 
         public async  Task<Employee> FindAnyAdmin()
         {
-            var users = await _userManager.GetUsersInRoleAsync("Admin");
-            return await Context.Employees.Where(employees => employees.Id == users[0].EmployeeId).SingleOrDefaultAsync();
+            var users = await _userManager.GetUsersInRoleAsync("Administrator");
+            return users[0].Employee;
         }
     }
 }

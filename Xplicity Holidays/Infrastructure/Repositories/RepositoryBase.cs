@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Infrastructure.Database;
@@ -16,7 +15,6 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
         {
             Context = context;
         }
-
 
         public virtual async Task<ICollection<TEntity>> GetAll()
         {

@@ -1,5 +1,5 @@
 ﻿using System;
-using Xplicity_Holidays.Infrastructure.Enums;
+using Xplicity_Holidays.Infrastructure.Database.Models;
 
 namespace Xplicity_Holidays.Dtos.Holidays
 {

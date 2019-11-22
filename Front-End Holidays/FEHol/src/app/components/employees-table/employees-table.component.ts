@@ -13,7 +13,6 @@ import { NgForm } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { Role } from '../../models/role';
-import { EmployeeStatus } from '../../models/employee-status.enum';
 
 @Component({
   selector: 'app-employees-table',
@@ -27,8 +26,6 @@ export class EmployeesTableComponent implements OnInit {
   formDataUsers: User;
   formDataUsersNoId: Updateuser;
   newUser: Newuser = new Newuser();
-  employeeStatus = EmployeeStatus;
-  selected;
 
   clients: Client[] = [];
   oneClient: Client;
@@ -75,7 +72,6 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   onAddButtonClick(user: User) {
-    user.status = this.employeeStatus.Current;
     this.userService.registerUser(user).subscribe(() => {
       this.refreshTable();
       this.handleOkCreator();
@@ -84,9 +80,6 @@ export class EmployeesTableComponent implements OnInit {
     });
   }
 
-  getCurrentUserId() {
-    return this.authenticationService.getUserId();
-  }
   onDeleteButtonClick(id: number) {
     this.userService.deleteUser(id).subscribe(() => {
       this.refreshTable();
@@ -118,13 +111,7 @@ export class EmployeesTableComponent implements OnInit {
       nzOnOk: () => this.deleteEmployeeOnModalClose(id)
     });
   }
-  showStatusConfirm() {
-    this.confirmDeleteModal = this.modal.confirm({
-      nzTitle: 'Do you want to change status of this user?',
-      nzContent: 'When clicked the OK button the status will be changed',
-      nzOnOk: () => this.onEditConfirmButtonClick(this.formDataUsersNoId, this.formDataUsers.id)
-    });
-  }
+
   onSubmit(form: NgForm) {
     form.resetForm();
   }

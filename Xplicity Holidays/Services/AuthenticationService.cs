@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Configurations;
 using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Database.Models;
-using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Services.Interfaces;
 
@@ -43,10 +42,6 @@ namespace Xplicity_Holidays.Services
             if (await _userManager.CheckPasswordAsync(userToVerify, password))
             {
                 var user = await _userManager.Users.Include(e => e.Employee).SingleAsync(x => x.Email == email);
-                if(user.Employee.Status == EmployeeStatusEnum.Former)
-                {
-                    throw new InvalidOperationException();
-                }
                 user.Employee.Token = await CreateJwt(user);
                 return user;
             }

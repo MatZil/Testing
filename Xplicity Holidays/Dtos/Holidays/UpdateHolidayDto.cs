@@ -1,5 +1,5 @@
 ﻿using System;
-using Xplicity_Holidays.Infrastructure.Enums;
+using Xplicity_Holidays.Infrastructure.Database.Models;
 
 namespace Xplicity_Holidays.Dtos.Holidays
 {
@@ -9,7 +9,7 @@ namespace Xplicity_Holidays.Dtos.Holidays
         public HolidayType Type { get; set; }
         public DateTime FromInclusive { get; set; }
         public DateTime ToExclusive { get; set; }
-        public HolidayStatus Status { get; set; }
+        public string Status { get; set; }
         public bool Paid { get; set; }
         public DateTime RequestCreatedDate { get; set; }
     }

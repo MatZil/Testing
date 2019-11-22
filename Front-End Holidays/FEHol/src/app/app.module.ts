@@ -25,7 +25,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDatepickerModule, MatNativeDateModule, MatCheckbox, MatCheckboxModule } from '@angular/material';
-import { MatDialogModule } from '@angular/material/dialog';
+
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
 import { HomeComponent } from './components/home/home.component';
@@ -34,7 +34,7 @@ import { HolidaysTableComponent } from './components/holidays-table/holidays-tab
 import { PdfComponent } from './components/pdf/pdf.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 import { RoleGuardService } from './helpers/role-guard';
 registerLocaleData(en);
 export function tokenGetter() {
@@ -76,8 +76,6 @@ export function tokenGetter() {
     MatDatepickerModule,
     MatNativeDateModule,
     PdfViewerModule,
-    MatDialogModule,
-    MatSnackBarModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
