@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Xplicity_Holidays.Infrastructure.Enums;
+using Xplicity_Holidays.Infrastructure.Static_Files;
 
 namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
@@ -34,11 +36,13 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         [MinLength(4)]
         public string Email { get; set; }
-
         [NotMapped]
         public string Token { get; set; }
         public string Position { get; set; }
         public ICollection<Holiday> Holidays { get; set; }
 
+        public DateTime HealthCheckDate { get; set; }
+
+        public EmployeeStatusEnum Status { get; set; }
     }
 }

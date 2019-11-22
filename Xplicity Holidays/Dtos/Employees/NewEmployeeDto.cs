@@ -1,4 +1,6 @@
 ﻿using System;
+using Xplicity_Holidays.Infrastructure.Enums;
+using Xplicity_Holidays.Infrastructure.Static_Files;
 
 namespace Xplicity_Holidays.Dtos.Employees
 {
@@ -15,5 +17,9 @@ namespace Xplicity_Holidays.Dtos.Employees
         public string Password { get; set; }
         public string Role { get; set; }
         public string Position { get; set; }
+
+        public DateTime HealthCheckDate { get; set; }
+
+        public EmployeeStatusEnum Status { get; set; }
     }
 }
