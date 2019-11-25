@@ -5,6 +5,6 @@ namespace Xplicity_Holidays.Services.Interfaces
 {
     public interface ITemplateGenerationService
     {
-        Task GenerateHolidayPdf(int holidayId, HolidayDocumentType holidayDocumentType);
+        Task<bool> GenerateHolidayDocx(int holidayId, HolidayDocumentType holidayDocumentType);
     }
 }

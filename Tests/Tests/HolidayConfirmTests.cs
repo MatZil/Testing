@@ -36,12 +36,12 @@ namespace Tests
             var userManager = _setup.InitializeUserManager(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
-            var pdfService = new Mock<IPdfService>();
+            var templateGenerationService = new Mock<ITemplateGenerationService>();
             var emailService = new Mock<IEmailService>();
 
             _holidaysService = new HolidaysService(_holidaysRepository, mapper, timeService);
             _holidayConfirmService = new HolidayConfirmService(emailService.Object, mapper, _holidaysRepository,
-                pdfService.Object, _employeesRepository, clientsRepository, _holidaysService, timeService);
+                templateGenerationService.Object, _employeesRepository, clientsRepository, _holidaysService, timeService);
         }
 
 
@@ -62,26 +62,6 @@ namespace Tests
         //    var result = await _holidayConfirmService.RequestAdminApproval(holidayId, clientStatus);
         //    Assert.True(result);
         //}
-
-        [Fact]
-        public async void When_CreatingRequestPdf_Expect_CreatesRequestPdf()
-        {
-            NewHolidayDto holidayDto = _setup.NewHolidayDto();
-
-            var result = await _holidayConfirmService.CreateRequestPdf(holidayDto, 3);
-
-            Assert.True(result);
-        }
-
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async void When_CreatingOrderPdf_Expect_CreatesOrderPdf(int holidayId)
-        {
-            var result = await _holidayConfirmService.CreateOrderPdf(holidayId);
-
-            Assert.True(result);
-        }
 
         [Theory]
         [InlineData(1)]

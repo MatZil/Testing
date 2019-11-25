@@ -17,10 +17,11 @@ namespace Xplicity_Holidays.Services
             _holidaysRepo = holidaysRepo;
         }
 
-        public async Task GenerateHolidayPdf(int holidayId, HolidayDocumentType holidayDocumentType)
+        public async Task<bool> GenerateHolidayDocx(int holidayId, HolidayDocumentType holidayDocumentType)
         {
             var holiday = await _holidaysRepo.GetById(holidayId);
             await _templateGeneration.GenerateFileByTemplate(holiday, holidayDocumentType);
+            return true;
         }
     }
 }

@@ -40,7 +40,7 @@ namespace Xplicity_Holidays.Controllers
 
             await _confirmationService.RequestClientApproval(holidayId);
 
-            await _templateGenerationService.GenerateHolidayPdf(holidayId, HolidayDocumentType.Request);
+            await _templateGenerationService.GenerateHolidayDocx(holidayId, HolidayDocumentType.Request);
 
             var path = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + @"\Templates\GeneratedTemplates\";
             var fileName = $"{holidayId}-Request{newHolidayDto.Type.ToString()}-{DateTime.Today.Date.ToShortDateString()}.docx";
@@ -58,7 +58,7 @@ namespace Xplicity_Holidays.Controllers
 
             await _confirmationService.ConfirmHoliday(holidayId);
 
-            await _templateGenerationService.GenerateHolidayPdf(holidayId, HolidayDocumentType.Order);
+            await _templateGenerationService.GenerateHolidayDocx(holidayId, HolidayDocumentType.Order);
 
             var path = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + @"\Templates\GeneratedTemplates\";
             var holidayDto = await _holidaysService.GetById(holidayId);
