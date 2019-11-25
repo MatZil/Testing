@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Xplicity_Holidays.Constants;
-using Xplicity_Holidays.Infrastructure.Database.Models;
+﻿using System.Threading.Tasks;
+using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.TemplateGeneration;
 using Xplicity_Holidays.Services.Interfaces;
@@ -14,15 +9,18 @@ namespace Xplicity_Holidays.Services
     public class TemplateGenerationService : ITemplateGenerationService
     {
         private readonly ITemplateGeneration _templateGeneration;
+        private readonly IHolidaysRepository _holidaysRepo;
 
-        public TemplateGenerationService(ITemplateGeneration templateGeneration)
+        public TemplateGenerationService(ITemplateGeneration templateGeneration, IHolidaysRepository holidaysRepo)
         {
             _templateGeneration = templateGeneration;
+            _holidaysRepo = holidaysRepo;
         }
 
-        public async Task TemplateGeneration(int id, HolidayType holidayType, HolidayDocumentType holidayDocumentType)
+        public async Task GenerateHolidayPdf(int holidayId, HolidayDocumentType holidayDocumentType)
         {
-            await _templateGeneration.GenerateFileByTemplate(id, holidayType, holidayDocumentType);
+            var holiday = await _holidaysRepo.GetById(holidayId);
+            await _templateGeneration.GenerateFileByTemplate(holiday, holidayDocumentType);
         }
     }
 }

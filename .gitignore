@@ -268,3 +268,4 @@ bin
 Xplicity Holidays/*.db
 Requests
 Orders
+Xplicity Holidays/Templates/GeneratedTemplates/*

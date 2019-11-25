@@ -1,4 +1,4 @@
-﻿namespace Xplicity_Holidays.Constants
+﻿namespace Xplicity_Holidays.Infrastructure.Enums
 {
     public enum HolidayDocumentType
     {

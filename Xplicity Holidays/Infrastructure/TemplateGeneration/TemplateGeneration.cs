@@ -1,39 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Xplicity_Holidays.Constants;
 using Xplicity_Holidays.Infrastructure.Database.Models;
-using Xplicity_Holidays.Infrastructure.Repositories;
+using Xplicity_Holidays.Infrastructure.Enums;
 
 namespace Xplicity_Holidays.Infrastructure.TemplateGeneration
 {
     public class TemplateGeneration : ITemplateGeneration
     {
-        private readonly IEmployeeRepository _repository;
-        
-        public TemplateGeneration(IEmployeeRepository repository)
+        public async Task<string> GenerateFileByTemplate(Holiday holiday, HolidayDocumentType holidayDocumentType)
         {
-            _repository = repository;
-        }
-
-        public async Task<string> GenerateFileByTemplate(int employeeId, HolidayType holidayType, HolidayDocumentType holidayDocumentType)
-        {
-            var employeeDto = await _repository.GetById(employeeId);
-            var holidays = _repository.GetHolidays(employeeId);
-            var holiday = holidays?.Where(h => h != null).FirstOrDefault(h => h.Type == holidayType);
-
             if (holiday != null)
             {
-                var templateValues = GenerateTemplateValues(holiday, employeeDto);
+                var replacementMap = GenerateReplacementMap(holiday);
 
                 var fileName = GetTemplateName(holiday, holidayDocumentType);
 
                 var source = File.ReadAllText(fileName);
-                foreach (var templateWord in templateValues)
+                foreach (var templateWord in replacementMap)
                 {
                     source = source.Replace(templateWord.Key, templateWord.Value);
                 }
@@ -42,18 +29,18 @@ namespace Xplicity_Holidays.Infrastructure.TemplateGeneration
                     $"{holiday.Id}-{holidayDocumentType.ToString()}{holiday.Type.ToString()}" +
                     $"-{DateTime.Today.Date.ToShortDateString()}.docx");
 
-                return await Task.FromResult(ProcessTemplate(fileName, localPath, templateValues));
+                return await Task.FromResult(ProcessTemplate(fileName, localPath, replacementMap));
             }
             throw new ArgumentNullException(nameof(holiday), "Holiday does not exist");
         }
 
-        private static Dictionary<string, string> GenerateTemplateValues(Holiday holiday, Employee employeeDto)
+        private Dictionary<string, string> GenerateReplacementMap(Holiday holiday)
         {
             return new Dictionary<string, string>
             {
-                {"TITLE", employeeDto.Position},
+                {"TITLE", holiday.Employee.Position},
                 {"HCREATEDAT", $"{holiday.RequestCreatedDate.ToShortDateString()}" },
-                {"FULLNAME", $"{employeeDto.Name} {employeeDto.Surname}"},
+                {"FULLNAME", $"{holiday.Employee.Name} {holiday.Employee.Surname}"},
                 {"CURRENTDATE", DateTime.Today.Date.ToShortDateString()},
                 {"HSTART", holiday.FromInclusive.ToShortDateString()},
                 {"HEND", holiday.ToExclusive.ToShortDateString()},
@@ -61,14 +48,14 @@ namespace Xplicity_Holidays.Infrastructure.TemplateGeneration
             };
         }
 
-        private static string ProcessTemplate(string fileName, string localPath, Dictionary<string, string> templateValues)
+        private static string ProcessTemplate(string fileName, string localPath, Dictionary<string, string> replacementMap)
         {
             using (var document = WordprocessingDocument.CreateFromTemplate(fileName))
             {
                 var body = document.MainDocumentPart.Document.Body;
                 foreach (var templateFile in body.Descendants<Text>())
                 {
-                    foreach (var documentText in templateValues)
+                    foreach (var documentText in replacementMap)
                     {
                         if (templateFile.Text.Contains(documentText.Key))
                         {
