@@ -1,5 +1,17 @@
 <div>
     <button nz-button nzType="primary" (click)=showModalCreator()>Request holidays</button>
+    <div>
+
+        <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Employee status"
+            (selectionChange)="changeStatus($event.value)" [(value)]="selected">
+            <mat-option [value]="1">
+                Current employees
+            </mat-option>
+            <mat-option [value]="0">
+                Former employees
+            </mat-option>
+        </mat-select>
+    </div>
     <form #newClientForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(newClientForm)">
         <nz-modal [(nzVisible)]="isVisibleCreator" [nzTitle]="modalTitl" [nzContent]="modalConten"
             [nzFooter]="modalFoote" (nzOnCancel)="handleCancelCreator()">
@@ -11,9 +23,12 @@
                     <div>
                         <mat-form-field>
                             <mat-select [(ngModel)]="requestHolidays.type" name="type" placeholder="Holiday's type"
-                                required #nameInput="ngModel">
+                                required #nameInput="ngModel" [(value)]="selectedType">
                                 <mat-option [value]="0">Annual</mat-option>
-                                <mat-option [value]="1">Parental</mat-option>
+                                <mat-option [value]="1"
+                                    *ngIf="currentUser.currentAvailableLeaves > 0 || currentUser.nextMonthAvailableLeaves > 0">
+                                    Parental
+                                </mat-option>
                                 <mat-option [value]="2">Science</mat-option>
                                 <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                     class="error">
@@ -42,15 +57,15 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-                    <div>
-                        <mat-checkbox [checked]="requestHolidays.paid" (change)="setPaid()">Paid</mat-checkbox>
+                    <div *ngIf="selectedType == 0">
+                        <mat-checkbox [checked]="requestHolidays.paid" (change)="changePaid()">Paid</mat-checkbox>
                     </div>
                 </mat-card>
             </ng-template>
 
             <ng-template #modalFoote>
                 <button nz-button nzType="default" (click)="handleCancelCreator()">Cancel</button>
-                <button nz-button nzType="primary" (click)="onAddButtonClick(); handleOkCreator()"
+                <button nz-button nzType="primary" (click)="setPaid(); onAddButtonClick(); handleOkCreator()"
                     [nzLoading]="isConfirmLoadingCreator" [disabled]="newClientForm.form.invalid">Request</button>
             </ng-template>
         </nz-modal>
@@ -58,7 +73,7 @@
 </div>
 
 <div>
-    <nz-table #basicTable [nzData]="holidays">
+    <nz-table *ngIf="isAdmin()" #basicTable [nzData]="holidays">
         <thead>
             <tr>
                 <th>Employee</th>
@@ -73,7 +88,7 @@
         <tbody>
             <tr *ngFor="let hol of basicTable.data">
                 <td>{{getUserNameById(hol.employeeId)}}</td>
-                <td>{{checkWhatTypeOfHoliday(hol.type)}}</td>
+                <td>{{enumConverter.determineHolidayType(hol.type)}}</td>
                 <td>
                     <div *ngIf="hol.paid">
                         Yes
@@ -84,19 +99,15 @@
                 </td>
                 <td>{{hol.fromInclusive | date}}</td>
                 <td>{{hol.toExclusive | date}}</td>
-                <td>{{hol.status}}</td>
+                <td>{{enumConverter.determineHolidayStatus(hol.status)}}</td>
                 <td>{{hol.requestCreatedDate | date}}</td>
-                <td>
-                    <button nz-button nzType="danger"
-                        (click)="populateForm(hol); showDeleteConfirm(formData.id); populateFormNoId(hol)">Delete</button>
-                </td>
             </tr>
         </tbody>
     </nz-table>
 </div>
 
 <div>
-    <nz-table #basicTable [nzData]="holidays">
+    <nz-table *ngIf="!isAdmin()" #basicTable [nzData]="holidays">
         <thead>
             <tr>
                 <th>Holidays type</th>
@@ -110,7 +121,7 @@
         <tbody>
             <tr *ngFor="let hol of basicTable.data">
                 <ng-container *ngIf="isTheRightId(hol)">
-                    <td>{{checkWhatTypeOfHoliday(hol.type)}}</td>
+                    <td>{{enumConverter.determineHolidayType(hol.type)}}</td>
                     <td>
                         <div *ngIf="hol.paid">
                             Yes
@@ -121,7 +132,7 @@
                     </td>
                     <td>{{hol.fromInclusive | date}}</td>
                     <td>{{hol.toExclusive | date}}</td>
-                    <td>{{hol.status}}</td>
+                    <td>{{enumConverter.determineHolidayStatus(hol.status)}}</td>
                     <td>{{hol.requestCreatedDate | date}}</td>
                 </ng-container>
             </tr>

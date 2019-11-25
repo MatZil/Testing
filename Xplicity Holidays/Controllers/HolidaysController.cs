@@ -1,12 +1,15 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Xplicity_Holidays.Dtos.Holidays;
+using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class HolidaysController : ControllerBase
     {
         private readonly IHolidaysService _holidaysService;
@@ -22,7 +25,15 @@ namespace Xplicity_Holidays.Controllers
         public async Task<IActionResult> Get()
         {
             var holidays = await _holidaysService.GetAll();
+            return Ok(holidays);
+        }
 
+        [HttpGet]
+        [Produces(typeof(GetHolidayDto[]))]
+        [Route("GetByStatus")]
+        public async Task<IActionResult> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus)
+        {
+            var holidays = await _holidaysService.GetByEmployeeStatus(employeeStatus);
             return Ok(holidays);
         }
 
@@ -34,7 +45,9 @@ namespace Xplicity_Holidays.Controllers
             var holiday = await _holidaysService.GetById(id);
 
             if (holiday == null)
+            {
                 return NotFound();
+            }
 
             return Ok(holiday);
         }
@@ -43,7 +56,12 @@ namespace Xplicity_Holidays.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] UpdateHolidayDto newHoliday)
         {
-            await _holidaysService.Update(id, newHoliday);
+            var succesful = await _holidaysService.Update(id, newHoliday);
+
+            if (!succesful)
+            {
+                return BadRequest();
+            }
 
             return NoContent();
         }
@@ -52,7 +70,12 @@ namespace Xplicity_Holidays.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _holidaysService.Delete(id);
+            var successful = await _holidaysService.Delete(id);
+
+            if(!successful)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

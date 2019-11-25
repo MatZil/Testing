@@ -205,7 +205,9 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<string>("Email")
                         .IsRequired();
 
-                    b.Property<double>("FreeWorksDays");
+                    b.Property<double>("FreeWorkDays");
+
+                    b.Property<DateTime>("HealthCheckDate");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -216,6 +218,8 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<int>("ParentalLeaveLimit");
 
                     b.Property<string>("Position");
+
+                    b.Property<int>("Status");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -236,13 +240,19 @@ namespace Xplicity_Holidays.Migrations
                         new
                         {
                             Id = 1,
-                            BirthdayDate = new DateTime(2019, 10, 15, 0, 0, 0, 0, DateTimeKind.Local),
+                            BirthdayDate = new DateTime(2019, 11, 8, 0, 0, 0, 0, DateTimeKind.Local),
+                            CurrentAvailableLeaves = 0,
                             DaysOfVacation = 20,
-                            Email = "Inga@xplicity.com",
+                            Email = "inga@xplicity.com",
+                            FreeWorkDays = 0.0,
+                            HealthCheckDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Inga",
-                            Position = "Position",
+                            NextMonthAvailableLeaves = 0,
+                            ParentalLeaveLimit = 0,
+                            Position = "Administrator",
+                            Status = 1,
                             Surname = "Rana",
-                            WorksFromDate = new DateTime(2019, 10, 15, 0, 0, 0, 0, DateTimeKind.Local)
+                            WorksFromDate = new DateTime(2019, 11, 8, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -260,8 +270,7 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<DateTime>("RequestCreatedDate");
 
-                    b.Property<string>("Status")
-                        .IsRequired();
+                    b.Property<int>("Status");
 
                     b.Property<DateTime>("ToExclusive");
 

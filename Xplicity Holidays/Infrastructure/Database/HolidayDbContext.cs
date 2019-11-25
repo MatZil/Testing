@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Infrastructure.Database.Models;
+using Xplicity_Holidays.Infrastructure.Enums;
+using Xplicity_Holidays.Infrastructure.Static_Files;
 
 namespace Xplicity_Holidays.Infrastructure.Database
 {
@@ -38,18 +40,19 @@ namespace Xplicity_Holidays.Infrastructure.Database
                 entity.HasIndex(e => e.Purpose).IsUnique();
             });
             base.OnModelCreating(builder);
-
+            
             builder.Entity<Employee>().HasData(
                 new Employee
                 {
                     Id = 1,
-                    Name = "Inga",
-                    Surname = "Rana",
+                    Name = _configuration.GetValue<string>("AdminData:AdminName"),
+                    Surname = _configuration.GetValue<string>("AdminData:AdminSurname"),
                     WorksFromDate = DateTime.Today,
                     BirthdayDate = DateTime.Today,
                     DaysOfVacation = 20,
-                    Email = "Inga@xplicity.com",
-                    Position = "Position"
+                    Email = _configuration.GetValue<string>("AdminData:AdminEmail"),
+                    Position = "Administrator",
+                    Status = EmployeeStatusEnum.Current
                 }
             );
         }

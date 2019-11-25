@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Database.Models;
+using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
@@ -12,11 +14,11 @@ namespace Xplicity_Holidays.Services
 {
     public class HolidaysService: IHolidaysService
     {
-        private readonly IRepository<Holiday> _repository;
+        private readonly IHolidaysRepository _repository;
         private readonly IMapper _mapper;
         private readonly ITimeService _timeService;
 
-        public HolidaysService(IRepository<Holiday> repository, IMapper mapper, ITimeService timeService)
+        public HolidaysService(IHolidaysRepository repository, IMapper mapper, ITimeService timeService)
         {
             _repository = repository;
             _mapper = mapper;
@@ -35,17 +37,20 @@ namespace Xplicity_Holidays.Services
         {
             var holidays = await _repository.GetAll();
             var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays);
-
+            
             return holidaysDto;
         }
 
         public async Task<int> Create(NewHolidayDto newHolidayDto)
         {
-            if (newHolidayDto == null) throw new ArgumentNullException(nameof(newHolidayDto));
+            if (newHolidayDto == null)
+            {
+                throw new ArgumentNullException();
+            }
 
             var newHoliday = _mapper.Map<Holiday>(newHolidayDto);
             newHoliday.RequestCreatedDate = _timeService.GetCurrentTime();
-            newHoliday.Status = "Unconfirmed";
+            newHoliday.Status = HolidayStatus.Unconfirmed;
             var holidayId = await _repository.Create(newHoliday);
 
             return holidayId;
@@ -56,25 +61,54 @@ namespace Xplicity_Holidays.Services
             var item = await _repository.GetById(id);
 
             if (item == null)
+            {
                 return false;
+            }
 
             var deleted = await _repository.Delete(item);
 
             return deleted;
         }
 
-        public async Task Update(int id, UpdateHolidayDto updateData)
+        public async Task<bool> Update(int id, UpdateHolidayDto updateData)
         {
             if (updateData == null)
+            {
                 throw new ArgumentNullException(nameof(updateData));
+            }
 
             var itemToUpdate = await _repository.GetById(id);
 
             if (itemToUpdate == null)
-                throw new InvalidOperationException();
+            {
+                return false;
+            }
 
             _mapper.Map(updateData, itemToUpdate);
-            await _repository.Update(itemToUpdate);
-        } 
+            var successful = await _repository.Update(itemToUpdate);
+            return successful;
+        }
+
+        public async Task<bool> Decline(int id)
+        {
+            var holiday = await _repository.GetById(id);
+
+            if (holiday == null)
+            {
+                return false;
+            }
+
+            holiday.Status = HolidayStatus.Declined;
+            var successful = await _repository.Update(holiday);
+
+            return successful;
+        }
+
+        public async Task<ICollection<GetHolidayDto>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus)
+        {
+            var holidays = await _repository.GetByEmployeeStatus(employeeStatus);
+            var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays);
+            return holidaysDto;
+        }
     }
 }

@@ -1,3 +1,5 @@
+import { EmployeeStatus } from './employee-status.enum';
+
 export class User {
     id: number;
     name: string;
@@ -7,8 +9,12 @@ export class User {
     birthdayDate: Date;
     daysOfVacation: number;
     freeWorkDays: number;
+    parentalLeaveLimit: number;
+    currentAvailableLeaves: number;
+    nextMonthAvailableLeaves: number;
     email: string;
     role: string;
     position: string;
-    token: string;
+    healthCheckDate: Date;
+    status: EmployeeStatus;
 }
