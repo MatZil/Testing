@@ -1,5 +1,5 @@
-export namespace FileType {
-    export const holidayPolicy = 'HOLIDAY_POLICY';
-    export const document = 'WORD_DOCUMENT';
-    export const image = 'IMAGE';
+export class FileType {
+    public readonly holidayPolicy = 'HOLIDAY_POLICY';
+    public readonly document = 'WORD_DOCUMENT';
+    public readonly image = 'IMAGE';
 }

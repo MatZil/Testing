@@ -23,7 +23,7 @@
     <mat-tab label="Settings">
         <div>
             <div>
-                <button class="settings" mat-raised-button (click)="showUploadModal()">Upload file</button>
+                <button class="settings" mat-raised-button (click)="showUploadModal()">Upload holiday policy</button>
             </div>
             <div>
                 <button class="settings" mat-raised-button (click)="showPasswordModal()">Change password</button>
@@ -34,7 +34,7 @@
                     Upload file
                 </ng-template>
                 <ng-template #modalContent>
-                    <app-upload></app-upload>
+                    <app-upload [fileType]="fileTypes.holidayPolicy"></app-upload>
                 </ng-template>
                 <ng-template #modalFooter>
                     <button nz-button nzType="default" (click)="closeUploadModal()">Close</button>

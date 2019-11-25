@@ -12,13 +12,14 @@ export class PdfComponent implements OnInit {
   page = 1;
   pdfSrc = '';
   showPdf = false;
+  fileTypes = new FileType();
   constructor(private fileService: FilesService) { }
 
   ngOnInit() {
   }
 
   onButtonClick() {
-    this.fileService.getFilePathByType(FileType.holidayPolicy).subscribe(
+    this.fileService.getFilePathByType(this.fileTypes.holidayPolicy).subscribe(
       data => {
         this.pdfSrc = `https://localhost:44374/${data}`;
       });
