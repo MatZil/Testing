@@ -13,8 +13,6 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public string Type { get; set; }
         [Required]
-        public bool IsValid { get; set; }
-        [Required]
         public DateTime CreatedAt { get; set; }
     }
 }

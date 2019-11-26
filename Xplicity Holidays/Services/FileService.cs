@@ -21,68 +21,64 @@ namespace Xplicity_Holidays.Services
             _fileRepository = fileRepository;
         }
 
-        public string Upload(IFormFile file, string fileType)
+        private async Task<int> CreateFileRecord(IFormFile file, string fileType)
         {
             var fileToCreate = new File
             {
                 Name = file.FileName,
                 Type = fileType,
-                IsValid = true,
                 CreatedAt = DateTime.Now
             };
-            var fileId = _fileRepository.Create(fileToCreate).Result;
-            string folderName = string.Empty;
-            switch (fileType)
+            var fileId = await _fileRepository.Create(fileToCreate);
+            return fileId;
+        }
+        public string Upload(IFormFile formFile, string fileType)
+        {
+            if (formFile.Length > 0)
             {
-                case "HOLIDAY_POLICY":
-                    folderName = Path.Combine(FilePath.HOLIDAY_POLICY, fileId.ToString());
-                    break;
-                case "WORD_DOCUMENT":
-                    
-                    folderName = Path.Combine(FilePath.WORD_DOCUMENT, fileId.ToString());
-                    break;
-                case "IMAGE":
-                    folderName = Path.Combine(FilePath.IMAGE, fileId.ToString());
-                    break;
-            }
-            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-            if (!Directory.Exists(pathToSave))
-            {
-                Directory.CreateDirectory(pathToSave);
-            }
-            if (file.Length > 0)
-            {
-                var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                var fullPath = Path.Combine(pathToSave, fileName);
-                var filePath = Path.Combine(folderName, fileName);
+                var fileId = CreateFileRecord(formFile, fileType).Result;
+                var filePath = BuildFilePath(_fileRepository.GetById(fileId).Result);
 
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+                if (!Directory.Exists(pathToSave))
+                {
+                    Directory.CreateDirectory(pathToSave);
+                }
+                var fullPath = Path.Combine(pathToSave, formFile.FileName);
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
-                    file.CopyTo(stream);
+                    formFile.CopyTo(stream);
                 }
+
                 return filePath;
             }
+
             return string.Empty;
         }
 
-        public async Task<string> GetByType(string fileType)
+        private string BuildFilePath(File file)
         {
-            var file = await _fileRepository.FindByType(fileType);
-            var folderName = string.Empty;
-            switch (fileType)
+            string folderName = string.Empty;
+            switch (file.Type)
             {
                 case "HOLIDAY_POLICY":
                     folderName = Path.Combine(FilePath.HOLIDAY_POLICY, file.Id.ToString());
                     break;
                 case "WORD_DOCUMENT":
+
                     folderName = Path.Combine(FilePath.WORD_DOCUMENT, file.Id.ToString());
                     break;
                 case "IMAGE":
                     folderName = Path.Combine(FilePath.IMAGE, file.Id.ToString());
                     break;
             }
-
-            var filePath = Path.Combine(folderName,file.Name).Replace(@"\","/");
+            return folderName;
+        }
+        public async Task<string> GetByType(string fileType)
+        {
+            var file = await _fileRepository.FindByType(fileType);
+            var folderName = BuildFilePath(file);
+            var filePath = Path.Combine(folderName, file.Name).Replace(@"\", "/");
             return filePath;
         }
     }

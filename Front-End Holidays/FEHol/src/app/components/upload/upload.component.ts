@@ -3,6 +3,8 @@ import { HttpClient, HttpEventType } from '@angular/common/http';
 import { FileType } from '../../helpers/file-type';
 import * as mime from 'mime-types';
 import { AlertService } from 'src/app/services/alert.service';
+import { environment } from '../../../environments/environment';
+
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.component.html',
@@ -14,6 +16,7 @@ export class UploadComponent implements OnInit {
   public fileTypes = new FileType();
   public fileName: string;
   public progress: number;
+  private readonly fileApi = `${environment.webApiUrl}/file`;
   constructor(private http: HttpClient, private alertService: AlertService) { }
 
   ngOnInit() {
@@ -50,7 +53,7 @@ export class UploadComponent implements OnInit {
     formData.append('file', fileToUpload, fileToUpload.name);
     formData.append('fileType', this.fileType);
 
-    this.http.post('https://localhost:44374/api/file/upload', formData, { reportProgress: true, observe: 'events' })
+    this.http.post(`${this.fileApi}/upload`, formData, { reportProgress: true, observe: 'events' })
       .subscribe(event => {
         if (event.type === HttpEventType.UploadProgress) {
           this.progress = Math.round(100 * event.loaded / event.total);
