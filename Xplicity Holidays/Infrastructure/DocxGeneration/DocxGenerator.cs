@@ -68,7 +68,7 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
                     return "kasmetinių";
 
                 case HolidayType.Parental:
-                    return "tėvystės";
+                    return "tėvystės-motinystės";
 
                 case HolidayType.Science:
                     return "mokslo";
