@@ -3,8 +3,8 @@ using Xplicity_Holidays.Infrastructure.Enums;
 
 namespace Xplicity_Holidays.Services.Interfaces
 {
-    public interface ITemplateGenerationService
+    public interface IDocxGeneratorService
     {
-        Task<bool> GenerateHolidayDocx(int holidayId, HolidayDocumentType holidayDocumentType);
+        Task<string> GenerateHolidayDocx(int holidayId, HolidayDocumentType holidayDocumentType);
     }
 }

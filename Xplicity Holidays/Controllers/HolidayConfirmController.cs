@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Dtos.Holidays;
@@ -17,15 +15,15 @@ namespace Xplicity_Holidays.Controllers
         private readonly IHolidayConfirmService _confirmationService;
         private readonly IConfiguration _configuration; 
         private readonly IHolidaysService _holidaysService;
-        private readonly ITemplateGenerationService _templateGenerationService;
+        private readonly IDocxGeneratorService _docxGeneratorService;
 
         public HolidayConfirmController(IHolidayConfirmService confirmationService, IConfiguration configuration, 
-                                        IHolidaysService holidaysService, ITemplateGenerationService templateGenerationService)
+                                        IHolidaysService holidaysService, IDocxGeneratorService docxGeneratorService)
         {
             _confirmationService = confirmationService;
             _configuration = configuration;
             _holidaysService = holidaysService;
-            _templateGenerationService = templateGenerationService;
+            _docxGeneratorService = docxGeneratorService;
         }
 
         [HttpPost]
@@ -40,11 +38,10 @@ namespace Xplicity_Holidays.Controllers
 
             await _confirmationService.RequestClientApproval(holidayId);
 
-            await _templateGenerationService.GenerateHolidayDocx(holidayId, HolidayDocumentType.Request);
-
-            var path = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + @"\Templates\GeneratedTemplates\";
-            var fileName = $"{holidayId}-Request{newHolidayDto.Type.ToString()}-{DateTime.Today.Date.ToShortDateString()}.docx";
-            var stream = new FileStream(path + fileName, FileMode.Open);
+            var filePath = await _docxGeneratorService.GenerateHolidayDocx(holidayId, HolidayDocumentType.Request);
+            var stream = new FileStream(filePath, FileMode.Open);
+            var nameStartIndex = filePath.LastIndexOf('\\') + 1;
+            var fileName = filePath.Substring(nameStartIndex, filePath.Length - nameStartIndex);
             return File(stream, "application/docx", fileName);
         }
 
@@ -52,18 +49,16 @@ namespace Xplicity_Holidays.Controllers
         public async Task<IActionResult> ConfirmHoliday(int holidayId)
         {
             if (!await _confirmationService.IsValid(holidayId))
-            {
-                return BadRequest();
-            }
+             {
+                 return BadRequest();
+             }
 
-            await _confirmationService.ConfirmHoliday(holidayId);
+             await _confirmationService.ConfirmHoliday(holidayId);
 
-            await _templateGenerationService.GenerateHolidayDocx(holidayId, HolidayDocumentType.Order);
-
-            var path = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + @"\Templates\GeneratedTemplates\";
-            var holidayDto = await _holidaysService.GetById(holidayId);
-            var fileName = $"{holidayId}-Order{holidayDto.Type.ToString()}-{DateTime.Today.Date.ToShortDateString()}.docx";
-            var stream = new FileStream(path + fileName, FileMode.Open);
+            var filePath = await _docxGeneratorService.GenerateHolidayDocx(holidayId, HolidayDocumentType.Order);
+            var stream = new FileStream(filePath, FileMode.Open);
+            var nameStartIndex = filePath.LastIndexOf('\\') + 1;
+            var fileName = filePath.Substring(nameStartIndex, filePath.Length - nameStartIndex);
             return File(stream, "application/docx", fileName);
         }
     }

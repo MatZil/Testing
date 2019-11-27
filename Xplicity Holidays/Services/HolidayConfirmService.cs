@@ -14,7 +14,6 @@ namespace Xplicity_Holidays.Services
     public class HolidayConfirmService: IHolidayConfirmService
     {
         private readonly IMapper _mapper;
-        private readonly ITemplateGenerationService _templateGenerationService;
         private readonly IEmailService _emailService;
         private readonly IHolidaysService _holidaysService;
         private readonly ITimeService _timeService;
@@ -23,15 +22,14 @@ namespace Xplicity_Holidays.Services
         private readonly IHolidaysRepository _repositoryHolidays;
 
         public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays,
-            ITemplateGenerationService templateGenerationService, IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
-            IHolidaysService holidaysService, ITimeService timeService)
+                                     IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
+                                     IHolidaysService holidaysService, ITimeService timeService)
         {
             _emailService = emailService;
             _mapper = mapper;
             _repositoryEmployees = repositoryEmployees;
             _repositoryClients = repositoryClients;
             _repositoryHolidays = repositoryHolidays;
-            _templateGenerationService = templateGenerationService;
             _holidaysService = holidaysService;
             _timeService = timeService;
         }

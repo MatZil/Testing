@@ -41,12 +41,7 @@ namespace Tests
                 .UseInternalServiceProvider(serviceProvider)
                 .Options;
 
-            var builder = new ConfigurationBuilder()
-                          .SetBasePath(Directory.GetCurrentDirectory())
-                          .AddJsonFile("testSettings.json");
-            var configuration = builder.Build();
-
-
+            var configuration = GetConfiguration();
             context = new HolidayDbContext(options, configuration);
             Seed(context);
 
@@ -55,6 +50,15 @@ namespace Tests
                 cfg.AddProfile(new AutoMapperConfiguration());
             });
             mapper = config.CreateMapper();
+        }
+
+        public IConfiguration GetConfiguration()
+        {
+            var config = new ConfigurationBuilder()
+                          .SetBasePath(Directory.GetCurrentDirectory())
+                          .AddJsonFile("testSettings.json")
+                          .Build();
+            return config;
         }
 
         public UserManager<User> InitializeUserManager(HolidayDbContext context)
