@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FilesService } from '..//..//services/files.service';
-import { FileType } from '../../helpers/file-type';
+import { FileType } from '../../enums/fileType';
 import { environment } from '../../../environments/environment';
 import { AlertService } from 'src/app/services/alert.service';
 
@@ -14,14 +14,13 @@ export class PdfComponent implements OnInit {
   page = 1;
   pdfSrc = '';
   showPdf = false;
-  fileTypes = new FileType();
   constructor(private fileService: FilesService, private alertService: AlertService) { }
 
   ngOnInit() {
   }
 
   onButtonClick() {
-    this.fileService.getFilePathByType(this.fileTypes.holidayPolicy).subscribe(
+    this.fileService.getFilePathByType(FileType.HolidayPolicy).subscribe(
       data => {
         this.pdfSrc = `${environment.serverUrl}/${data}`;
       }

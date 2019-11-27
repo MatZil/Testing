@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Database.Models;
+using Xplicity_Holidays.Infrastructure.Enums;
 
 namespace Xplicity_Holidays.Infrastructure.Repositories
 {
@@ -53,7 +54,7 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
             return changes > 0;
         }
 
-        public async Task<File> FindByType(string fileType)
+        public async Task<File> FindByType(FileTypeEnum fileType)
         {
             var file = await _context.Files.Where(f => f.Type == fileType).OrderBy(f => f.CreatedAt).LastAsync();
             return file;

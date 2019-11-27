@@ -29,19 +29,19 @@
                 <button class="settings" mat-raised-button (click)="showPasswordModal()">Change password</button>
             </div>
             <nz-modal [(nzVisible)]="isVisibleUploadModal" [nzTitle]="uploadModal" [nzContent]="modalContent"
-                [nzFooter]="modalFooter" (nzOnCancel)="closeUploadModal()">
+                [nzFooter]="modalFooter" (nzOnCancel)="closeUploadModal()" ngCloak>
                 <ng-template #uploadModal>
                     Upload file
                 </ng-template>
                 <ng-template #modalContent>
-                    <app-upload [fileType]="fileTypes.holidayPolicy"></app-upload>
+                    <app-upload [fileType]="fileTypes.HolidayPolicy"></app-upload>
                 </ng-template>
                 <ng-template #modalFooter>
                     <button nz-button nzType="default" (click)="closeUploadModal()">Close</button>
                 </ng-template>
             </nz-modal>
             <nz-modal [(nzVisible)]="isVisiblePasswordModal" [nzTitle]="passwordModal" [nzContent]="modalContent2"
-                [nzFooter]="modalFooter2" (nzOnCancel)="closePasswordModal()">
+                [nzFooter]="modalFooter2" (nzOnCancel)="closePasswordModal()" ngCloak>
                 <ng-template #passwordModal>
                     Change password
                 </ng-template>

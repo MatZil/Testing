@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Xplicity_Holidays.Infrastructure.Enums;
 
 namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
@@ -11,7 +12,7 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public string Type { get; set; }
+        public FileTypeEnum Type { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
     }

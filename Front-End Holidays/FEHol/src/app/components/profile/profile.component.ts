@@ -6,7 +6,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { passwordMatcherValidatorFn } from '../../helpers/password-match-validator';
 import { PasswordChangeModel } from '../../models/password-change-model';
 import { AlertService } from 'src/app/services/alert.service';
-import { FileType } from '../../helpers/file-type';
+import { FileType } from '../../enums/fileType';
 
 @Component({
   selector: 'app-profile',
@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit {
   registerForm: FormGroup;
   isVisibleUploadModal = false;
   isVisiblePasswordModal = false;
-  fileTypes = new FileType();
+  fileTypes = FileType;
 
   constructor(
     private authenticationService: AuthenticationService,
