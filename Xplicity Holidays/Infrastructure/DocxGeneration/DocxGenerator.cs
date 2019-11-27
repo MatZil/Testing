@@ -54,7 +54,9 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
                 {"{HOLIDAY_TYPE}", TypeToLithuanian(holiday.Type) },
                 {"{HOLIDAY_PAID_INFO}", holiday.Paid ? "apmokamas" : "neapmokamas" },
                 {"{INCREASED_SALARY_REQUEST}", holiday.Paid ? _configuration["DocxGeneration:IncreasedSalaryRequest"] : ""},
-                {"{INCREASED_SALARY_ORDER}", holiday.Paid ? _configuration["DocxGeneration:IncreasedSalaryOrder"] : ""}
+                {"{INCREASED_SALARY_ORDER}", holiday.Paid ? _configuration["DocxGeneration:IncreasedSalaryOrder"] : ""},
+                {"{OVERTIME_ORDER}", "" },
+                {"{OVERTIME_REQUEST}", "" }
             };
         }
 
