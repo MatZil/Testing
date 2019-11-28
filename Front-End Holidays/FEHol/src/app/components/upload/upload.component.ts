@@ -1,9 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { HttpClient, HttpEventType } from '@angular/common/http';
+import { HttpEventType } from '@angular/common/http';
 import * as mime from 'mime-types';
 import { AlertService } from 'src/app/services/alert.service';
-import { environment } from '../../../environments/environment';
 import { FileType } from '../../enums/fileType';
+import { FilesService } from 'src/app/services/files.service';
 
 @Component({
   selector: 'app-upload',
@@ -15,8 +15,7 @@ export class UploadComponent implements OnInit {
   public fileType: number;
   public fileName: string;
   public progress: number;
-  private readonly fileApi = `${environment.webApiUrl}/file`;
-  constructor(private http: HttpClient, private alertService: AlertService) { }
+  constructor(private alertService: AlertService, private fileService: FilesService) { }
 
   ngOnInit() {
   }
@@ -52,14 +51,13 @@ export class UploadComponent implements OnInit {
     formData.append('file', fileToUpload, fileToUpload.name);
     formData.append('fileType', this.fileType.toString());
 
-    this.http.post(`${this.fileApi}/upload`, formData, { reportProgress: true, observe: 'events' })
-      .subscribe(event => {
-        if (event.type === HttpEventType.UploadProgress) {
-          this.progress = Math.round(100 * event.loaded / event.total);
-        }
-        else if (event.type === HttpEventType.Response) {
-          this.alertService.displayMessage('You have successfuly uploaded a file');
-        }
-      });
+    this.fileService.upload(formData).subscribe(event => {
+      if (event.type === HttpEventType.UploadProgress) {
+        this.progress = Math.round(100 * event.loaded / event.total);
+      }
+      else if (event.type === HttpEventType.Response) {
+        this.alertService.displayMessage('You have successfuly uploaded a file');
+      }
+    });
   }
 }

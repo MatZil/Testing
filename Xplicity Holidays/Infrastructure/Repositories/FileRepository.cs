@@ -19,44 +19,44 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<ICollection<File>> GetAll()
+        public async Task<ICollection<FileRecord>> GetAll()
         {
-            var files = await _context.Files.ToArrayAsync();
+            var files = await _context.FileRecords.ToArrayAsync();
             return files;
         }
 
-        public async Task<File> GetById(int id)
+        public async Task<FileRecord> GetById(int id)
         {
-            var file = await _context.Files.FindAsync(id);
-            return file;
+            var fileRecord = await _context.FileRecords.FindAsync(id);
+            return fileRecord;
         }
 
-        public async Task<int> Create(File newFile)
+        public async Task<int> Create(FileRecord newFileRecord)
         {
-            await _context.Files.AddAsync(newFile);
+            await _context.FileRecords.AddAsync(newFileRecord);
             await _context.SaveChangesAsync();
-            return newFile.Id;
+            return newFileRecord.Id;
         }
 
-        public async Task<bool> Update(File fileToUpdate)
+        public async Task<bool> Update(FileRecord fileRecordToUpdate)
         {
-            _context.Files.Attach(fileToUpdate);
+            _context.FileRecords.Attach(fileRecordToUpdate);
             var changes = await _context.SaveChangesAsync();
 
             return changes > 0;
         }
 
-        public async Task<bool> Delete(File fileToDelete)
+        public async Task<bool> Delete(FileRecord fileRecordToDelete)
         {
-            _context.Files.Remove(fileToDelete);
+            _context.FileRecords.Remove(fileRecordToDelete);
             var changes = await _context.SaveChangesAsync();
 
             return changes > 0;
         }
 
-        public async Task<File> FindByType(FileTypeEnum fileType)
+        public async Task<FileRecord> FindByType(FileTypeEnum fileType)
         {
-            var file = await _context.Files.Where(f => f.Type == fileType).OrderBy(f => f.CreatedAt).LastAsync();
+            var file = await _context.FileRecords.Where(f => f.Type == fileType).OrderBy(f => f.CreatedAt).LastAsync();
             return file;
         }
     }

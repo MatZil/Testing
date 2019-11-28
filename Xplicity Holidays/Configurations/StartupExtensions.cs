@@ -94,18 +94,20 @@ namespace Xplicity_Holidays.Configurations
             );
         }
 
-        public static void SetUpStaticFiles(this IApplicationBuilder app)
+        public static void SetUpStaticFiles(this IApplicationBuilder app, IConfiguration configuration)
         {
+            string baseFolder = configuration.GetValue<string>("FileConfig:BaseFolder");
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
-                RequestPath = new PathString("/Resources")
+
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), baseFolder)),
+                RequestPath = new PathString(string.Concat("/", baseFolder))
             });
         }
-        public static IServiceCollection SetupJtwAuthentication(this IServiceCollection services, IConfiguration Configuration)
+        public static IServiceCollection SetupJtwAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            var appSettingsSection = Configuration.GetSection("AppSettings");
+            var appSettingsSection = configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
             // configure jwt authentication

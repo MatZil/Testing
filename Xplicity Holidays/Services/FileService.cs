@@ -6,11 +6,10 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Repositories;
-using Xplicity_Holidays.Infrastructure.Static_Files;
 using Xplicity_Holidays.Services.Interfaces;
-using File = Xplicity_Holidays.Infrastructure.Database.Models.File;
 
 namespace Xplicity_Holidays.Services
 {
@@ -26,21 +25,21 @@ namespace Xplicity_Holidays.Services
 
         private async Task<int> CreateFileRecord(IFormFile file, FileTypeEnum fileType)
         {
-            var fileToCreate = new File
+            var fileRecordToCreate = new FileRecord
             {
                 Name = file.FileName,
                 Type = fileType,
                 CreatedAt = DateTime.Now
             };
-            var fileId = await _fileRepository.Create(fileToCreate);
+            var fileId = await _fileRepository.Create(fileRecordToCreate);
             return fileId;
         }
-        public string Upload(IFormFile formFile, FileTypeEnum fileType)
+        public async Task<string> Upload(IFormFile formFile, FileTypeEnum fileType)
         {
             if (formFile.Length > 0)
             {
-                var fileId = CreateFileRecord(formFile, fileType).Result;
-                var filePath = BuildFilePath(_fileRepository.GetById(fileId).Result);
+                var fileId =  await CreateFileRecord(formFile, fileType);
+                var filePath = BuildFilePath(await _fileRepository.GetById(fileId));
 
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), filePath);
                 if (!Directory.Exists(pathToSave))
@@ -59,7 +58,7 @@ namespace Xplicity_Holidays.Services
             return string.Empty;
         }
 
-        private string BuildFilePath(File file)
+        private string BuildFilePath(FileRecord file)
         {
             string folderName = string.Empty;
             switch (file.Type)

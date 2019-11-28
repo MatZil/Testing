@@ -7,8 +7,8 @@ using Xplicity_Holidays.Infrastructure.Enums;
 
 namespace Xplicity_Holidays.Infrastructure.Repositories
 {
-    public interface IFileRepository : IRepository<File>
+    public interface IFileRepository : IRepository<FileRecord>
     {
-        Task<File> FindByType(FileTypeEnum fileType);
+        Task<FileRecord> FindByType(FileTypeEnum fileType);
     }
 }

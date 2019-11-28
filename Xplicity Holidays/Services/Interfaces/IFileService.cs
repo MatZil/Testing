@@ -9,7 +9,7 @@ namespace Xplicity_Holidays.Services.Interfaces
 {
     public interface IFileService
     {
-        string Upload(IFormFile fomFile, FileTypeEnum fileType);
+        Task<string> Upload(IFormFile fomFile, FileTypeEnum fileType);
 
         Task<string> GetByType(FileTypeEnum fileType);
     }

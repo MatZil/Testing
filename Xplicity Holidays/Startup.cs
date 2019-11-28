@@ -50,7 +50,7 @@ namespace Xplicity_Holidays
             }
 
             app.UseCorsExt();
-            app.SetUpStaticFiles();
+            app.SetUpStaticFiles(Configuration);
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();

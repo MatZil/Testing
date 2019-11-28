@@ -25,11 +25,11 @@ namespace Xplicity_Holidays.Controllers
         [HttpPost]
         [Route("Upload")]
         [RequestSizeLimit(1048576)]
-        public IActionResult Upload()
+        public async Task<IActionResult> Upload()
         {
             var file = Request.Form.Files[0];
-            FileTypeEnum fileType = (FileTypeEnum)Enum.Parse(typeof(FileTypeEnum),Request.Form["fileType"]);
-            var filePath = _fileService.Upload(file, fileType);
+            FileTypeEnum fileType = (FileTypeEnum)Enum.Parse(typeof(FileTypeEnum), Request.Form["fileType"]);
+            var filePath = await _fileService.Upload(file, fileType);
             if (!string.IsNullOrEmpty(filePath))
             {
                 return Ok(new { filePath });

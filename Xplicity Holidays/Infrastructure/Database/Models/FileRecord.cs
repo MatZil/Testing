@@ -7,7 +7,7 @@ using Xplicity_Holidays.Infrastructure.Enums;
 
 namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
-    public class File : BaseEntity
+    public class FileRecord : BaseEntity
     {
         [Required]
         public string Name { get; set; }
