@@ -9,20 +9,20 @@ namespace Xplicity_Holidays.Services
     public class DocxGeneratorService : IDocxGeneratorService
     {
         private readonly IDocxGenerator _docxGenerator;
-        private readonly IHolidaysRepository _holidaysRepo;
-        private readonly IEmployeeRepository _employeesRepo;
+        private readonly IHolidaysRepository _holidaysRepository;
+        private readonly IEmployeeRepository _employeesRepository;
 
-        public DocxGeneratorService(IDocxGenerator docxGenerator, IHolidaysRepository holidaysRepo, IEmployeeRepository employeesRepo)
+        public DocxGeneratorService(IDocxGenerator docxGenerator, IHolidaysRepository holidaysRepository, IEmployeeRepository employeesRepository)
         {
             _docxGenerator = docxGenerator;
-            _holidaysRepo = holidaysRepo;
-            _employeesRepo = employeesRepo;
+            _holidaysRepository = holidaysRepository;
+            _employeesRepository = employeesRepository;
         }
 
         public async Task<string> GenerateHolidayDocx(int holidayId, HolidayDocumentType holidayDocumentType)
         {
-            var holiday = await _holidaysRepo.GetById(holidayId);
-            var employee = await _employeesRepo.GetById(holiday.EmployeeId);
+            var holiday = await _holidaysRepository.GetById(holidayId);
+            var employee = await _employeesRepository.GetById(holiday.EmployeeId);
             return await _docxGenerator.GenerateDocx(holiday, employee, holidayDocumentType);
         }
     }

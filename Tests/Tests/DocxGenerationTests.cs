@@ -12,11 +12,10 @@ using Xplicity_Holidays.Infrastructure.Utils;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using System.Threading.Tasks;
 
-namespace Tests.Tests
+namespace Tests
 {
     public class DocxGenerationTests
     {
-        private readonly Set_up _setup;
         private readonly HolidayDbContext _context;
         private readonly HolidaysRepository _holidaysRepository;
         private readonly EmployeesRepository _employeesRepository;
@@ -26,10 +25,10 @@ namespace Tests.Tests
 
         public DocxGenerationTests()
         {
-            _setup = new Set_up();
-            _setup.Initialize(out _context, out IMapper mapper);
-            _config = _setup.GetConfiguration();
-            var userManager = _setup.InitializeUserManager(_context);
+            var setup = new SetUp();
+            setup.Initialize(out _context, out IMapper mapper);
+            _config = setup.GetConfiguration();
+            var userManager = setup.InitializeUserManager(_context);
 
             _holidaysRepository = new HolidaysRepository(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
@@ -60,7 +59,7 @@ namespace Tests.Tests
 
             var actualPath = await _docxGeneratorService.GenerateHolidayDocx(holidayId, documentType);
 
-            Assert.Equal(expectedPath, actualPath);
+            Assert.True(expectedPath == actualPath, "DocxGeneration returned unexpected path.");
         }
     }
 }

@@ -24,19 +24,20 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
 
         public async Task<string> GenerateDocx(Holiday holiday, Employee employee, HolidayDocumentType holidayDocumentType)
         {
-            if (holiday != null)
+            if (holiday is null)
             {
-                var replacementMap = GetReplacementMap(holiday, employee);
-
-                var templatePath = GetTemplatePath(holidayDocumentType);
-
-                var generationPath = Path.Combine(_configuration["DocxGeneration:GenerationDir"],
-                    $"{holiday.Id}-{holidayDocumentType.ToString()}{holiday.Type.ToString()}" +
-                    $"-{_timeService.GetCurrentTime().ToString("yyyy-MM-dd")}.docx");
-
-                return await Task.FromResult(ProcessTemplate(templatePath, generationPath, replacementMap));
+                throw new ArgumentNullException(nameof(holiday), "Holiday does not exist");
             }
-            throw new ArgumentNullException(nameof(holiday), "Holiday does not exist");
+
+            var replacementMap = GetReplacementMap(holiday, employee);
+
+            var templatePath = GetTemplatePath(holidayDocumentType);
+
+            var generationPath = Path.Combine(_configuration["DocxGeneration:GenerationDir"],
+                $"{holiday.Id}-{holidayDocumentType.ToString()}{holiday.Type.ToString()}" +
+                $"-{_timeService.GetCurrentTime().ToString("yyyy-MM-dd")}.docx");
+
+            return await Task.FromResult(ProcessTemplate(templatePath, generationPath, replacementMap));
         }
 
         private Dictionary<string, string> GetReplacementMap(Holiday holiday, Employee employee)

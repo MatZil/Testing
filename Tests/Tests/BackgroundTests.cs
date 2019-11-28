@@ -28,7 +28,7 @@ namespace Tests
         public BackgroundTests(ITestOutputHelper output)
         {
             _output = output;
-            Set_up setup = new Set_up();
+            var setup = new SetUp();
             setup.Initialize(out _context, out IMapper mapper);
 
             var timeService = new TimeService();

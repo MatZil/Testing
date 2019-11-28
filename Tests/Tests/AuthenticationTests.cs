@@ -19,17 +19,16 @@ namespace Tests
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AuthenticationService _authService;
         private readonly int _rolesCount;
-        private readonly Set_up _setup;
 
         public AuthenticationTests(ITestOutputHelper output)
         {
             _output = output;
-            _setup = new Set_up();
-            _setup.Initialize(out _context, out IMapper mapper);
-            _rolesCount = _setup.GetCount("roles");
+            var setup = new SetUp();
+            setup.Initialize(out _context, out IMapper mapper);
+            _rolesCount = setup.GetCount("roles");
 
-            _userManager = _setup.InitializeUserManager(_context);
-            _roleManager = _setup.InitializeRoleManager(_context);
+            _userManager = setup.InitializeUserManager(_context);
+            _roleManager = setup.InitializeRoleManager(_context);
 
             var opt = Options.Create<AppSettings>(new AppSettings());
             _authService = new AuthenticationService(opt, _userManager, _roleManager);

@@ -17,6 +17,7 @@ import { EnumToStringConverterService } from 'src/app/services/enum-to-string-co
 import { HolidayType } from 'src/app/enums/holidayType';
 import { EmployeeStatus } from 'src/app/models/employee-status.enum';
 import { HttpResponse } from '@angular/common/http';
+import { HeadersService } from 'src/app/services/headers.service';
 
 @Component({
   selector: 'app-holidays-table',
@@ -44,6 +45,7 @@ export class HolidaysTableComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private holidayService: HolidaysService,
+    private headersService: HeadersService = new HeadersService(),
     private modal: NzModalService,
     private enumConverter: EnumToStringConverterService
   ) {
@@ -73,8 +75,7 @@ export class HolidaysTableComponent implements OnInit {
   onAddButtonClick() {
     this.requestHolidays.employeeId = this.currentUser.id;
     this.holidayService.addHolidays(this.requestHolidays).subscribe(response => {
-      const contentDisposition = response.headers.get('content-disposition');
-      const fileName = contentDisposition.split(';')[1].split('filename')[1].split('=')[1].trim();
+      const fileName = this.headersService.getFileName(response);
       saveAs(response.body, fileName);
       this.refreshTable(this.selected);
     });

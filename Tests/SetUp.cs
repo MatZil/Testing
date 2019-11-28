@@ -16,12 +16,11 @@ using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Dtos.EmailTemplates;
 using Xplicity_Holidays.Infrastructure.Enums;
 using System.IO;
-using Microsoft.Extensions.Configuration.Json;
 
 
 namespace Tests
 {
-    class Set_up
+    class SetUp
     {
         private Employee[] _employees;
         private Client[] _clients;
