@@ -16,7 +16,8 @@
     <p><b>Role</b>: {{ currentUser.role }}</p>
 </div>
 
-<p class="holidaysLeftMessage">You currently have <b>{{ currentUser.freeWorkDays }}</b> free workdays left!</p>
+<p class="holidaysLeftMessage">You currently have <b>{{ currentUser.freeWorkDays | number : '.0-2' }}</b> free workdays left!</p>
+<p class="overtimeMessage">Your overtime hours: <b>{{ currentUser.overtimeHours}}</b> ({{currentUser.overtimeDays | number : '.0-2' }} vacation days) </p>
 
 <mat-dialog-content>
     <form novalidate [formGroup]="registerForm">

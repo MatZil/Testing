@@ -1,5 +1,6 @@
 <div class="container">
     <h1 class="titleCenter">Xplicity Holidays</h1>
     <p class="holidaysCount">You currently have <b>{{ currentUser.freeWorkDays | number : '.0-2' }}</b> free workdays left!</p>
+    <p class="overtimeCount">Your overtime hours: <b>{{ currentUser.overtimeHours}}</b> ({{currentUser.overtimeDays | number : '.0-2' }} vacation days) </p>
     <app-pdf></app-pdf>
 </div>
