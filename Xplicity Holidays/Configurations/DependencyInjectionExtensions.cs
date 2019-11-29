@@ -25,6 +25,7 @@ namespace Xplicity_Holidays.Configurations
         {
             return service
                 .AddScoped<IRepository<Client>, ClientsRepository>()
+                .AddScoped<IFileRepository, FileRepository>()
                 .AddScoped<IHolidaysRepository, HolidaysRepository>()
                 .AddScoped<IEmailTemplatesRepository, EmailTemplatesRepository>()
                 .AddScoped<IEmployeeRepository, EmployeesRepository>()
@@ -47,7 +48,8 @@ namespace Xplicity_Holidays.Configurations
                 .AddScoped<IEmailService, EmailService>()
                 .AddScoped<IBackgroundService, BackgroundService>()
                 .AddScoped<IEmailTemplatesService, EmailTemplatesService>()
-                .AddScoped<IUserService, UserService>();
+                .AddScoped<IUserService, UserService>()
+                .AddScoped<IFileService, FileService>();
         }
     }
 }

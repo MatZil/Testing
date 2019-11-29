@@ -1,0 +1,16 @@
+mat-card{
+    height: 200px;
+}
+.auto-width{
+    .mat-form-field {
+        width: auto !important;
+        margin-top: 20px;
+    }
+    .mat-select-value {
+        max-width: 100%;
+        width: auto;
+    }
+}
+mat-progess-bar{
+    margin-top: 25px;
+}

@@ -26,8 +26,9 @@
     "file-saver": "^2.0.2",
     "hammerjs": "^2.0.8",
     "jwt-decode": "^2.2.0",
+    "mime-types": "^2.1.25",
     "ng-zorro-antd": "^8.1.2",
-    "ng2-pdf-viewer": "^5.3.3",
+    "ng2-pdf-viewer": "^5.3.4",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
