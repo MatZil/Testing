@@ -52,7 +52,8 @@ namespace Xplicity_Holidays.Services
                                         .Replace("{holiday.to}", holiday.ToExclusive.ToShortDateString())
                                         .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/holidayconfirm?holidayid={holiday.Id}")
                                         .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/holidaydecline?holidayid={holiday.Id}")
-                                        .Replace("{client.status}", clientStatus);
+                                        .Replace("{client.status}", clientStatus)
+                                        .Replace("{holiday.overtimeHours}", holiday.OvertimeHours.ToString());
 
             _emailer.SendMail(admin.Email, template.Subject, messageString);
         }
@@ -75,7 +76,8 @@ namespace Xplicity_Holidays.Services
                                                         .Replace("{employee.paid}", holiday.Item1.Paid ? "Paid" : "Unpaid")
                                                         .Replace("{holiday.type}", holiday.Item1.Type.ToString())
                                                         .Replace("{holiday.from}", holiday.Item1.FromInclusive.ToShortDateString())
-                                                        .Replace("{holiday.to}", holiday.Item1.ToExclusive.ToShortDateString());
+                                                        .Replace("{holiday.to}", holiday.Item1.ToExclusive.ToShortDateString())
+                                                        .Replace("{holiday.overtimeHours}", holiday.Item1.OvertimeHours.ToString());
                     holidayInfo += messageString;
                 }
                 holidayInfo += "\n\n";

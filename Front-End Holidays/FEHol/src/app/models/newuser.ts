@@ -8,6 +8,7 @@ export class Newuser {
     birthdayDate: Date;
     daysOfVacation: number;
     parentalLeaveLimit: number;
+    overtimeHours: number;
     email: string;
     password: string;
     role: string;

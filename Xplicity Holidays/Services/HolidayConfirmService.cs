@@ -96,14 +96,23 @@ namespace Xplicity_Holidays.Services
             else if (getHolidayDto.Type == HolidayType.Annual && getHolidayDto.Paid)
             {
                 await UpdateEmployeesWorkdays(getHolidayDto);
+                await UpdateEmployeesOvertime(getHolidayDto);
             }
         }
 
         private async Task UpdateEmployeesWorkdays(GetHolidayDto holidayDto)
         {
             var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
+            workdays -= holidayDto.OvertimeDays;
             var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
             employee.FreeWorkDays -= workdays;
+            await _repositoryEmployees.Update(employee);
+        }
+
+        private async Task UpdateEmployeesOvertime(GetHolidayDto holidayDto)
+        {
+            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
+            employee.OvertimeHours -= holidayDto.OvertimeHours;
             await _repositoryEmployees.Update(employee);
         }
 
@@ -167,12 +176,12 @@ namespace Xplicity_Holidays.Services
 
             var currentTime = _timeService.GetCurrentTime();
 
-            if (!ValidDateInterval(holiday, currentTime))
+            var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
+
+            if (!ValidDateInterval(holiday, currentTime) || !ValidOvertime(holiday, employee))
             {
                 return false;
             }
-
-            var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
 
             if (holiday.Type == HolidayType.Parental && !EmployeeEligibleForParental(holiday, employee, currentTime))
             {
@@ -188,6 +197,14 @@ namespace Xplicity_Holidays.Services
             {
                 return false;
             }
+
+            return true;
+        }
+
+        private bool ValidOvertime(Holiday holiday, Employee employee)
+        {
+            if (holiday.OvertimeDays > employee.OvertimeDays)
+                return false;
 
             return true;
         }

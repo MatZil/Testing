@@ -8,6 +8,7 @@ export class Updateuser {
     birthdayDate: Date;
     daysOfVacation: number;
     parentalLeaveLimit: number;
+    overtimeHours: number;
     email: string;
     role: string;
     position: string;

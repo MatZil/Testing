@@ -5,3 +5,8 @@
     width: 150px;
     float: right;
 }
+
+.columns{
+    display: flex;
+    justify-content: space-between; 
+}

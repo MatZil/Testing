@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Xplicity_Holidays.Infrastructure.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
@@ -18,6 +19,8 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         public DateTime ToExclusive { get; set; }
         [Required]
         public int OvertimeDays { get; set; }
+        [NotMapped]
+        public double OvertimeHours { get { return OvertimeDays * 8 / 1.5; } set { } }
         [Required]
         public HolidayStatus Status { get; set; }
         [Required]

@@ -62,7 +62,6 @@ export class HolidaysTableComponent implements OnInit {
       this.users = users;
     });
     this.role = this.userService.getRole();
-    this.overtimeDays = this.currentUser.overtimeHours;
   }
 
   refreshTable(status: number) {

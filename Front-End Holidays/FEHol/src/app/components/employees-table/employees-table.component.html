@@ -7,123 +7,142 @@
         </ng-template>
         <ng-template #modalConten>
             <mat-card>
-                <div>
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="newUser.name" type="text" name="name" placeholder="Employee name"
-                            required #nameInput="ngModel">
-                        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-                            Employee name cannot be empty.
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div>
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="newUser.surname" type="text" name="surname"
-                            placeholder="Employee surname" required #nameInput="ngModel">
-                        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-                            Employee surname cannot be empty.
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div>
-                    <mat-form-field>
-                        <mat-select [(ngModel)]="newUser.clientId" name="clientId" placeholder="Client">
-                            <mat-option [value]=null>No client</mat-option>
-                            <div *ngFor="let client of clients">
-                                <mat-option [value]="client.id">{{client.companyName}}</mat-option>
-                            </div>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div>
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="newUser.worksFromDate" type="date" name="worksFromDate"
-                            placeholder="Started working from date" required #nameInput="ngModel">
-                        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-                            Date cannot be empty.
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div>
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="newUser.birthdayDate" type="date" name="birthDayDate"
-                            placeholder="Employee birthday date" required #nameInput="ngModel">
-                        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-                            Date cannot be empty.
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div>
-                    <mat-form-field>
-                        <mat-select [(ngModel)]="newUser.daysOfVacation" name="daysOfVacation"
-                            placeholder="Days of vacation" required #nameInput="ngModel">
-                            <mat-option [value]="20">20</mat-option>
-                            <mat-option [value]="25">25</mat-option>
+                <div class="columns">
+                    <div>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="newUser.name" type="text" name="name"
+                                placeholder="Employee name" required #nameInput="ngModel">
                             <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                 class="error">
-                                Days cannot be empty.
+                                Employee name cannot be empty.
                             </mat-error>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div>
-                    <mat-form-field>
-                        <mat-select [(ngModel)]="newUser.parentalLeaveLimit" name="parentalLeaveLimit"
-                            placeholder="Parental leave limit" required #nameInput="ngModel">
-                            <mat-option [value]="0">0</mat-option>
-                            <mat-option [value]="1">1</mat-option>
-                            <mat-option [value]="2">2</mat-option>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="newUser.surname" type="text" name="surname"
+                                placeholder="Employee surname" required #nameInput="ngModel">
                             <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                 class="error">
-                                Parental leave limit cannot be empty.
+                                Employee surname cannot be empty.
                             </mat-error>
-                        </mat-select>
-                    </mat-form-field>
+                        </mat-form-field>
+                    </div>
                 </div>
-                <div>
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="newUser.email" type="email" name="email"
-                            placeholder="Employee email" required #nameInput="ngModel">
-                        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-                            Employee email is invalid.
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div>
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="newUser.password" type="password" name="password"
-                            placeholder="Employee password" required #nameInput="ngModel">
-                        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-                            Employee password cannot be empty.
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div>
-                    <mat-form-field>
-                        <mat-select [(ngModel)]="newUser.role" name="role" placeholder="Employee role" required
-                            #nameInput="ngModel">
-                            <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}</mat-option>
+                <div class="columns">
+                    <div>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="newUser.email" type="email" name="email"
+                                placeholder="Employee email" required #nameInput="ngModel">
                             <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                 class="error">
-                                Employee role cannot be empty.
+                                Employee email is invalid.
                             </mat-error>
-                        </mat-select>
-                    </mat-form-field>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="newUser.password" type="password" name="password"
+                                placeholder="Employee password" required #nameInput="ngModel">
+                            <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                class="error">
+                                Employee password cannot be empty.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
                 </div>
-                <div>
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="newUser.position" type="text" name="position"
-                            placeholder="Employee position" required #nameInput="ngModel">
-                        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-                            Employee position cannot be empty.
-                        </mat-error>
-                    </mat-form-field>
+                <div class="columns">
+                    <div>
+                        <mat-form-field>
+                            <mat-select [(ngModel)]="newUser.clientId" name="clientId" placeholder="Client">
+                                <mat-option [value]=null>No client</mat-option>
+                                <div *ngFor="let client of clients">
+                                    <mat-option [value]="client.id">{{client.companyName}}</mat-option>
+                                </div>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="newUser.worksFromDate" type="date" name="worksFromDate"
+                                placeholder="Started working from date" required #nameInput="ngModel">
+                            <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                class="error">
+                                Date cannot be empty.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
                 </div>
-                <div>
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="newUser.healthCheckDate" type="date" name="healthCheckDate"
-                            placeholder="Employee health check-up date" #nameInput="ngModel">
-                    </mat-form-field>
+                <div class="columns">
+                    <div>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="newUser.birthdayDate" type="date" name="birthDayDate"
+                                placeholder="Employee birthday date" required #nameInput="ngModel">
+                            <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                class="error">
+                                Date cannot be empty.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="newUser.healthCheckDate" type="date" name="healthCheckDate"
+                                placeholder="Employee health check-up date" #nameInput="ngModel">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div>
+                        <mat-form-field>
+                            <mat-select [(ngModel)]="newUser.daysOfVacation" name="daysOfVacation"
+                                placeholder="Days of vacation" required #nameInput="ngModel">
+                                <mat-option [value]="20">20</mat-option>
+                                <mat-option [value]="25">25</mat-option>
+                                <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                    class="error">
+                                    Days cannot be empty.
+                                </mat-error>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <mat-select [(ngModel)]="newUser.parentalLeaveLimit" name="parentalLeaveLimit"
+                                placeholder="Parental leave limit" required #nameInput="ngModel">
+                                <mat-option [value]="0">0</mat-option>
+                                <mat-option [value]="1">1</mat-option>
+                                <mat-option [value]="2">2</mat-option>
+                                <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                    class="error">
+                                    Parental leave limit cannot be empty.
+                                </mat-error>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div>
+                        <mat-form-field>
+                            <mat-select [(ngModel)]="newUser.role" name="role" placeholder="Employee role" required
+                                #nameInput="ngModel">
+                                <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}</mat-option>
+                                <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                    class="error">
+                                    Employee role cannot be empty.
+                                </mat-error>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="newUser.position" type="text" name="position"
+                                placeholder="Employee position" required #nameInput="ngModel">
+                            <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                class="error">
+                                Employee position cannot be empty.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
                 </div>
             </mat-card>
         </ng-template>
@@ -190,143 +209,167 @@
                 </ng-template>
                 <ng-template #modalContent>
                     <mat-card>
-                        <div>
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="formDataUsersNoId.name" type="text" name="name"
-                                    placeholder="Employee name" required #nameInput="ngModel">
-                                <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
-                                    class="error">
-                                    Employee name cannot be empty.
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div>
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="formDataUsersNoId.surname" type="text" name="surname"
-                                    placeholder="Employee surname" required #nameInput="ngModel">
-                                <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
-                                    class="error">
-                                    Employee surname cannot be empty.
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div>
-                            <mat-form-field>
-                                <mat-select [(ngModel)]="formDataUsersNoId.clientId" name="clientId"
-                                    placeholder="Client id">
-                                    <mat-option [value]=null>No client</mat-option>
-                                    <div *ngFor="let client of clients">
-                                        <mat-option [value]="client.id">{{client.companyName}}</mat-option>
-                                    </div>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div>
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="formDataUsersNoId.worksFromDate" type="date"
-                                    name="worksFromDate" placeholder="Started working from date" required
-                                    #nameInput="ngModel">
-                                <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
-                                    class="error">
-                                    Date cannot be empty.
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div>
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="formDataUsersNoId.birthdayDate" type="date"
-                                    name="birthDayDate" placeholder="Employee birthday date" required
-                                    #nameInput="ngModel">
-                                <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
-                                    class="error">
-                                    Date cannot be empty.
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div>
-                            <mat-form-field>
-                                <mat-select [(ngModel)]="formDataUsersNoId.daysOfVacation" name="daysOfVacation"
-                                    placeholder="Days of vacation" required #nameInput="ngModel">
-                                    <mat-option [value]="20">20</mat-option>
-                                    <mat-option [value]="25">25</mat-option>
+                        <div class="columns">
+                            <div>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]="formDataUsersNoId.name" type="text" name="name"
+                                        placeholder="Employee name" required #nameInput="ngModel">
                                     <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                         class="error">
-                                        Days cannot be empty.
+                                        Employee name cannot be empty.
                                     </mat-error>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div>
-                            <mat-form-field>
-                                <mat-select [(ngModel)]="formDataUsersNoId.parentalLeaveLimit" name="parentalLeaveLimit"
-                                    placeholder="Parental leave limit" required #nameInput="ngModel">
-                                    <mat-option [value]="0">0</mat-option>
-                                    <mat-option [value]="1">1</mat-option>
-                                    <mat-option [value]="2">2</mat-option>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]="formDataUsersNoId.surname" type="text" name="surname"
+                                        placeholder="Employee surname" required #nameInput="ngModel">
                                     <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                         class="error">
-                                        Parental leave limit cannot be empty.
+                                        Employee surname cannot be empty.
                                     </mat-error>
-                                </mat-select>
-                            </mat-form-field>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div>
+                                <mat-form-field>
+                                    <mat-select [(ngModel)]="formDataUsersNoId.clientId" name="clientId"
+                                        placeholder="Client id">
+                                        <mat-option [value]=null>No client</mat-option>
+                                        <div *ngFor="let client of clients">
+                                            <mat-option [value]="client.id">{{client.companyName}}</mat-option>
+                                        </div>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]="formDataUsersNoId.worksFromDate" type="date"
+                                        name="worksFromDate" placeholder="Started working from date" required
+                                        #nameInput="ngModel">
+                                    <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                        class="error">
+                                        Date cannot be empty.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]="formDataUsersNoId.birthdayDate" type="date"
+                                        name="birthDayDate" placeholder="Employee birthday date" required
+                                        #nameInput="ngModel">
+                                    <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                        class="error">
+                                        Date cannot be empty.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]="formDataUsersNoId.healthCheckDate" type="date"
+                                        name="healthCheckDate" placeholder="Employee health check-up date"
+                                        #nameInput="ngModel">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div>
+                                <mat-form-field>
+                                    <mat-select [(ngModel)]="formDataUsersNoId.daysOfVacation" name="daysOfVacation"
+                                        placeholder="Days of vacation" required #nameInput="ngModel">
+                                        <mat-option [value]="20">20</mat-option>
+                                        <mat-option [value]="25">25</mat-option>
+                                        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                            class="error">
+                                            Days cannot be empty.
+                                        </mat-error>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <mat-select [(ngModel)]="formDataUsersNoId.parentalLeaveLimit"
+                                        name="parentalLeaveLimit" placeholder="Parental leave limit" required
+                                        #nameInput="ngModel">
+                                        <mat-option [value]="0">0</mat-option>
+                                        <mat-option [value]="1">1</mat-option>
+                                        <mat-option [value]="2">2</mat-option>
+                                        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                            class="error">
+                                            Parental leave limit cannot be empty.
+                                        </mat-error>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
                         </div>
                         <div>
                             <mat-form-field>
-                                <input matInput [(ngModel)]="formDataUsersNoId.email" type="email" name="email"
-                                    placeholder="Employee email" required #nameInput="ngModel">
+                                <input matInput [(ngModel)]="formDataUsersNoId.overtimeHours" type="number" min="0"
+                                    name="overtimeHours" placeholder="Overtime hours" required #nameInput="ngModel">
                                 <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                     class="error">
-                                    Employee email is invalid.
+                                    Overtime hours cannot be empty.
                                 </mat-error>
                             </mat-form-field>
                         </div>
-                        <div>
-                            <mat-form-field>
-                                <mat-select [(ngModel)]="formDataUsersNoId.role" name="role" placeholder="Employee role"
-                                    required #nameInput="ngModel">
-                                    <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}
-                                    </mat-option>
+                        <div class="columns">
+                            <div>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]="formDataUsersNoId.email" type="email" name="email"
+                                        placeholder="Employee email" required #nameInput="ngModel">
                                     <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                         class="error">
-                                        Employee role cannot be empty.
+                                        Employee email is invalid.
                                     </mat-error>
-                                </mat-select>
-                            </mat-form-field>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <mat-select [(ngModel)]="formDataUsersNoId.status" name="status"
+                                        placeholder="Employee status" required #nameInput="ngModel" [(value)]="selected"
+                                        [disabled]="formDataUsers.id === getCurrentUserId()">
+                                        <mat-option [value]="0">
+                                            Former employee
+                                        </mat-option>
+                                        <mat-option [value]="1">
+                                            Current employee
+                                        </mat-option>
+                                        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                            class="error">
+                                            Employee status cannot be empty.
+                                        </mat-error>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
                         </div>
-                        <div>
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="formDataUsersNoId.position" type="text" name="position"
-                                    placeholder="Employee position" required #nameInput="ngModel">
-                                <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
-                                    class="error">
-                                    Employee position cannot be empty.
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div>
-                            <mat-form-field>
-                                <input matInput [(ngModel)]="formDataUsersNoId.healthCheckDate" type="date"
-                                    name="healthCheckDate" placeholder="Employee health check-up date"
-                                    #nameInput="ngModel">
-                            </mat-form-field>
-                        </div>
-                        <div>
-                            <mat-form-field>
-                                <mat-select [(ngModel)]="formDataUsersNoId.status" name="status"
-                                    placeholder="Employee status" required #nameInput="ngModel" [(value)]="selected"
-                                    [disabled]="formDataUsers.id === getCurrentUserId()">
-                                    <mat-option [value]="0">
-                                        Former employee
-                                    </mat-option>
-                                    <mat-option [value]="1">
-                                        Current employee
-                                    </mat-option>
+
+                        <div class="columns">
+                            <div>
+                                <mat-form-field>
+                                    <mat-select [(ngModel)]="formDataUsersNoId.role" name="role"
+                                        placeholder="Employee role" required #nameInput="ngModel">
+                                        <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}
+                                        </mat-option>
+                                        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                                            class="error">
+                                            Employee role cannot be empty.
+                                        </mat-error>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]="formDataUsersNoId.position" type="text" name="position"
+                                        placeholder="Employee position" required #nameInput="ngModel">
                                     <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
                                         class="error">
-                                        Employee status cannot be empty.
+                                        Employee position cannot be empty.
                                     </mat-error>
-                                </mat-select>
-                            </mat-form-field>
+                                </mat-form-field>
+                            </div>
                         </div>
                     </mat-card>
                 </ng-template>

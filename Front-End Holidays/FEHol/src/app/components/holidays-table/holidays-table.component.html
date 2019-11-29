@@ -19,10 +19,10 @@
                 Request holidays (advised to take 10 days)
             </ng-template>
             <ng-template #modalConten>
-                    <p>You currently have <b>{{ currentUser.freeWorkDays }}</b> free workdays left!</p>
+                    <p>You currently have <b>{{ currentUser.freeWorkDays | number : '.0-2' }}</b> free workdays left!</p>
                     <p>Your overtime hours: <b>{{ currentUser.overtimeHours}}</b> ({{currentUser.overtimeDays | number : '.0-2' }} vacation days) </p>
                 <mat-card>
-                    <div>
+                    <div class="columns">
                         <mat-form-field>
                             <mat-select [(ngModel)]="requestHolidays.type" name="type" placeholder="Holiday's type"
                                 required #nameInput="ngModel" [(value)]="selectedType">
@@ -37,6 +37,10 @@
                                     Type cannot be empty.
                                 </mat-error>
                             </mat-select>
+                        </mat-form-field>
+                        <mat-form-field *ngIf="selectedType == 0 && requestHolidays.paid">
+                                <input matInput [(ngModel)]="requestHolidays.overtimeDays" type="number" min="0" max={{currentUser.overtimeDays}} 
+                                    name="overtimeHours" placeholder="Overtime days" #nameInput="ngModel">
                         </mat-form-field>
                     </div>
                     <div>
