@@ -53,7 +53,8 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
                 {"{HOLIDAY_END}", holiday.ToExclusive.AddDays(-1).ToString("yyyy-MM-dd")},
                 {"{WORK_DAY_COUNT}", _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive).ToString()},
                 {"{HOLIDAY_TYPE}", TypeToLithuanian(holiday.Type) },
-                {"{HOLIDAY_PAID_INFO}", holiday.Paid ? "apmokamas" : "neapmokamas" },
+                {"{ORDER_PAID_INFO}", holiday.Paid ? _configuration["DocxGeneration:OrderPaid"] : _configuration["DocxGeneration:OrderUnpaid"] },
+                {"{REQUEST_PAID_INFO}", holiday.Paid ? _configuration["DocxGeneration:RequestPaid"] : _configuration["DocxGeneration:RequestUnpaid"] },
                 {"{INCREASED_SALARY_REQUEST}", holiday.Paid ? _configuration["DocxGeneration:IncreasedSalaryRequest"] : ""},
                 {"{INCREASED_SALARY_ORDER}", holiday.Paid ? _configuration["DocxGeneration:IncreasedSalaryOrder"] : ""},
                 {"{OVERTIME_ORDER}", "" },
@@ -80,20 +81,17 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
 
         private string ProcessTemplate(string templatePath, string generationPath, Dictionary<string, string> replacementMap)
         {
-            using (var document = WordprocessingDocument.CreateFromTemplate(templatePath))
+            using (var template = WordprocessingDocument.CreateFromTemplate(templatePath))
             {
-                var body = document.MainDocumentPart.Document.Body;
-                foreach (var templateFile in body.Descendants<Text>())
+                var body = template.MainDocumentPart.Document.Body;
+                foreach (var text in body.Descendants<Text>())
                 {
-                    foreach (var documentText in replacementMap)
+                    foreach (var replacementPair in replacementMap)
                     {
-                        if (templateFile.Text.Contains(documentText.Key))
-                        {
-                            templateFile.Text = templateFile.Text.Replace(documentText.Key, documentText.Value);
-                        }
+                        text.Text = text.Text.Replace(replacementPair.Key, replacementPair.Value);
                     }
                 }
-                document.SaveAs(generationPath).Close();
+                template.SaveAs(generationPath).Close();
                 return generationPath;
             }
         }
