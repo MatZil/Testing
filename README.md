@@ -1,3 +1,7 @@
+If you want to view this file with its intended text formatting, it is recommended that you view it in your git repository, download a markdown editor or use one online.
+  - (online) https://dillinger.io
+  - https://www.typora.io/
+
 ## Prerequisites
 
 Install the following applications:
@@ -6,19 +10,14 @@ Install the following applications:
   - Visual Studio 2019 IDE (https://visualstudio.microsoft.com/vs/community/)
   - Microsoft SQL Server Management Studio 18
 (https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15)
-
-Additionally for developers:
   - Sourcetree graphic interface for Git (https://www.sourcetreeapp.com)
 
 ## Project files
-###### If you want to download the whole project without too much fuss: 
-//ar yra prieiga kur galima lengvai parsisiųsti, nesiloginant į Azure? git adresas?
-
 ###### If you are planning on interacting with the existing repository or just want to have a quick access to the latest updates - create a complete local copy of the repository by cloning it to your device.
    ##### Copy the Clone URL
   - Open Azure DevOps > Projects > XplicityApplication 
   (or navigate to https://dev.azure.com/xplicity/_git/XplicityApplication)
-  - Repos (left sidebar) > Files > Clone (at the top right corner of the dashboard) > HTTPS > Copy Clone URL to clipboard.
+  - Repos (left sidebar) > Files > Clone (at the top right corner of the dashboard) > Copy Clone URL to clipboard.
 
    ##### Create a local repository  
   - Open Sourcetree > File > Clone / New... > Paste copied Clone URL into **Source Path / URL** field > Browse for a desired Destination Path > Clone.
@@ -38,19 +37,20 @@ You can also do this using Command Prompt or Windows Powershell.
 ##### To run the project:
 Type in Terminal
 ```sh
-$ cd FEHol
+$ cd 'FEHol'
 $ npm install
 $ ng serve 
 ```
-  - **cd** changes the current directory. If there is ever an error indicating missing project file, type **cd FEHol** (full path).
+  - **cd** changes the current directory. If there is ever an error indicating missing project file, type **cd 'FEHol'** (full path).
   - **npm install** is necessary every time the project is updated from remote sources (in case new libraries were added by fellow developers). After its first-time execution **node-modules** folder should appear in **FEHol**, containing all of the necessary libraries.
   - **ng serve** will compile and run the front end of your application.
   - (for developers) to open the code, you could either type **. code** or go to File > Open Folder > search for **FEHol** directory > Open.
+  - don't forget to add typewriter apostrophes (') on both sides of 'FEHol'. This is to prevent you from getting an error (e.g. if there is a space symbol in your directory name).
 
 Open your browser > in the address bar type the RootUrl (https://localhost:44374) > click Enter.
 Where to find the RootUrl in case it was changed? Go to **XplicityApplication\Xplicity Holidays** (the back-end directory of the application), open **appsettings.json** file, it should be under **AppSettings**.
 
-You should see the log-in window, but no interactivity.
+Once the page loads, you should see the log-in form, but no interactivity.
 
 #### A few important notes
   - Every time the project is opened anew, it should be run with **ng serve**. If you haven't closed the project, it will be compiled every time a new change has been saved.
@@ -66,14 +66,14 @@ $  taskkill /F /PID 51912
 Go to **XplicityApplication\Xplicity Holidays** (the back-end directory of the application), double-click on **Xplicity Holidays.sln**. The project will be opened in Visual Studio 2019.
 
 #### Prepare the database
+In Visual Studio 2019 click on View > Other Windows > Package Manager Console > type **Update-Database** (this will apply any pending migrations to the database) > click Enter.
+If there are any errors, you can delete the Migrations folder, then in the console type **Add-Migrations Initial**.
+
 Before running the project, it's important to have some data in the database. 
 Open **Microsoft SQL Server Management Studio 18** and connect with these settings:
  - Server type: Database Engine
- - Server name: localhost\\SQLEXPRESS (check **appsettings.json** file to see if nothing changed)
+ - Server name: localhost\sqlexpress (check **appsettings.json** file to see if nothing changed, should be **localhost\\SQLEXPRESS**)
  - Authentication: Windows Authentication
-
-In Visual Studio 2019 click on View > Other Windows > Package Manager Console > type **Update-Database** (this will apply any pending migrations to the database) > click Enter.
-If there are any errors, you can delete the Migrations folder, then in the console type **Add-Migrations Initial**.
 
    ##### Where are the newly created tables and how to manage their data?
 Open the Server Management Studio > check out its Object Explorer window > expand Databases > check to see if there is a catalog entitled **XplicityHolidays**.
@@ -85,5 +85,5 @@ Email: gamma.holidays@gmail.com
 Password: password
 
 ## Run back-end files
-After all of the instructions above have been followed, go back to Visual Studio 2019 where the back-end project is open. Press **CTRL+F5** keys at the same time, the project will be compiled and built. Now the log-in window in the browser is interactive, you can log-in with .....
+After all of the instructions above have been followed, go back to Visual Studio 2019 where the back-end project is open. Press **CTRL+F5** keys at the same time, the project will be compiled and built. Now that the log-in form in the browser is interactive, you can log-in with admin data.
 

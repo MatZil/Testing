@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.IO;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,7 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileProviders;
 using Xplicity_Holidays.Infrastructure.Database;
 using Swashbuckle.AspNetCore.Filters;
 using Xplicity_Holidays.Infrastructure.Database.Models;
@@ -99,9 +102,20 @@ namespace Xplicity_Holidays.Configurations
             );
         }
 
-        public static IServiceCollection SetupJtwAuthentication(this IServiceCollection services, IConfiguration Configuration)
+        public static void SetUpStaticFiles(this IApplicationBuilder app, IConfiguration configuration)
         {
-            var appSettingsSection = Configuration.GetSection("AppSettings");
+            string baseFolder = configuration.GetValue<string>("FileConfig:BaseFolder");
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), baseFolder)),
+                RequestPath = new PathString(string.Concat("/", baseFolder))
+            });
+        }
+        public static IServiceCollection SetupJtwAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            var appSettingsSection = configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
             // configure jwt authentication
