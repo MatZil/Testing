@@ -36,6 +36,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RoleGuardService } from './helpers/role-guard';
+import { OvertimeDisplayComponent } from './components/overtime-display/overtime-display.component';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -54,7 +55,8 @@ export function tokenGetter() {
     ProfileComponent,
     HolidaysTableComponent,
     PdfComponent,
-    EmailtemplatesTableComponent
+    EmailtemplatesTableComponent,
+    OvertimeDisplayComponent
   ],
   imports: [
     BrowserModule,
