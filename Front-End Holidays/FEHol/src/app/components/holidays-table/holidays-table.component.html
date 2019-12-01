@@ -19,8 +19,7 @@
                 Request holidays (advised to take 10 days)
             </ng-template>
             <ng-template #modalConten>
-                    <p>You currently have <b>{{ currentUser.freeWorkDays }}</b> free workdays left!</p>
-                    <p>Your overtime hours: <b>{{ currentUser.overtimeHours}}</b> ({{currentUser.overtimeDays | number : '.0-2' }} vacation days) </p>
+                   <app-overtime-display></app-overtime-display>
                 <mat-card>
                     <div>
                         <mat-form-field>
