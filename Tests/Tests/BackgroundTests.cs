@@ -24,6 +24,7 @@ namespace Tests
         private readonly HolidaysRepository _holidaysRepository;
         private readonly EmployeesRepository _employeesRepository;
         private readonly BackgroundService _backgroundService;
+        private readonly TimeService _timeService;
 
         public BackgroundTests(ITestOutputHelper output)
         {
@@ -31,14 +32,14 @@ namespace Tests
             Set_up setup = new Set_up();
             setup.Initialize(out _context, out IMapper mapper);
 
-            var timeService = new TimeService();
+            _timeService = new TimeService();
             _holidaysRepository = new HolidaysRepository(_context);
             var userManager = setup.InitializeUserManager(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
 
             var _serviceScopeFactory = new Mock<IServiceScopeFactory>().Object;
             var _hostingEnvironment = new Mock<IHostingEnvironment>().Object;
-            _backgroundService = new BackgroundService(timeService, _serviceScopeFactory, _hostingEnvironment);
+            _backgroundService = new BackgroundService(_timeService, _serviceScopeFactory, _hostingEnvironment);
         }
 
         //[Fact]
@@ -61,30 +62,43 @@ namespace Tests
         //    _backgroundService.call("CheckForLastMonthDay", args);
         //}
 
-
+            
         [Fact]
         public async void When_AddingFreeWorkDays_Expect_AddsDaysOff()
         {
             ICollection<Employee> employees = await _employeesRepository.GetAll();
-            var timeService = new TimeService();
 
             var initial = new double[employees.Count];
             var index = 0;
             foreach (var e in employees)
+            {
                 initial[index++] = e.FreeWorkDays;
+            }
 
-            Object[] args = { employees, timeService, _employeesRepository };
+            Object[] args = { employees, _timeService, _employeesRepository };
             _backgroundService.call("AddFreeWorkDays", args);
 
-            var final = new double[employees.Count];
-            index = 0;
+            
             var countTrue = 0;
-            foreach (var e in employees)
-            {
-                final[index] = e.FreeWorkDays;
 
-                if (final[index] > initial[index++])
-                    countTrue++;
+            var currentTime = _timeService.GetCurrentTime();
+            if (currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.DayOfWeek != DayOfWeek.Sunday)
+            {
+                var final = new double[employees.Count];
+                index = 0;
+                foreach (var e in employees)
+                {
+                    final[index] = e.FreeWorkDays;
+
+                    if (final[index] > initial[index++])
+                    {
+                        countTrue++;
+                    }
+                }
+            }
+            else
+            {
+                countTrue = employees.Count;
             }
 
             Assert.Equal(employees.Count, countTrue);
