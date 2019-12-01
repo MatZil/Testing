@@ -24,6 +24,7 @@ namespace Tests
         private readonly HolidaysRepository _holidaysRepository;
         private readonly EmployeesRepository _employeesRepository;
         private readonly BackgroundService _backgroundService;
+        private readonly TimeService timeService;
 
         public BackgroundTests(ITestOutputHelper output)
         {
@@ -31,7 +32,7 @@ namespace Tests
             Set_up setup = new Set_up();
             setup.Initialize(out _context, out IMapper mapper);
 
-            var timeService = new TimeService();
+            timeService = new TimeService();
             _holidaysRepository = new HolidaysRepository(_context);
             var userManager = setup.InitializeUserManager(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
@@ -61,7 +62,7 @@ namespace Tests
         //    _backgroundService.call("CheckForLastMonthDay", args);
         //}
 
-
+            
         [Fact]
         public async void When_AddingFreeWorkDays_Expect_AddsDaysOff()
         {
@@ -76,16 +77,23 @@ namespace Tests
             Object[] args = { employees, timeService, _employeesRepository };
             _backgroundService.call("AddFreeWorkDays", args);
 
-            var final = new double[employees.Count];
-            index = 0;
+            
             var countTrue = 0;
-            foreach (var e in employees)
-            {
-                final[index] = e.FreeWorkDays;
 
-                if (final[index] > initial[index++])
-                    countTrue++;
+            var currentTime = timeService.GetCurrentTime();
+            if (currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.DayOfWeek != DayOfWeek.Sunday)
+            {
+                var final = new double[employees.Count];
+                index = 0;
+                foreach (var e in employees)
+                {
+                    final[index] = e.FreeWorkDays;
+
+                    if (final[index] > initial[index++])
+                        countTrue++;
+                }
             }
+            else countTrue = employees.Count;
 
             Assert.Equal(employees.Count, countTrue);
         }
