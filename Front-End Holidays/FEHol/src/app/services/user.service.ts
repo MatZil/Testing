@@ -9,6 +9,7 @@ import { Updateuser } from '../models/updateuser';
 import { NgForm } from '@angular/forms';
 import { PasswordChangeModel } from '../models/password-change-model';
 import decode from 'jwt-decode';
+import { InventoryItem } from '../models/inventory-item';
 @Injectable({ providedIn: 'root' })
 
 export class UserService {
@@ -49,6 +50,10 @@ export class UserService {
 
     getCurrentUser(): Observable<User> {
         return this.http.get<User>(`${this.userApi}/self`);
+    }
+
+    getEquipment(id: number): Observable<InventoryItem[]> {
+        return this.http.get<InventoryItem[]>(`${this.userApi}/${id}/EquipmentList`);
     }
 
     getRole(): string {

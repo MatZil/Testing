@@ -29,6 +29,7 @@ export class EmployeesTableComponent implements OnInit {
   newUser: Newuser = new Newuser();
   employeeStatus = EmployeeStatus;
   selected;
+  employeeIdForEquipment: number;
 
   clients: Client[] = [];
   oneClient: Client;
@@ -36,6 +37,7 @@ export class EmployeesTableComponent implements OnInit {
   isVisibleCreator = false;
   isConfirmLoadingCreator = false;
   isVisibleEditor = false;
+  isVisibleEquipmentModal = false;
 
   confirmDeleteModal: NzModalRef;
 
@@ -176,6 +178,14 @@ export class EmployeesTableComponent implements OnInit {
       'Form error',
       'An employee with this email already exists'
     );
+  }
+
+  showEquipmentModal(employeeId: number) {
+    this.isVisibleEquipmentModal = true;
+    this.employeeIdForEquipment = employeeId;
+  }
+  closeEquipmentModal() {
+    this.isVisibleEquipmentModal = false;
   }
 
   formatDate(date: Date) {

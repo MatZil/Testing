@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +10,7 @@ using Xplicity_Holidays.Infrastructure.Enums;
 
 namespace Xplicity_Holidays.Infrastructure.Repositories
 {
-    public class EmployeesRepository: IEmployeeRepository
+    public class EmployeesRepository : IEmployeeRepository
     {
         protected readonly HolidayDbContext Context;
         private readonly UserManager<User> _userManager;
@@ -66,16 +67,28 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
 
         public List<Holiday> GetConfirmedHolidays(int employeeId)
         {
-            var holidays = Context.Holidays.Where(holiday => 
+            var holidays = Context.Holidays.Where(holiday =>
                                                     holiday.EmployeeId == employeeId && holiday.Status == HolidayStatus.Confirmed).ToList();
 
             return holidays;
         }
 
-        public async  Task<Employee> FindAnyAdmin()
+        public async Task<Employee> FindAnyAdmin()
         {
             var users = await _userManager.GetUsersInRoleAsync("Admin");
             return await Context.Employees.Where(employees => employees.Id == users[0].EmployeeId).SingleOrDefaultAsync();
+        }
+
+        public async Task<ICollection<InventoryItem>> GetEquipmentList(int employeeId)
+        {
+            var employee = await Context.Employees.Include(e => e.InventoryItems)
+                .Where(e => e.Id == employeeId).SingleOrDefaultAsync();
+            if (employee == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            return employee.InventoryItems;
         }
     }
 }

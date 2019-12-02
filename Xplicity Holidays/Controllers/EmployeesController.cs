@@ -95,6 +95,12 @@ namespace Xplicity_Holidays.Controllers
             return Ok();
         }
 
+        [HttpGet("{id}/EquipmentList")]
+        public async Task<IActionResult> GetEquipment(int id)
+        {
+            var equipment = await _employeesService.GetEquipmentList(id);
+            return Ok(equipment);
+        }
         
     }
 }

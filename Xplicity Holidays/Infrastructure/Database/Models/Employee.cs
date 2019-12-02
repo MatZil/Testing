@@ -44,5 +44,7 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         public DateTime HealthCheckDate { get; set; }
 
         public EmployeeStatusEnum Status { get; set; }
+
+        public ICollection<InventoryItem> InventoryItems { get; set; }
     }
 }

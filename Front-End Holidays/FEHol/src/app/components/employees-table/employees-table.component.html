@@ -135,7 +135,18 @@
         </ng-template>
     </nz-modal>
 </form>
-
+<nz-modal [(nzVisible)]="isVisibleEquipmentModal" [nzTitle]="EquipmentModal" [nzContent]="EquipmentModalContent"
+    [nzFooter]="EquipmentModalFooter" (nzOnCancel)="closeEquipmentModal()" nzWidth="1000">
+    <ng-template #EquipmentModal>
+        Equipment list
+    </ng-template>
+    <ng-template #EquipmentModalContent>
+        <app-inventory-table [id]="employeeIdForEquipment"></app-inventory-table>
+    </ng-template>
+    <ng-template #EquipmentModalFooter>
+        <button nz-button nzType="default" (click)="closeEquipmentModal()">Close</button>
+    </ng-template>
+</nz-modal>
 <nz-table #basicTable [nzData]="users" [nzScroll]="{x: '100%'}">
     <thead>
         <tr>
@@ -157,6 +168,8 @@
             <th>Next month's parental leaves</th>
             <th>Health check-up date</th>
             <th>Status</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -178,6 +191,9 @@
             <td>
                 <button nz-button nzType="primary"
                     (click)="populateUserForm(user); showModalEditor(); populateUserFormNoId(user)">Edit</button>
+            </td>
+            <td>
+                <button nz-button nzType="primary" (click)="showEquipmentModal(user.id)">Equipment</button>
             </td>
         </tr>
         <form #editUsersForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(editUsersForm)">

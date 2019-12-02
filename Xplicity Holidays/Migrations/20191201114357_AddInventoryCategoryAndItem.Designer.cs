@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Xplicity_Holidays.Infrastructure.Database;
 
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    partial class HolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191201114357_AddInventoryCategoryAndItem")]
+    partial class AddInventoryCategoryAndItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -324,8 +326,6 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<int>("EmployeeId");
-
                     b.Property<DateTime>("ExpiryDate");
 
                     b.Property<int>("InventoryCategoryId");
@@ -339,8 +339,6 @@ namespace Xplicity_Holidays.Migrations
                         .IsRequired();
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("InventoryCategoryId");
 
@@ -464,11 +462,6 @@ namespace Xplicity_Holidays.Migrations
 
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.InventoryItem", b =>
                 {
-                    b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.Employee", "Employee")
-                        .WithMany("InventoryItems")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.InventoryCategory", "Category")
                         .WithMany("Items")
                         .HasForeignKey("InventoryCategoryId")
