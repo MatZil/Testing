@@ -121,5 +121,41 @@ namespace Xplicity_Holidays.Services
                 }
             }
         }
+
+        public async Task<bool> SendOrderNotification(Holiday holiday, Employee employee, Employee admin)
+        {
+            var template = await _repository.GetByPurpose(EmailPurposes.ORDER_NOTIFICATION);
+
+            if (template is null)
+            {
+                return false;
+            }
+
+            var messageString = template.Template
+                                        .Replace("{employee.name}", employee.Name)
+                                        .Replace("{employee.surname}", employee.Surname)
+                                        .Replace("{download_link}", $"{_configuration["AppSettings:RootUrl"]}/api/download/order/{holiday.Id}");
+
+            _emailer.SendMail(admin.Email, template.Subject, messageString);
+
+            return true;
+        }
+
+        public async Task<bool> SendRequestNotification(Holiday holiday, Employee employee)
+        {
+            var template = await _repository.GetByPurpose(EmailPurposes.REQUEST_NOTIFICATION);
+
+            if (template is null)
+            {
+                return false;
+            }
+
+            var messageString = template.Template
+                                        .Replace("{download_link}", $"{_configuration["AppSettings:RootUrl"]}/api/download/request/{holiday.Id}");
+
+            _emailer.SendMail(employee.Email, template.Subject, messageString);
+
+            return true;
+        }
     }
 }

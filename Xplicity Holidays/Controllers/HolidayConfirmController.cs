@@ -38,7 +38,9 @@ namespace Xplicity_Holidays.Controllers
 
             await _confirmationService.RequestClientApproval(holidayId);
 
-            return await GetDocxStreamResult(holidayId, HolidayDocumentType.Request);
+            await _docxGeneratorService.GenerateHolidayDocx(holidayId, HolidayDocumentType.Request);
+
+            return Ok();
         }
 
         [HttpGet]
@@ -51,16 +53,13 @@ namespace Xplicity_Holidays.Controllers
 
             await _confirmationService.ConfirmHoliday(holidayId);
 
-            return await GetDocxStreamResult(holidayId, HolidayDocumentType.Order);
-        }
+            await _docxGeneratorService.GenerateHolidayDocx(holidayId, HolidayDocumentType.Order);
 
-        private async Task<IActionResult> GetDocxStreamResult(int holidayId, HolidayDocumentType documentType)
-        {
-            var filePath = await _docxGeneratorService.GenerateHolidayDocx(holidayId, documentType);
-            var stream = new FileStream(filePath, FileMode.Open);
-            var nameStartIndex = filePath.LastIndexOf('\\') + 1;
-            var fileName = filePath.Substring(nameStartIndex, filePath.Length - nameStartIndex);
-            return File(stream, "application/docx", fileName);
+            await _confirmationService.Notify(holidayId, EmployeeRoleEnum.Administrator);
+
+            await _confirmationService.Notify(holidayId, EmployeeRoleEnum.Regular);
+
+            return Ok();
         }
     }
 }

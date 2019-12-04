@@ -31,6 +31,7 @@ namespace Xplicity_Holidays.Configurations
                 .AddScoped<IEmployeeRepository, EmployeesRepository>()
                 .AddScoped<IEmailer, Emailer>()
                 .AddScoped<IDocxGenerator, DocxGenerator>()
+                .AddScoped<IFileUtility, FileUtility>()
                 .AddSingleton<ITimeService, TimeService>()
                 .AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }

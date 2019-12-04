@@ -199,5 +199,24 @@ namespace Xplicity_Holidays.Services
 
             return true;
         }
+
+        public async Task<bool> Notify(int holidayId, EmployeeRoleEnum receiver)
+        {
+            var holiday = await _repositoryHolidays.GetById(holidayId);
+            var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
+
+            switch (receiver)
+            {
+                case EmployeeRoleEnum.Regular:
+                    return await _emailService.SendRequestNotification(holiday, employee);
+
+                case EmployeeRoleEnum.Administrator:
+                    var admin = await _repositoryEmployees.FindAnyAdmin();
+
+                    return await _emailService.SendOrderNotification(holiday, employee, admin);
+            }
+
+            return false;
+        }
     }
 }

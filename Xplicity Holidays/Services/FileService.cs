@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Repositories;
+using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Services
@@ -17,28 +15,34 @@ namespace Xplicity_Holidays.Services
     {
         private readonly IFileRepository _fileRepository;
         private readonly IConfiguration _configuration;
-        public FileService(IFileRepository fileRepository, IConfiguration configuration)
+        private readonly ITimeService _timeService;
+
+        public FileService(IFileRepository fileRepository, IConfiguration configuration, ITimeService timeService)
         {
             _fileRepository = fileRepository;
             _configuration = configuration;
+            _timeService = timeService;
         }
 
-        private async Task<int> CreateFileRecord(IFormFile file, FileTypeEnum fileType)
+        public async Task<int> CreateFileRecord(string fileName, FileTypeEnum fileType)
         {
             var fileRecordToCreate = new FileRecord
             {
-                Name = file.FileName,
+                Name = fileName,
                 Type = fileType,
-                CreatedAt = DateTime.Now
+                CreatedAt = _timeService.GetCurrentTime()
             };
+
             var fileId = await _fileRepository.Create(fileRecordToCreate);
+
             return fileId;
         }
+
         public async Task<string> Upload(IFormFile formFile, FileTypeEnum fileType)
         {
             if (formFile.Length > 0)
             {
-                var fileId =  await CreateFileRecord(formFile, fileType);
+                var fileId =  await CreateFileRecord(formFile.FileName, fileType);
                 var filePath = BuildFilePath(await _fileRepository.GetById(fileId));
 
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), filePath);
