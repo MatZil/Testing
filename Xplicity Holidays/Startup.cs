@@ -31,7 +31,7 @@ namespace Xplicity_Holidays
             services.SetUpDatabase(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwagger();
-            services.AddCors();
+            services.ConfigureCors();
             services.SetupJtwAuthentication(Configuration);
             services.AddAllDependencies();
         }

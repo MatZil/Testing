@@ -84,6 +84,13 @@ namespace Xplicity_Holidays.Configurations
             services.AddSingleton(mapper);
         }
 
+        public static void ConfigureCors(this IServiceCollection services)
+        {
+            services.AddCors(options => options.AddPolicy("ExposeResponseHeaders", policyBuilder => {
+                    policyBuilder.WithExposedHeaders("Content-Disposition");
+                }));
+        }
+
         public static void UseCorsExt(this IApplicationBuilder app)
         {
             app.UseCors(builder => builder
@@ -91,6 +98,7 @@ namespace Xplicity_Holidays.Configurations
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()
+                .WithExposedHeaders("Content-Disposition")
             );
         }
 

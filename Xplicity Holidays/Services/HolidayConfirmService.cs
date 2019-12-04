@@ -15,26 +15,25 @@ namespace Xplicity_Holidays.Services
     {
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
-        private readonly IPdfService _pdfService;
         private readonly IHolidaysService _holidaysService;
         private readonly ITimeService _timeService;
         private readonly IEmployeeRepository _repositoryEmployees;
         private readonly IRepository<Client> _repositoryClients;
         private readonly IHolidaysRepository _repositoryHolidays;
 
-        public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays, 
-            IPdfService pdfService, IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
-            IHolidaysService holidaysService, ITimeService timeService)
+        public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays,
+                                     IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
+                                     IHolidaysService holidaysService, ITimeService timeService)
         {
             _emailService = emailService;
             _mapper = mapper;
             _repositoryEmployees = repositoryEmployees;
             _repositoryClients = repositoryClients;
             _repositoryHolidays = repositoryHolidays;
-            _pdfService = pdfService;
             _holidaysService = holidaysService;
             _timeService = timeService;
         }
+
         public async Task<bool> RequestClientApproval(int holidayId)
         {
             var holiday = await _repositoryHolidays.GetById(holidayId);
@@ -59,25 +58,6 @@ namespace Xplicity_Holidays.Services
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
             var admin = await _repositoryEmployees.FindAnyAdmin();
             await _emailService.ConfirmHolidayWithAdmin(admin, employee, holiday, clientStatus);
-
-            return true;
-        }
-
-        public async Task<bool> CreateRequestPdf(NewHolidayDto holidayDto, int holidayId)
-        {
-            var holiday = _mapper.Map<Holiday>(holidayDto);
-            holiday.Id = holidayId;
-            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
-            _pdfService.CreateRequestPdf(holiday, employee);
-
-            return true;
-        }
-
-        public async Task<bool> CreateOrderPdf(int holidayId)
-        {
-            var holiday = await _repositoryHolidays.GetById(holidayId);
-            var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
-            _pdfService.CreateOrderPdf(holiday, employee);
 
             return true;
         }
