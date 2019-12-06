@@ -7,6 +7,7 @@ using Xplicity_Holidays.Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using Xplicity_Holidays.Infrastructure.Static_Files;
+using System;
 
 namespace Xplicity_Holidays.Services
 {
@@ -41,6 +42,12 @@ namespace Xplicity_Holidays.Services
 
         public async Task ConfirmHolidayWithAdmin(Employee admin, Employee employee, Holiday holiday, string clientStatus)
         {
+            var overtimeString = "";
+            if (holiday.OvertimeDays > 0)
+            {
+                overtimeString = " (using " + Math.Round(holiday.OvertimeHours, 2).ToString() + " overtime hours)";
+            }
+
             var template = await _repository.GetByPurpose(EmailPurposes.ADMIN_CONFIRMATION);
             var messageString = template.Template
                                         .Replace("{admin.name}", admin.Name)
@@ -53,7 +60,7 @@ namespace Xplicity_Holidays.Services
                                         .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/holidayconfirm?holidayid={holiday.Id}")
                                         .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/holidaydecline?holidayid={holiday.Id}")
                                         .Replace("{client.status}", clientStatus)
-                                        .Replace("{holiday.overtimeHours}", holiday.OvertimeHours.ToString());
+                                        .Replace("{holiday.overtimeHours}", overtimeString);
 
             _emailer.SendMail(admin.Email, template.Subject, messageString);
         }

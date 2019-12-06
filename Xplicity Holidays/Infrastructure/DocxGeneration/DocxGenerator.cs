@@ -42,6 +42,14 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
 
         private Dictionary<string, string> GetReplacementMap(Holiday holiday, Employee employee)
         {
+            var overtimeOrderString = "";
+            var overtimeRequestString = "";
+            if (holiday.OvertimeDays > 0)
+            {
+                overtimeOrderString = _configuration["DocxGeneration:OvertimeOrder"].Replace("{OVERTIME_HOURS}", Math.Round(holiday.OvertimeHours, 2).ToString());
+                overtimeRequestString = _configuration["DocxGeneration:OvertimeRequest"].Replace("{OVERTIME_HOURS}", Math.Round(holiday.OvertimeHours, 2).ToString());
+            }
+
             return new Dictionary<string, string>
             {
                 {"{POSITION}", employee.Position},
@@ -57,8 +65,8 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
                 {"{REQUEST_PAID_INFO}", holiday.Paid ? _configuration["DocxGeneration:RequestPaid"] : _configuration["DocxGeneration:RequestUnpaid"] },
                 {"{INCREASED_SALARY_REQUEST}", holiday.Paid ? _configuration["DocxGeneration:IncreasedSalaryRequest"] : ""},
                 {"{INCREASED_SALARY_ORDER}", holiday.Paid ? _configuration["DocxGeneration:IncreasedSalaryOrder"] : ""},
-                {"{OVERTIME_ORDER}", "" },
-                {"{OVERTIME_REQUEST}", "" }
+                {"{OVERTIME_ORDER}", overtimeOrderString },
+                {"{OVERTIME_REQUEST}", overtimeRequestString }
             };
         }
 
