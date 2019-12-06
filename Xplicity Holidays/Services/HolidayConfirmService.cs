@@ -183,7 +183,11 @@ namespace Xplicity_Holidays.Services
 
         private bool ValidOvertime(Holiday holiday, Employee employee)
         {
-            if (holiday.OvertimeDays > employee.OvertimeDays)
+            if (holiday.OvertimeDays < 0 || holiday.OvertimeDays > employee.OvertimeDays)
+                return false;
+
+            var workdays = _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive);
+            if (workdays < holiday.OvertimeDays)
                 return false;
 
             return true;

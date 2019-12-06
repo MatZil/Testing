@@ -22,6 +22,7 @@ namespace Tests
         private readonly HolidaysRepository _holidaysRepository;
         private readonly IMapper _mapper;
         private readonly EmployeesRepository _employeesRepository;
+        private readonly TimeService _timeService;
 
         public HolidayConfirmTests(ITestOutputHelper output)
         {
@@ -30,16 +31,16 @@ namespace Tests
             setup.Initialize(out _context, out IMapper mapper);
             _mapper = mapper;
 
-            var timeService = new TimeService();
+            _timeService = new TimeService();
             _holidaysRepository = new HolidaysRepository(_context);
             var userManager = setup.InitializeUserManager(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
             var emailService = new Mock<IEmailService>();
 
-            _holidaysService = new HolidaysService(_holidaysRepository, mapper, timeService);
+            _holidaysService = new HolidaysService(_holidaysRepository, mapper, _timeService);
             _holidayConfirmService = new HolidayConfirmService(emailService.Object, mapper, _holidaysRepository,
-                                                                _employeesRepository, clientsRepository, _holidaysService, timeService);
+                                                                _employeesRepository, clientsRepository, _holidaysService, _timeService);
         }
 
 
@@ -78,21 +79,45 @@ namespace Tests
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
+        [InlineData(3)]
         public async void When_UpdatingEmployeesWorkdays_Expect_UpdatesWorkdays(int holidayId)
         {
             var index = _context.Holidays.Find(holidayId).EmployeeId;
             var employee = await _employeesRepository.GetById(index);
             var initial = employee.FreeWorkDays;
-
             var holiday = await _holidaysRepository.GetById(holidayId);
             var holidayDto = _mapper.Map<GetHolidayDto>((Holiday)holiday);
+
+            var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
+            var expected = initial - workdays + holiday.OvertimeDays;
 
             _holidayConfirmService.call("UpdateEmployeesWorkdays", holidayDto);
 
             employee = await _employeesRepository.GetById(index);
-            var final = employee.FreeWorkDays;
+            var actual = employee.FreeWorkDays;
 
-            Assert.True(final < initial);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(3)]
+        public async void When_UpdatingEmployeesOvertime_Expect_UpdatesOvertime(int holidayId)
+        {
+            var index = _context.Holidays.Find(holidayId).EmployeeId;
+            var employee = await _employeesRepository.GetById(index);
+            var initial = employee.OvertimeHours;
+            var holiday = await _holidaysRepository.GetById(holidayId);
+            var holidayDto = _mapper.Map<GetHolidayDto>((Holiday)holiday);
+
+            var expected = initial - holiday.OvertimeHours;
+
+            _holidayConfirmService.call("UpdateEmployeesOvertime", holidayDto);
+
+            employee = await _employeesRepository.GetById(index);
+            var actual = employee.OvertimeHours;
+
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
