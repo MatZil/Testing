@@ -27,7 +27,7 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
             _fileService = fileService;
         }
 
-        public async Task<FileRecord> GenerateDocx(Holiday holiday, Employee employee, FileTypeEnum holidayDocumentType)
+        public async Task<int> GenerateDocx(Holiday holiday, Employee employee, FileTypeEnum holidayDocumentType)
         {
             if (holiday is null)
             {
@@ -46,7 +46,7 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
 
             ProcessTemplate(templatePath, generationPath, replacementMap);
 
-            return await _fileService.GetById(fileId);
+            return fileId;
         }
 
         private Dictionary<string, string> GetReplacementMap(Holiday holiday, Employee employee)

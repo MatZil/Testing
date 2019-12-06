@@ -6,7 +6,6 @@ using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.DocxGeneration;
 using Xplicity_Holidays.Services;
 using Xunit;
-using System.IO;
 using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Infrastructure.Utils;
 using Xplicity_Holidays.Infrastructure.Database.Models;
@@ -46,7 +45,7 @@ namespace Tests
                                                 .Replace("{holidayType}", holiday.Type.ToString()),
                                             Type = documentType,
                                             CreatedAt = _timeService.GetCurrentTime()
-                                        }));
+                                        }.Id));
 
 
             _docxGeneratorService = new DocxGeneratorService(docxGenerationMock.Object, _holidaysRepository, _employeesRepository);
@@ -59,21 +58,21 @@ namespace Tests
         {
             var holiday = await _holidaysRepository.GetById(holidayId);
 
-            var expectedValue = new FileRecord
+            var expectedId = new FileRecord
             {
                 Name = _config["DocxGeneration:NameFormat"]
-                        .Replace("{holidayId}", holiday.Id.ToString())
+                        .Replace("{holidayId}", holidayId.ToString())
                         .Replace("{documentType}", documentType.ToString())
                         .Replace("{holidayType}", holiday.Type.ToString()),
                 Type = documentType,
                 CreatedAt = _timeService.GetCurrentTime()
-            };
+            }.Id;
 
+            var actualId = await _docxGeneratorService.GenerateHolidayDocx(holidayId, documentType);
 
-
-            var actualPath = await _docxGeneratorService.GenerateHolidayDocx(holidayId, documentType);
-
-            Assert.True(expectedValue == actualPath, "DocxGeneration returned unexpected file record.");
+            Assert.True(expectedId == actualId, "DocxGeneration returned unexpected file record.");
         }
+
+
     }
 }

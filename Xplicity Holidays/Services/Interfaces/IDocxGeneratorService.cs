@@ -6,6 +6,6 @@ namespace Xplicity_Holidays.Services.Interfaces
 {
     public interface IDocxGeneratorService
     {
-        Task<FileRecord> GenerateHolidayDocx(int holidayId, FileTypeEnum holidayDocumentType);
+        Task<int> GenerateHolidayDocx(int holidayId, FileTypeEnum holidayDocumentType);
     }
 }

@@ -221,11 +221,11 @@ namespace Xplicity_Holidays.Services
 
         public async Task<bool> GenerateFilesAndNotify(int holidayId)
         {
-            var file = await _docxGeneratorService.GenerateHolidayDocx(holidayId, FileTypeEnum.Request);
-            await Notify(file.Id, holidayId, EmployeeRoleEnum.Regular);
+            var fileId = await _docxGeneratorService.GenerateHolidayDocx(holidayId, FileTypeEnum.Request);
+            await Notify(fileId, holidayId, EmployeeRoleEnum.Regular);
 
-            file = await _docxGeneratorService.GenerateHolidayDocx(holidayId, FileTypeEnum.Order);
-            await Notify(file.Id, holidayId, EmployeeRoleEnum.Administrator);
+            fileId = await _docxGeneratorService.GenerateHolidayDocx(holidayId, FileTypeEnum.Order);
+            await Notify(fileId, holidayId, EmployeeRoleEnum.Administrator);
 
             return true;
         }

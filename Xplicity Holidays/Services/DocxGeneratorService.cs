@@ -21,7 +21,7 @@ namespace Xplicity_Holidays.Services
             _employeesRepository = employeesRepository;
         }
 
-        public async Task<FileRecord> GenerateHolidayDocx(int holidayId, FileTypeEnum holidayDocumentType)
+        public async Task<int> GenerateHolidayDocx(int holidayId, FileTypeEnum holidayDocumentType)
         {
             var holiday = await _holidaysRepository.GetById(holidayId);
             var employee = await _employeesRepository.GetById(holiday.EmployeeId);
