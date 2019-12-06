@@ -14,7 +14,5 @@ namespace Xplicity_Holidays.Services.Interfaces
         Task<NewEmployeeDto> Create(NewEmployeeDto newClient);
         Task Update(int id, UpdateEmployeeDto updateData);
         Task<bool> Delete(int id);
-
-        Task<ICollection<GetInventoryItemDto>> GetEquipmentList(int employeeId);
     }
 }

@@ -52,9 +52,7 @@ export class UserService {
         return this.http.get<User>(`${this.userApi}/self`);
     }
 
-    getEquipment(id: number): Observable<InventoryItem[]> {
-        return this.http.get<InventoryItem[]>(`${this.userApi}/${id}/EquipmentList`);
-    }
+
 
     getRole(): string {
         const token = localStorage.getItem('token');

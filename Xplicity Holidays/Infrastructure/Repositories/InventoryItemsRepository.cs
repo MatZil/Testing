@@ -11,37 +11,53 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
 {
     public class InventoryItemsRepository : IInventoryItemRepository
     {
-        private readonly IInventoryItemRepository _repository;
+        private readonly HolidayDbContext _context;
 
-        public InventoryItemsRepository(IInventoryItemRepository repository)
+        public InventoryItemsRepository(HolidayDbContext context)
         {
-            _repository = repository;
+            _context = context;
         }
+
 
         public async Task<ICollection<InventoryItem>> GetAll()
         {
-            throw new NotImplementedException();
+            var inventoryItems = await _context.InventoryItems.Include(i => i.Category).ToArrayAsync();
+            return inventoryItems;
         }
 
         public async Task<InventoryItem> GetById(int id)
         {
-            throw new NotImplementedException();
+            var inventoryItem = await _context.InventoryItems.Include(i => i.Category).FirstOrDefaultAsync();
+            return inventoryItem;
         }
 
-        public async Task<int> Create(InventoryItem entity)
+        public async Task<int> Create(InventoryItem newItem)
         {
-            throw new NotImplementedException();
+            await _context.InventoryItems.AddAsync(newItem);
+            await _context.SaveChangesAsync();
+            return newItem.Id;
         }
 
-        public async Task<bool> Update(InventoryItem entity)
+        public async Task<bool> Update(InventoryItem inventoryItem)
         {
-            throw new NotImplementedException();
+            _context.InventoryItems.Attach(inventoryItem);
+            var changes = await _context.SaveChangesAsync();
+
+            return changes > 0;
         }
 
-        public async Task<bool> Delete(InventoryItem entity)
+        public async Task<bool> Delete(InventoryItem inventoryItem)
         {
-            throw new NotImplementedException();
+            _context.InventoryItems.Remove(inventoryItem);
+            var changes = await _context.SaveChangesAsync();
+
+            return changes > 0;
         }
 
+        public async Task<ICollection<InventoryItem>> GetByEmployeeId(int employeeId)
+        {
+            var inventoryItems = _context.InventoryItems.Include(i =>i.Category).Where(i => i.EmployeeId == employeeId);
+            return await inventoryItems.ToListAsync();
+        }
     }
 }

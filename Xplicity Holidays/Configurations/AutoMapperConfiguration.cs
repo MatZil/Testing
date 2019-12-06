@@ -50,6 +50,12 @@ namespace Xplicity_Holidays.Configurations
 
             CreateMap<GetInventoryItemDto, InventoryItem>(MemberList.None);
             CreateMap<InventoryItem, GetInventoryItemDto>(MemberList.None);
+
+            CreateMap<NewInventoryItemDto, InventoryItem>(MemberList.None);
+            CreateMap<InventoryItem, NewInventoryItemDto>(MemberList.None);
+
+            CreateMap<GetInventoryCategoryDto, InventoryCategory>(MemberList.None);
+            CreateMap<InventoryCategory, GetInventoryCategoryDto>(MemberList.None);
         }
     }
 }

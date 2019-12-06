@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Xplicity_Holidays.Infrastructure.Database.Models;
 
 namespace Xplicity_Holidays.Dtos.Inventory
 {
-    public class GetInventoryItemDto
+    public class NewInventoryItemDto
     {
-        public int Id { get; set; }
-        public string Name { get;set; }
+        public string Name { get; set; }
 
         public string SerialNumber { get; set; }
-        
-        public DateTime PurchaseDate { get;set; }
+
+        public DateTime PurchaseDate { get; set; }
 
         public DateTime ExpiryDate { get; set; }
 
@@ -21,8 +19,8 @@ namespace Xplicity_Holidays.Dtos.Inventory
 
         public int InventoryCategoryId { get; set; }
 
-        public InventoryCategory Category { get; set; }
-
         public decimal Price { get; set; }
+
+        public int? EmployeeId { get; set; }
     }
 }

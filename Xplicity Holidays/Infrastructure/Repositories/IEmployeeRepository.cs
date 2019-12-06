@@ -12,6 +12,5 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
 
         Task<Employee> FindAnyAdmin();
 
-        Task<ICollection<InventoryItem>> GetEquipmentList(int employeeId);
     }
 }

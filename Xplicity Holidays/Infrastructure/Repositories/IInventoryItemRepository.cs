@@ -9,6 +9,6 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
 {
     public interface IInventoryItemRepository : IRepository<InventoryItem>
     {
-     
+        Task<ICollection<InventoryItem>> GetByEmployeeId(int employeeId);
     }
 }

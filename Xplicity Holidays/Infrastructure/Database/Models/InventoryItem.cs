@@ -21,13 +21,15 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public DateTime ExpiryDate { get; set; }
 
+        [Required]
+        public decimal Price { get; set; }
         public string Comment { get; set; }
 
         public int InventoryCategoryId { get; set; }
 
         public InventoryCategory Category { get; set; }
 
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
 
         public Employee Employee { get; set; }
     }

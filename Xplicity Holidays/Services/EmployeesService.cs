@@ -120,13 +120,5 @@ namespace Xplicity_Holidays.Services
             await _repository.Update(employeeToUpdate);
             await _userService.Update(id, updateData);
         }
-
-        public async Task<ICollection<GetInventoryItemDto>> GetEquipmentList(int employeeId)
-        {
-            var inventoryItems = await _repository.GetEquipmentList(employeeId);
-            var inventoryItemsDto = _mapper.Map<GetInventoryItemDto[]>(inventoryItems);
-            return inventoryItemsDto;
-        }
-
     }
 }

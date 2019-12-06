@@ -38,7 +38,11 @@
         <i nz-icon nzType="smile"></i>
         <span>Holidays</span>
       </li>
-
+      <li nz-menu-item *ngIf="isAdmin()">
+        <a routerLink="/inventory" routerLinkActive="active"></a>
+        <i nz-icon nzType="book"></i>
+        <span>Inventory</span>
+      </li>
       <li nz-submenu nzTitle="{{currentUser.name}}" nzIcon="user">
         <ul>
           <li nz-menu-item>

@@ -79,16 +79,6 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
             return await Context.Employees.Where(employees => employees.Id == users[0].EmployeeId).SingleOrDefaultAsync();
         }
 
-        public async Task<ICollection<InventoryItem>> GetEquipmentList(int employeeId)
-        {
-            var employee = await Context.Employees.Include(e => e.InventoryItems)
-                .Where(e => e.Id == employeeId).SingleOrDefaultAsync();
-            if (employee == null)
-            {
-                throw new ArgumentNullException();
-            }
 
-            return employee.InventoryItems;
-        }
     }
 }
