@@ -23,7 +23,7 @@ namespace Tests
         public HolidayTests(ITestOutputHelper output)
         {
             _output = output;
-            var setup = new Set_up();
+            var setup = new SetUp();
             setup.Initialize(out _context, out IMapper _mapper);
             _holidaysCount = setup.GetCount("employees");
 

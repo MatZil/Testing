@@ -19,15 +19,14 @@ namespace Tests
         private readonly UserService _usersService;
         private readonly UserManager<User> _userManager;
         //private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly Set_up _setup;
 
         public UserTests(ITestOutputHelper output)
         {
             _output = output;
-            _setup = new Set_up();
-            _setup.Initialize(out _context, out IMapper mapper);
+            var setup = new SetUp();
+            setup.Initialize(out _context, out IMapper mapper);
 
-            _userManager = _setup.InitializeUserManager(_context);
+            _userManager = setup.InitializeUserManager(_context);
             //_roleManager = _setup.InitializeRoleManager(_context);
   
             EmployeesRepository employeesRepository = new EmployeesRepository(_context, _userManager);

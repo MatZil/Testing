@@ -259,6 +259,24 @@ namespace Xplicity_Holidays.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.FileRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FileRecords");
+                });
+
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Holiday", b =>
                 {
                     b.Property<int>("Id")

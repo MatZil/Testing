@@ -1,0 +1,15 @@
+<mat-card>
+    <div>
+        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
+        <button mat-raised-button (click)="file.click()">Upload</button>
+    </div>
+    <div>
+        <span>
+            {{fileName}}
+        </span>
+    </div>
+    <div>
+        <mat-progress-bar *ngIf="progress > 0" value="{{progress}}">
+        </mat-progress-bar>
+    </div>
+</mat-card>

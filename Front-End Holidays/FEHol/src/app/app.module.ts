@@ -36,6 +36,10 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RoleGuardService } from './helpers/role-guard';
+import { MatTabsModule } from '@angular/material/tabs';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { UploadComponent } from './components/upload/upload.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { OvertimeDisplayComponent } from './components/overtime-display/overtime-display.component';
 registerLocaleData(en);
 export function tokenGetter() {
@@ -56,6 +60,7 @@ export function tokenGetter() {
     HolidaysTableComponent,
     PdfComponent,
     EmailtemplatesTableComponent,
+    UploadComponent,
     OvertimeDisplayComponent
   ],
   imports: [
@@ -80,6 +85,9 @@ export function tokenGetter() {
     PdfViewerModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatTabsModule,
+    NzUploadModule,
+    MatProgressBarModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

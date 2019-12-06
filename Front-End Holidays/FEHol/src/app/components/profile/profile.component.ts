@@ -5,7 +5,8 @@ import { UserService } from '../../services/user.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { passwordMatcherValidatorFn } from '../../helpers/password-match-validator';
 import { PasswordChangeModel } from '../../models/password-change-model';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { AlertService } from 'src/app/services/alert.service';
+import { FileType } from '../../enums/fileType';
 
 @Component({
   selector: 'app-profile',
@@ -13,17 +14,20 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  private readonly snackbarConfiguration: MatSnackBarConfig = { duration: 5000 };
   currentUser: User;
   hideOldPassword = true;
   hideFirstPassword = true;
   hideSecondPassword = true;
   registerForm: FormGroup;
+  isVisibleUploadModal = false;
+  isVisiblePasswordModal = false;
+  fileTypes = FileType;
+
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar
+    private alertService: AlertService
   ) {
   }
   get oldPassword() {
@@ -42,6 +46,20 @@ export class ProfileComponent implements OnInit {
       this.currentUser = user;
     });
     this.createFormGroup();
+  }
+
+  showUploadModal() {
+    this.isVisibleUploadModal = true;
+  }
+
+  closeUploadModal() {
+    this.isVisibleUploadModal = false;
+  }
+  closePasswordModal() {
+    this.isVisiblePasswordModal = false;
+  }
+  showPasswordModal() {
+    this.isVisiblePasswordModal = true;
   }
 
   createFormGroup() {
@@ -67,11 +85,11 @@ export class ProfileComponent implements OnInit {
       this.userService.changePassword(id, passwordChangeModel)
         .subscribe(
           () => {
-            this.snackBar.open('You have successfuly changed your password', 'OK', this.snackbarConfiguration);
+            this.alertService.displayMessage('You have successfuly changed your password');
             this.registerForm.reset();
           },
           error => {
-            this.snackBar.open('There was an error while changing password', 'OK', this.snackbarConfiguration);
+            this.alertService.displayMessage('There was an error while changing password');
             console.log(error);
           }
         );
