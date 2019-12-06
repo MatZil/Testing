@@ -16,6 +16,8 @@ import { saveAs } from 'file-saver';
 import { EnumToStringConverterService } from 'src/app/services/enum-to-string-converter.service';
 import { HolidayType } from 'src/app/enums/holidayType';
 import { EmployeeStatus } from 'src/app/models/employee-status.enum';
+import { HttpResponse } from '@angular/common/http';
+import { HeadersService } from 'src/app/services/headers.service';
 
 @Component({
   selector: 'app-holidays-table',
@@ -44,6 +46,7 @@ export class HolidaysTableComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private holidayService: HolidaysService,
+    private headersService: HeadersService = new HeadersService(),
     private modal: NzModalService,
     private enumConverter: EnumToStringConverterService
   ) {
@@ -73,7 +76,8 @@ export class HolidaysTableComponent implements OnInit {
   onAddButtonClick() {
     this.requestHolidays.employeeId = this.currentUser.id;
     this.holidayService.addHolidays(this.requestHolidays).subscribe(response => {
-      saveAs(response, 'Holidays_Request');
+      const fileName = this.headersService.getFileName(response);
+      saveAs(response.body, fileName);
       this.refreshTable(this.selected);
     });
   }
@@ -145,8 +149,7 @@ export class HolidaysTableComponent implements OnInit {
   isAdmin() {
     if (this.role === 'Admin') {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }

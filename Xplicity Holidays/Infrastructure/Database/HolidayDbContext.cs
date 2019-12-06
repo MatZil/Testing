@@ -16,6 +16,7 @@ namespace Xplicity_Holidays.Infrastructure.Database
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Holiday> Holidays { get; set; }
         public DbSet<EmailTemplate> EmailTemplates { get; set; }
+        public DbSet<FileRecord> FileRecords { get; set; }
         private readonly IConfiguration _configuration;
 
         public HolidayDbContext(DbContextOptions options, IConfiguration configuration) : base(options)

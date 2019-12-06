@@ -16,7 +16,7 @@
         <nz-modal [(nzVisible)]="isVisibleCreator" [nzTitle]="modalTitl" [nzContent]="modalConten"
             [nzFooter]="modalFoote" (nzOnCancel)="handleCancelCreator()">
             <ng-template #modalTitl>
-                Request holidays (advised to take 10 days)
+                Request holidays
             </ng-template>
             <ng-template #modalConten>
                     <p>You currently have <b>{{ currentUser.freeWorkDays | number : '.0-2' }}</b> free workdays left!</p>

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
 import { environment } from '../../environments/environment';
 
 import { Holidays } from '../models/holidays';
@@ -39,12 +38,11 @@ export class HolidaysService {
     return this.http.get<Holidays[]>(`${this.holidaysApiBase}/GetByStatus`, { params: parameters });
   }
 
-  addHolidays(holidays: Requestholidays): Observable<Blob> {
-    const headersType = new HttpHeaders({
-      'Content-Type': 'application/json'
+  addHolidays(holidays: Requestholidays): Observable<HttpResponse<Blob>> {
+    return this.http.post<Blob>(this.holidaysApiRequest, holidays, {
+      responseType: 'blob' as 'json',
+      observe: 'response'
     });
-
-    return this.http.post<Blob>(this.holidaysApiRequest, holidays, { headers: headersType, responseType: 'blob' as 'json' });
   }
 
   editHolidays(holidays: Newholidays, id: number): Observable<Newholidays> {

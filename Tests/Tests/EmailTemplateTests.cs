@@ -14,7 +14,7 @@ namespace Tests
     {
         private readonly HolidayDbContext _context;
         private readonly EmailTemplatesService _templatesService;
-        private readonly Set_up _setup;
+        private readonly SetUp _setup;
         private readonly ITestOutputHelper _output;
         private readonly int _templatesCount;
         private readonly IEmailTemplatesRepository _templatesRepository;
@@ -22,7 +22,7 @@ namespace Tests
         public EmailTemplateTests(ITestOutputHelper output)
         {
             _output = output;
-            _setup = new Set_up();
+            _setup = new SetUp();
             _setup.Initialize(out _context, out IMapper _mapper);
 
             _templatesCount = _setup.GetCount("emailTemplates");

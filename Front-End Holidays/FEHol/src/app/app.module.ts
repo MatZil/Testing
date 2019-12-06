@@ -36,6 +36,10 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RoleGuardService } from './helpers/role-guard';
+import { MatTabsModule } from '@angular/material/tabs';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { UploadComponent } from './components/upload/upload.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -54,7 +58,8 @@ export function tokenGetter() {
     ProfileComponent,
     HolidaysTableComponent,
     PdfComponent,
-    EmailtemplatesTableComponent
+    EmailtemplatesTableComponent,
+    UploadComponent
   ],
   imports: [
     BrowserModule,
@@ -78,6 +83,9 @@ export function tokenGetter() {
     PdfViewerModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatTabsModule,
+    NzUploadModule,
+    MatProgressBarModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
