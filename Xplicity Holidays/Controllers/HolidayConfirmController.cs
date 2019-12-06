@@ -1,9 +1,6 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Dtos.Holidays;
-using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers
@@ -13,17 +10,12 @@ namespace Xplicity_Holidays.Controllers
     public class HolidayConfirmController : ControllerBase
     {
         private readonly IHolidayConfirmService _confirmationService;
-        private readonly IConfiguration _configuration;
         private readonly IHolidaysService _holidaysService;
-        private readonly IDocxGeneratorService _docxGeneratorService;
 
-        public HolidayConfirmController(IHolidayConfirmService confirmationService, IConfiguration configuration,
-                                        IHolidaysService holidaysService, IDocxGeneratorService docxGeneratorService)
+        public HolidayConfirmController(IHolidayConfirmService confirmationService, IHolidaysService holidaysService)
         {
             _confirmationService = confirmationService;
-            _configuration = configuration;
             _holidaysService = holidaysService;
-            _docxGeneratorService = docxGeneratorService;
         }
 
         [HttpPost]
@@ -38,8 +30,6 @@ namespace Xplicity_Holidays.Controllers
 
             await _confirmationService.RequestClientApproval(holidayId);
 
-            await _docxGeneratorService.GenerateHolidayDocx(holidayId, HolidayDocumentType.Request);
-
             return Ok();
         }
 
@@ -53,11 +43,7 @@ namespace Xplicity_Holidays.Controllers
 
             await _confirmationService.ConfirmHoliday(holidayId);
 
-            await _docxGeneratorService.GenerateHolidayDocx(holidayId, HolidayDocumentType.Order);
-
-            await _confirmationService.Notify(holidayId, EmployeeRoleEnum.Administrator);
-
-            await _confirmationService.Notify(holidayId, EmployeeRoleEnum.Regular);
+            await _confirmationService.GenerateFilesAndNotify(holidayId);
 
             return Ok();
         }

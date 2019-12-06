@@ -27,7 +27,7 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
             _fileService = fileService;
         }
 
-        public async Task<string> GenerateDocx(Holiday holiday, Employee employee, HolidayDocumentType holidayDocumentType)
+        public async Task<FileRecord> GenerateDocx(Holiday holiday, Employee employee, FileTypeEnum holidayDocumentType)
         {
             if (holiday is null)
             {
@@ -40,11 +40,13 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
 
             var generationPath = await _fileUtility.GetGeneratedDocxPath(holiday.Id, holidayDocumentType);
 
-            var fileName = _fileUtility.GetFileName(generationPath);
+            var fileName = _fileUtility.ExtractNameFromPath(generationPath);
 
-            await _fileService.CreateFileRecord(fileName, FileTypeEnum.Document);
+            var fileId = await _fileService.CreateFileRecord(fileName, holidayDocumentType);
 
-            return await Task.FromResult(ProcessTemplate(templatePath, generationPath, replacementMap));
+            ProcessTemplate(templatePath, generationPath, replacementMap);
+
+            return await _fileService.GetById(fileId);
         }
 
         private Dictionary<string, string> GetReplacementMap(Holiday holiday, Employee employee)
@@ -103,18 +105,18 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
             }
         }
 
-        private string GetTemplatePath(HolidayDocumentType holidayDocumentType)
+        private string GetTemplatePath(FileTypeEnum holidayDocumentType)
         {
             var templateDir = _configuration["DocxGeneration:TemplatesDir"];
             var templatePath = "";
 
             switch (holidayDocumentType)
             {
-                case HolidayDocumentType.Order:
+                case FileTypeEnum.Order:
                     templatePath = Path.Combine(templateDir, _configuration["DocxGeneration:OrderTemplateName"]);
                     break;
 
-                case HolidayDocumentType.Request:
+                case FileTypeEnum.Request:
                     templatePath = Path.Combine(templateDir, _configuration["DocxGeneration:RequestTemplateName"]);
                     break;
             }

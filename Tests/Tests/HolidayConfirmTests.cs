@@ -36,10 +36,11 @@ namespace Tests
             _employeesRepository = new EmployeesRepository(_context, userManager);
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
             var emailService = new Mock<IEmailService>();
+            var docxGeneratorService = new Mock<IDocxGeneratorService>();
 
             _holidaysService = new HolidaysService(_holidaysRepository, mapper, timeService);
             _holidayConfirmService = new HolidayConfirmService(emailService.Object, mapper, _holidaysRepository,
-                                                                _employeesRepository, clientsRepository, _holidaysService, timeService);
+                                                                _employeesRepository, clientsRepository, _holidaysService, timeService, docxGeneratorService.Object);
         }
 
 

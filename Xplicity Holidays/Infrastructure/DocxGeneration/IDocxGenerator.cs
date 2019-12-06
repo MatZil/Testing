@@ -6,6 +6,6 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
 {
     public interface IDocxGenerator
     {
-        Task<string> GenerateDocx(Holiday holiday, Employee employee, HolidayDocumentType holidayDocumentType);
+        Task<FileRecord> GenerateDocx(Holiday holiday, Employee employee, FileTypeEnum holidayDocumentType);
     }
 }
