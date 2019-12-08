@@ -51,7 +51,7 @@ namespace Tests
         {
             var result = await _holidayConfirmService.RequestClientApproval(holidayId);
 
-            Assert.True(result);
+            Assert.True(result, "Request for client's approval was successfully submitted.");
         }
 
         //[Theory]
@@ -68,12 +68,13 @@ namespace Tests
         public async void When_ConfirmingHoliday_Expect_True(int holidayId)
         {
             var holiday = await _holidaysRepository.GetById(holidayId);
-            _output.WriteLine(holiday.Status.ToString());
 
             await _holidayConfirmService.ConfirmHoliday(holidayId);
 
             var updatedHoliday = await _holidaysRepository.GetById(holidayId);
-            _output.WriteLine(updatedHoliday.Status.ToString());
+            var status = updatedHoliday.Status.ToString();
+
+            Assert.True(status == "Confirmed", "Failed to confirm holiday.");
         }
 
         [Theory]
@@ -86,7 +87,7 @@ namespace Tests
             var employee = await _employeesRepository.GetById(index);
             var initial = employee.FreeWorkDays;
             var holiday = await _holidaysRepository.GetById(holidayId);
-            var holidayDto = _mapper.Map<GetHolidayDto>((Holiday)holiday);
+            var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
 
             var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
             var expected = initial - workdays + holiday.OvertimeDays;
@@ -96,7 +97,7 @@ namespace Tests
             employee = await _employeesRepository.GetById(index);
             var actual = employee.FreeWorkDays;
 
-            Assert.Equal(expected, actual);
+            Assert.True(expected == actual, "Failed to update employee's free workdays.");
         }
 
         [Theory]
@@ -108,7 +109,7 @@ namespace Tests
             var employee = await _employeesRepository.GetById(index);
             var initial = employee.OvertimeHours;
             var holiday = await _holidaysRepository.GetById(holidayId);
-            var holidayDto = _mapper.Map<GetHolidayDto>((Holiday)holiday);
+            var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
 
             var expected = initial - holiday.OvertimeHours;
 
@@ -117,7 +118,7 @@ namespace Tests
             employee = await _employeesRepository.GetById(index);
             var actual = employee.OvertimeHours;
 
-            Assert.Equal(expected, actual);
+            Assert.True(expected == actual, "Failed to update employee's overtime hours.");
         }
 
         [Theory]
@@ -139,7 +140,7 @@ namespace Tests
             final[0] = employee.CurrentAvailableLeaves;
             final[1] = employee.NextMonthAvailableLeaves;
 
-            Assert.True(initial[0] != final[0] || initial[1] != final[1]);
+            Assert.True(initial[0] != final[0] || initial[1] != final[1], "Failed to update employee's parental leaves.");
         }
 
         //[Theory]
@@ -148,16 +149,16 @@ namespace Tests
         //{
         //    var result = await _holidayConfirmService.IsValid(holidayId);
 
-        //    Assert.True(result);
+        //    Assert.True(result, "Holiday request is deemed to be invalid.");
         //}
 
         [Theory]
-        [InlineData(2)]
+        [InlineData(4)]
         public async void When_ConfirmingInvalid_Expect_False(int holidayId)
         {
             var result = await _holidayConfirmService.IsValid(holidayId);
 
-            Assert.False(result);
+            Assert.False(result, "Holiday request is deemed to be valid.");
         }
     }
 }

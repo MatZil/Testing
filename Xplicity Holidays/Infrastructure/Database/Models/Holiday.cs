@@ -7,10 +7,8 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
     public class Holiday: BaseEntity
     {
-        [NotMapped]
-        double oneOvertimeHour = 1.5;
-        [NotMapped]
-        int dailyHourLimit = 8;
+        private double _oneOvertimeHour = 1.5;
+        private int _dailyHourLimit = 8;
 
         [Required]
         public Employee Employee { get; set; }
@@ -25,7 +23,7 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public int OvertimeDays { get; set; }
         [NotMapped]
-        public double OvertimeHours { get { return OvertimeDays * dailyHourLimit / oneOvertimeHour; } set { } }
+        public double OvertimeHours { get { return OvertimeDays * _dailyHourLimit / _oneOvertimeHour; } set { } }
         [Required]
         public HolidayStatus Status { get; set; }
         [Required]
