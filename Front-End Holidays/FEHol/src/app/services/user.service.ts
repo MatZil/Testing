@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../environments/environment';
 import { User } from '../models/user';
 import { Newuser } from '../models/newuser';
 import { Updateuser } from '../models/updateuser';
@@ -13,7 +12,7 @@ import decode from 'jwt-decode';
 
 export class UserService {
 
-    private readonly userApi = `${environment.webApiUrl}/Employees`;
+    private readonly userApi = `${this.baseUrl}/api/Employees`;
 
     private readonly httpOptions = {
         headers: new HttpHeaders({
@@ -21,7 +20,7 @@ export class UserService {
         })
     };
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
     getAllUsers(): Observable<User[]> {
         return this.http.get<User[]>(this.userApi);

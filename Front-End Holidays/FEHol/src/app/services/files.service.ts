@@ -1,14 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { FileType } from '../enums/fileType';
 @Injectable({
   providedIn: 'root'
 })
 export class FilesService {
-  private readonly filesApi = `${environment.webApiUrl}/File`;
-  constructor(private http: HttpClient) { }
+  private readonly filesApi = `${this.baseUrl}/api/File`;
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
   getFilePathByType(fileType: FileType): Observable<string> {
     return this.http.get<string>(`${this.filesApi}/GetByType?fileType=${fileType}`, { responseType: 'text' as 'json' });

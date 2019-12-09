@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
 
 import { Holidays } from '../models/holidays';
 import { Requestholidays } from '../models/requestholidays';
@@ -13,8 +12,8 @@ import { EmployeeStatus } from '../models/employee-status.enum';
 })
 export class HolidaysService {
 
-  private readonly holidaysApiBase = `${environment.webApiUrl}/Holidays`;
-  private readonly holidaysApiRequest = `${environment.webApiUrl}/HolidayConfirm`;
+  private readonly holidaysApiBase = `${this.baseUrl}/api/Holidays`;
+  private readonly holidaysApiRequest = `${this.baseUrl}/api/HolidayConfirm`;
 
   private readonly httpOptions = {
     headers: new HttpHeaders({
@@ -22,7 +21,7 @@ export class HolidaysService {
     })
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
   getHolidays(): Observable<Holidays[]> {
     return this.http.get<Holidays[]>(this.holidaysApiBase);

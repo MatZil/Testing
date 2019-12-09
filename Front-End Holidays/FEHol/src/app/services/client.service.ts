@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../environments/environment';
 import { Client } from '../models/client';
 import { Newclient } from '../models/newclient';
 
@@ -11,7 +10,7 @@ import { Newclient } from '../models/newclient';
 })
 export class ClientService {
 
-  private readonly clientApi = `${environment.webApiUrl}/Clients`;
+  private readonly clientApi = `${this.baseUrl}/api/Clients`;
 
   private readonly httpOptions = {
     headers: new HttpHeaders({
@@ -19,7 +18,7 @@ export class ClientService {
     })
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
   getClient(): Observable<Client[]> {
     return this.http.get<Client[]>(this.clientApi);

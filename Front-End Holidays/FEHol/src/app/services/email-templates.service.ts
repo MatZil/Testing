@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { EmailTemplate } from '../models/email-template';
 import { NewEmailTemplate } from '../models/new-email-template';
 
@@ -10,7 +9,7 @@ import { NewEmailTemplate } from '../models/new-email-template';
 })
 
 export class EmailTemplatesService {
-  private readonly emailTemplateApi = `${environment.webApiUrl}/EmailTemplates`;
+  private readonly emailTemplateApi = `${this.baseUrl}/api/EmailTemplates`;
 
   private readonly httpOptions = {
     headers: new HttpHeaders({
@@ -18,7 +17,7 @@ export class EmailTemplatesService {
     })
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
   getEmailTemplates(): Observable<EmailTemplate[]> {
     return this.http.get<EmailTemplate[]>(this.emailTemplateApi);

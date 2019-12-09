@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Role } from '../models/role';
 
@@ -12,7 +11,8 @@ export class AuthenticationService {
 
   private thisUserId: number;
 
-  constructor(private http: HttpClient, public jwtHelper: JwtHelperService) {
+  constructor(private http: HttpClient, public jwtHelper: JwtHelperService, 
+    @Inject('BASE_URL') private baseUrl: string) {
 
   }
 
@@ -24,7 +24,7 @@ export class AuthenticationService {
   }
 
   login(email, password) {
-    return this.http.post<any>(`${environment.webApiUrl}/Auth/login`, { email, password })
+    return this.http.post<any>(`${this.baseUrl}/api/Auth/login`, { email, password })
       .pipe(map(it => {
         localStorage.setItem('userId', JSON.stringify(it.employeeId));
         localStorage.setItem('token', it.token);
@@ -44,6 +44,6 @@ export class AuthenticationService {
   }
 
   getRoles(): Observable<Role[]> {
-    return this.http.get<Role[]>(`${environment.webApiUrl}/Auth/roles`);
+    return this.http.get<Role[]>(`${this.baseUrl}/api/Auth/roles`);
   }
 }

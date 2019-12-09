@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientApp\" />
     <Folder Include="Templates\GeneratedTemplates\" />
     <Folder Include="Resources\Documents\" />
     <Folder Include="Resources\Images\" />
