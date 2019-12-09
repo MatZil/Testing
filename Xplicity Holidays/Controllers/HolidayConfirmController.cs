@@ -1,9 +1,5 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Hosting;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Services.Interfaces;
 
@@ -14,14 +10,11 @@ namespace Xplicity_Holidays.Controllers
     public class HolidayConfirmController : ControllerBase
     {
         private readonly IHolidayConfirmService _confirmationService;
-        private readonly IConfiguration _configuration; 
         private readonly IHolidaysService _holidaysService;
 
-        public HolidayConfirmController(IHolidayConfirmService confirmationService, IConfiguration configuration, 
-                                        IHolidaysService holidaysService)
+        public HolidayConfirmController(IHolidayConfirmService confirmationService, IHolidaysService holidaysService)
         {
             _confirmationService = confirmationService;
-            _configuration = configuration;
             _holidaysService = holidaysService;
         }
 
@@ -37,12 +30,7 @@ namespace Xplicity_Holidays.Controllers
 
             await _confirmationService.RequestClientApproval(holidayId);
 
-            await _confirmationService.CreateRequestPdf(newHolidayDto, holidayId);
-
-            var path = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + @"\Pdfs\Requests\";
-            var fileName = $"Holiday_Request_{holidayId}.pdf";
-            var stream = new FileStream(path + fileName, FileMode.Open);
-            return File(stream, "application/pdf", fileName);
+            return Ok();
         }
 
         [HttpGet]
@@ -55,12 +43,9 @@ namespace Xplicity_Holidays.Controllers
 
             await _confirmationService.ConfirmHoliday(holidayId);
 
-            await _confirmationService.CreateOrderPdf(holidayId);
+            await _confirmationService.GenerateFilesAndNotify(holidayId);
 
-            var path = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey) + @"\Pdfs\Orders\";
-            var fileName = $"Holiday_Order_{holidayId}.pdf";
-            var stream = new FileStream(path + fileName, FileMode.Open);
-            return File(stream, "application/pdf", fileName);
+            return Ok();
         }
     }
 }

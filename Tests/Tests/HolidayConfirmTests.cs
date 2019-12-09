@@ -18,7 +18,6 @@ namespace Tests
         private readonly HolidayDbContext _context;
         private readonly HolidayConfirmService _holidayConfirmService;
         private readonly HolidaysService _holidaysService;
-        private readonly Set_up _setup;
         private readonly ITestOutputHelper _output;
         private readonly HolidaysRepository _holidaysRepository;
         private readonly IMapper _mapper;
@@ -27,21 +26,21 @@ namespace Tests
         public HolidayConfirmTests(ITestOutputHelper output)
         {
             _output = output;
-            _setup = new Set_up();
-            _setup.Initialize(out _context, out IMapper mapper);
+            var setup = new SetUp();
+            setup.Initialize(out _context, out IMapper mapper);
             _mapper = mapper;
 
             var timeService = new TimeService();
             _holidaysRepository = new HolidaysRepository(_context);
-            var userManager = _setup.InitializeUserManager(_context);
+            var userManager = setup.InitializeUserManager(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
-            var pdfService = new Mock<IPdfService>();
             var emailService = new Mock<IEmailService>();
+            var docxGeneratorService = new Mock<IDocxGeneratorService>();
 
             _holidaysService = new HolidaysService(_holidaysRepository, mapper, timeService);
             _holidayConfirmService = new HolidayConfirmService(emailService.Object, mapper, _holidaysRepository,
-                pdfService.Object, _employeesRepository, clientsRepository, _holidaysService, timeService);
+                                                                _employeesRepository, clientsRepository, _holidaysService, timeService, docxGeneratorService.Object);
         }
 
 
@@ -62,26 +61,6 @@ namespace Tests
         //    var result = await _holidayConfirmService.RequestAdminApproval(holidayId, clientStatus);
         //    Assert.True(result);
         //}
-
-        [Fact]
-        public async void When_CreatingRequestPdf_Expect_CreatesRequestPdf()
-        {
-            NewHolidayDto holidayDto = _setup.NewHolidayDto();
-
-            var result = await _holidayConfirmService.CreateRequestPdf(holidayDto, 3);
-
-            Assert.True(result);
-        }
-
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async void When_CreatingOrderPdf_Expect_CreatesOrderPdf(int holidayId)
-        {
-            var result = await _holidayConfirmService.CreateOrderPdf(holidayId);
-
-            Assert.True(result);
-        }
 
         [Theory]
         [InlineData(1)]

@@ -19,12 +19,12 @@ namespace Tests
         private readonly int _employeesCount;
         private readonly ITestOutputHelper _output;
         private readonly EmployeesService _employeesService;
-        private readonly Set_up _setup;
+        private readonly SetUp _setup;
 
         public EmployeeTests(ITestOutputHelper output)
         {
             _output = output;
-            _setup = new Set_up();
+            _setup = new SetUp();
             _setup.Initialize(out _context, out IMapper _mapper);
             _employeesCount = _setup.GetCount("employees");
 

@@ -3,8 +3,8 @@ using DinkToPdf.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Emailer;
-using Xplicity_Holidays.Infrastructure.PdfGeneration;
 using Xplicity_Holidays.Infrastructure.Repositories;
+using Xplicity_Holidays.Infrastructure.DocxGeneration;
 using Xplicity_Holidays.Infrastructure.Utils;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services;
@@ -32,7 +32,8 @@ namespace Xplicity_Holidays.Configurations
                 .AddScoped<IInventoryItemRepository, InventoryItemsRepository>()
                 .AddScoped<IRepository<InventoryCategory>, InventoryCategoryRepository>()
                 .AddScoped<IEmailer, Emailer>()
-                .AddScoped<IPdfGenerator, PdfGenerator>()
+                .AddScoped<IDocxGenerator, DocxGenerator>()
+                .AddScoped<IFileUtility, FileUtility>()
                 .AddSingleton<ITimeService, TimeService>()
                 .AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }
@@ -45,7 +46,7 @@ namespace Xplicity_Holidays.Configurations
                 .AddScoped<IHolidayInfoService, HolidayInfoService>()
                 .AddScoped<IHolidaysService, HolidaysService>()
                 .AddScoped<IHolidayConfirmService, HolidayConfirmService>()
-                .AddScoped<IPdfService, PdfService>()
+                .AddScoped<IDocxGeneratorService, DocxGeneratorService>()
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IEmailService, EmailService>()
                 .AddScoped<IBackgroundService, BackgroundService>()

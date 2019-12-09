@@ -22,7 +22,7 @@ namespace Tests
         public ClientTests(ITestOutputHelper output)
         {
             _output = output;
-            Set_up setup = new Set_up();
+            var setup = new SetUp();
             setup.Initialize(out _context, out IMapper mapper);
             _clientsCount = setup.GetCount("clients");
             IRepository<Client> clientsRepository = new ClientsRepository(_context);

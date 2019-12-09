@@ -14,6 +14,8 @@ namespace Xplicity_Holidays.Dtos.Employees
         public DateTime BirthdayDate { get; set; }
         public int DaysOfVacation { get; set; }
         public double FreeWorkDays { get; set; }
+        public double OvertimeHours { get; set; }
+        public double OvertimeDays { get; set; }
         public int ParentalLeaveLimit { get; set; }
         public int CurrentAvailableLeaves { get; set; } 
         public int NextMonthAvailableLeaves { get; set; } 

@@ -5,5 +5,6 @@ export class Requestholidays {
     type: HolidayType;
     fromInclusive: Date;
     toExclusive: Date;
+    overtimeDays: number;
     paid: boolean;
 }

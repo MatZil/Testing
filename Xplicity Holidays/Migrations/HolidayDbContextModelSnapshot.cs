@@ -215,6 +215,8 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<int>("NextMonthAvailableLeaves");
 
+                    b.Property<double>("OvertimeHours");
+
                     b.Property<int>("ParentalLeaveLimit");
 
                     b.Property<string>("Position");
@@ -240,7 +242,7 @@ namespace Xplicity_Holidays.Migrations
                         new
                         {
                             Id = 1,
-                            BirthdayDate = new DateTime(2019, 12, 5, 0, 0, 0, 0, DateTimeKind.Local),
+                            BirthdayDate = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Local),
                             CurrentAvailableLeaves = 0,
                             DaysOfVacation = 20,
                             Email = "gamma.holidays@gmail.com",
@@ -248,11 +250,12 @@ namespace Xplicity_Holidays.Migrations
                             HealthCheckDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Admin",
                             NextMonthAvailableLeaves = 0,
+                            OvertimeHours = 0.0,
                             ParentalLeaveLimit = 0,
                             Position = "Administrator",
                             Status = 1,
                             Surname = "Admin",
-                            WorksFromDate = new DateTime(2019, 12, 5, 0, 0, 0, 0, DateTimeKind.Local)
+                            WorksFromDate = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -283,6 +286,8 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<int>("EmployeeId");
 
                     b.Property<DateTime>("FromInclusive");
+
+                    b.Property<int>("OvertimeDays");
 
                     b.Property<bool>("Paid");
 

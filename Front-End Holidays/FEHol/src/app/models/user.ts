@@ -9,6 +9,8 @@ export class User {
     birthdayDate: Date;
     daysOfVacation: number;
     freeWorkDays: number;
+    overtimeHours: number;
+    overtimeDays: number;
     parentalLeaveLimit: number;
     currentAvailableLeaves: number;
     nextMonthAvailableLeaves: number;

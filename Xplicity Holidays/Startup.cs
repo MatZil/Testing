@@ -32,7 +32,7 @@ namespace Xplicity_Holidays
             services.SetUpDatabase(Configuration);
             services.SetUpJsonOptions();
             services.AddSwagger();
-            services.AddCors();
+            services.ConfigureCors();
             services.SetupJtwAuthentication(Configuration);
             services.AddAllDependencies();
         }

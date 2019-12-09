@@ -17,6 +17,8 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public DateTime ToExclusive { get; set; }
         [Required]
+        public int OvertimeDays { get; set; }
+        [Required]
         public HolidayStatus Status { get; set; }
         [Required]
         public bool Paid { get; set; }

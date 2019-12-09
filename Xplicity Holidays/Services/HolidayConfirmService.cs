@@ -15,26 +15,26 @@ namespace Xplicity_Holidays.Services
     {
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
-        private readonly IPdfService _pdfService;
         private readonly IHolidaysService _holidaysService;
         private readonly ITimeService _timeService;
         private readonly IEmployeeRepository _repositoryEmployees;
         private readonly IRepository<Client> _repositoryClients;
         private readonly IHolidaysRepository _repositoryHolidays;
-
-        public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays, 
-            IPdfService pdfService, IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
-            IHolidaysService holidaysService, ITimeService timeService)
+        private readonly IDocxGeneratorService _docxGeneratorService;
+        public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays,
+                                     IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
+                                     IHolidaysService holidaysService, ITimeService timeService, IDocxGeneratorService docxGeneratorService)
         {
             _emailService = emailService;
             _mapper = mapper;
             _repositoryEmployees = repositoryEmployees;
             _repositoryClients = repositoryClients;
             _repositoryHolidays = repositoryHolidays;
-            _pdfService = pdfService;
             _holidaysService = holidaysService;
             _timeService = timeService;
+            _docxGeneratorService = docxGeneratorService;
         }
+
         public async Task<bool> RequestClientApproval(int holidayId)
         {
             var holiday = await _repositoryHolidays.GetById(holidayId);
@@ -59,25 +59,6 @@ namespace Xplicity_Holidays.Services
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
             var admin = await _repositoryEmployees.FindAnyAdmin();
             await _emailService.ConfirmHolidayWithAdmin(admin, employee, holiday, clientStatus);
-
-            return true;
-        }
-
-        public async Task<bool> CreateRequestPdf(NewHolidayDto holidayDto, int holidayId)
-        {
-            var holiday = _mapper.Map<Holiday>(holidayDto);
-            holiday.Id = holidayId;
-            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
-            _pdfService.CreateRequestPdf(holiday, employee);
-
-            return true;
-        }
-
-        public async Task<bool> CreateOrderPdf(int holidayId)
-        {
-            var holiday = await _repositoryHolidays.GetById(holidayId);
-            var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
-            _pdfService.CreateOrderPdf(holiday, employee);
 
             return true;
         }
@@ -216,6 +197,35 @@ namespace Xplicity_Holidays.Services
             {
                 return false;
             }
+
+            return true;
+        }
+
+        private async Task<bool> Notify(int fileId, int holidayId, EmployeeRoleEnum receiver)
+        {
+            var holiday = await _repositoryHolidays.GetById(holidayId);
+            var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
+
+            switch (receiver)
+            {
+                case EmployeeRoleEnum.Regular:
+                    return await _emailService.SendRequestNotification(fileId, employee.Email);
+
+                case EmployeeRoleEnum.Administrator:
+                    var admin = await _repositoryEmployees.FindAnyAdmin();
+                    return await _emailService.SendOrderNotification(fileId, employee, admin.Email);
+            }
+
+            return false;
+        }
+
+        public async Task<bool> GenerateFilesAndNotify(int holidayId)
+        {
+            var fileId = await _docxGeneratorService.GenerateHolidayDocx(holidayId, FileTypeEnum.Request);
+            await Notify(fileId, holidayId, EmployeeRoleEnum.Regular);
+
+            fileId = await _docxGeneratorService.GenerateHolidayDocx(holidayId, FileTypeEnum.Order);
+            await Notify(fileId, holidayId, EmployeeRoleEnum.Administrator);
 
             return true;
         }
