@@ -8,10 +8,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class InventoryCategoryService {
-  private readonly itemCategoryApi = `${environment.webApiUrl}/InventoryCategory`;
+  private readonly itemCategoryApi = `${environment.webApiUrl}/InventoryCategories`;
+
   constructor(private http: HttpClient) { }
 
   getAllCategories(): Observable<InventoryCategory[]> {
-    return this.http.get<InventoryCategory[]>(`${this.itemCategoryApi}`);
+    return this.http.get<InventoryCategory[]>(this.itemCategoryApi);
   }
 }

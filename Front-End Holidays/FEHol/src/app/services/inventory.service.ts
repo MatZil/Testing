@@ -10,19 +10,19 @@ import { FormGroup } from '@angular/forms';
   providedIn: 'root'
 })
 export class InventoryService {
-  private readonly itemApi = `${environment.webApiUrl}/InventoryItem`;
+  private readonly itemApi = `${environment.webApiUrl}/InventoryItems`;
 
   constructor(private http: HttpClient) { }
 
-  getEquipmentByEmployeeId(id: number): Observable<InventoryItem[]> {
-    return this.http.get<InventoryItem[]>(`${this.itemApi}/GetByEmployeeId/${id}`);
+  getEquipmentByEmployeeId(employeeId: number): Observable<InventoryItem[]> {
+    return this.http.get<InventoryItem[]>(`${this.itemApi}/employee/${employeeId}`);
   }
 
   getAllInventoryItems(): Observable<InventoryItem[]> {
-    return this.http.get<InventoryItem[]>(`${this.itemApi}`);
+    return this.http.get<InventoryItem[]>(this.itemApi);
   }
 
-  create(fg: FormGroup) {
-    return this.http.post(`${this.itemApi}`, fg);
+  createNewInventoryItem(newInventoryItem: FormGroup) {
+    return this.http.post(this.itemApi, newInventoryItem);
   }
 }

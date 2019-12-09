@@ -30,12 +30,7 @@ namespace Xplicity_Holidays
             services.SetUpIdentity();
             services.SetUpAutoMapper();
             services.SetUpDatabase(Configuration);
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(options =>
-                {
-                    options.SerializerSettings.Formatting = Formatting.Indented;
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                });
+            services.SetUpJsonOptions();
             services.AddSwagger();
             services.AddCors();
             services.SetupJtwAuthentication(Configuration);

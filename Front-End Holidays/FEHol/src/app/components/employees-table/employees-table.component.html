@@ -141,7 +141,7 @@
         Equipment list
     </ng-template>
     <ng-template #EquipmentModalContent>
-        <app-inventory-table [id]="employeeIdForEquipment"></app-inventory-table>
+        <app-inventory-table [employeeId]="employeeIdForEquipment"></app-inventory-table>
     </ng-template>
     <ng-template #EquipmentModalFooter>
         <button nz-button nzType="default" (click)="closeEquipmentModal()">Close</button>

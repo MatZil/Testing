@@ -9,6 +9,7 @@ namespace Xplicity_Holidays.Dtos.Inventory
     public class GetInventoryItemDto
     {
         public int Id { get; set; }
+
         public string Name { get;set; }
 
         public string SerialNumber { get; set; }

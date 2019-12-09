@@ -14,6 +14,7 @@ namespace Xplicity_Holidays.Services
     {
         private readonly IRepository<InventoryCategory> _repository;
         private readonly IMapper _mapper;
+
         public InventoryCategoryService(IRepository<InventoryCategory> repository, IMapper mapper)
         {
             _repository = repository;

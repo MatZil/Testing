@@ -13,19 +13,19 @@ namespace Xplicity_Holidays.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InventoryItemController : ControllerBase
+    public class InventoryItemsController : ControllerBase
     {
         private readonly IInventoryItemService _inventoryItemService;
 
-        public InventoryItemController(IInventoryItemService inventoryItemService)
+        public InventoryItemsController(IInventoryItemService inventoryItemService)
         {
             _inventoryItemService = inventoryItemService;
         }
 
-        [HttpGet("GetByEmployeeId/{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("employee/{employeeId}")]
+        public async Task<IActionResult> Get(int employeeId)
         {
-            var items = await _inventoryItemService.GetByEmployeeId(id);
+            var items = await _inventoryItemService.GetByEmployeeId(employeeId);
             return Ok(items);
         }
 

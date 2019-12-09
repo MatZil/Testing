@@ -18,10 +18,14 @@ export class InventoryTableComponent implements OnInit {
   isVisibleNewItemModal = false;
   input: FormGroup;
   categories: InventoryCategory[] = [];
-  constructor(private inventoryService: InventoryService, private fb: FormBuilder, private categoryService: InventoryCategoryService) { }
+  constructor(
+    private inventoryService: InventoryService,
+    private formBuilder: FormBuilder,
+    private categoryService: InventoryCategoryService
+  ) { }
 
   ngOnInit() {
-    this.input = this.fb.group({
+    this.input = this.formBuilder.group({
       name: [null, [Validators.required]],
       serialNumber: [null, [Validators.required]],
       price: [null, [Validators.required]],
@@ -33,13 +37,15 @@ export class InventoryTableComponent implements OnInit {
     this.refreshTable(this.employeeId);
   }
   refreshTable(id: number) {
-    if (!isNaN(id)) {
-      this.inventoryService.getEquipmentByEmployeeId(id).subscribe(data => {
-        this.equipment = data;
+    console.log(id);
+    if (id) {
+
+      this.inventoryService.getEquipmentByEmployeeId(id).subscribe(inventoryItems => {
+        this.equipment = inventoryItems;
       });
     } else {
-      this.inventoryService.getAllInventoryItems().subscribe(data => {
-        this.equipment = data;
+      this.inventoryService.getAllInventoryItems().subscribe(inventoryItems => {
+        this.equipment = inventoryItems;
       });
     }
   }
@@ -52,8 +58,8 @@ export class InventoryTableComponent implements OnInit {
     this.isVisibleNewItemModal = false;
   }
 
-  save() {
-    this.inventoryService.create(this.input.value).subscribe(() => {
+  createNewItem() {
+    this.inventoryService.createNewInventoryItem(this.input.value).subscribe(() => {
       this.isVisibleNewItemModal = false;
       this.refreshTable(this.employeeId);
     });
@@ -62,8 +68,8 @@ export class InventoryTableComponent implements OnInit {
   }
 
   getCategoriesList() {
-    this.categoryService.getAllCategories().subscribe(data => {
-      this.categories = data;
+    this.categoryService.getAllCategories().subscribe(categories => {
+      this.categories = categories;
     });
   }
 }

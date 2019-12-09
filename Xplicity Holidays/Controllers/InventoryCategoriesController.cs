@@ -10,11 +10,11 @@ namespace Xplicity_Holidays.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InventoryCategoryController : ControllerBase
+    public class InventoryCategoriesController : ControllerBase
     {
         private readonly IInventoryCategoryService _inventoryCategoryService;
 
-        public InventoryCategoryController(IInventoryCategoryService inventoryCategoryService)
+        public InventoryCategoriesController(IInventoryCategoryService inventoryCategoryService)
         {
             _inventoryCategoryService = inventoryCategoryService;
         }

@@ -181,8 +181,9 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   showEquipmentModal(employeeId: number) {
-    this.isVisibleEquipmentModal = true;
     this.employeeIdForEquipment = employeeId;
+    this.isVisibleEquipmentModal = true;
+
   }
   closeEquipmentModal() {
     this.isVisibleEquipmentModal = false;

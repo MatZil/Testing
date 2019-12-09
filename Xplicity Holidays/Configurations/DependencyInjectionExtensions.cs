@@ -29,12 +29,12 @@ namespace Xplicity_Holidays.Configurations
                 .AddScoped<IHolidaysRepository, HolidaysRepository>()
                 .AddScoped<IEmailTemplatesRepository, EmailTemplatesRepository>()
                 .AddScoped<IEmployeeRepository, EmployeesRepository>()
+                .AddScoped<IInventoryItemRepository, InventoryItemsRepository>()
+                .AddScoped<IRepository<InventoryCategory>, InventoryCategoryRepository>()
                 .AddScoped<IEmailer, Emailer>()
                 .AddScoped<IPdfGenerator, PdfGenerator>()
                 .AddSingleton<ITimeService, TimeService>()
-                .AddScoped<IInventoryItemRepository, InventoryItemsRepository>()
-                .AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()))
-                .AddScoped<IRepository<InventoryCategory>, InventoryCategoryRepository>();
+                .AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }
 
         public static IServiceCollection AddApplicationDependencies(this IServiceCollection service)

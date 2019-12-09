@@ -14,6 +14,7 @@ namespace Xplicity_Holidays.Services
     {
         private readonly IInventoryItemRepository _repository;
         private readonly IMapper _mapper;
+
         public InventoryItemService(IInventoryItemRepository repository, IMapper mapper)
         {
             _repository = repository;
@@ -43,11 +44,11 @@ namespace Xplicity_Holidays.Services
 
         public async Task<InventoryItem> Create(NewInventoryItemDto newInventoryItemDto)
         {
-            var newInventoryItem = _mapper.Map<InventoryItem>(newInventoryItemDto);
-            if (newInventoryItem == null)
+            if (newInventoryItemDto == null)
             {
                 throw new ArgumentNullException();
             }
+            var newInventoryItem = _mapper.Map<InventoryItem>(newInventoryItemDto);
             await _repository.Create(newInventoryItem);
             return newInventoryItem;
         }

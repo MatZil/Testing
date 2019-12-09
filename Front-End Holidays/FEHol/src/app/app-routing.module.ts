@@ -58,7 +58,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'inventory', component: SidebarComponent, canActivate: [AuthGuard],
+    path: 'inventory-items', component: SidebarComponent, canActivate: [AuthGuard],
     children: [
       {
         path: '', component: InventoryTableComponent, canActivate: [RoleGuardService], data: {

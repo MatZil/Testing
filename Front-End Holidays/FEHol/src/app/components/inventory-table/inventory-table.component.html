@@ -24,7 +24,7 @@
 <nz-modal [(nzVisible)]="isVisibleNewItemModal" (nzOnCancel)="closeNewItemModal()" nzTitle="Add new equipment"
     nzWidth="400" [nzContent]="newItemModalContent" [nzFooter]="newItemModalFooter">
     <ng-template #newItemModalContent>
-        <form nz-form [formGroup]="input" (onsubmit)="save()">
+        <form nz-form [formGroup]="input" (onsubmit)="createNewItem()">
             <nz-form-item>
                 <nz-form-control [nzErrorTip]="categoryErrorTip">
                     <nz-input-group>
@@ -104,6 +104,6 @@
     </ng-template>
     <ng-template #newItemModalFooter>
         <button nz-button nzType="default" (click)="closeNewItemModal()">Cancel</button>
-        <button nz-button nzType="default" (click)="save()" [disabled]="this.input.invalid">Save</button>
+        <button nz-button nzType="default" (click)="createNewItem()" [disabled]="this.input.invalid">Save</button>
     </ng-template>
 </nz-modal>
