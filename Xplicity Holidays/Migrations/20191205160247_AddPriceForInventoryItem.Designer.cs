@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Xplicity_Holidays.Infrastructure.Database;
 
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    partial class HolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191205160247_AddPriceForInventoryItem")]
+    partial class AddPriceForInventoryItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -215,8 +217,6 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<int>("NextMonthAvailableLeaves");
 
-                    b.Property<double>("OvertimeHours");
-
                     b.Property<int>("ParentalLeaveLimit");
 
                     b.Property<string>("Position");
@@ -242,7 +242,7 @@ namespace Xplicity_Holidays.Migrations
                         new
                         {
                             Id = 1,
-                            BirthdayDate = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Local),
+                            BirthdayDate = new DateTime(2019, 12, 5, 0, 0, 0, 0, DateTimeKind.Local),
                             CurrentAvailableLeaves = 0,
                             DaysOfVacation = 20,
                             Email = "gamma.holidays@gmail.com",
@@ -250,12 +250,11 @@ namespace Xplicity_Holidays.Migrations
                             HealthCheckDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Admin",
                             NextMonthAvailableLeaves = 0,
-                            OvertimeHours = 0.0,
                             ParentalLeaveLimit = 0,
                             Position = "Administrator",
                             Status = 1,
                             Surname = "Admin",
-                            WorksFromDate = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Local)
+                            WorksFromDate = new DateTime(2019, 12, 5, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -286,8 +285,6 @@ namespace Xplicity_Holidays.Migrations
                     b.Property<int>("EmployeeId");
 
                     b.Property<DateTime>("FromInclusive");
-
-                    b.Property<int>("OvertimeDays");
 
                     b.Property<bool>("Paid");
 
@@ -329,7 +326,7 @@ namespace Xplicity_Holidays.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<int?>("EmployeeId");
+                    b.Property<int>("EmployeeId");
 
                     b.Property<DateTime>("ExpiryDate");
 
@@ -473,7 +470,8 @@ namespace Xplicity_Holidays.Migrations
                 {
                     b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.Employee", "Employee")
                         .WithMany("InventoryItems")
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.InventoryCategory", "Category")
                         .WithMany("Items")
