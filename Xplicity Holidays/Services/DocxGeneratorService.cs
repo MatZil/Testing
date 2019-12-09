@@ -3,6 +3,7 @@ using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.DocxGeneration;
 using Xplicity_Holidays.Services.Interfaces;
+using Xplicity_Holidays.Infrastructure.Database.Models;
 
 namespace Xplicity_Holidays.Services
 {
@@ -12,14 +13,15 @@ namespace Xplicity_Holidays.Services
         private readonly IHolidaysRepository _holidaysRepository;
         private readonly IEmployeeRepository _employeesRepository;
 
-        public DocxGeneratorService(IDocxGenerator docxGenerator, IHolidaysRepository holidaysRepository, IEmployeeRepository employeesRepository)
+        public DocxGeneratorService(IDocxGenerator docxGenerator, IHolidaysRepository holidaysRepository, 
+                                    IEmployeeRepository employeesRepository)
         {
             _docxGenerator = docxGenerator;
             _holidaysRepository = holidaysRepository;
             _employeesRepository = employeesRepository;
         }
 
-        public async Task<string> GenerateHolidayDocx(int holidayId, HolidayDocumentType holidayDocumentType)
+        public async Task<int> GenerateHolidayDocx(int holidayId, FileTypeEnum holidayDocumentType)
         {
             var holiday = await _holidaysRepository.GetById(holidayId);
             var employee = await _employeesRepository.GetById(holiday.EmployeeId);

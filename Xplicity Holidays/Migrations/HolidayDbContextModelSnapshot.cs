@@ -242,7 +242,7 @@ namespace Xplicity_Holidays.Migrations
                         new
                         {
                             Id = 1,
-                            BirthdayDate = new DateTime(2019, 11, 28, 0, 0, 0, 0, DateTimeKind.Local),
+                            BirthdayDate = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Local),
                             CurrentAvailableLeaves = 0,
                             DaysOfVacation = 20,
                             Email = "gamma.holidays@gmail.com",
@@ -255,7 +255,7 @@ namespace Xplicity_Holidays.Migrations
                             Position = "Administrator",
                             Status = 1,
                             Surname = "Admin",
-                            WorksFromDate = new DateTime(2019, 11, 28, 0, 0, 0, 0, DateTimeKind.Local)
+                            WorksFromDate = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 

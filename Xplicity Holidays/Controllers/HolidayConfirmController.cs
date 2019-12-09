@@ -1,9 +1,6 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Dtos.Holidays;
-using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Controllers
@@ -13,17 +10,12 @@ namespace Xplicity_Holidays.Controllers
     public class HolidayConfirmController : ControllerBase
     {
         private readonly IHolidayConfirmService _confirmationService;
-        private readonly IConfiguration _configuration;
         private readonly IHolidaysService _holidaysService;
-        private readonly IDocxGeneratorService _docxGeneratorService;
 
-        public HolidayConfirmController(IHolidayConfirmService confirmationService, IConfiguration configuration,
-                                        IHolidaysService holidaysService, IDocxGeneratorService docxGeneratorService)
+        public HolidayConfirmController(IHolidayConfirmService confirmationService, IHolidaysService holidaysService)
         {
             _confirmationService = confirmationService;
-            _configuration = configuration;
             _holidaysService = holidaysService;
-            _docxGeneratorService = docxGeneratorService;
         }
 
         [HttpPost]
@@ -38,7 +30,7 @@ namespace Xplicity_Holidays.Controllers
 
             await _confirmationService.RequestClientApproval(holidayId);
 
-            return await GetDocxStreamResult(holidayId, HolidayDocumentType.Request);
+            return Ok();
         }
 
         [HttpGet]
@@ -51,16 +43,9 @@ namespace Xplicity_Holidays.Controllers
 
             await _confirmationService.ConfirmHoliday(holidayId);
 
-            return await GetDocxStreamResult(holidayId, HolidayDocumentType.Order);
-        }
+            await _confirmationService.GenerateFilesAndNotify(holidayId);
 
-        private async Task<IActionResult> GetDocxStreamResult(int holidayId, HolidayDocumentType documentType)
-        {
-            var filePath = await _docxGeneratorService.GenerateHolidayDocx(holidayId, documentType);
-            var stream = new FileStream(filePath, FileMode.Open);
-            var nameStartIndex = filePath.LastIndexOf('\\') + 1;
-            var fileName = filePath.Substring(nameStartIndex, filePath.Length - nameStartIndex);
-            return File(stream, "application/docx", fileName);
+            return Ok();
         }
     }
 }

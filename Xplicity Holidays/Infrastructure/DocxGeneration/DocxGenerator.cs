@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
+using Xplicity_Holidays.Services.Interfaces;
 
 namespace Xplicity_Holidays.Infrastructure.DocxGeneration
 {
@@ -15,14 +16,18 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
     {
         private readonly IConfiguration _configuration;
         private readonly ITimeService _timeService;
+        private readonly IFileUtility _fileUtility;
+        private readonly IFileService _fileService;
 
-        public DocxGenerator(IConfiguration configuration, ITimeService timeService)
+        public DocxGenerator(IConfiguration configuration, ITimeService timeService, IFileUtility fileUtility, IFileService fileService)
         {
             _configuration = configuration;
             _timeService = timeService;
+            _fileUtility = fileUtility;
+            _fileService = fileService;
         }
 
-        public async Task<string> GenerateDocx(Holiday holiday, Employee employee, HolidayDocumentType holidayDocumentType)
+        public async Task<int> GenerateDocx(Holiday holiday, Employee employee, FileTypeEnum holidayDocumentType)
         {
             if (holiday is null)
             {
@@ -33,11 +38,15 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
 
             var templatePath = GetTemplatePath(holidayDocumentType);
 
-            var generationPath = Path.Combine(_configuration["DocxGeneration:GenerationDir"],
-                $"{holiday.Id}-{holidayDocumentType.ToString()}{holiday.Type.ToString()}" +
-                $"-{_timeService.GetCurrentTime().ToString("yyyy-MM-dd")}.docx");
+            var generationPath = await _fileUtility.GetGeneratedDocxPath(holiday.Id, holidayDocumentType);
 
-            return await Task.FromResult(ProcessTemplate(templatePath, generationPath, replacementMap));
+            var fileName = _fileUtility.ExtractNameFromPath(generationPath);
+
+            var fileId = await _fileService.CreateFileRecord(fileName, holidayDocumentType);
+
+            ProcessTemplate(templatePath, generationPath, replacementMap);
+
+            return fileId;
         }
 
         private Dictionary<string, string> GetReplacementMap(Holiday holiday, Employee employee)
@@ -96,18 +105,18 @@ namespace Xplicity_Holidays.Infrastructure.DocxGeneration
             }
         }
 
-        private string GetTemplatePath(HolidayDocumentType holidayDocumentType)
+        private string GetTemplatePath(FileTypeEnum holidayDocumentType)
         {
             var templateDir = _configuration["DocxGeneration:TemplatesDir"];
             var templatePath = "";
 
             switch (holidayDocumentType)
             {
-                case HolidayDocumentType.Order:
+                case FileTypeEnum.Order:
                     templatePath = Path.Combine(templateDir, _configuration["DocxGeneration:OrderTemplateName"]);
                     break;
 
-                case HolidayDocumentType.Request:
+                case FileTypeEnum.Request:
                     templatePath = Path.Combine(templateDir, _configuration["DocxGeneration:RequestTemplateName"]);
                     break;
             }

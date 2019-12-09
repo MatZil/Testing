@@ -15,12 +15,14 @@ namespace Xplicity_Holidays.Services
         private readonly IEmailer _emailer;
         private readonly IEmailTemplatesRepository _repository;
         private readonly IConfiguration _configuration;
+        private readonly IFileService _fileService;
 
-        public EmailService(IEmailer emailer, IEmailTemplatesRepository repository, IConfiguration configuration)
+        public EmailService(IEmailer emailer, IEmailTemplatesRepository repository, IConfiguration configuration, IFileService fileService)
         {
             _emailer = emailer;
             _repository = repository;
             _configuration = configuration;
+            _fileService = fileService;
         }
 
         public async Task ConfirmHolidayWithClient(Client client, Employee employee, Holiday holiday)
@@ -120,6 +122,41 @@ namespace Xplicity_Holidays.Services
                     }
                 }
             }
+        }
+
+        public async Task<bool> SendOrderNotification(int fileId, Employee employee, string receiver)
+        {
+            var template = await _repository.GetByPurpose(EmailPurposes.ORDER_NOTIFICATION);
+
+            if (template is null)
+            {
+                return false;
+            }
+
+            var messageString = template.Template
+                                        .Replace("{employee.name}", employee.Name)
+                                        .Replace("{employee.surname}", employee.Surname)
+                                        .Replace("{download_link}", _fileService.GetDownloadLink(fileId));
+
+            _emailer.SendMail(receiver, template.Subject, messageString);
+
+            return true;
+        }
+
+        public async Task<bool> SendRequestNotification(int fileId, string receiver)
+        {
+            var template = await _repository.GetByPurpose(EmailPurposes.REQUEST_NOTIFICATION);
+
+            if (template is null)
+            {
+                return false;
+            }
+
+            var messageString = template.Template.Replace("{download_link}", _fileService.GetDownloadLink(fileId));
+
+            _emailer.SendMail(receiver, template.Subject, messageString);
+
+            return true;
         }
     }
 }
