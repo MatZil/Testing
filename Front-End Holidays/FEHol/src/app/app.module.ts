@@ -62,7 +62,8 @@ export function tokenGetter() {
     PdfComponent,
     EmailtemplatesTableComponent,
     UploadComponent,
-    OvertimeDisplayComponent
+    OvertimeDisplayComponent,
+    InventoryTableComponent
   ],
   imports: [
     BrowserModule,

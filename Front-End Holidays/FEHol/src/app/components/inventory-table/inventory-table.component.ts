@@ -37,7 +37,6 @@ export class InventoryTableComponent implements OnInit {
     this.refreshTable(this.employeeId);
   }
   refreshTable(id: number) {
-    console.log(id);
     if (id) {
 
       this.inventoryService.getEquipmentByEmployeeId(id).subscribe(inventoryItems => {
