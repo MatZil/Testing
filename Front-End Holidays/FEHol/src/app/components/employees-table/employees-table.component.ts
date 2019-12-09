@@ -218,6 +218,7 @@ export class EmployeesTableComponent implements OnInit {
       worksFromDate: Date;
       birthdayDate: Date;
       daysOfVacation: number;
+      overtimeHours: number;
       email: string;
       role: string;
       position: string;
@@ -235,6 +236,7 @@ export class EmployeesTableComponent implements OnInit {
       worksFromDate: Date;
       birthdayDate: Date;
       daysOfVacation: number;
+      overtimeHours: number;
       email: string;
       role: string;
       position: string;

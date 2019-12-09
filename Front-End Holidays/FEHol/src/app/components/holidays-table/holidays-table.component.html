@@ -21,7 +21,7 @@
             <ng-template #modalConten>
                    <app-overtime-display></app-overtime-display>
                 <mat-card>
-                    <div>
+                    <div class="columns">
                         <mat-form-field>
                             <mat-select [(ngModel)]="requestHolidays.type" name="type" placeholder="Holiday's type"
                                 required #nameInput="ngModel" [(value)]="selectedType">
@@ -36,6 +36,10 @@
                                     Type cannot be empty.
                                 </mat-error>
                             </mat-select>
+                        </mat-form-field>
+                        <mat-form-field *ngIf="selectedType == 0 && requestHolidays.paid">
+                                <input matInput [(ngModel)]="requestHolidays.overtimeDays" type="number" min="0" max={{currentUser.overtimeDays}} 
+                                    name="overtimeHours" placeholder="Overtime days" #nameInput="ngModel">
                         </mat-form-field>
                     </div>
                     <div>

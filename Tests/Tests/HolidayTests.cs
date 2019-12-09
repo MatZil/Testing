@@ -25,7 +25,7 @@ namespace Tests
             _output = output;
             var setup = new SetUp();
             setup.Initialize(out _context, out IMapper _mapper);
-            _holidaysCount = setup.GetCount("employees");
+            _holidaysCount = setup.GetCount("holidays");
 
             var timeService = new TimeService();
             _holidaysRepository = new HolidaysRepository(_context);
@@ -42,7 +42,7 @@ namespace Tests
         }
 
         [Theory]
-        [InlineData(3)]
+        [InlineData(4)]
         public async void When_GettingNonexistentHolidayById_Expect_ReturnsNull(int id)
         {
             var retrievedHoliday = await _holidaysService.GetById(id);
@@ -117,7 +117,7 @@ namespace Tests
         }
 
         [Theory]
-        [InlineData(3)]
+        [InlineData(4)]
         public async void When_DeletingNonexistentHoliday_Expect_False(int id)
         {
             _output.WriteLine("Couldn't find holiday to delete");
