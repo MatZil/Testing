@@ -40,6 +40,7 @@ export class HolidaysTableComponent implements OnInit {
   holidaysType: string;
   holidaysStatus: string;
   role: string;
+  overtimeDays: number;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -64,6 +65,7 @@ export class HolidaysTableComponent implements OnInit {
       this.users = users;
     });
     this.role = this.userService.getRole();
+    this.overtimeDays = this.currentUser.overtimeHours;
   }
 
   refreshTable(status: number) {

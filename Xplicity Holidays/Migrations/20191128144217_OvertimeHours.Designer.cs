@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Xplicity_Holidays.Infrastructure.Database;
 
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    partial class HolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191128144217_OvertimeHours")]
+    partial class OvertimeHours
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,24 +259,6 @@ namespace Xplicity_Holidays.Migrations
                             Surname = "Admin",
                             WorksFromDate = new DateTime(2019, 11, 28, 0, 0, 0, 0, DateTimeKind.Local)
                         });
-                });
-
-            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.FileRecord", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.Property<int>("Type");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FileRecords");
                 });
 
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Holiday", b =>
