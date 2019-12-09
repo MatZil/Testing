@@ -3,6 +3,7 @@ using Xplicity_Holidays.Dtos.Clients;
 using Xplicity_Holidays.Dtos.EmailTemplates;
 using Xplicity_Holidays.Dtos.Employees;
 using Xplicity_Holidays.Dtos.Holidays;
+using Xplicity_Holidays.Dtos.Inventory;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 
 namespace Xplicity_Holidays.Configurations
@@ -46,6 +47,15 @@ namespace Xplicity_Holidays.Configurations
 
             CreateMap<GetEmailTemplateDto, EmailTemplate>(MemberList.None);
             CreateMap<EmailTemplate, GetEmailTemplateDto>(MemberList.None);
+
+            CreateMap<GetInventoryItemDto, InventoryItem>(MemberList.None);
+            CreateMap<InventoryItem, GetInventoryItemDto>(MemberList.None);
+
+            CreateMap<NewInventoryItemDto, InventoryItem>(MemberList.None);
+            CreateMap<InventoryItem, NewInventoryItemDto>(MemberList.None);
+
+            CreateMap<GetInventoryCategoryDto, InventoryCategory>(MemberList.None);
+            CreateMap<InventoryCategory, GetInventoryCategoryDto>(MemberList.None);
         }
     }
 }

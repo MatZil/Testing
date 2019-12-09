@@ -10,5 +10,6 @@ namespace Xplicity_Holidays.Services.Interfaces
         Task ConfirmHoliday(int holidayId);
         Task<bool> IsValid(int id);
         Task<bool> IsValid(NewHolidayDto holidayDto);
+        Task<bool> GenerateFilesAndNotify(int holidayId);
     }
 }

@@ -29,8 +29,11 @@ namespace Xplicity_Holidays.Configurations
                 .AddScoped<IHolidaysRepository, HolidaysRepository>()
                 .AddScoped<IEmailTemplatesRepository, EmailTemplatesRepository>()
                 .AddScoped<IEmployeeRepository, EmployeesRepository>()
+                .AddScoped<IInventoryItemRepository, InventoryItemsRepository>()
+                .AddScoped<IRepository<InventoryCategory>, InventoryCategoryRepository>()
                 .AddScoped<IEmailer, Emailer>()
                 .AddScoped<IDocxGenerator, DocxGenerator>()
+                .AddScoped<IFileUtility, FileUtility>()
                 .AddSingleton<ITimeService, TimeService>()
                 .AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }
@@ -49,7 +52,9 @@ namespace Xplicity_Holidays.Configurations
                 .AddScoped<IBackgroundService, BackgroundService>()
                 .AddScoped<IEmailTemplatesService, EmailTemplatesService>()
                 .AddScoped<IUserService, UserService>()
-                .AddScoped<IFileService, FileService>();
+                .AddScoped<IFileService, FileService>()
+                .AddScoped<IInventoryItemService, InventoryItemService>()
+                .AddScoped<IInventoryCategoryService, InventoryCategoryService>();
         }
     }
 }

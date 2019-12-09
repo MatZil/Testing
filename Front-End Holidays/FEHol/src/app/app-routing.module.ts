@@ -12,6 +12,7 @@ import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './helpers/auth-guard';
 import { RoleGuardService } from './helpers/role-guard';
 import { ProfileComponent } from './components/profile/profile.component';
+import { InventoryTableComponent } from './components/inventory-table/inventory-table.component';
 
 
 const routes: Routes = [
@@ -54,6 +55,16 @@ const routes: Routes = [
     path: 'holidays', component: SidebarComponent, canActivate: [AuthGuard],
     children: [
       { path: '', component: HolidaysTableComponent, canActivate: [AuthGuard] }
+    ]
+  },
+  {
+    path: 'inventory-items', component: SidebarComponent, canActivate: [AuthGuard],
+    children: [
+      {
+        path: '', component: InventoryTableComponent, canActivate: [RoleGuardService], data: {
+          expectedRole: 'Admin'
+        }
+      }
     ]
   },
   {

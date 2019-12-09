@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Newtonsoft.Json;
 using Xplicity_Holidays.Configurations;
 using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Database.Models;
@@ -29,7 +30,7 @@ namespace Xplicity_Holidays
             services.SetUpIdentity();
             services.SetUpAutoMapper();
             services.SetUpDatabase(Configuration);
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.SetUpJsonOptions();
             services.AddSwagger();
             services.ConfigureCors();
             services.SetupJtwAuthentication(Configuration);

@@ -7,5 +7,7 @@
         public const string MONTHLY_HOLIDAYS_REPORT = "Monthly Holidays' Report";
         public const string HOLIDAY_REMINDER = "Upcoming Holiday Reminder";
         public const string BIRTHDAY_REMINDER = "Birthday Reminder";
+        public const string ORDER_NOTIFICATION = "Order Notification";
+        public const string REQUEST_NOTIFICATION = "Request Notification";
     }
 }

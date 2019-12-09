@@ -40,6 +40,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { UploadComponent } from './components/upload/upload.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { InventoryTableComponent } from './components/inventory-table/inventory-table.component';
 import { OvertimeDisplayComponent } from './components/overtime-display/overtime-display.component';
 registerLocaleData(en);
 export function tokenGetter() {
@@ -61,7 +62,8 @@ export function tokenGetter() {
     PdfComponent,
     EmailtemplatesTableComponent,
     UploadComponent,
-    OvertimeDisplayComponent
+    OvertimeDisplayComponent,
+    InventoryTableComponent
   ],
   imports: [
     BrowserModule,

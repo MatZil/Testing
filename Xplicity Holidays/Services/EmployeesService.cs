@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Dtos.Employees;
+using Xplicity_Holidays.Dtos.Inventory;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
@@ -119,6 +120,5 @@ namespace Xplicity_Holidays.Services
             await _repository.Update(employeeToUpdate);
             await _userService.Update(id, updateData);
         }
-
     }
 }

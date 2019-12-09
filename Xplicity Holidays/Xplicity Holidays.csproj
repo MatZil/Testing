@@ -13,6 +13,8 @@
     <Compile Remove="Migrations\20191103145611_AddHealthCheckUp.Designer.cs" />
     <Compile Remove="Migrations\20191118143918_AddFilesTable.cs" />
     <Compile Remove="Migrations\20191118143918_AddFilesTable.Designer.cs" />
+    <Compile Remove="Migrations\20191201114226_AddInventoryCategoryAndItem.cs" />
+    <Compile Remove="Migrations\20191201114226_AddInventoryCategoryAndItem.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

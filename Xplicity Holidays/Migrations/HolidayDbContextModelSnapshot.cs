@@ -242,7 +242,7 @@ namespace Xplicity_Holidays.Migrations
                         new
                         {
                             Id = 1,
-                            BirthdayDate = new DateTime(2019, 11, 28, 0, 0, 0, 0, DateTimeKind.Local),
+                            BirthdayDate = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Local),
                             CurrentAvailableLeaves = 0,
                             DaysOfVacation = 20,
                             Email = "gamma.holidays@gmail.com",
@@ -255,7 +255,7 @@ namespace Xplicity_Holidays.Migrations
                             Position = "Administrator",
                             Status = 1,
                             Surname = "Admin",
-                            WorksFromDate = new DateTime(2019, 11, 28, 0, 0, 0, 0, DateTimeKind.Local)
+                            WorksFromDate = new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -304,6 +304,54 @@ namespace Xplicity_Holidays.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Holidays");
+                });
+
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.InventoryCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Normative");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InventoryCategories");
+                });
+
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.InventoryItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment");
+
+                    b.Property<int?>("EmployeeId");
+
+                    b.Property<DateTime>("ExpiryDate");
+
+                    b.Property<int>("InventoryCategoryId");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<DateTime>("PurchaseDate");
+
+                    b.Property<string>("SerialNumber")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("InventoryCategoryId");
+
+                    b.ToTable("InventoryItems");
                 });
 
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.User", b =>
@@ -418,6 +466,18 @@ namespace Xplicity_Holidays.Migrations
                     b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.Employee", "Employee")
                         .WithMany("Holidays")
                         .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.InventoryItem", b =>
+                {
+                    b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.Employee", "Employee")
+                        .WithMany("InventoryItems")
+                        .HasForeignKey("EmployeeId");
+
+                    b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.InventoryCategory", "Category")
+                        .WithMany("Items")
+                        .HasForeignKey("InventoryCategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
