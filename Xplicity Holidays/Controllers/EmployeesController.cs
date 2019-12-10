@@ -1,8 +1,7 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Xplicity_Holidays.Dtos;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Xplicity_Holidays.Dtos.Employees;
 using Xplicity_Holidays.Dtos.Users;
 using Xplicity_Holidays.Services.Interfaces;

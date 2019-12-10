@@ -6,7 +6,7 @@ import { FileType } from '../enums/fileType';
   providedIn: 'root'
 })
 export class FilesService {
-  private readonly filesApi = `${this.baseUrl}/api/File`;
+  private readonly filesApi = `${this.baseUrl}api/File`;
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
   getFilePathByType(fileType: FileType): Observable<string> {

@@ -12,8 +12,8 @@ import { EmployeeStatus } from '../models/employee-status.enum';
 })
 export class HolidaysService {
 
-  private readonly holidaysApiBase = `${this.baseUrl}/api/Holidays`;
-  private readonly holidaysApiRequest = `${this.baseUrl}/api/HolidayConfirm`;
+  private readonly holidaysApiBase = `${this.baseUrl}api/Holidays`;
+  private readonly holidaysApiRequest = `${this.baseUrl}api/HolidayConfirm`;
 
   private readonly httpOptions = {
     headers: new HttpHeaders({

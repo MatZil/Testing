@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FilesService } from '..//..//services/files.service';
 import { FileType } from '../../enums/fileType';
-import { environment } from '../../../environments/environment';
 import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
@@ -14,7 +13,11 @@ export class PdfComponent implements OnInit {
   page = 1;
   pdfSrc = '';
   showPdf = false;
-  constructor(private fileService: FilesService, private alertService: AlertService) { }
+  baseApplicationUrl = '';
+  constructor(private fileService: FilesService, private alertService: AlertService,
+    @Inject('BASE_URL') baseUrl: string) { 
+      this.baseApplicationUrl = baseUrl;
+    }
 
   ngOnInit() {
   }
@@ -22,7 +25,7 @@ export class PdfComponent implements OnInit {
   onButtonClick() {
     this.fileService.getFilePathByType(FileType.HolidayPolicy).subscribe(
       data => {
-        this.pdfSrc = `${environment.serverUrl}/${data}`;
+        this.pdfSrc = `${this.baseApplicationUrl}${data}`;
       }
     );
 

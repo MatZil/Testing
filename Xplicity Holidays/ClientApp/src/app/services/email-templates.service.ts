@@ -9,7 +9,7 @@ import { NewEmailTemplate } from '../models/new-email-template';
 })
 
 export class EmailTemplatesService {
-  private readonly emailTemplateApi = `${this.baseUrl}/api/EmailTemplates`;
+  private readonly emailTemplateApi = `${this.baseUrl}api/EmailTemplates`;
 
   private readonly httpOptions = {
     headers: new HttpHeaders({

@@ -24,7 +24,7 @@ export class AuthenticationService {
   }
 
   login(email, password) {
-    return this.http.post<any>(`${this.baseUrl}/api/Auth/login`, { email, password })
+    return this.http.post<any>(`${this.baseUrl}api/Auth/login`, { email, password })
       .pipe(map(it => {
         localStorage.setItem('userId', JSON.stringify(it.employeeId));
         localStorage.setItem('token', it.token);

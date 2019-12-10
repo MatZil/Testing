@@ -12,7 +12,7 @@ import decode from 'jwt-decode';
 
 export class UserService {
 
-    private readonly userApi = `${this.baseUrl}/api/Employees`;
+    private readonly userApi = `${this.baseUrl}api/Employees`;
 
     private readonly httpOptions = {
         headers: new HttpHeaders({

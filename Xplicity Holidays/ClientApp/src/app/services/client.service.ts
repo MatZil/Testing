@@ -10,7 +10,7 @@ import { Newclient } from '../models/newclient';
 })
 export class ClientService {
 
-  private readonly clientApi = `${this.baseUrl}/api/Clients`;
+  private readonly clientApi = `${this.baseUrl}api/Clients`;
 
   private readonly httpOptions = {
     headers: new HttpHeaders({

@@ -27,27 +27,35 @@ Install the following applications:
   - **Pull**. Merges the retrieved branch into your local repository.
 Read about other operations here: https://confluence.lsstcorp.org/display/LDMDG/Basic+Git+Operations
 
+# Run the application (Easy mode)
+ * Open the solution (**.sln** file in the root of the repository) using Visual Studio.
+ * Build the solution (**F6** while in Visual Studio)
+ * Update database - open package manager console in Visual Studio and type **Update-Database** and enter
+ * Change the debugging profile to Kestrel - there's a dropdown on the debug button in the toolbar (by default it's set to 'IIS Express'), choose 'Xplicity_Holidays' from the dropdown
+ * Run the application (**F5** or the Debug button in the toolbar)
+
+# Running front-end and back-end separately
 ## Run front-end files
 The very first time you open Visual Studio Code, you should:
 open Terminal (in the tools bar) > New Terminal > type **npm install -g @angular/cli** > click Enter.
 You can also do this using Command Prompt or Windows Powershell.
 
-**FEHol** - the directory where your Angular project file resides. It should contain **src** and **e2e** folders. The full path should look like this: **..\XplicityApplication\Front-End Holidays\FEHol**. You will need to paste the full path everywhere **FEHol** is mentioned.
+**ClientApp** - the directory where your Angular project file resides. It should contain **src** and **e2e** folders. The full path should look like this: **..\XplicityApplication\Xplicity Holidays\ClientApp**. You will need to paste the full path everywhere **ClientApp** is mentioned.
 
 ##### To run the project:
 Type in Terminal
 ```sh
-$ cd 'FEHol'
+$ cd 'ClientApp'
 $ npm install
 $ ng serve 
 ```
-  - **cd** changes the current directory. If there is ever an error indicating missing project file, type **cd 'FEHol'** (full path).
-  - **npm install** is necessary every time the project is updated from remote sources (in case new libraries were added by fellow developers). After its first-time execution **node-modules** folder should appear in **FEHol**, containing all of the necessary libraries.
+  - **cd** changes the current directory. If there is ever an error indicating missing project file, type **cd 'ClientApp'** (full path).
+  - **npm install** is necessary every time the project is updated from remote sources (in case new libraries were added by fellow developers). After its first-time execution **node-modules** folder should appear in **ClientApp**, containing all of the necessary libraries.
   - **ng serve** will compile and run the front end of your application.
-  - (for developers) to open the code, you could either type **. code** or go to File > Open Folder > search for **FEHol** directory > Open.
-  - don't forget to add typewriter apostrophes (') on both sides of 'FEHol'. This is to prevent you from getting an error (e.g. if there is a space symbol in your directory name).
+  - (for developers) to open the code, you could either type **. code** or go to File > Open Folder > search for **ClientApp** directory > Open.
+  - don't forget to add typewriter apostrophes (') on both sides of 'ClientApp'. This is to prevent you from getting an error (e.g. if there is a space symbol in your directory name).
 
-Open your browser > in the address bar type the RootUrl (https://localhost:44374) > click Enter.
+Open your browser > in the address bar type the RootUrl (default: https://localhost:4200) > click Enter.
 Where to find the RootUrl in case it was changed? Go to **XplicityApplication\Xplicity Holidays** (the back-end directory of the application), open **appsettings.json** file, it should be under **AppSettings**.
 
 Once the page loads, you should see the log-in form, but no interactivity.
@@ -62,7 +70,7 @@ $  TCP    127.0.0.1:44374         0.0.0.0:0              LISTENING       51912
 $  taskkill /F /PID 51912
 ```
 
-## Open back-end project
+## Prepare back-end project
 Go to **XplicityApplication\Xplicity Holidays** (the back-end directory of the application), double-click on **Xplicity Holidays.sln**. The project will be opened in Visual Studio 2019.
 
 #### Prepare the database
@@ -83,6 +91,10 @@ If you expand it, you can find its tables, see their Design and edit Rows.
 Initial admin is created when you run update-database command and start your project.
 Email: gamma.holidays@gmail.com
 Password: password
+
+## Important when running front-end and back-end separately
+Open **Startup.cs** and find configuration for single page application (Spa) at the bottom. By default it's set to *UseAngularCliServer* - you need to comment that line and uncomment the next one - *UseProxyToSpaDevelopmentServer(spaUrl)*.
+This will link your *ng serve'd* instance with your asp.net core application.
 
 ## Run back-end files
 After all of the instructions above have been followed, go back to Visual Studio 2019 where the back-end project is open. Press **CTRL+F5** keys at the same time, the project will be compiled and built. Now that the log-in form in the browser is interactive, you can log-in with admin data.
