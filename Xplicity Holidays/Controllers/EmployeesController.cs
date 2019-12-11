@@ -93,7 +93,6 @@ namespace Xplicity_Holidays.Controllers
             return Ok();
         }
 
-        
     }
 }
 

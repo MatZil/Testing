@@ -9,7 +9,9 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
+using Newtonsoft.Json;
 using Xplicity_Holidays.Infrastructure.Database;
 using Swashbuckle.AspNetCore.Filters;
 using Xplicity_Holidays.Infrastructure.Database.Models;
@@ -36,6 +38,16 @@ namespace Xplicity_Holidays.Configurations
             });
 
             return services;
+        }
+
+        public static void SetUpJsonOptions(this IServiceCollection services)
+        {
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.Formatting = Formatting.Indented;
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
         }
 
         public static void ConfigureAndUseSwagger(this IApplicationBuilder app)

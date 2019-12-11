@@ -306,6 +306,54 @@ namespace Xplicity_Holidays.Migrations
                     b.ToTable("Holidays");
                 });
 
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.InventoryCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Normative");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InventoryCategories");
+                });
+
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.InventoryItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment");
+
+                    b.Property<int?>("EmployeeId");
+
+                    b.Property<DateTime>("ExpiryDate");
+
+                    b.Property<int>("InventoryCategoryId");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<DateTime>("PurchaseDate");
+
+                    b.Property<string>("SerialNumber")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("InventoryCategoryId");
+
+                    b.ToTable("InventoryItems");
+                });
+
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.User", b =>
                 {
                     b.Property<string>("Id")
@@ -418,6 +466,18 @@ namespace Xplicity_Holidays.Migrations
                     b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.Employee", "Employee")
                         .WithMany("Holidays")
                         .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.InventoryItem", b =>
+                {
+                    b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.Employee", "Employee")
+                        .WithMany("InventoryItems")
+                        .HasForeignKey("EmployeeId");
+
+                    b.HasOne("Xplicity_Holidays.Infrastructure.Database.Models.InventoryCategory", "Category")
+                        .WithMany("Items")
+                        .HasForeignKey("InventoryCategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

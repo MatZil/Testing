@@ -29,6 +29,7 @@ export class EmployeesTableComponent implements OnInit {
   newUser: Newuser = new Newuser();
   employeeStatus = EmployeeStatus;
   selected;
+  employeeIdForEquipment: number;
 
   clients: Client[] = [];
   oneClient: Client;
@@ -36,6 +37,7 @@ export class EmployeesTableComponent implements OnInit {
   isVisibleCreator = false;
   isConfirmLoadingCreator = false;
   isVisibleEditor = false;
+  isVisibleEquipmentModal = false;
 
   confirmDeleteModal: NzModalRef;
 
@@ -178,6 +180,15 @@ export class EmployeesTableComponent implements OnInit {
     );
   }
 
+  showEquipmentModal(employeeId: number) {
+    this.employeeIdForEquipment = employeeId;
+    this.isVisibleEquipmentModal = true;
+
+  }
+  closeEquipmentModal() {
+    this.isVisibleEquipmentModal = false;
+  }
+
   formatDate(date: Date) {
     const d = new Date(date);
     let month = '' + (d.getMonth() + 1);
@@ -207,6 +218,7 @@ export class EmployeesTableComponent implements OnInit {
       worksFromDate: Date;
       birthdayDate: Date;
       daysOfVacation: number;
+      overtimeHours: number;
       email: string;
       role: string;
       position: string;
@@ -224,6 +236,7 @@ export class EmployeesTableComponent implements OnInit {
       worksFromDate: Date;
       birthdayDate: Date;
       daysOfVacation: number;
+      overtimeHours: number;
       email: string;
       role: string;
       position: string;

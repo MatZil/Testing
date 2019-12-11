@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Xplicity_Holidays.Dtos.Employees;
+using Xplicity_Holidays.Dtos.Inventory;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 
 namespace Xplicity_Holidays.Services.Interfaces
