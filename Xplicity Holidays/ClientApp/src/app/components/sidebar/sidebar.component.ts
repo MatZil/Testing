@@ -3,7 +3,7 @@ import { first } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { User } from '../../models/user';
-import { AuthenticationService } from '../../services/authentication-service.service';
+import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../services/user.service';
 import { Holidays } from '../../models/holidays';
 import { HolidaysService } from '../../services/holidays.service';
