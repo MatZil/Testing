@@ -116,8 +116,8 @@ namespace Xplicity_Holidays.Configurations
 
         public static void SetUpStaticFiles(this IApplicationBuilder app, IConfiguration configuration)
         {
-            string baseFolder = configuration.GetValue<string>("FileConfig:BaseFolder");
-            app.UseStaticFiles();
+            var baseFolder = configuration.GetValue<string>("FileConfig:BaseFolder");
+            //app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
 

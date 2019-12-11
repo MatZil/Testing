@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using Xplicity_Holidays.Infrastructure.Static_Files;
 using Xplicity_Holidays.Services.Interfaces;
 
