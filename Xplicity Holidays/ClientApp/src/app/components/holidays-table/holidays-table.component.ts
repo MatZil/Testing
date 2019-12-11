@@ -7,7 +7,7 @@ import { HolidaysService } from '../../services/holidays.service';
 
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
-import { AuthenticationService } from '../../services/authentication-service.service';
+import { AuthenticationService } from '../../services/authentication.service';
 
 import { NgForm } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
