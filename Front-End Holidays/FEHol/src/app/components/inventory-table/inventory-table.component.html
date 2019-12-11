@@ -43,6 +43,18 @@
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
+                <nz-form-control>
+                    <nz-input-group>
+                        <nz-select formControlName="employees" style="width: 200px" nzPlaceHolder="Select employee"
+                            [(ngModel)]="selectedEmployee">
+                            <nz-option *ngFor="let employee of employees" [nzValue]="employee.id"
+                                [nzLabel]="employee.name + ' ' + employee.surname">
+                            </nz-option>
+                        </nz-select>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
                 <nz-form-control [nzErrorTip]="nameErrorTip">
                     <nz-input-group>
                         <input type="text" autocomplete="off" nz-input formControlName="name" placeholder="Name" />

@@ -4,7 +4,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InventoryService } from 'src/app/services/inventory.service';
 import { InventoryCategory } from 'src/app/models/inventory-category';
 import { InventoryCategoryService } from 'src/app/services/inventory-category.service';
-import { NzTreeHigherOrderServiceToken } from 'ng-zorro-antd';
+import { User } from 'src/app/models/user';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-inventory-table',
@@ -18,10 +19,13 @@ export class InventoryTableComponent implements OnInit {
   isVisibleNewItemModal = false;
   input: FormGroup;
   categories: InventoryCategory[] = [];
+  employees: User[] = [];
+  selectedEmployee;
   constructor(
     private inventoryService: InventoryService,
     private formBuilder: FormBuilder,
-    private categoryService: InventoryCategoryService
+    private categoryService: InventoryCategoryService,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
@@ -31,17 +35,18 @@ export class InventoryTableComponent implements OnInit {
       price: [null, [Validators.required]],
       purchaseDate: [null, [Validators.required]],
       comment: [null],
-      inventoryCategoryId: [null, [Validators.required]]
+      inventoryCategoryId: [null, [Validators.required]],
+      employees: [null]
     });
-
+    this.getAllUsers();
     this.refreshTable(this.employeeId);
   }
   refreshTable(id: number) {
     if (id) {
-
       this.inventoryService.getEquipmentByEmployeeId(id).subscribe(inventoryItems => {
         this.equipment = inventoryItems;
       });
+      this.selectedEmployee = id;
     } else {
       this.inventoryService.getAllInventoryItems().subscribe(inventoryItems => {
         this.equipment = inventoryItems;
@@ -69,6 +74,12 @@ export class InventoryTableComponent implements OnInit {
   getCategoriesList() {
     this.categoryService.getAllCategories().subscribe(categories => {
       this.categories = categories;
+    });
+  }
+
+  getAllUsers() {
+    this.userService.getAllUsers().subscribe(users => {
+      this.employees = users;
     });
   }
 }
