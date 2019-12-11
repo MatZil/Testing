@@ -36,7 +36,7 @@ export class InventoryTableComponent implements OnInit {
       purchaseDate: [null, [Validators.required]],
       comment: [null],
       inventoryCategoryId: [null, [Validators.required]],
-      employees: [null]
+      employeeId: [null]
     });
     this.getAllUsers();
     this.refreshTable(this.employeeId);
@@ -63,9 +63,11 @@ export class InventoryTableComponent implements OnInit {
   }
 
   createNewItem() {
+    console.log(this.input.value);
     this.inventoryService.createNewInventoryItem(this.input.value).subscribe(() => {
       this.isVisibleNewItemModal = false;
       this.refreshTable(this.employeeId);
+
     });
     this.input.reset();
 
