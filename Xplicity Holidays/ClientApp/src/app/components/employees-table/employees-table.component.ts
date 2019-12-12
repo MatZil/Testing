@@ -4,7 +4,7 @@ import { User } from '../../models/user';
 import { Newuser } from '../../models/newuser';
 import { Updateuser } from '../../models/updateuser';
 import { UserService } from '../../services/user.service';
-import { AuthenticationService } from '../../services/authentication-service.service';
+import { AuthenticationService } from '../../services/authentication.service';
 
 import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';

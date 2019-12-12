@@ -1,2 +1,5 @@
-<p>You currently have <b>{{ currentUser.freeWorkDays | number : '.0-2' }}</b> free workdays left!</p>
-<p>Your overtime hours: <b>{{ currentUser.overtimeHours}}</b> ({{currentUser.overtimeDays | number : '.0-2' }} vacation days) </p>
+<div *ngIf="currentUser">
+    <p>You currently have <b>{{ currentUser.freeWorkDays | number : '.0-2' }}</b> free workdays left!</p>
+    <p>Your overtime hours: <b>{{ currentUser.overtimeHours}}</b> ({{currentUser.overtimeDays | number : '.0-2' }} vacation days) </p>    
+</div>
+
