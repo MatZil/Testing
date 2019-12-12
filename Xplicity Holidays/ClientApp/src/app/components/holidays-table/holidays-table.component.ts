@@ -121,9 +121,12 @@ export class HolidaysTableComponent implements OnInit {
   }
 
   getUserNameById(id: number) {
-    for (const user of this.users) {
-      if (user.id === id) {
-        return user.name + ' ' + user.surname;
+    if (this.users) {
+      for (const userIndex of Object.keys(this.users)) {
+        const user = this.users[userIndex];
+        if (user.id === id) {
+          return user.name + ' ' + user.surname;
+        }
       }
     }
   }
