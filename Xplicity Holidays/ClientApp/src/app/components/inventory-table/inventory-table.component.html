@@ -2,29 +2,38 @@
 <nz-table #basicTable [nzData]="equipment">
     <thead>
         <tr>
+            <th>Category</th>
             <th>Name</th>
             <th>Serial number</th>
             <th>Purchase Date</th>
             <th>Price</th>
             <th>Expiry Date</th>
             <th>Comment</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let data of basicTable.data">
+            <td>{{data.category.name}}</td>
             <td>{{data.name}}</td>
             <td>{{data.serialNumber}}</td>
             <td>{{data.purchaseDate | date}}</td>
             <td>{{data.price}}</td>
             <td>{{data.expiryDate | date}}</td>
-            <td>{{data.comment}}</td>
+            <td nzBreakWork>{{data.comment}}</td>
+            <td>
+                <button nz-button nzType="default" (click)="modify(data)">
+                    <i nz-icon nzType="edit" nzTheme="outline"></i>
+                </button>
+            </td>
         </tr>
     </tbody>
 </nz-table>
-<nz-modal [(nzVisible)]="isVisibleNewItemModal" (nzOnCancel)="closeNewItemModal()" nzTitle="Add new equipment"
-    nzWidth="400" [nzContent]="newItemModalContent" [nzFooter]="newItemModalFooter">
+<nz-modal [(nzVisible)]="isVisibleNewItemModal" (nzOnCancel)="closeNewItemModal()"
+    [nzTitle]="isModifying ? 'Edit equipment' : 'Add new equipment'" nzWidth="400" [nzContent]="newItemModalContent"
+    [nzFooter]="newItemModalFooter">
     <ng-template #newItemModalContent>
-        <form nz-form [formGroup]="input" (onsubmit)="createNewItem()">
+        <form nz-form [formGroup]="input" (onsubmit)="saveInventoryItem()">
             <nz-form-item>
                 <nz-form-control [nzErrorTip]="categoryErrorTip">
                     <nz-input-group>
@@ -46,7 +55,7 @@
                 <nz-form-control>
                     <nz-input-group>
                         <nz-select formControlName="employeeId" style="width: 200px" nzPlaceHolder="Select employee"
-                            [(ngModel)]="selectedEmployee">
+                            [(ngModel)]="selectedEmployee" nzShowSearch nzAllowClear>
                             <nz-option *ngFor="let employee of employees" [nzValue]="employee.id"
                                 [nzLabel]="employee.name + ' ' + employee.surname">
                             </nz-option>
@@ -116,6 +125,6 @@
     </ng-template>
     <ng-template #newItemModalFooter>
         <button nz-button nzType="default" (click)="closeNewItemModal()">Cancel</button>
-        <button nz-button nzType="default" (click)="createNewItem()" [disabled]="this.input.invalid">Save</button>
+        <button nz-button nzType="default" (click)="saveInventoryItem()" [disabled]="this.input.invalid">Save</button>
     </ng-template>
 </nz-modal>

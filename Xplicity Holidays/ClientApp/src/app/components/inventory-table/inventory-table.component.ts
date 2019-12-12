@@ -21,6 +21,8 @@ export class InventoryTableComponent implements OnInit {
   categories: InventoryCategory[] = [];
   employees: User[] = [];
   selectedEmployee;
+  isModifying = false;
+
   constructor(
     private inventoryService: InventoryService,
     private formBuilder: FormBuilder,
@@ -30,15 +32,19 @@ export class InventoryTableComponent implements OnInit {
 
   ngOnInit() {
     this.input = this.formBuilder.group({
+      id: [null],
       name: [null, [Validators.required]],
       serialNumber: [null, [Validators.required]],
       price: [null, [Validators.required]],
       purchaseDate: [null, [Validators.required]],
+      expiryDate: [null],
+      category: [null],
       comment: [null],
       inventoryCategoryId: [null, [Validators.required]],
       employeeId: [null]
     });
     this.getAllUsers();
+    this.getCategoriesList();
     this.refreshTable(this.employeeId);
   }
   refreshTable(id: number) {
@@ -55,22 +61,28 @@ export class InventoryTableComponent implements OnInit {
   }
   showNewItemModal() {
     this.isVisibleNewItemModal = true;
-    this.getCategoriesList();
   }
 
   closeNewItemModal() {
     this.isVisibleNewItemModal = false;
+    this.isModifying = false;
   }
 
-  createNewItem() {
-    console.log(this.input.value);
-    this.inventoryService.createNewInventoryItem(this.input.value).subscribe(() => {
-      this.isVisibleNewItemModal = false;
-      this.refreshTable(this.employeeId);
-
-    });
+  saveInventoryItem() {
+    if (!this.isModifying) {
+      console.log(this.input.value);
+      this.inventoryService.createNewInventoryItem(this.input.value).subscribe(() => {
+        this.refreshTable(this.employeeId);
+      });
+    } else {
+      console.log(this.input.value);
+      this.inventoryService.updateInventoryItem(this.input.value.id, this.input.value).subscribe(() => {
+        this.refreshTable(this.employeeId);
+      });
+    }
+    this.isVisibleNewItemModal = false;
+    this.isModifying = false;
     this.input.reset();
-
   }
 
   getCategoriesList() {
@@ -83,5 +95,11 @@ export class InventoryTableComponent implements OnInit {
     this.userService.getAllUsers().subscribe(users => {
       this.employees = users;
     });
+  }
+
+  modify(data) {
+    this.input.setValue(data);
+    this.isModifying = true;
+    this.isVisibleNewItemModal = true;
   }
 }

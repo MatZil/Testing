@@ -24,4 +24,8 @@ export class InventoryService {
   createNewInventoryItem(newInventoryItem: FormGroup) {
     return this.http.post(this.inventoryItemApi, newInventoryItem);
   }
+
+  updateInventoryItem(id: number, inventoryItem: FormGroup) {
+    return this.http.put(`${this.inventoryItemApi}/${id}`, inventoryItem);
+  }
 }
