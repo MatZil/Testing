@@ -77,7 +77,7 @@
     </form>
 </div>
 
-<div>
+<div *ngIf="holidays">
     <nz-table *ngIf="isAdmin()" #basicTable [nzData]="holidays">
         <thead>
             <tr>
@@ -111,7 +111,7 @@
     </nz-table>
 </div>
 
-<div>
+<div *ngIf="holidays">
     <nz-table *ngIf="!isAdmin()" #basicTable [nzData]="holidays">
         <thead>
             <tr>
