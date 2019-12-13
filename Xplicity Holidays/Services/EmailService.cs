@@ -42,14 +42,19 @@ namespace Xplicity_Holidays.Services
             _emailer.SendMail(client.OwnerEmail, template.Subject, messageString);
         }
 
-        public async Task ConfirmHolidayWithAdmin(Employee admin, Employee employee, Holiday holiday, string clientStatus)
+        private string OvertimeSentence(Holiday holiday)
         {
-            var overtimeString = "";
+            var overtimeSentence = "";
             if (holiday.OvertimeDays > 0)
             {
-                overtimeString = " (using " + Math.Round(holiday.OvertimeHours, 2).ToString() + " overtime hours)";
+                overtimeSentence = " (using " + Math.Round(holiday.OvertimeHours, 2).ToString() + " overtime hours)";
             }
 
+            return overtimeSentence;
+        }
+
+        public async Task ConfirmHolidayWithAdmin(Employee admin, Employee employee, Holiday holiday, string clientStatus)
+        {
             var template = await _repository.GetByPurpose(EmailPurposes.ADMIN_CONFIRMATION);
             var messageString = template.Template
                                         .Replace("{admin.name}", admin.Name)
@@ -62,7 +67,7 @@ namespace Xplicity_Holidays.Services
                                         .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/holidayconfirm?holidayid={holiday.Id}")
                                         .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/holidaydecline?holidayid={holiday.Id}")
                                         .Replace("{client.status}", clientStatus)
-                                        .Replace("{holiday.overtimeHours}", overtimeString);
+                                        .Replace("{holiday.overtimeHours}", OvertimeSentence(holiday));
 
             _emailer.SendMail(admin.Email, template.Subject, messageString);
         }
@@ -86,7 +91,7 @@ namespace Xplicity_Holidays.Services
                                                         .Replace("{holiday.type}", holiday.Item1.Type.ToString())
                                                         .Replace("{holiday.from}", holiday.Item1.FromInclusive.ToShortDateString())
                                                         .Replace("{holiday.to}", holiday.Item1.ToExclusive.ToShortDateString())
-                                                        .Replace("{holiday.overtimeHours}", holiday.Item1.OvertimeHours.ToString());
+                                                        .Replace("{holiday.overtimeHours}", OvertimeSentence(holiday.Item1));
                     holidayInfo += messageString;
                 }
                 holidayInfo += "\n\n";
