@@ -42,7 +42,7 @@ namespace Xplicity_Holidays.Services
             _emailer.SendMail(client.OwnerEmail, template.Subject, messageString);
         }
 
-        private string OvertimeSentence(Holiday holiday)
+        private string GetOvertimeSentence(Holiday holiday)
         {
             var overtimeSentence = "";
             if (holiday.OvertimeDays > 0)
@@ -67,7 +67,7 @@ namespace Xplicity_Holidays.Services
                                         .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/holidayconfirm?holidayid={holiday.Id}")
                                         .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/holidaydecline?holidayid={holiday.Id}")
                                         .Replace("{client.status}", clientStatus)
-                                        .Replace("{holiday.overtimeHours}", OvertimeSentence(holiday));
+                                        .Replace("{holiday.overtimeHours}", GetOvertimeSentence(holiday));
 
             _emailer.SendMail(admin.Email, template.Subject, messageString);
         }
@@ -91,7 +91,7 @@ namespace Xplicity_Holidays.Services
                                                         .Replace("{holiday.type}", holiday.Item1.Type.ToString())
                                                         .Replace("{holiday.from}", holiday.Item1.FromInclusive.ToShortDateString())
                                                         .Replace("{holiday.to}", holiday.Item1.ToExclusive.ToShortDateString())
-                                                        .Replace("{holiday.overtimeHours}", OvertimeSentence(holiday.Item1));
+                                                        .Replace("{holiday.overtimeHours}", GetOvertimeSentence(holiday.Item1));
                     holidayInfo += messageString;
                 }
                 holidayInfo += "\n\n";
