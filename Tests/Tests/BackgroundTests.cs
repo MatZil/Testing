@@ -13,6 +13,7 @@ using Moq;
 using Xunit.Abstractions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Tests.SeparateMethods;
 
 namespace Tests
 {
@@ -25,12 +26,14 @@ namespace Tests
         private readonly EmployeesRepository _employeesRepository;
         private readonly BackgroundService _backgroundService;
         private readonly TimeService _timeService;
+        private readonly BackgroundMethods _accessMethods;
 
         public BackgroundTests(ITestOutputHelper output)
         {
             _output = output;
             var setup = new SetUp();
             setup.Initialize(out _context, out IMapper mapper);
+            _accessMethods = new BackgroundMethods();
 
             _timeService = new TimeService();
             _holidaysRepository = new HolidaysRepository(_context);
@@ -75,9 +78,7 @@ namespace Tests
                 initial[index++] = e.FreeWorkDays;
             }
 
-            Object[] args = { employees, _timeService, _employeesRepository };
-            _backgroundService.call("AddFreeWorkDays", args);
-
+            await _accessMethods.AddFreeWorkDays(employees, _timeService, _employeesRepository);
             
             var countTrue = 0;
 
@@ -120,8 +121,7 @@ namespace Tests
                 expected[index++, 1] = e.ParentalLeaveLimit;
             }
 
-            Object[] args = { employees, timeService.Object, _employeesRepository };
-            _backgroundService.call("ResetParentalLeaves", args);
+            await _accessMethods.ResetParentalLeaves(employees, timeService.Object, _employeesRepository);
 
             var countTrue = 0;
             var actual = new int[employees.Count, 2];

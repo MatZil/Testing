@@ -9,6 +9,7 @@ using Xplicity_Holidays.Services.Interfaces;
 using Moq;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xunit.Abstractions;
+using Tests.SeparateMethods;
 
 namespace Tests
 {
@@ -23,6 +24,7 @@ namespace Tests
         private readonly IMapper _mapper;
         private readonly EmployeesRepository _employeesRepository;
         private readonly TimeService _timeService;
+        private readonly HolidayConfirmMethods _accessMethods;
 
         public HolidayConfirmTests(ITestOutputHelper output)
         {
@@ -30,7 +32,7 @@ namespace Tests
             var setup = new SetUp();
             setup.Initialize(out _context, out IMapper mapper);
             _mapper = mapper;
-
+            
             _timeService = new TimeService();
             _holidaysRepository = new HolidaysRepository(_context);
             var userManager = setup.InitializeUserManager(_context);
@@ -42,6 +44,7 @@ namespace Tests
             _holidaysService = new HolidaysService(_holidaysRepository, mapper, _timeService);
             _holidayConfirmService = new HolidayConfirmService(emailService.Object, mapper, _holidaysRepository,
                                                                 _employeesRepository, clientsRepository, _holidaysService, _timeService, docxGeneratorService.Object);
+            _accessMethods = new HolidayConfirmMethods(_employeesRepository, _timeService);
         }
 
 
@@ -68,8 +71,6 @@ namespace Tests
         [InlineData(2)]
         public async void When_ConfirmingHoliday_Expect_True(int holidayId)
         {
-            var holiday = await _holidaysRepository.GetById(holidayId);
-
             await _holidayConfirmService.ConfirmHoliday(holidayId);
 
             var updatedHoliday = await _holidaysRepository.GetById(holidayId);
@@ -93,7 +94,7 @@ namespace Tests
             var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
             var expected = initial - workdays + holiday.OvertimeDays;
 
-            _holidayConfirmService.call("UpdateEmployeesWorkdays", holidayDto);
+            await _accessMethods.UpdateEmployeesWorkdays(holidayDto);
 
             employee = await _employeesRepository.GetById(index);
             var actual = employee.FreeWorkDays;
@@ -114,7 +115,7 @@ namespace Tests
 
             var expected = initial - holiday.OvertimeHours;
 
-            _holidayConfirmService.call("UpdateEmployeesOvertime", holidayDto);
+            await _accessMethods.UpdateEmployeesOvertime(holidayDto);
 
             employee = await _employeesRepository.GetById(index);
             var actual = employee.OvertimeHours;
@@ -128,14 +129,14 @@ namespace Tests
         public async void When_UpdatingParentalLeaves_Expect_UpdatesParentalLeaves(int holidayId)
         {
             var holiday = await _holidaysRepository.GetById(holidayId);
-            var holidayDto = _mapper.Map<GetHolidayDto>((Holiday)holiday);
+            var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
 
             var employee = await _employeesRepository.GetById(holidayDto.EmployeeId);
             var initial = new int[2];
             initial[0] = employee.CurrentAvailableLeaves;
             initial[1] = employee.NextMonthAvailableLeaves;
 
-            _holidayConfirmService.call("UpdateParentalLeaves", holidayDto);
+            await _accessMethods.UpdateParentalLeaves(holidayDto);
 
             var final = new int[2];
             final[0] = employee.CurrentAvailableLeaves;
