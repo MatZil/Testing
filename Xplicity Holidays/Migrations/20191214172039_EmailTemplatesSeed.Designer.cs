@@ -10,7 +10,7 @@ using Xplicity_Holidays.Infrastructure.Database;
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20191212221243_EmailTemplatesSeed")]
+    [Migration("20191214172039_EmailTemplatesSeed")]
     partial class EmailTemplatesSeed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -207,7 +207,7 @@ namespace Xplicity_Holidays.Migrations
                             Subject = "An employee is requesting confirmation for holidays",
                             Template = @"Hello, {admin.name},
 
-An employee {employee.fullName} is intending to go on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {client.status}. {holiday.overtimeHours}
+An employee {employee.fullName} is intending to go on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {client.status} {holiday.overtimeHours}
 
 Click this link to confirm: {holiday.confirm}
 Click this link to decline: {holiday.decline}"
@@ -260,7 +260,9 @@ Please use the first line for team's title, second line for individual employee'
                         new
                         {
                             Id = 4,
-                            Instructions = "{employee.fullName} - Employee's full name.",
+                            Instructions = @"{employee.fullName} - Employee's full name.
+{holiday.from} - Holiday's starting date.
+{holiday.to} - Holiday's ending date.",
                             Purpose = "Upcoming Holiday Reminder",
                             Subject = "One of your colleagues is going away for holidays next workday!",
                             Template = "Your colleague {employee.fullName} is going away for holidays next workday from {holiday.from} to {holiday.to} (inclusive)."
@@ -280,7 +282,7 @@ Please use the first line for team's title, second line for individual employee'
                             Instructions = "{download.link} - A link to download request document.",
                             Purpose = "Request Notification",
                             Subject = "Your holiday request has been generated!",
-                            Template = "You can download you holiday request document by clicking this link: {download.link}"
+                            Template = "You can download your holiday request document by clicking this link: {download.link}"
                         });
                 });
 
@@ -338,7 +340,7 @@ Please use the first line for team's title, second line for individual employee'
                         new
                         {
                             Id = 1,
-                            BirthdayDate = new DateTime(2019, 12, 13, 0, 0, 0, 0, DateTimeKind.Local),
+                            BirthdayDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CurrentAvailableLeaves = 0,
                             DaysOfVacation = 20,
                             Email = "gamma.holidays@gmail.com",
@@ -351,7 +353,7 @@ Please use the first line for team's title, second line for individual employee'
                             Position = "Administrator",
                             Status = 1,
                             Surname = "Admin",
-                            WorksFromDate = new DateTime(2019, 12, 13, 0, 0, 0, 0, DateTimeKind.Local)
+                            WorksFromDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 

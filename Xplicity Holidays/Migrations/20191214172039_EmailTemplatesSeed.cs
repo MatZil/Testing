@@ -23,7 +23,7 @@ namespace Xplicity_Holidays.Migrations
                 {holiday.confirm} - Holiday's confirmation link.
                 {holiday.decline} - Holiday's rejection link.", "Admin Confirmation", "An employee is requesting confirmation for holidays", @"Hello, {admin.name},
 
-                An employee {employee.fullName} is intending to go on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {client.status}. {holiday.overtimeHours}
+                An employee {employee.fullName} is intending to go on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {client.status} {holiday.overtimeHours}
 
                 Click this link to confirm: {holiday.confirm}
                 Click this link to decline: {holiday.decline}" },
@@ -51,10 +51,12 @@ namespace Xplicity_Holidays.Migrations
 
                 {employee.fullName} went on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {holiday.overtimeHours}." },
                     { 5, "{employee.fullName} - Employee's full name.", "Birthday Reminder", "One of your colleagues is having their birthday today!", "Your colleague {employee.fullName} is having their birthday today! Don't forget to congratulate them." },
-                    { 4, "{employee.fullName} - Employee's full name.", "Upcoming Holiday Reminder", "One of your colleagues is going away for holidays next workday!", "Your colleague {employee.fullName} is going away for holidays next workday from {holiday.from} to {holiday.to} (inclusive)." },
+                    { 4, @"{employee.fullName} - Employee's full name.
+                {holiday.from} - Holiday's starting date.
+                {holiday.to} - Holiday's ending date.", "Upcoming Holiday Reminder", "One of your colleagues is going away for holidays next workday!", "Your colleague {employee.fullName} is going away for holidays next workday from {holiday.from} to {holiday.to} (inclusive)." },
                     { 7, @"{employee.fullName} - Employee's full name.
                 {download.link} - A link to download order document.", "Order Notification", "A holiday order has been generated!", "A holiday order for {employee.fullName} has been generated. Click this link to download it: {download.link}" },
-                    { 6, "{download.link} - A link to download request document.", "Request Notification", "Your holiday request has been generated!", "You can download you holiday request document by clicking this link: {download.link}" }
+                    { 6, "{download.link} - A link to download request document.", "Request Notification", "Your holiday request has been generated!", "You can download your holiday request document by clicking this link: {download.link}" }
                 });
 
             migrationBuilder.UpdateData(
@@ -62,7 +64,7 @@ namespace Xplicity_Holidays.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 columns: new[] { "BirthdayDate", "WorksFromDate" },
-                values: new object[] { new DateTime(2019, 12, 13, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2019, 12, 13, 0, 0, 0, 0, DateTimeKind.Local) });
+                values: new object[] { new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -107,7 +109,7 @@ namespace Xplicity_Holidays.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 columns: new[] { "BirthdayDate", "WorksFromDate" },
-                values: new object[] { new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2019, 12, 6, 0, 0, 0, 0, DateTimeKind.Local) });
+                values: new object[] { new DateTime(2019, 12, 13, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2019, 12, 13, 0, 0, 0, 0, DateTimeKind.Local) });
         }
     }
 }
