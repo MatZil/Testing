@@ -24,9 +24,9 @@ namespace Tests
         {
             _output = output;
             var setup = new SetUp();
-            var contextMapperTupple = setup.Initialize();
-            _context = contextMapperTupple.Item1;
-            var _mapper = contextMapperTupple.Item2;
+            var contextMapperTuple = setup.Initialize();
+            _context = contextMapperTuple.Item1;
+            var _mapper = contextMapperTuple.Item2;
             _holidaysCount = setup.GetCount("holidays");
 
             var timeService = new TimeService();

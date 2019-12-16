@@ -23,9 +23,9 @@ namespace Tests
         {
             _output = output;
             var setup = new SetUp();
-            var contextMapperTupple = setup.Initialize();
-            _context = contextMapperTupple.Item1;
-            var mapper = contextMapperTupple.Item2;
+            var contextMapperTuple = setup.Initialize();
+            _context = contextMapperTuple.Item1;
+            var mapper = contextMapperTuple.Item2;
             _clientsCount = setup.GetCount("clients");
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
             _clientsService = new ClientsService(clientsRepository, mapper);
