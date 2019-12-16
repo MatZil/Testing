@@ -60,7 +60,7 @@ namespace Xplicity_Holidays.Configurations
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/holidays/swagger.json", "Xplicity");
-                options.RoutePrefix = "holidays";
+                options.RoutePrefix = "swagger";
             });
         }
 
