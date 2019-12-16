@@ -18,7 +18,9 @@ namespace Tests
         public HolidayInfoTests()
         {
             var setup = new SetUp();
-            setup.Initialize(out _context, out IMapper mapper);
+            var contextMapperTupple = setup.Initialize();
+            _context = contextMapperTupple.Item1;
+            var mapper = contextMapperTupple.Item2;
 
             var userManager = setup.InitializeUserManager(_context);
 

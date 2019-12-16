@@ -25,7 +25,9 @@ namespace Tests
         {
             _output = output;
             _setup = new SetUp();
-            _setup.Initialize(out _context, out IMapper _mapper);
+            var contextMapperTupple = _setup.Initialize();
+            _context = contextMapperTupple.Item1;
+            var _mapper = contextMapperTupple.Item2;
             _employeesCount = _setup.GetCount("employees");
 
             var timeService = new TimeService();

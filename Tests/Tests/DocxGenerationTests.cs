@@ -25,7 +25,9 @@ namespace Tests
         public DocxGenerationTests()
         {
             var setup = new SetUp();
-            setup.Initialize(out _context, out IMapper mapper);
+            var contextMapperTupple = setup.Initialize();
+            _context = contextMapperTupple.Item1;
+            var mapper = contextMapperTupple.Item2;
             _config = setup.GetConfiguration();
             var userManager = setup.InitializeUserManager(_context);
 

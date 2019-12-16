@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+using System;
 using Xplicity_Holidays.Dtos.Inventory;
 using Xplicity_Holidays.Infrastructure.Database;
-using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Services;
 using Xunit;
@@ -19,15 +15,17 @@ namespace Tests
         private readonly HolidayDbContext _context;
         private readonly ITestOutputHelper _output;
         private readonly InventoryItemService _inventoryItemService;
-        private readonly int _inventoryItemsCount;
+        private readonly int _actualNumberOfItemsInInventory;
 
         public InventoryTests(ITestOutputHelper output)
         {
             _output = output;
             var setup = new SetUp();
-            setup.Initialize(out _context, out IMapper mapper);
-            _inventoryItemsCount = setup.GetCount("inventoryItems");
-            InventoryItemsRepository inventoryItemsRepository = new InventoryItemsRepository(_context);
+            var contextMapperTupple = setup.Initialize();
+            _context = contextMapperTupple.Item1;
+            var mapper = contextMapperTupple.Item2;
+            _actualNumberOfItemsInInventory = setup.GetCount("inventoryItems");
+            var inventoryItemsRepository = new InventoryItemsRepository(_context);
             _inventoryItemService = new InventoryItemService(inventoryItemsRepository,mapper);
         }
 
@@ -54,8 +52,8 @@ namespace Tests
         public async void When_GettingAllInventoryItems_Expect_ReturnsAllInventoryItems()
         {
             var retrievedInventoryItems = await _inventoryItemService.GetAll();
-
-            Assert.Equal(_inventoryItemsCount, retrievedInventoryItems.Count);
+            var retrievedNumberOfItemsInInventory = retrievedInventoryItems.Count;
+            Assert.Equal(_actualNumberOfItemsInInventory, retrievedNumberOfItemsInInventory);
         }
 
         [Fact]
@@ -89,13 +87,13 @@ namespace Tests
             {
                 Name = "UpdatedInventoryItemName",
             };
-            var expected = updatedInventoryItem.Name;
+            var updatedInventoryItemName = updatedInventoryItem.Name;
 
             await _inventoryItemService.Update(id, updatedInventoryItem);
-            var actual = _context.InventoryItems.Find(id).Name;
-            _output.WriteLine(initial + "   >>   " + actual);
+            var inventoryItemNameInDatabase = _context.InventoryItems.Find(id).Name;
+            _output.WriteLine(initial + "   >>   " + inventoryItemNameInDatabase);
 
-            Assert.Equal(expected, actual);
+            Assert.Equal(updatedInventoryItemName, inventoryItemNameInDatabase);
         }
     }
 }

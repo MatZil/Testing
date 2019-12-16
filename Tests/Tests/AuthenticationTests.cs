@@ -24,7 +24,9 @@ namespace Tests
         {
             _output = output;
             var setup = new SetUp();
-            setup.Initialize(out _context, out IMapper mapper);
+            var contextMapperTupple = setup.Initialize();
+            _context = contextMapperTupple.Item1;
+            var mapper = contextMapperTupple.Item2;
             _rolesCount = setup.GetCount("roles");
 
             _userManager = setup.InitializeUserManager(_context);

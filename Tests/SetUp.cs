@@ -32,7 +32,7 @@ namespace Tests
         private InventoryItem[] _inventoryItems;
         private InventoryCategory[] _inventoryCategories;
 
-        public void Initialize(out HolidayDbContext context, out IMapper mapper)
+        public Tuple<HolidayDbContext,IMapper> Initialize()
         {
             var serviceProvider = new ServiceCollection()
                 .AddEntityFrameworkInMemoryDatabase()
@@ -44,14 +44,16 @@ namespace Tests
                 .Options;
 
             var configuration = GetConfiguration();
-            context = new HolidayDbContext(options, configuration);
+            var context = new HolidayDbContext(options, configuration);
             Seed(context);
 
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new AutoMapperConfiguration());
             });
-            mapper = config.CreateMapper();
+            var mapper = config.CreateMapper();
+
+            return new Tuple<HolidayDbContext, IMapper>(context, mapper);
         }
 
         public IConfiguration GetConfiguration()
