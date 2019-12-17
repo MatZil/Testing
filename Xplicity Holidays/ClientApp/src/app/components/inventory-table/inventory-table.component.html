@@ -30,20 +30,17 @@
     </tbody>
 </nz-table>
 <nz-modal [(nzVisible)]="isVisibleNewItemModal" (nzOnCancel)="closeNewItemModal()"
-    [nzTitle]="isModifying ? 'Edit equipment' : 'Add new equipment'" nzWidth="400" [nzContent]="newItemModalContent"
+    [nzTitle]="isModifying ? 'Edit equipment' : 'Add new equipment'" nzWidth="600" [nzContent]="newItemModalContent"
     [nzFooter]="newItemModalFooter">
     <ng-template #newItemModalContent>
-        <form nz-form [formGroup]="input" (onsubmit)="saveInventoryItem()">
+        <form nz-form [formGroup]="input" (onsubmit)="saveInventoryItem()" nzLayout="horizontal">
             <nz-form-item>
-                <nz-form-control [nzErrorTip]="categoryErrorTip">
-                    <nz-input-group>
-                        <nz-select formControlName="inventoryCategoryId" nzPlaceHolder="Select item category"
-                            style="width: 200px">
-                            <nz-option *ngFor="let category of categories" [nzValue]=category.id
-                                [nzLabel]="category.name">
-                            </nz-option>
-                        </nz-select>
-                    </nz-input-group>
+                <nz-form-label [nzSpan]="5" nzFor="inventoryCategoryId" nzRequired>Category</nz-form-label>
+                <nz-form-control [nzSpan]="10" [nzErrorTip]="categoryErrorTip">
+                    <nz-select formControlName="inventoryCategoryId" nzPlaceHolder="Select item category">
+                        <nz-option *ngFor="let category of categories" [nzValue]=category.id [nzLabel]="category.name">
+                        </nz-option>
+                    </nz-select>
                     <ng-template #categoryErrorTip let-control>
                         <ng-container *ngIf="control.hasError('required')">
                             Category is required!
@@ -52,22 +49,20 @@
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
-                <nz-form-control>
-                    <nz-input-group>
-                        <nz-select formControlName="employeeId" style="width: 200px" nzPlaceHolder="Select employee"
-                            [(ngModel)]="selectedEmployee" nzShowSearch nzAllowClear>
-                            <nz-option *ngFor="let employee of employees" [nzValue]="employee.id"
-                                [nzLabel]="employee.name + ' ' + employee.surname">
-                            </nz-option>
-                        </nz-select>
-                    </nz-input-group>
+                <nz-form-label [nzSpan]="5" nzFor="employeeId">Employee</nz-form-label>
+                <nz-form-control [nzSpan]="10">
+                    <nz-select formControlName="employeeId" nzPlaceHolder="Select employee"
+                        [(ngModel)]="selectedEmployee" nzShowSearch nzAllowClear>
+                        <nz-option *ngFor="let employee of employees" [nzValue]="employee.id"
+                            [nzLabel]="employee.name + ' ' + employee.surname">
+                        </nz-option>
+                    </nz-select>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
-                <nz-form-control [nzErrorTip]="nameErrorTip">
-                    <nz-input-group>
-                        <input type="text" autocomplete="off" nz-input formControlName="name" placeholder="Name" />
-                    </nz-input-group>
+                <nz-form-label [nzSpan]="5" nzFor="name" nzRequired>Name</nz-form-label>
+                <nz-form-control [nzErrorTip]="nameErrorTip" [nzSpan]="10">
+                    <input nz-input autocomplete="off" formControlName="name" placeholder="Name" />
                     <ng-template #nameErrorTip let-control>
                         <ng-container *ngIf="control.hasError('required')">
                             Name is required!
@@ -76,11 +71,9 @@
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
-                <nz-form-control [nzErrorTip]="serialNumberErrorTip">
-                    <nz-input-group>
-                        <input type="text" autocomplete="off" nz-input formControlName="serialNumber"
-                            placeholder="Serial number" />
-                    </nz-input-group>
+                <nz-form-label [nzSpan]="5" nzFor="serialNumber" nzRequired>Serial number</nz-form-label>
+                <nz-form-control [nzSpan]="10" [nzErrorTip]="serialNumberErrorTip">
+                    <input nz-input autocomplete="off" formControlName="serialNumber" placeholder="Serial number" />
                     <ng-template #serialNumberErrorTip let-control>
                         <ng-container *ngIf="control.hasError('required')">
                             Serial number is required!
@@ -89,10 +82,9 @@
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
-                <nz-form-control [nzErrorTip]="priceErrorTip">
-                    <nz-input-group>
-                        <input type="number" autocomplete="off" nz-input formControlName="price" placeholder="Price" />
-                    </nz-input-group>
+                <nz-form-label [nzSpan]="5" nzFor="price" nzRequired>Price</nz-form-label>
+                <nz-form-control [nzSpan]="10" [nzErrorTip]="priceErrorTip">
+                    <input type="number" autocomplete="off" nz-input formControlName="price" placeholder="Price" />
                     <ng-template #priceErrorTip let-control>
                         <ng-container *ngIf="control.hasError('required')">
                             Price is required!
@@ -101,10 +93,9 @@
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
-                <nz-form-control [nzErrorTip]="purchaseDateErrorTip">
-                    <nz-input-group>
-                        <nz-date-picker formControlName="purchaseDate"></nz-date-picker>
-                    </nz-input-group>
+                <nz-form-label [nzSpan]="5" nzFor="purchaseDate" nzRequired>Purchase date</nz-form-label>
+                <nz-form-control [nzSpan]="10" [nzErrorTip]="purchaseDateErrorTip">
+                    <nz-date-picker formControlName="purchaseDate"></nz-date-picker>
                     <ng-template #purchaseDateErrorTip let-control>
                         <ng-container *ngIf="control.hasError('required')">
                             Date of purchase is required!
@@ -113,12 +104,10 @@
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
-                <nz-form-control>
-                    <nz-input-group>
-                        <textarea type="text" autocomplete="off" nz-input formControlName="comment"
-                            placeholder="Comment">
+                <nz-form-label [nzSpan]="5" nzFor="comment">Comment</nz-form-label>
+                <nz-form-control [nzSpan]="10">
+                    <textarea type="text" autocomplete="off" nz-input formControlName="comment" placeholder="Comment">
                         </textarea>
-                    </nz-input-group>
                 </nz-form-control>
             </nz-form-item>
         </form>

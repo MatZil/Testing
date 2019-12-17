@@ -66,16 +66,15 @@ export class InventoryTableComponent implements OnInit {
   closeNewItemModal() {
     this.isVisibleNewItemModal = false;
     this.isModifying = false;
+    this.input.reset();
   }
 
   saveInventoryItem() {
     if (!this.isModifying) {
-      console.log(this.input.value);
       this.inventoryService.createNewInventoryItem(this.input.value).subscribe(() => {
         this.refreshTable(this.employeeId);
       });
     } else {
-      console.log(this.input.value);
       this.inventoryService.updateInventoryItem(this.input.value.id, this.input.value).subscribe(() => {
         this.refreshTable(this.employeeId);
       });
