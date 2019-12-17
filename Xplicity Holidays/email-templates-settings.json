@@ -1,32 +1,8 @@
-﻿{
-  "AdminData": {
-    "AdminGuid": "53ec4767-d79f-452e-ab70-4bbe27c44fc0",
-    "RoleGuid": "ebf2ee18-d97a-49fe-9301-e6cd31957140",
-    "RoleName": "Admin",
-    "AdminEmail": "email",
-    "AdminPassword": "password",
-    "AdminName": "Inga",
-    "AdminSurname": "Rana"
-  },
-  "DocxGeneration": {
-    "TemplatesDir": "Templates",
-    "OrderTemplateName": "Order Template.docx",
-    "RequestTemplateName": "Request Template.docx",
-    "NameFormat": "{holidayId}-{documentType}{holidayType}.docx",
-    "OrderPaid": "apmokamas",
-    "OrderUnpaid": "neapmokamas",
-    "RequestPaid": "",
-    "RequestUnpaid": "neapmokamų",
-    "IncreasedSalaryRequest": "Atostoginius prašau sumokėti su atlyginimu.",
-    "IncreasedSalaryOrder": "Atostoginius prie darbo užmokesčio išmokėti su atitinkamo mėn. darbo užmokesčiu.",
-    "OvertimeOrder": " panaudojant už viršvalandinį darbą susikaupusias {OVERTIME_HOURS} valandas",
-    "OvertimeRequest": "panaudojant už viršvalandinį darbą sukauptas atostogų {OVERTIME_HOURS} valandas."
-  },
-
+{
   "EmailTemplates": {
     "AdminConfirmation": {
       "Subject": "An employee is requesting confirmation for holidays",
-      "Template": "Hello, {admin.name},\n\nAn employee {employee.fullName} is intending to go on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {client.status}. {holiday.overtimeHours}\n\nClick this link to confirm: {holiday.confirm}\nClick this link to decline: {holiday.decline}",
+      "Template": "Hello, {admin.name},\n\nAn employee {employee.fullName} is intending to go on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {client.status} {holiday.overtimeHours}\n\nClick this link to confirm: {holiday.confirm}\nClick this link to decline: {holiday.decline}",
       "Instructions": "{admin.name} - Receiving admin's first name.\n{employee.fullName} - Employee's full name.\n{holiday.paid} - Whether or not holiday is paid.\n{holiday.type} - Holiday's type.\n{holiday.from} - Holiday's starting date.\n{holiday.to} - Holiday's ending date.\n{client.status} - Message that client has confirmed the holiday.\n{holiday.overtimeHours} - Message that employee wants to use some of his overtime hours for this holiday.\n{holiday.confirm} - Holiday's confirmation link.\n{holiday.decline} - Holiday's rejection link."
     },
 
@@ -45,7 +21,7 @@
     "HolidayNotification": {
       "Subject": "One of your colleagues is going away for holidays next workday!",
       "Template": "Your colleague {employee.fullName} is going away for holidays next workday from {holiday.from} to {holiday.to} (inclusive).",
-      "Instructions": "{employee.fullName} - Employee's full name."
+      "Instructions": "{employee.fullName} - Employee's full name.\n{holiday.from} - Holiday's starting date.\n{holiday.to} - Holiday's ending date."
     },
 
     "BirthdayReminder": {
@@ -56,7 +32,7 @@
 
     "RequestNotification": {
       "Subject": "Your holiday request has been generated!",
-      "Template": "You can download you holiday request document by clicking this link: {download.link}",
+      "Template": "You can download your holiday request document by clicking this link: {download.link}",
       "Instructions": "{download.link} - A link to download request document."
     },
 
