@@ -11,7 +11,7 @@
                     <div>
                         <mat-form-field>
                             <input matInput [(ngModel)]="newUser.name" type="text" name="name"
-                                placeholder="Employee name" required #nameInput="ngModel" pattern="[a-zA-Z]*">
+                                placeholder="Employee name" required #nameInput="ngModel" pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
                             <mat-error *ngIf="nameInput.invalid" class="error">
                                 Name has to contain only letters.
                             </mat-error>
@@ -20,7 +20,7 @@
                     <div>
                         <mat-form-field>
                             <input matInput [(ngModel)]="newUser.surname" type="text" name="surname"
-                                placeholder="Employee surname" required #nameInput="ngModel" pattern="[a-zA-Z]*">
+                                placeholder="Employee surname" required #nameInput="ngModel" pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
                             <mat-error *ngIf="nameInput.invalid" class="error">
                                 Surname has to contain only letters.
                             </mat-error>
@@ -213,7 +213,7 @@
                             <div>
                                 <mat-form-field>
                                     <input matInput [(ngModel)]="formDataUsersNoId.name" type="text" name="name"
-                                        placeholder="Employee name" required #nameInput="ngModel" pattern="[a-zA-Z]*">
+                                        placeholder="Employee name" required #nameInput="ngModel" pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
                                     <mat-error *ngIf="nameInput.invalid" class="error">
                                         Name has to contain only letters.
                                     </mat-error>
@@ -222,7 +222,7 @@
                             <div>
                                 <mat-form-field>
                                     <input matInput [(ngModel)]="formDataUsersNoId.surname" type="text" name="surname"
-                                        placeholder="Employee surname" required #nameInput="ngModel" pattern="[a-zA-Z]*">
+                                        placeholder="Employee surname" required #nameInput="ngModel" pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
                                     <mat-error *ngIf="nameInput.invalid" class="error">
                                         Surname has to contain only letters.
                                     </mat-error>
