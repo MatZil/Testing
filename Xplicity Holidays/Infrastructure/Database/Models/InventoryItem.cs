@@ -18,8 +18,7 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         [Required]
         public DateTime PurchaseDate { get;set; }
 
-        [Required]
-        public DateTime ExpiryDate { get; set; }
+        public DateTime? ExpiryDate { get; set; }
 
         [Required]
         public decimal Price { get; set; }

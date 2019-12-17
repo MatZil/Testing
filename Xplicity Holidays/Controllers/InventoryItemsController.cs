@@ -42,5 +42,12 @@ namespace Xplicity_Holidays.Controllers
             var newInventoryItem = await _inventoryItemService.Create(newInventoryItemDto);
             return CreatedAtRoute(new {id = newInventoryItem.Id}, newInventoryItem);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, UpdateInventoryItemDto updateInventoryItemDto)
+        {
+            await _inventoryItemService.Update(id, updateInventoryItemDto);
+            return NoContent();
+        }
     }
 }
