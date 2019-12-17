@@ -7,11 +7,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class InventoryCategoryService {
-  private readonly itemCategoryApi = `${this.baseUrl}/InventoryCategories`;
+  private readonly inventoryCategoryApi = `${this.baseUrl}api/InventoryCategories`;
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
   getAllCategories(): Observable<InventoryCategory[]> {
-    return this.http.get<InventoryCategory[]>(this.itemCategoryApi);
+    return this.http.get<InventoryCategory[]>(this.inventoryCategoryApi);
   }
 }

@@ -30,7 +30,9 @@ namespace Tests
         {
             _output = output;
             var setup = new SetUp();
-            setup.Initialize(out _context, out IMapper mapper);
+            var contextMapperTuple = setup.Initialize();
+            _context = contextMapperTuple.Item1;
+            var mapper = contextMapperTuple.Item2;
 
             _timeService = new TimeService();
             _holidaysRepository = new HolidaysRepository(_context);

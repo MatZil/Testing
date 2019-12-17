@@ -27,7 +27,8 @@ namespace Xplicity_Holidays.Infrastructure.Repositories
 
         public async Task<InventoryItem> GetById(int id)
         {
-            var inventoryItem = await _context.InventoryItems.Include(i => i.Category).FirstOrDefaultAsync();
+            var inventoryItem = await _context.InventoryItems.Include(i => i.Category).Where(i => i.Id == id)
+                .FirstOrDefaultAsync();
             return inventoryItem;
         }
 
