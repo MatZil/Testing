@@ -13,16 +13,16 @@
                             <input matInput [(ngModel)]="newUser.name" type="text" name="name"
                                 placeholder="Employee name" required #nameInput="ngModel" pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
                             <mat-error *ngIf="nameInput.invalid" class="error">
-                                Name has to contain only letters.
+                                Please enter a valid name.
                             </mat-error>
                         </mat-form-field>
                     </div>
                     <div>
                         <mat-form-field>
                             <input matInput [(ngModel)]="newUser.surname" type="text" name="surname"
-                                placeholder="Employee surname" required #nameInput="ngModel" pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
-                            <mat-error *ngIf="nameInput.invalid" class="error">
-                                Surname has to contain only letters.
+                                placeholder="Employee surname" required #surnameInput="ngModel" pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
+                            <mat-error *ngIf="surnameInput.invalid" class="error">
+                                Please enter a valid surname.
                             </mat-error>
                         </mat-form-field>
                     </div>
@@ -31,18 +31,18 @@
                     <div>
                         <mat-form-field>
                             <input matInput [(ngModel)]="newUser.email" type="email" name="email"
-                                placeholder="Employee email" required #nameInput="ngModel" email>
-                            <mat-error *ngIf="nameInput.invalid" class="error">
-                                Email is invalid.
+                                placeholder="Employee email" #emailInput="ngModel" required email>
+                            <mat-error *ngIf="emailInput.invalid" class="error">
+                                Please enter a valid email.
                             </mat-error>
                         </mat-form-field>
                     </div>
                     <div>
                         <mat-form-field>
                             <input matInput [(ngModel)]="newUser.password" type="password" name="password"
-                                placeholder="Employee password" required #nameInput="ngModel">
-                            <mat-error *ngIf="nameInput.invalid" class="error">
-                                Password cannot be empty.
+                                placeholder="Employee password" required #passwordInput="ngModel">
+                            <mat-error *ngIf="passwordInput.invalid" class="error">
+                                Please enter password.
                             </mat-error>
                         </mat-form-field>
                     </div>
@@ -61,8 +61,8 @@
                     <div>
                         <mat-form-field>
                             <input matInput [(ngModel)]="newUser.worksFromDate" type="date" name="worksFromDate"
-                                placeholder="Started working from date" required #nameInput="ngModel">
-                            <mat-error *ngIf="nameInput.invalid" class="error">
+                                placeholder="Started working from date" required #workStartInput="ngModel">
+                            <mat-error *ngIf="workStartInput.invalid" class="error">
                                 Date cannot be empty.
                             </mat-error>
                         </mat-form-field>
@@ -72,8 +72,8 @@
                     <div>
                         <mat-form-field>
                             <input matInput [(ngModel)]="newUser.birthdayDate" type="date" name="birthDayDate"
-                                placeholder="Employee birthday date" required #nameInput="ngModel">
-                            <mat-error *ngIf="nameInput.invalid" class="error">
+                                placeholder="Employee birthday date" required #birthdayInput="ngModel">
+                            <mat-error *ngIf="birthdayInput.invalid" class="error">
                                 Date cannot be empty.
                             </mat-error>
                         </mat-form-field>
@@ -81,8 +81,8 @@
                     <div>
                       <mat-form-field>
                         <input matInput [(ngModel)]="newUser.healthCheckDate" type="date" name="healthCheckDate"
-                               placeholder="Employee health check-up date" required #nameInput="ngModel">
-                        <mat-error *ngIf="nameInput.invalid" class="error">
+                               placeholder="Employee health check-up date" required #healthInput="ngModel">
+                        <mat-error *ngIf="healthInput.invalid" class="error">
                             Date cannot be empty.
                         </mat-error>
                       </mat-form-field>
@@ -92,7 +92,7 @@
                     <div>
                         <mat-form-field>
                             <mat-select [(ngModel)]="newUser.daysOfVacation" name="daysOfVacation"
-                                placeholder="Days of vacation" required #nameInput="ngModel">
+                                placeholder="Days of vacation" required #daysInput="ngModel">
                                 <mat-option [value]="20">20</mat-option>
                                 <mat-option [value]="25">25</mat-option>
                             </mat-select>
@@ -101,7 +101,7 @@
                     <div>
                         <mat-form-field>
                             <mat-select [(ngModel)]="newUser.parentalLeaveLimit" name="parentalLeaveLimit"
-                                placeholder="Parental leave limit" required #nameInput="ngModel">
+                                placeholder="Parental leave limit" required #parentalInput="ngModel">
                                 <mat-option [value]="0">0</mat-option>
                                 <mat-option [value]="1">1</mat-option>
                                 <mat-option [value]="2">2</mat-option>
@@ -113,7 +113,7 @@
                     <div>
                         <mat-form-field>
                             <mat-select [(ngModel)]="newUser.role" name="role" placeholder="Employee role" required
-                                #nameInput="ngModel">
+                                #roleInput="ngModel">
                                 <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -121,8 +121,8 @@
                     <div>
                         <mat-form-field>
                             <input matInput [(ngModel)]="newUser.position" type="text" name="position"
-                                placeholder="Employee position" required #nameInput="ngModel">
-                            <mat-error *ngIf="nameInput.invalid" class="error">
+                                placeholder="Employee position" required #positionInput="ngModel">
+                            <mat-error *ngIf="positionInput.invalid" class="error">
                                 Position cannot be empty.
                             </mat-error>
                         </mat-form-field>
@@ -211,22 +211,24 @@
                     <mat-card>
                         <div class="columns">
                             <div>
-                                <mat-form-field>
-                                    <input matInput [(ngModel)]="formDataUsersNoId.name" type="text" name="name"
-                                        placeholder="Employee name" required #nameInput="ngModel" pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
-                                    <mat-error *ngIf="nameInput.invalid" class="error">
-                                        Name has to contain only letters.
-                                    </mat-error>
-                                </mat-form-field>
+                              <mat-form-field>
+                                <input matInput [(ngModel)]="formDataUsersNoId.name" type="text" name="name"
+                                       placeholder="Employee name" #nameInput="ngModel"
+                                       required pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
+                                <mat-error *ngIf="nameInput.invalid" class="error">
+                                    Please enter a valid name.
+                                </mat-error>
+                              </mat-form-field>
                             </div>
                             <div>
-                                <mat-form-field>
-                                    <input matInput [(ngModel)]="formDataUsersNoId.surname" type="text" name="surname"
-                                        placeholder="Employee surname" required #nameInput="ngModel" pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
-                                    <mat-error *ngIf="nameInput.invalid" class="error">
-                                        Surname has to contain only letters.
-                                    </mat-error>
-                                </mat-form-field>
+                              <mat-form-field>
+                                <input matInput [(ngModel)]="formDataUsersNoId.surname" type="text" name="surname"
+                                       placeholder="Employee surname" #surnameInput="ngModel"
+                                       required pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
+                                <mat-error *ngIf="surnameInput.invalid" class="error">
+                                    Please enter a valid surname.
+                                </mat-error>
+                              </mat-form-field>
                             </div>
                         </div>
                         <div class="columns">
@@ -244,9 +246,9 @@
                             <div>
                                 <mat-form-field>
                                     <input matInput [(ngModel)]="formDataUsersNoId.worksFromDate" type="date"
-                                        name="worksFromDate" placeholder="Started working from date" required
-                                        #nameInput="ngModel">
-                                    <mat-error *ngIf="nameInput.invalid" class="error">
+                                        name="worksFromDate" placeholder="Started working from date" #workStartInput="ngModel"
+                                        required>
+                                    <mat-error *ngIf="workStartInput.invalid" class="error">
                                         Date cannot be empty.
                                     </mat-error>
                                 </mat-form-field>
@@ -256,9 +258,9 @@
                             <div>
                                 <mat-form-field>
                                     <input matInput [(ngModel)]="formDataUsersNoId.birthdayDate" type="date"
-                                        name="birthDayDate" placeholder="Employee birthday date" required
-                                        #nameInput="ngModel">
-                                    <mat-error *ngIf="nameInput.invalid" class="error">
+                                        name="birthDayDate" placeholder="Employee birthday date" #birthdayInput="ngModel"
+                                        required>
+                                    <mat-error *ngIf="birthdayInput.invalid" class="error">
                                         Date cannot be empty.
                                     </mat-error>
                                 </mat-form-field>
@@ -267,8 +269,8 @@
                               <mat-form-field>
                                 <input matInput [(ngModel)]="formDataUsersNoId.healthCheckDate" type="date"
                                        name="healthCheckDate" placeholder="Employee health check-up date"
-                                       required #nameInput="ngModel">
-                                <mat-error *ngIf="nameInput.invalid" class="error">
+                                       #healthInput="ngModel" required>
+                                <mat-error *ngIf="healthInput.invalid" class="error">
                                     Date cannot be empty.
                                 </mat-error>
                               </mat-form-field>
@@ -278,7 +280,7 @@
                             <div>
                                 <mat-form-field>
                                     <mat-select [(ngModel)]="formDataUsersNoId.daysOfVacation" name="daysOfVacation"
-                                        placeholder="Days of vacation" required #nameInput="ngModel">
+                                        placeholder="Days of vacation" required #daysInput="ngModel">
                                         <mat-option [value]="20">20</mat-option>
                                         <mat-option [value]="25">25</mat-option>
                                     </mat-select>
@@ -288,7 +290,7 @@
                                 <mat-form-field>
                                     <mat-select [(ngModel)]="formDataUsersNoId.parentalLeaveLimit"
                                         name="parentalLeaveLimit" placeholder="Parental leave limit" required
-                                        #nameInput="ngModel">
+                                        #parentalInput="ngModel">
                                         <mat-option [value]="0">0</mat-option>
                                         <mat-option [value]="1">1</mat-option>
                                         <mat-option [value]="2">2</mat-option>
@@ -299,26 +301,26 @@
                         <div>
                             <mat-form-field>
                                 <input matInput [(ngModel)]="formDataUsersNoId.overtimeHours" type="number" min="0"
-                                    name="overtimeHours" placeholder="Overtime hours" required #nameInput="ngModel">
-                                <mat-error *ngIf="nameInput.invalid" class="error">
+                                    name="overtimeHours" placeholder="Overtime hours" #overtimeInput="ngModel" required>
+                                <mat-error *ngIf="overtimeInput.invalid" class="error">
                                     Overtime hours cannot be empty.
                                 </mat-error>
                             </mat-form-field>
                         </div>
                         <div class="columns">
                             <div>
-                                <mat-form-field>
-                                    <input matInput [(ngModel)]="formDataUsersNoId.email" type="email" name="email"
-                                        placeholder="Employee email" required #nameInput="ngModel" email>
-                                    <mat-error *ngIf="nameInput.invalid" class="error">
-                                        Email is invalid.
-                                    </mat-error>
-                                </mat-form-field>
+                              <mat-form-field>
+                                <input matInput [(ngModel)]="formDataUsersNoId.email" type="email" name="email"
+                                       placeholder="Employee email" #emailInput="ngModel" required email>
+                                <mat-error *ngIf="emailInput.invalid" class="error">
+                                  Please enter a valid email.
+                                </mat-error>
+                              </mat-form-field>
                             </div>
                             <div>
                                 <mat-form-field>
                                     <mat-select [(ngModel)]="formDataUsersNoId.status" name="status"
-                                        placeholder="Employee status" required #nameInput="ngModel" [(value)]="selected"
+                                        placeholder="Employee status" required #statusInput="ngModel" [(value)]="selected"
                                         [disabled]="formDataUsers.id === getCurrentUserId()">
                                         <mat-option [value]="0">
                                             Former employee
@@ -335,7 +337,7 @@
                             <div>
                                 <mat-form-field>
                                     <mat-select [(ngModel)]="formDataUsersNoId.role" name="role"
-                                        placeholder="Employee role" required #nameInput="ngModel">
+                                        placeholder="Employee role" required #roleInput="ngModel">
                                         <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}
                                         </mat-option>
                                     </mat-select>
@@ -344,8 +346,8 @@
                             <div>
                                 <mat-form-field>
                                     <input matInput [(ngModel)]="formDataUsersNoId.position" type="text" name="position"
-                                        placeholder="Employee position" required #nameInput="ngModel">
-                                    <mat-error *ngIf="nameInput.invalid" class="error">
+                                        placeholder="Employee position" #positionInput="ngModel" required>
+                                    <mat-error *ngIf="positionInput.invalid" class="error">
                                         Position cannot be empty.
                                     </mat-error>
                                 </mat-form-field>
