@@ -92,7 +92,7 @@
                     <div>
                         <mat-form-field>
                             <mat-select [(ngModel)]="newUser.daysOfVacation" name="daysOfVacation"
-                                placeholder="Days of vacation" required #daysInput="ngModel">
+                                placeholder="Days of vacation" #daysInput="ngModel">
                                 <mat-option [value]="20">20</mat-option>
                                 <mat-option [value]="25">25</mat-option>
                             </mat-select>
@@ -101,7 +101,7 @@
                     <div>
                         <mat-form-field>
                             <mat-select [(ngModel)]="newUser.parentalLeaveLimit" name="parentalLeaveLimit"
-                                placeholder="Parental leave limit" required #parentalInput="ngModel">
+                                placeholder="Parental leave limit" #parentalInput="ngModel">
                                 <mat-option [value]="0">0</mat-option>
                                 <mat-option [value]="1">1</mat-option>
                                 <mat-option [value]="2">2</mat-option>
@@ -112,7 +112,7 @@
                 <div class="columns">
                     <div>
                         <mat-form-field>
-                            <mat-select [(ngModel)]="newUser.role" name="role" placeholder="Employee role" required
+                            <mat-select [(ngModel)]="newUser.role" name="role" placeholder="Employee role"
                                 #roleInput="ngModel">
                                 <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}</mat-option>
                             </mat-select>
@@ -280,7 +280,7 @@
                             <div>
                                 <mat-form-field>
                                     <mat-select [(ngModel)]="formDataUsersNoId.daysOfVacation" name="daysOfVacation"
-                                        placeholder="Days of vacation" required #daysInput="ngModel">
+                                        placeholder="Days of vacation" #daysInput="ngModel">
                                         <mat-option [value]="20">20</mat-option>
                                         <mat-option [value]="25">25</mat-option>
                                     </mat-select>
@@ -289,7 +289,7 @@
                             <div>
                                 <mat-form-field>
                                     <mat-select [(ngModel)]="formDataUsersNoId.parentalLeaveLimit"
-                                        name="parentalLeaveLimit" placeholder="Parental leave limit" required
+                                        name="parentalLeaveLimit" placeholder="Parental leave limit"
                                         #parentalInput="ngModel">
                                         <mat-option [value]="0">0</mat-option>
                                         <mat-option [value]="1">1</mat-option>
@@ -337,7 +337,7 @@
                             <div>
                                 <mat-form-field>
                                     <mat-select [(ngModel)]="formDataUsersNoId.role" name="role"
-                                        placeholder="Employee role" required #roleInput="ngModel">
+                                        placeholder="Employee role" #roleInput="ngModel">
                                         <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}
                                         </mat-option>
                                     </mat-select>

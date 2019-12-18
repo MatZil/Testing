@@ -9,7 +9,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
 
-import { NgForm, FormControl, Validators } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { Role } from '../../models/role';
@@ -29,7 +29,8 @@ export class EmployeesTableComponent implements OnInit {
   newUser: Newuser = new Newuser();
   employeeStatus = EmployeeStatus;
   selected;
-  employeeIdForEquipment: number
+  employeeIdForEquipment: number;
+
   clients: Client[] = [];
   oneClient: Client;
 
@@ -52,16 +53,14 @@ export class EmployeesTableComponent implements OnInit {
     private modal: NzModalService,
     private notification: NzNotificationService,
     private authenticationService: AuthenticationService
-  ) {
+  ) {}
+
+  ngOnInit() {
     this.refreshTable();
     this.getAllRoles();
     this.clientService.getClient().subscribe(clients => {
       this.clients = clients;
     });
-  }
-
-  ngOnInit() {
-    
   }
 
   refreshTable() {
