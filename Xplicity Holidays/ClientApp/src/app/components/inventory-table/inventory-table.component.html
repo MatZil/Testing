@@ -2,12 +2,12 @@
 <nz-table #basicTable [nzData]="equipment">
     <thead>
         <tr>
-            <th>Category</th>
+            <th nzShowFilter [nzFilters]="categories">Category</th>
             <th>Name</th>
             <th>Serial number</th>
             <th>Purchase Date</th>
             <th>Price</th>
-            <th>Expiry Date</th>
+            <th>Expiration Date</th>
             <th>Comment</th>
             <th></th>
         </tr>
@@ -99,6 +99,17 @@
                     <ng-template #purchaseDateErrorTip let-control>
                         <ng-container *ngIf="control.hasError('required')">
                             Date of purchase is required!
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="5" nzFor="expirationDate" nzRequired>Expiration date</nz-form-label>
+                <nz-form-control [nzSpan]="10" [nzErrorTip]="expiryDateErrorTip">
+                    <nz-date-picker formControlName="expiryDate"></nz-date-picker>
+                    <ng-template #expiryDateErrorTip let-control>
+                        <ng-container *ngIf="control.hasError('required')">
+                            Expiration date is required!
                         </ng-container>
                     </ng-template>
                 </nz-form-control>

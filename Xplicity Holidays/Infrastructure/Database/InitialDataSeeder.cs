@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
+using DocumentFormat.OpenXml.Drawing;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Static_Files;
@@ -132,6 +133,36 @@ namespace Xplicity_Holidays.Infrastructure.Database
                     Subject = configuration["EmailTemplates:OrderNotification:Subject"],
                     Template = configuration["EmailTemplates:OrderNotification:Template"],
                     Instructions = configuration["EmailTemplates:OrderNotification:Instructions"]
+                }
+            );
+        }
+
+        public static void CreateEquipmentCategories(ModelBuilder builder, IConfiguration configuration)
+        {
+            builder.Entity<InventoryCategory>().HasData(
+                new InventoryCategory
+                {
+                    Id = 1,
+                    Name = configuration["EquipmentCategories:Furniture:Name"],
+                    Deprecation = Convert.ToInt32(configuration["EquipmentCategories:Furniture:Deprecation"])
+                },
+                new InventoryCategory
+                {
+                    Id = 2,
+                    Name = configuration["EquipmentCategories:Electronics:Name"],
+                    Deprecation = Convert.ToInt32(configuration["EquipmentCategories:Electronics:Deprecation"])
+                },
+                new InventoryCategory
+                {
+                    Id = 3,
+                    Name = configuration["EquipmentCategories:Other:Name"],
+                    Deprecation = Convert.ToInt32(configuration["EquipmentCategories:Other:Deprecation"])
+                },
+                new InventoryCategory
+                {
+                    Id = 4,
+                    Name = configuration["EquipmentCategories:License:Name"],
+                    Deprecation = Convert.ToInt32(configuration["EquipmentCategories:License:Deprecation"])
                 }
             );
         }

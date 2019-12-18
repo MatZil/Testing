@@ -9,7 +9,7 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
     {
         public string Name { get; set; }
 
-        public int Normative { get; set; }
+        public int? Deprecation { get; set; }
 
         public List<InventoryItem> Items { get; set; }
     }

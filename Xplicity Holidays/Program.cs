@@ -17,6 +17,7 @@ namespace Xplicity_Holidays
             var config = new ConfigurationBuilder()
                             .SetBasePath(Directory.GetCurrentDirectory())
                             .AddJsonFile("email-templates-settings.json")
+                            .AddJsonFile("equipment-categories.json")
                             .Build();
 
             return WebHost.CreateDefaultBuilder(args)

@@ -239,12 +239,12 @@ namespace Tests
                 new InventoryCategory()
                 {
                     Name = "Category1",
-                    Normative = 1
+                    Deprecation = 1
                 },
                 new InventoryCategory()
                 {
                     Name = "Category2",
-                    Normative = 2
+                    Deprecation = 2
                 }
             };
             context.InventoryCategories.AddRange(_inventoryCategories);

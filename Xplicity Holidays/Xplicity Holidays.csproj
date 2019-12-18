@@ -23,6 +23,8 @@
     <Compile Remove="Migrations\20191118143918_AddFilesTable.Designer.cs" />
     <Compile Remove="Migrations\20191201114226_AddInventoryCategoryAndItem.cs" />
     <Compile Remove="Migrations\20191201114226_AddInventoryCategoryAndItem.Designer.cs" />
+    <Compile Remove="Migrations\20191218112938_EquipmentCategoriesSeed.cs" />
+    <Compile Remove="Migrations\20191218112938_EquipmentCategoriesSeed.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
