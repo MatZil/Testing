@@ -11,7 +11,7 @@
                     <div>
                         <mat-form-field>
                             <input matInput [(ngModel)]="newUser.name" type="text" name="name"
-                                placeholder="Employee name" required #nameInput="ngModel" pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
+                                placeholder="Employee name" required #nameInput="ngModel" pattern="[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]*">
                             <mat-error *ngIf="nameInput.invalid" class="error">
                                 Please enter a valid name.
                             </mat-error>
@@ -20,7 +20,7 @@
                     <div>
                         <mat-form-field>
                             <input matInput [(ngModel)]="newUser.surname" type="text" name="surname"
-                                placeholder="Employee surname" required #surnameInput="ngModel" pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
+                                placeholder="Employee surname" required #surnameInput="ngModel" pattern="[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]*">
                             <mat-error *ngIf="surnameInput.invalid" class="error">
                                 Please enter a valid surname.
                             </mat-error>
@@ -214,7 +214,7 @@
                               <mat-form-field>
                                 <input matInput [(ngModel)]="formDataUsersNoId.name" type="text" name="name"
                                        placeholder="Employee name" #nameInput="ngModel"
-                                       required pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
+                                       required pattern="[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]*">
                                 <mat-error *ngIf="nameInput.invalid" class="error">
                                     Please enter a valid name.
                                 </mat-error>
@@ -224,7 +224,7 @@
                               <mat-form-field>
                                 <input matInput [(ngModel)]="formDataUsersNoId.surname" type="text" name="surname"
                                        placeholder="Employee surname" #surnameInput="ngModel"
-                                       required pattern="[a-zA-ZąčęėįšųūĄČĘĖĮŠŲŪ]*">
+                                       required pattern="[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]*">
                                 <mat-error *ngIf="surnameInput.invalid" class="error">
                                     Please enter a valid surname.
                                 </mat-error>
