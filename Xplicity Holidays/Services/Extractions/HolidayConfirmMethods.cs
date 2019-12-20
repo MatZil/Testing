@@ -4,7 +4,7 @@ using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 
-namespace Tests.SeparateMethods
+namespace Xplicity_Holidays.Services.Extractions
 {
     public class HolidayConfirmMethods
     {

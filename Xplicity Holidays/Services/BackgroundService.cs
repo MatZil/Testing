@@ -9,6 +9,7 @@ using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
+using Xplicity_Holidays.Services.Extractions;
 
 namespace Xplicity_Holidays.Services
 {
@@ -17,12 +18,14 @@ namespace Xplicity_Holidays.Services
         private readonly ITimeService _timeService;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly BackgroundMethods _accessMethods;
 
         public BackgroundService(ITimeService timeService, IServiceScopeFactory serviceScopeFactory, IHostingEnvironment hostingEnvironment)
         {
             _serviceScopeFactory = serviceScopeFactory;
             _timeService = timeService;
             _hostingEnvironment = hostingEnvironment;
+            _accessMethods = new BackgroundMethods();
         }
 
         public async Task RunBackgroundServices()
@@ -54,9 +57,9 @@ namespace Xplicity_Holidays.Services
 
                 await CheckBirthdays(employees, _timeService, emailService);
 
-                await AddFreeWorkDays(employees, _timeService, employeeRepository);
+                await _accessMethods.AddFreeWorkDays(employees, _timeService, employeeRepository);
 
-                await ResetParentalLeaves(employees, _timeService, employeeRepository);
+                await _accessMethods.ResetParentalLeaves(employees, _timeService, employeeRepository);
             }
         }
 
@@ -127,35 +130,6 @@ namespace Xplicity_Holidays.Services
             if (employeesWithBirthdays.Count != 0)
             {
                 await emailService.SendBirthDayReminder(employeesWithBirthdays, employees);
-            }
-        }
-
-        private async Task AddFreeWorkDays(ICollection<Employee> employees, ITimeService _timeService, IEmployeeRepository _repository)
-        {
-            var currentTime = _timeService.GetCurrentTime();
-            if (currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.DayOfWeek != DayOfWeek.Sunday)
-            {
-                var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
-                                                            new DateTime(currentTime.AddYears(1).Year, 1, 1));
-                foreach (var employee in employees)
-                {
-                    employee.FreeWorkDays += Math.Round((double)employee.DaysOfVacation / workDaysPerYear, 2);
-                    await _repository.Update(employee);
-                }
-            }
-        }
-
-        private async Task ResetParentalLeaves(ICollection<Employee> employees, ITimeService timeService, IEmployeeRepository repository)
-        {
-            var currentTime = timeService.GetCurrentTime();
-            if (currentTime.Day == 1)
-            {
-                foreach (var employee in employees)
-                {
-                    employee.CurrentAvailableLeaves = employee.NextMonthAvailableLeaves;
-                    employee.NextMonthAvailableLeaves = employee.ParentalLeaveLimit;
-                    await repository.Update(employee);
-                }
             }
         }
 

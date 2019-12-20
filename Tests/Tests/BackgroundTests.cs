@@ -8,12 +8,11 @@ using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Utils;
 using AutoMapper;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
-using Xplicity_Holidays.Services.Interfaces;
 using Moq;
 using Xunit.Abstractions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Tests.SeparateMethods;
+using Xplicity_Holidays.Services.Extractions;
 
 namespace Tests
 {

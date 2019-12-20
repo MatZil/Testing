@@ -9,7 +9,7 @@ using Xplicity_Holidays.Services.Interfaces;
 using Moq;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xunit.Abstractions;
-using Tests.SeparateMethods;
+using Xplicity_Holidays.Services.Extractions;
 
 namespace Tests
 {

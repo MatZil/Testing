@@ -8,6 +8,7 @@ using Xplicity_Holidays.Infrastructure.Static_Files;
 using Xplicity_Holidays.Services.Interfaces;
 using System;
 using Xplicity_Holidays.Infrastructure.Enums;
+using Xplicity_Holidays.Services.Extractions;
 
 namespace Xplicity_Holidays.Services
 {
@@ -21,6 +22,8 @@ namespace Xplicity_Holidays.Services
         private readonly IRepository<Client> _repositoryClients;
         private readonly IHolidaysRepository _repositoryHolidays;
         private readonly IDocxGeneratorService _docxGeneratorService;
+        private readonly HolidayConfirmMethods _accessMethods;
+
         public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays,
                                      IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
                                      IHolidaysService holidaysService, ITimeService timeService, IDocxGeneratorService docxGeneratorService)
@@ -33,6 +36,7 @@ namespace Xplicity_Holidays.Services
             _holidaysService = holidaysService;
             _timeService = timeService;
             _docxGeneratorService = docxGeneratorService;
+            _accessMethods = new HolidayConfirmMethods(repositoryEmployees, timeService);
         }
 
         public async Task<bool> RequestClientApproval(int holidayId)
@@ -72,57 +76,16 @@ namespace Xplicity_Holidays.Services
 
             if (getHolidayDto.Type == HolidayType.Parental)
             {
-                await UpdateParentalLeaves(getHolidayDto);
+                await _accessMethods.UpdateParentalLeaves(getHolidayDto);
             }
             else if (getHolidayDto.Type == HolidayType.Annual && getHolidayDto.Paid)
             {
-                await UpdateEmployeesWorkdays(getHolidayDto);
-                await UpdateEmployeesOvertime(getHolidayDto);
+                await _accessMethods.UpdateEmployeesWorkdays(getHolidayDto);
+                await _accessMethods.UpdateEmployeesOvertime(getHolidayDto);
             }
         }
 
-        private async Task UpdateEmployeesWorkdays(GetHolidayDto holidayDto)
-        {
-            var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
-            workdays -= holidayDto.OvertimeDays;
-            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
-            employee.FreeWorkDays -= workdays;
-            await _repositoryEmployees.Update(employee);
-        }
-
-        private async Task UpdateEmployeesOvertime(GetHolidayDto holidayDto)
-        {
-            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
-            employee.OvertimeHours -= holidayDto.OvertimeHours;
-            await _repositoryEmployees.Update(employee);
-        }
-
-        private async Task UpdateParentalLeaves(GetHolidayDto holidayDto)
-        {
-            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
-            var leaveTime = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
-            var currentTime = _timeService.GetCurrentTime();
-
-            if (holidayDto.FromInclusive.Month != holidayDto.ToExclusive.AddDays(-1).Month)
-            {
-                var leaveTimeCurrentMonth = _timeService.GetWorkDays(holidayDto.FromInclusive,
-                                        new DateTime(holidayDto.FromInclusive.AddMonths(1).Year, holidayDto.FromInclusive.AddMonths(1).Month, 1));
-
-                var leaveTimeNextMonth = leaveTime - leaveTimeCurrentMonth;
-                employee.CurrentAvailableLeaves -= leaveTimeCurrentMonth;
-                employee.NextMonthAvailableLeaves -= leaveTimeNextMonth;
-            }
-            else if (holidayDto.FromInclusive.Month == currentTime.Month)
-            {
-                employee.CurrentAvailableLeaves -= leaveTime;
-            }
-            else
-            {
-                employee.NextMonthAvailableLeaves -= leaveTime;
-            }
-
-            await _repositoryEmployees.Update(employee);
-        }
+        
 
         public async Task<bool> IsValid(int id)
         {
