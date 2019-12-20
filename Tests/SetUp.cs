@@ -16,6 +16,7 @@ using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Dtos.EmailTemplates;
 using Xplicity_Holidays.Infrastructure.Enums;
 using System.IO;
+using Xplicity_Holidays.Infrastructure.Repositories;
 
 
 namespace Tests
@@ -28,8 +29,10 @@ namespace Tests
         private User[] _users;
         private EmailTemplate[] _emailTemplates;
         private IdentityRole[] _roles;
+        private InventoryItem[] _inventoryItems;
+        private InventoryCategory[] _inventoryCategories;
 
-        public void Initialize(out HolidayDbContext context, out IMapper mapper)
+        public Tuple<HolidayDbContext,IMapper> Initialize()
         {
             var serviceProvider = new ServiceCollection()
                 .AddEntityFrameworkInMemoryDatabase()
@@ -41,14 +44,16 @@ namespace Tests
                 .Options;
 
             var configuration = GetConfiguration();
-            context = new HolidayDbContext(options, configuration);
+            var context = new HolidayDbContext(options, configuration);
             Seed(context);
 
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new AutoMapperConfiguration());
             });
-            mapper = config.CreateMapper();
+            var mapper = config.CreateMapper();
+
+            return new Tuple<HolidayDbContext, IMapper>(context, mapper);
         }
 
         public IConfiguration GetConfiguration()
@@ -229,6 +234,48 @@ namespace Tests
             };
             context.Users.AddRange(_users);
 
+            _inventoryCategories = new InventoryCategory[]
+            {
+                new InventoryCategory()
+                {
+                    Name = "Category1",
+                    Normative = 1
+                },
+                new InventoryCategory()
+                {
+                    Name = "Category2",
+                    Normative = 2
+                }
+            };
+            context.InventoryCategories.AddRange(_inventoryCategories);
+
+            _inventoryItems = new InventoryItem[]
+            {
+                new InventoryItem()
+                {
+                    Name = "Item1",
+                    SerialNumber = "Serial no 1",
+                    PurchaseDate = DateTime.Today,
+                    ExpiryDate = null,
+                    Price = 100,
+                    Comment = null,
+                    Category = context.InventoryCategories.Find(1),
+                    InventoryCategoryId = 1
+                },
+                new InventoryItem()
+                {
+                    Name = "Item2",
+                    SerialNumber = "Serial no 2",
+                    PurchaseDate = DateTime.Today,
+                    ExpiryDate = null,
+                    Price = 100,
+                    Comment = null,
+                    Category = context.InventoryCategories.Find(2),
+                    InventoryCategoryId = 2
+                },
+            };
+            context.InventoryItems.AddRange(_inventoryItems);
+
             context.SaveChanges();
         }
 
@@ -246,6 +293,10 @@ namespace Tests
                 return _emailTemplates.Length;
             else if (type == "roles")
                 return _roles.Length;
+            else if (type == "inventoryItems")
+                return _inventoryItems.Length;
+            else if (type == "inventoryCategories")
+                return _inventoryCategories.Length;
 
             return 0;
         }

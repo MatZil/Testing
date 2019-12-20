@@ -2,7 +2,7 @@
 
 <mat-tab-group>
     <mat-tab label="General">
-        <div class="employeesInfo">
+        <div *ngIf="currentUser" class="employeesInfo">
             <h1><b>Profile information</b></h1>
             <p><b>Name</b>: {{ currentUser.name }}</p>
             <p><b>Surname</b>: {{ currentUser.surname }}</p>

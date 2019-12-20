@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Xplicity_Holidays.Dtos.Inventory
 {
-    public class NewInventoryItemDto
+    public class UpdateInventoryItemDto
     {
         public string Name { get; set; }
 

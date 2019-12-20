@@ -62,6 +62,7 @@ namespace Xplicity_Holidays
             }
             app.UseHttpsRedirection();
             app.UseAuthentication();
+            app.ConfigureAndUseSwagger();
             app.UseMvc();
 
             app.UseSpa(spa =>
@@ -80,7 +81,6 @@ namespace Xplicity_Holidays
                 }
             });
 
-            app.ConfigureAndUseSwagger();
             IdentityDataSeeder.SeedData(userManager, roleManager, Configuration);
             var _ = backgroundService.RunBackgroundServices();
         }

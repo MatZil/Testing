@@ -16,7 +16,7 @@ namespace Xplicity_Holidays.Dtos.Inventory
         
         public DateTime PurchaseDate { get;set; }
 
-        public DateTime ExpiryDate { get; set; }
+        public DateTime? ExpiryDate { get; set; }
 
         public string Comment { get; set; }
 
@@ -25,5 +25,7 @@ namespace Xplicity_Holidays.Dtos.Inventory
         public InventoryCategory Category { get; set; }
 
         public decimal Price { get; set; }
+
+        public int EmployeeId { get; set; }
     }
 }
