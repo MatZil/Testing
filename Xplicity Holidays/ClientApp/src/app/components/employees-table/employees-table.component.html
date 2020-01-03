@@ -38,13 +38,16 @@
                         </mat-form-field>
                     </div>
                     <div>
-                        <mat-form-field>
-                            <input matInput [(ngModel)]="newUser.password" type="password" name="password"
-                                placeholder="Employee password" required #passwordInput="ngModel">
-                            <mat-error *ngIf="passwordInput.invalid" class="error">
-                                Please enter password.
-                            </mat-error>
-                        </mat-form-field>
+                      <mat-form-field>
+                        <input matInput [(ngModel)]="newUser.password" type="password" name="password"
+                               placeholder="Employee password" required minlength="6" #passwordInput="ngModel">
+                        <mat-error *ngIf="passwordInput.errors?.required" class="error">
+                          Please enter password.
+                        </mat-error>
+                        <mat-error *ngIf="passwordInput.errors?.minlength" class="error">
+                          Enter at least 6 symbols.
+                        </mat-error>
+                      </mat-form-field>
                     </div>
                 </div>
                 <div class="columns">
