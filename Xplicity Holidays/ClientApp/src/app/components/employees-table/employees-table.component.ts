@@ -53,7 +53,7 @@ export class EmployeesTableComponent implements OnInit {
     private modal: NzModalService,
     private notification: NzNotificationService,
     private authenticationService: AuthenticationService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.refreshTable();
@@ -82,7 +82,7 @@ export class EmployeesTableComponent implements OnInit {
       this.refreshTable();
       this.handleOkCreator();
     }, error => {
-      this.createBasicNotification();
+      this.showUnexpectedError();
     });
   }
 
@@ -104,7 +104,7 @@ export class EmployeesTableComponent implements OnInit {
       this.refreshTable();
       this.handleCancelEditor();
     }, error => {
-      this.createBasicNotification();
+      this.showUnexpectedError();
     });
   }
 
@@ -173,10 +173,10 @@ export class EmployeesTableComponent implements OnInit {
     return 'No client';
   }
 
-  createBasicNotification(): void {
+  showUnexpectedError(): void {
     this.notification.blank(
       'Form error',
-      'An employee with this email already exists'
+      'Unexpected error occurred'
     );
   }
 

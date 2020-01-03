@@ -48,16 +48,22 @@ namespace Xplicity_Holidays.Services
         public async Task<NewEmployeeDto> Create(NewEmployeeDto newEmployeeDto)
         {
             if (newEmployeeDto == null)
+            {
                 throw new ArgumentNullException(nameof(newEmployeeDto));
+            }
 
             var password = newEmployeeDto.Password;
 
             if (string.IsNullOrWhiteSpace(password))
+            {
                 throw new Exception("Password is required");
+            }
 
             if (_repository.FindByEmail(newEmployeeDto.Email).Result != null)
+            {
                 throw new Exception("Email \"" + newEmployeeDto.Email + "\" is already taken");
-
+            }
+                
             var newEmployee = _mapper.Map<Employee>(newEmployeeDto);
 
             var currentTime = _timeService.GetCurrentTime();
