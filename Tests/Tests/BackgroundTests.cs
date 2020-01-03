@@ -12,7 +12,7 @@ using Moq;
 using Xunit.Abstractions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Xplicity_Holidays.Services.Extractions;
+using Xplicity_Holidays.Services.Extensions;
 
 namespace Tests
 {
@@ -25,7 +25,7 @@ namespace Tests
         private readonly EmployeesRepository _employeesRepository;
         private readonly BackgroundService _backgroundService;
         private readonly TimeService _timeService;
-        private readonly BackgroundMethods _accessMethods;
+        private readonly EmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
 
         public BackgroundTests(ITestOutputHelper output)
         {
@@ -34,7 +34,7 @@ namespace Tests
             var contextMapperTuple = setup.Initialize();
             _context = contextMapperTuple.Item1;
             var mapper = contextMapperTuple.Item2;
-            _accessMethods = new BackgroundMethods();
+            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater();
 
             _timeService = new TimeService();
             _holidaysRepository = new HolidaysRepository(_context);
@@ -79,7 +79,7 @@ namespace Tests
                 initial[index++] = e.FreeWorkDays;
             }
 
-            await _accessMethods.AddFreeWorkDays(employees, _timeService, _employeesRepository);
+            await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(employees, _timeService, _employeesRepository);
             
             var countTrue = 0;
 
@@ -122,7 +122,7 @@ namespace Tests
                 expected[index++, 1] = e.ParentalLeaveLimit;
             }
 
-            await _accessMethods.ResetParentalLeaves(employees, timeService.Object, _employeesRepository);
+            await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(employees, timeService.Object, _employeesRepository);
 
             var countTrue = 0;
             var actual = new int[employees.Count, 2];

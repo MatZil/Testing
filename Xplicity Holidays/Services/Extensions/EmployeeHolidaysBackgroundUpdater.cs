@@ -5,9 +5,9 @@ using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 
-namespace Xplicity_Holidays.Services.Extractions
+namespace Xplicity_Holidays.Services.Extensions
 {
-    public class BackgroundMethods
+    public class EmployeeHolidaysBackgroundUpdater
     {
         public async Task AddFreeWorkDays(ICollection<Employee> employees, ITimeService _timeService, IEmployeeRepository _repository)
         {
@@ -40,4 +40,3 @@ namespace Xplicity_Holidays.Services.Extractions
 
     }
 }
-

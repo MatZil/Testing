@@ -8,7 +8,7 @@ using Xplicity_Holidays.Infrastructure.Static_Files;
 using Xplicity_Holidays.Services.Interfaces;
 using System;
 using Xplicity_Holidays.Infrastructure.Enums;
-using Xplicity_Holidays.Services.Extractions;
+using Xplicity_Holidays.Services.Extensions;
 
 namespace Xplicity_Holidays.Services
 {
@@ -22,7 +22,7 @@ namespace Xplicity_Holidays.Services
         private readonly IRepository<Client> _repositoryClients;
         private readonly IHolidaysRepository _repositoryHolidays;
         private readonly IDocxGeneratorService _docxGeneratorService;
-        private readonly HolidayConfirmMethods _accessMethods;
+        private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
 
         public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays,
                                      IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
@@ -36,7 +36,7 @@ namespace Xplicity_Holidays.Services
             _holidaysService = holidaysService;
             _timeService = timeService;
             _docxGeneratorService = docxGeneratorService;
-            _accessMethods = new HolidayConfirmMethods(repositoryEmployees, timeService);
+            _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(repositoryEmployees, timeService);
         }
 
         public async Task<bool> RequestClientApproval(int holidayId)
@@ -76,16 +76,15 @@ namespace Xplicity_Holidays.Services
 
             if (getHolidayDto.Type == HolidayType.Parental)
             {
-                await _accessMethods.UpdateParentalLeaves(getHolidayDto);
+                await _employeeHolidaysConfirmationUpdater.UpdateParentalLeaves(getHolidayDto);
             }
             else if (getHolidayDto.Type == HolidayType.Annual && getHolidayDto.Paid)
             {
-                await _accessMethods.UpdateEmployeesWorkdays(getHolidayDto);
-                await _accessMethods.UpdateEmployeesOvertime(getHolidayDto);
+                await _employeeHolidaysConfirmationUpdater.UpdateEmployeesWorkdays(getHolidayDto);
+                await _employeeHolidaysConfirmationUpdater.UpdateEmployeesOvertime(getHolidayDto);
             }
         }
 
-        
 
         public async Task<bool> IsValid(int id)
         {

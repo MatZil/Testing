@@ -9,7 +9,7 @@ using Xplicity_Holidays.Services.Interfaces;
 using Moq;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xunit.Abstractions;
-using Xplicity_Holidays.Services.Extractions;
+using Xplicity_Holidays.Services.Extensions;
 
 namespace Tests
 {
@@ -24,7 +24,7 @@ namespace Tests
         private readonly IMapper _mapper;
         private readonly EmployeesRepository _employeesRepository;
         private readonly TimeService _timeService;
-        private readonly HolidayConfirmMethods _accessMethods;
+        private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
 
         public HolidayConfirmTests(ITestOutputHelper output)
         {
@@ -46,9 +46,8 @@ namespace Tests
             _holidaysService = new HolidaysService(_holidaysRepository, mapper, _timeService);
             _holidayConfirmService = new HolidayConfirmService(emailService.Object, mapper, _holidaysRepository,
                                                                 _employeesRepository, clientsRepository, _holidaysService, _timeService, docxGeneratorService.Object);
-            _accessMethods = new HolidayConfirmMethods(_employeesRepository, _timeService);
+            _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _timeService);
         }
-
 
         [Theory]
         [InlineData(1)]
@@ -96,7 +95,7 @@ namespace Tests
             var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
             var expected = initial - workdays + holiday.OvertimeDays;
 
-            await _accessMethods.UpdateEmployeesWorkdays(holidayDto);
+            await _employeeHolidaysConfirmationUpdater.UpdateEmployeesWorkdays(holidayDto);
 
             employee = await _employeesRepository.GetById(index);
             var actual = employee.FreeWorkDays;
@@ -117,7 +116,7 @@ namespace Tests
 
             var expected = initial - holiday.OvertimeHours;
 
-            await _accessMethods.UpdateEmployeesOvertime(holidayDto);
+            await _employeeHolidaysConfirmationUpdater.UpdateEmployeesOvertime(holidayDto);
 
             employee = await _employeesRepository.GetById(index);
             var actual = employee.OvertimeHours;
@@ -138,7 +137,7 @@ namespace Tests
             initial[0] = employee.CurrentAvailableLeaves;
             initial[1] = employee.NextMonthAvailableLeaves;
 
-            await _accessMethods.UpdateParentalLeaves(holidayDto);
+            await _employeeHolidaysConfirmationUpdater.UpdateParentalLeaves(holidayDto);
 
             var final = new int[2];
             final[0] = employee.CurrentAvailableLeaves;

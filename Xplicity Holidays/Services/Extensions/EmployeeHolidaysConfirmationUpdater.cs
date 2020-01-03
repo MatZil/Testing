@@ -4,16 +4,23 @@ using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 
-namespace Xplicity_Holidays.Services.Extractions
+namespace Xplicity_Holidays.Services.Extensions
 {
-    public class HolidayConfirmMethods
+    public class EmployeeHolidaysConfirmationUpdater
     {
         private readonly ITimeService _timeService;
         private readonly IEmployeeRepository _repositoryEmployees;
-        public HolidayConfirmMethods(IEmployeeRepository repositoryEmployees, ITimeService timeService)
+        public EmployeeHolidaysConfirmationUpdater(IEmployeeRepository repositoryEmployees, ITimeService timeService)
         {
             _repositoryEmployees = repositoryEmployees;
             _timeService = timeService;
+        }
+
+        public async Task UpdateEmployeesOvertime(GetHolidayDto holidayDto)
+        {
+            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
+            employee.OvertimeHours -= holidayDto.OvertimeHours;
+            await _repositoryEmployees.Update(employee);
         }
 
         public async Task UpdateEmployeesWorkdays(GetHolidayDto holidayDto)
@@ -22,13 +29,6 @@ namespace Xplicity_Holidays.Services.Extractions
             workdays -= holidayDto.OvertimeDays;
             var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
             employee.FreeWorkDays -= workdays;
-            await _repositoryEmployees.Update(employee);
-        }
-
-        public async Task UpdateEmployeesOvertime(GetHolidayDto holidayDto)
-        {
-            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
-            employee.OvertimeHours -= holidayDto.OvertimeHours;
             await _repositoryEmployees.Update(employee);
         }
 

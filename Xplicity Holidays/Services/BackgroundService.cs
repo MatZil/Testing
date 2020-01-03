@@ -9,7 +9,7 @@ using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
-using Xplicity_Holidays.Services.Extractions;
+using Xplicity_Holidays.Services.Extensions;
 
 namespace Xplicity_Holidays.Services
 {
@@ -18,14 +18,14 @@ namespace Xplicity_Holidays.Services
         private readonly ITimeService _timeService;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly BackgroundMethods _accessMethods;
+        private readonly EmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
 
         public BackgroundService(ITimeService timeService, IServiceScopeFactory serviceScopeFactory, IHostingEnvironment hostingEnvironment)
         {
             _serviceScopeFactory = serviceScopeFactory;
             _timeService = timeService;
             _hostingEnvironment = hostingEnvironment;
-            _accessMethods = new BackgroundMethods();
+            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater();
         }
 
         public async Task RunBackgroundServices()
@@ -57,9 +57,9 @@ namespace Xplicity_Holidays.Services
 
                 await CheckBirthdays(employees, _timeService, emailService);
 
-                await _accessMethods.AddFreeWorkDays(employees, _timeService, employeeRepository);
+                await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(employees, _timeService, employeeRepository);
 
-                await _accessMethods.ResetParentalLeaves(employees, _timeService, employeeRepository);
+                await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(employees, _timeService, employeeRepository);
             }
         }
 
