@@ -67,7 +67,15 @@ namespace Xplicity_Holidays.Services
             var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
                                                             new DateTime(currentTime.AddYears(1).Year, 1, 1));
 
-            newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
+            if(String.IsNullOrWhiteSpace(newEmployeeDto.FreeWorkDays.ToString()))
+            {
+                newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
+            }
+            else
+            {
+                newEmployee.FreeWorkDays = newEmployeeDto.FreeWorkDays;
+            }
+            
 
             newEmployee.CurrentAvailableLeaves = newEmployee.ParentalLeaveLimit;
             newEmployee.NextMonthAvailableLeaves = newEmployee.ParentalLeaveLimit;
@@ -103,7 +111,12 @@ namespace Xplicity_Holidays.Services
             {
                 throw new InvalidOperationException();
             }
-            
+
+            if (!String.IsNullOrWhiteSpace(updateData.FreeWorkDays.ToString()))
+            {
+                employeeToUpdate.FreeWorkDays = updateData.FreeWorkDays;
+            }
+
             if (updateData.Email != employeeToUpdate.Email)
             {
                 // email has changed so check if the new email is already taken
