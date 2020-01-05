@@ -11,7 +11,7 @@ using Xplicity_Holidays.Infrastructure.Utils;
 
 namespace Xplicity_Holidays.Services
 {
-    public class EmailService: IEmailService
+    public class EmailService : IEmailService
     {
         private readonly IEmailer _emailer;
         private readonly IEmailTemplatesRepository _repository;
@@ -33,11 +33,10 @@ namespace Xplicity_Holidays.Services
             var template = await _repository.GetByPurpose(EmailPurposes.CLIENT_CONFIRMATION);
             var messageString = template.Template
                                         .Replace("{client.name}", client.OwnerName)
-                                        .Replace("{employee.name}", employee.Name)
-                                        .Replace("{employee.surname}", employee.Surname)
+                                        .Replace("{employee.fullName}", $"{employee.Name} {employee.Surname}")
                                         .Replace("{holiday.type}", holiday.Type.ToString())
                                         .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
-                                        .Replace("{holiday.to}", holiday.ToExclusive.ToShortDateString())
+                                        .Replace("{holiday.to}", holiday.ToExclusive.AddDays(-1).ToShortDateString())
                                         .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/holidayclient?holidayid={holiday.Id}")
                                         .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/holidaydecline?holidayid={holiday.Id}");
 
@@ -49,12 +48,11 @@ namespace Xplicity_Holidays.Services
             var template = await _repository.GetByPurpose(EmailPurposes.ADMIN_CONFIRMATION);
             var messageString = template.Template
                                         .Replace("{admin.name}", admin.Name)
-                                        .Replace("{employee.name}", employee.Name)
-                                        .Replace("{employee.surname}", employee.Surname)
-                                        .Replace("{employee.paid}", holiday.Paid ? "Paid" : "Unpaid")
+                                        .Replace("{employee.fullName}", $"{employee.Name} {employee.Surname}")
+                                        .Replace("{holiday.paid}", holiday.Paid ? "Paid" : "Unpaid")
                                         .Replace("{holiday.type}", holiday.Type.ToString())
                                         .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
-                                        .Replace("{holiday.to}", holiday.ToExclusive.ToShortDateString())
+                                        .Replace("{holiday.to}", holiday.ToExclusive.AddDays(-1).ToShortDateString())
                                         .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/holidayconfirm?holidayid={holiday.Id}")
                                         .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/holidaydecline?holidayid={holiday.Id}")
                                         .Replace("{client.status}", clientStatus)
@@ -78,12 +76,11 @@ namespace Xplicity_Holidays.Services
                     var overtimeSentence = _overtime.GetOvertimeSentence(OvertimeEmail.MONTHLY_REPORT, holiday.Item1.OvertimeHours);
 
                     var messageString = template.Template.Substring(titleEnd)
-                                                        .Replace("{employee.name}", holiday.Item1.Employee.Name)
-                                                        .Replace("{employee.surname}", holiday.Item1.Employee.Surname)
-                                                        .Replace("{employee.paid}", holiday.Item1.Paid ? "Paid" : "Unpaid")
+                                                        .Replace("{employee.fullName}", $"{holiday.Item1.Employee.Name} {holiday.Item1.Employee.Surname}")
+                                                        .Replace("{holiday.paid}", holiday.Item1.Paid ? "Paid" : "Unpaid")
                                                         .Replace("{holiday.type}", holiday.Item1.Type.ToString())
                                                         .Replace("{holiday.from}", holiday.Item1.FromInclusive.ToShortDateString())
-                                                        .Replace("{holiday.to}", holiday.Item1.ToExclusive.ToShortDateString())
+                                                        .Replace("{holiday.to}", holiday.Item1.ToExclusive.AddDays(-1).ToShortDateString())
                                                         .Replace("{holiday.overtimeHours}", overtimeSentence);
                     holidayInfo += messageString;
                 }
@@ -102,10 +99,9 @@ namespace Xplicity_Holidays.Services
                     if (h.Employee.Name != employee.Name && h.Employee.Surname != employee.Surname)
                     {
                         var messageString = template.Template
-                                                    .Replace("{employee.name}", h.Employee.Name)
-                                                    .Replace("{employee.surname}", h.Employee.Surname)
+                                                    .Replace("{employee.fullName}", $"{employee.Name} {employee.Surname}")
                                                     .Replace("{holiday.from}", h.FromInclusive.ToShortDateString())
-                                                    .Replace("{holiday.to}", h.ToExclusive.ToShortDateString());
+                                                    .Replace("{holiday.to}", h.ToExclusive.AddDays(-1).ToShortDateString());
 
                         _emailer.SendMail(employee.Email, template.Subject, messageString);
                     }
@@ -123,8 +119,7 @@ namespace Xplicity_Holidays.Services
                     if (employee.Name != employeeWithBirthday.Name && employee.Surname != employeeWithBirthday.Surname)
                     {
                         var messageString = template.Template
-                                                    .Replace("{employee.name}", employeeWithBirthday.Name)
-                                                    .Replace("{employee.surname}", employeeWithBirthday.Surname);
+                                                    .Replace("{employee.fullName}", $"{employeeWithBirthday.Name} {employeeWithBirthday.Surname}");
                         _emailer.SendMail(employee.Email, template.Subject, messageString);
                     }
                 }
@@ -141,9 +136,8 @@ namespace Xplicity_Holidays.Services
             }
 
             var messageString = template.Template
-                                        .Replace("{employee.name}", employee.Name)
-                                        .Replace("{employee.surname}", employee.Surname)
-                                        .Replace("{download_link}", _fileService.GetDownloadLink(fileId));
+                                        .Replace("{employee.fullName}", $"{employee.Name} {employee.Surname}")
+                                        .Replace("{download.link}", _fileService.GetDownloadLink(fileId));
 
             _emailer.SendMail(receiver, template.Subject, messageString);
 
@@ -159,7 +153,7 @@ namespace Xplicity_Holidays.Services
                 return false;
             }
 
-            var messageString = template.Template.Replace("{download_link}", _fileService.GetDownloadLink(fileId));
+            var messageString = template.Template.Replace("{download.link}", _fileService.GetDownloadLink(fileId));
 
             _emailer.SendMail(receiver, template.Subject, messageString);
 

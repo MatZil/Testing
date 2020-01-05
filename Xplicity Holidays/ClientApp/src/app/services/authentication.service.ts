@@ -11,7 +11,7 @@ export class AuthenticationService {
 
   private thisUserId: number;
 
-  constructor(private http: HttpClient, public jwtHelper: JwtHelperService, 
+  constructor(private http: HttpClient, public jwtHelper: JwtHelperService,
     @Inject('BASE_URL') private baseUrl: string) {
 
   }
@@ -44,6 +44,6 @@ export class AuthenticationService {
   }
 
   getRoles(): Observable<Role[]> {
-    return this.http.get<Role[]>(`${this.baseUrl}/api/Auth/roles`);
+    return this.http.get<Role[]>(`${this.baseUrl}api/Auth/roles`);
   }
 }

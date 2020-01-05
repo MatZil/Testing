@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Xplicity_Holidays.Infrastructure.Database;
 
 namespace Xplicity_Holidays.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    partial class HolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191212095031_MakeInventoryExpiryDateNullable")]
+    partial class MakeInventoryExpiryDateNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,102 +188,6 @@ namespace Xplicity_Holidays.Migrations
                         .IsUnique();
 
                     b.ToTable("EmailTemplates");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Instructions = @"{admin.name} - Receiving admin's first name.
-{employee.fullName} - Employee's full name.
-{holiday.paid} - Whether or not holiday is paid.
-{holiday.type} - Holiday's type.
-{holiday.from} - Holiday's starting date.
-{holiday.to} - Holiday's ending date.
-{client.status} - Message that client has confirmed the holiday.
-{holiday.overtimeHours} - Message that employee wants to use some of his overtime hours for this holiday.
-{holiday.confirm} - Holiday's confirmation link.
-{holiday.decline} - Holiday's rejection link.",
-                            Purpose = "Admin Confirmation",
-                            Subject = "An employee is requesting confirmation for holidays",
-                            Template = @"Hello, {admin.name},
-
-An employee {employee.fullName} is intending to go on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {client.status} {holiday.overtimeHours}
-
-Click this link to confirm: {holiday.confirm}
-Click this link to decline: {holiday.decline}"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Instructions = @"{client.name} - Receiving client's first name.
- {employee.fullName} - Employee's full name.
-{holiday.type} - Holiday's type.
-{holiday.from} - Holiday's starting date.
-{holiday.to} - Holiday's ending date.
-{holiday.confirm} - Holiday's confirmation link.
-{holiday.decline} - Holiday's rejection link.",
-                            Purpose = "Client Confirmation",
-                            Subject = "One of your employees is requesting confirmation for holidays",
-                            Template = @"Hello, {client.name},
-
-An employee {employee.fullName} is intending to go on {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive).
-
-Click this link to confirm: {holiday.confirm}
-Click this link to decline: {holiday.decline}"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Instructions = @"{client.name} - Individual team's client's name.
-{employee.fullName} - Individual employee's full name.
-{holiday.paid} - Whether or not the holiday is paid.
-{holiday.type} - Holiday's type.
-{holiday.from} - Holiday's starting date.
-{holiday.to} - Holiday's beginning date.
-{holiday.overtimeHours} - Message about individual employee's overtime hours.
-
-Please use the first line for team's title, second line for individual employee's info.",
-                            Purpose = "Monthly Holidays' Report",
-                            Subject = "Monthly Holidays' Report Grouped By Teams",
-                            Template = @"{client.name} team's employees:
-
-{employee.fullName} went on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {holiday.overtimeHours}."
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Instructions = "{employee.fullName} - Employee's full name.",
-                            Purpose = "Birthday Reminder",
-                            Subject = "One of your colleagues is having their birthday today!",
-                            Template = "Your colleague {employee.fullName} is having their birthday today! Don't forget to congratulate them."
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Instructions = @"{employee.fullName} - Employee's full name.
-{holiday.from} - Holiday's starting date.
-{holiday.to} - Holiday's ending date.",
-                            Purpose = "Upcoming Holiday Reminder",
-                            Subject = "One of your colleagues is going away for holidays next workday!",
-                            Template = "Your colleague {employee.fullName} is going away for holidays next workday from {holiday.from} to {holiday.to} (inclusive)."
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Instructions = @"{employee.fullName} - Employee's full name.
-{download.link} - A link to download order document.",
-                            Purpose = "Order Notification",
-                            Subject = "A holiday order has been generated!",
-                            Template = "A holiday order for {employee.fullName} has been generated. Click this link to download it: {download.link}"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Instructions = "{download.link} - A link to download request document.",
-                            Purpose = "Request Notification",
-                            Subject = "Your holiday request has been generated!",
-                            Template = "You can download your holiday request document by clicking this link: {download.link}"
-                        });
                 });
 
             modelBuilder.Entity("Xplicity_Holidays.Infrastructure.Database.Models.Employee", b =>
@@ -338,7 +244,7 @@ Please use the first line for team's title, second line for individual employee'
                         new
                         {
                             Id = 1,
-                            BirthdayDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            BirthdayDate = new DateTime(2019, 12, 12, 0, 0, 0, 0, DateTimeKind.Local),
                             CurrentAvailableLeaves = 0,
                             DaysOfVacation = 20,
                             Email = "gamma.holidays@gmail.com",
@@ -351,7 +257,7 @@ Please use the first line for team's title, second line for individual employee'
                             Position = "Administrator",
                             Status = 1,
                             Surname = "Admin",
-                            WorksFromDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            WorksFromDate = new DateTime(2019, 12, 12, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
