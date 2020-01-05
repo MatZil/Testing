@@ -8,6 +8,7 @@ using Xplicity_Holidays.Infrastructure.Static_Files;
 using Xplicity_Holidays.Services.Interfaces;
 using System;
 using Xplicity_Holidays.Infrastructure.Enums;
+using Xplicity_Holidays.Infrastructure.Utils;
 
 namespace Xplicity_Holidays.Services
 {
@@ -21,6 +22,8 @@ namespace Xplicity_Holidays.Services
         private readonly IRepository<Client> _repositoryClients;
         private readonly IHolidaysRepository _repositoryHolidays;
         private readonly IDocxGeneratorService _docxGeneratorService;
+        private readonly OvertimeService _overtime;
+
         public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays,
                                      IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
                                      IHolidaysService holidaysService, ITimeService timeService, IDocxGeneratorService docxGeneratorService)
@@ -33,6 +36,7 @@ namespace Xplicity_Holidays.Services
             _holidaysService = holidaysService;
             _timeService = timeService;
             _docxGeneratorService = docxGeneratorService;
+            _overtime = new OvertimeService();
         }
 
         public async Task<bool> RequestClientApproval(int holidayId)
@@ -53,12 +57,15 @@ namespace Xplicity_Holidays.Services
             return true;
         }
 
+
         public async Task<bool> RequestAdminApproval(int holidayId, string clientStatus)
         {
             var holiday = await _repositoryHolidays.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
             var admin = await _repositoryEmployees.FindAnyAdmin();
-            await _emailService.ConfirmHolidayWithAdmin(admin, employee, holiday, clientStatus);
+            var overtimeSentence = _overtime.GetOvertimeSentence(OvertimeEmail.CONFIRMATION, holiday.OvertimeHours);
+
+            await _emailService.ConfirmHolidayWithAdmin(admin, employee, holiday, clientStatus, overtimeSentence);
 
             return true;
         }

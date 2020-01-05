@@ -1,5 +1,5 @@
 export enum HolidayStatus {
-    Unconfirmed,
-    Declined,
+    Pending,
+    Rejected,
     Confirmed
 }

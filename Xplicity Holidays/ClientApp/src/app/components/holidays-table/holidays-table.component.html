@@ -1,80 +1,81 @@
 <div>
-    <button nz-button nzType="primary" (click)=showModalCreator()>Request holidays</button>
-    <div>
+  <div class="columns">
+    <button nz-button nzType="primary" style="float:left;" (click)=showModalCreator()>Request holidays</button>
+    <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Employee status"
+                (selectionChange)="changeStatus($event.value)" [(value)]="selected">
+      <mat-option [value]="1">
+        Current employees
+      </mat-option>
+      <mat-option [value]="0">
+        Former employees
+      </mat-option>
+    </mat-select>
+  </div>
+  <form #newClientForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(newClientForm)">
+    <nz-modal [(nzVisible)]="isVisibleCreator" [nzTitle]="modalTitl" [nzContent]="modalConten"
+              [nzFooter]="modalFoote" (nzOnCancel)="handleCancelCreator()">
+      <ng-template #modalTitl>
+        Request holidays
+      </ng-template>
+      <ng-template #modalConten>
+        <app-overtime-display></app-overtime-display>
+        <mat-card>
+          <div class="columns">
+            <mat-form-field>
+              <mat-select [(ngModel)]="requestHolidays.type" name="type" placeholder="Holiday's type"
+                          required #nameInput="ngModel" [(value)]="selectedType">
+                <mat-option [value]="0">Annual</mat-option>
+                <mat-option [value]="1"
+                            *ngIf="currentUser.currentAvailableLeaves > 0 || currentUser.nextMonthAvailableLeaves > 0">
+                  Parental
+                </mat-option>
+                <mat-option [value]="2">Science</mat-option>
+                <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                           class="error">
+                  Type cannot be empty.
+                </mat-error>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field *ngIf="selectedType == 0 && requestHolidays.paid">
+              <input matInput [(ngModel)]="requestHolidays.overtimeDays" type="number" min="0" max={{currentUser.overtimeDays}}
+                     name="overtimeHours" placeholder="Overtime days" #nameInput="ngModel">
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field>
+              <input matInput [(ngModel)]="requestHolidays.fromInclusive" type="date" name="fromInclusive"
+                     placeholder="Holidays from" required #nameInput="ngModel">
+              <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                         class="error">
+                Date cannot be empty.
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field>
+              <input matInput [(ngModel)]="requestHolidays.toExclusive" type="date" name="toExclusive"
+                     placeholder="Holidays to" required #nameInput="ngModel">
+              <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+                         class="error">
+                Date cannot be empty.
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div *ngIf="selectedType == 0">
+            <mat-checkbox [checked]="requestHolidays.paid" (change)="changePaid()">Paid</mat-checkbox>
+          </div>
+        </mat-card>
+      </ng-template>
 
-        <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Employee status"
-            (selectionChange)="changeStatus($event.value)" [(value)]="selected">
-            <mat-option [value]="1">
-                Current employees
-            </mat-option>
-            <mat-option [value]="0">
-                Former employees
-            </mat-option>
-        </mat-select>
-    </div>
-    <form #newClientForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(newClientForm)">
-        <nz-modal [(nzVisible)]="isVisibleCreator" [nzTitle]="modalTitl" [nzContent]="modalConten"
-            [nzFooter]="modalFoote" (nzOnCancel)="handleCancelCreator()">
-            <ng-template #modalTitl>
-                Request holidays
-            </ng-template>
-            <ng-template #modalConten>
-                   <app-overtime-display></app-overtime-display>
-                <mat-card>
-                    <div class="columns">
-                        <mat-form-field>
-                            <mat-select [(ngModel)]="requestHolidays.type" name="type" placeholder="Holiday's type"
-                                required #nameInput="ngModel" [(value)]="selectedType">
-                                <mat-option [value]="0">Annual</mat-option>
-                                <mat-option [value]="1"
-                                    *ngIf="currentUser.currentAvailableLeaves > 0 || currentUser.nextMonthAvailableLeaves > 0">
-                                    Parental
-                                </mat-option>
-                                <mat-option [value]="2">Science</mat-option>
-                                <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
-                                    class="error">
-                                    Type cannot be empty.
-                                </mat-error>
-                            </mat-select>
-                        </mat-form-field>
-                        <mat-form-field *ngIf="selectedType == 0 && requestHolidays.paid">
-                                <input matInput [(ngModel)]="requestHolidays.overtimeDays" type="number" min="0" max={{currentUser.overtimeDays}} 
-                                    name="overtimeHours" placeholder="Overtime days" #nameInput="ngModel">
-                        </mat-form-field>
-                    </div>
-                    <div>
-                        <mat-form-field>
-                            <input matInput [(ngModel)]="requestHolidays.fromInclusive" type="date" name="fromInclusive"
-                                placeholder="Holidays from" required #nameInput="ngModel">
-                            <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
-                                class="error">
-                                Date cannot be empty.
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                    <div>
-                        <mat-form-field>
-                            <input matInput [(ngModel)]="requestHolidays.toExclusive" type="date" name="toExclusive"
-                                placeholder="Holidays to" required #nameInput="ngModel">
-                            <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
-                                class="error">
-                                Date cannot be empty.
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                    <div *ngIf="selectedType == 0">
-                        <mat-checkbox [checked]="requestHolidays.paid" (change)="changePaid()">Paid</mat-checkbox>
-                    </div>
-                </mat-card>
-            </ng-template>
-
-            <ng-template #modalFoote>
-                <button nz-button nzType="default" (click)="handleCancelCreator()">Cancel</button>
-                <button nz-button nzType="primary" (click)="setPaid(); onAddButtonClick(); handleOkCreator()"
-                    [nzLoading]="isConfirmLoadingCreator" [disabled]="newClientForm.form.invalid">Request</button>
-            </ng-template>
-        </nz-modal>
-    </form>
+      <ng-template #modalFoote>
+        <button nz-button nzType="default" (click)="handleCancelCreator()">Cancel</button>
+        <button nz-button nzType="primary" (click)="setPaid(); onAddButtonClick(); handleOkCreator()"
+                [nzLoading]="isConfirmLoadingCreator" [disabled]="newClientForm.form.invalid">
+          Request
+        </button>
+      </ng-template>
+    </nz-modal>
+  </form>
 </div>
 
 <div>
@@ -86,27 +87,32 @@
                 <th>Paid</th>
                 <th>Date from</th>
                 <th>Date to</th>
+                <th>Overtime days</th>
                 <th>Status</th>
                 <th>Request creation date</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let hol of basicTable.data">
-                <td>{{getUserNameById(hol.employeeId)}}</td>
-                <td>{{enumConverter.determineHolidayType(hol.type)}}</td>
-                <td>
-                    <div *ngIf="hol.paid">
-                        Yes
-                    </div>
-                    <div *ngIf="!hol.paid">
-                        No
-                    </div>
-                </td>
-                <td>{{hol.fromInclusive | date}}</td>
-                <td>{{hol.toExclusive | date}}</td>
-                <td>{{enumConverter.determineHolidayStatus(hol.status)}}</td>
-                <td>{{hol.requestCreatedDate | date}}</td>
-            </tr>
+          <tr *ngFor="let hol of basicTable.data">
+            <td>{{getUserNameById(hol.employeeId)}}</td>
+            <td>{{enumConverter.determineHolidayType(hol.type)}}</td>
+            <td>
+              <div *ngIf="hol.paid">
+                Yes
+              </div>
+              <div *ngIf="!hol.paid">
+                No
+              </div>
+            </td>
+            <td>{{hol.fromInclusive | date}}</td>
+            <td>{{hol.toExclusive | date}}</td>
+            <td *ngIf="hol.paid">{{hol.overtimeDays}}</td>
+            <td *ngIf="!hol.paid">-</td>
+            <td *ngIf="hol.status == 0" style="color:orange">{{enumConverter.determineHolidayStatus(hol.status)}}</td>
+            <td *ngIf="hol.status == 1" style="color:red">{{enumConverter.determineHolidayStatus(hol.status)}}</td>
+            <td *ngIf="hol.status == 2" style="color:green">{{enumConverter.determineHolidayStatus(hol.status)}}</td>
+            <td>{{hol.requestCreatedDate | date}}</td>
+          </tr>
         </tbody>
     </nz-table>
 </div>
