@@ -7,8 +7,8 @@ namespace Xplicity_Holidays.Infrastructure.Utils
     {
         public string GetOvertimeSentence(string initialSentence, double overtimeHours)
         {
-            string overtime = Math.Round(overtimeHours, 2).ToString();
-            var overtimeSentence = "";
+            var overtime = Math.Round(overtimeHours, 2).ToString();
+            var overtimeSentence = string.Empty;
             if (overtimeHours > 0)
                 overtimeSentence = initialSentence.Replace("{holiday.overtimeHours}", overtime);
 
