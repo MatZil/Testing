@@ -1,10 +1,10 @@
 ﻿using Xunit;
-using Xplicity_Holidays.Services;
-using Xplicity_Holidays.Infrastructure.Database.Models;
-using Xplicity_Holidays.Infrastructure.Database;
-using Xplicity_Holidays.Infrastructure.Repositories;
+using XplicityApp.Services;
+using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Repositories;
 using AutoMapper;
-using Xplicity_Holidays.Dtos.Clients;
+using XplicityApp.Dtos.Clients;
 using Xunit.Abstractions;
 using System;
 

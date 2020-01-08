@@ -1,8 +1,8 @@
 ﻿using System;
-using Xplicity_Holidays.Infrastructure.Repositories;
-using Xplicity_Holidays.Services;
+using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Services;
 using Xunit;
-using Xplicity_Holidays.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database;
 using AutoMapper;
 using Xunit.Abstractions;
 
