@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Xplicity_Holidays.Services;
+using XplicityApp.Services;
 using Xunit;
-using Xplicity_Holidays.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database;
 using Xunit.Abstractions;
-using Xplicity_Holidays.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Database.Models;
 using Microsoft.AspNetCore.Identity;
-using Xplicity_Holidays.Configurations;
+using XplicityApp.Configurations;
 using Microsoft.Extensions.Options;
 
 namespace Tests

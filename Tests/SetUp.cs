@@ -1,9 +1,9 @@
 ﻿using System;
 using AutoMapper;
-using Xplicity_Holidays.Dtos.Employees;
-using Xplicity_Holidays.Infrastructure.Database.Models;
-using Xplicity_Holidays.Infrastructure.Database;
-using Xplicity_Holidays.Configurations;
+using XplicityApp.Dtos.Employees;
+using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -12,11 +12,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Xplicity_Holidays.Dtos.Holidays;
-using Xplicity_Holidays.Dtos.EmailTemplates;
-using Xplicity_Holidays.Infrastructure.Enums;
+using XplicityApp.Dtos.Holidays;
+using XplicityApp.Dtos.EmailTemplates;
+using XplicityApp.Infrastructure.Enums;
 using System.IO;
-using Xplicity_Holidays.Infrastructure.Repositories;
+using XplicityApp.Infrastructure.Repositories;
 
 
 namespace Tests
