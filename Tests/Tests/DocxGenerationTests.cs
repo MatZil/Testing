@@ -1,15 +1,14 @@
-﻿using AutoMapper;
+﻿using Microsoft.Extensions.Configuration;
 using Moq;
-using Xplicity_Holidays.Infrastructure.Database;
-using Xplicity_Holidays.Infrastructure.Enums;
-using Xplicity_Holidays.Infrastructure.Repositories;
-using Xplicity_Holidays.Infrastructure.DocxGeneration;
-using Xplicity_Holidays.Services;
-using Xunit;
-using Microsoft.Extensions.Configuration;
-using Xplicity_Holidays.Infrastructure.Utils;
-using Xplicity_Holidays.Infrastructure.Database.Models;
 using System.Threading.Tasks;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.DocxGeneration;
+using XplicityApp.Infrastructure.Enums;
+using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Services;
+using Xunit;
 
 namespace Tests
 {
