@@ -69,13 +69,13 @@ namespace XplicityApp.Services
             var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
                                                             new DateTime(currentTime.AddYears(1).Year, 1, 1));
 
-            if(newEmployeeDto.FreeWorkDays == 0)
+            if(newEmployeeDto.IsACurrentEmployee == true)
             {
-                newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
+                newEmployee.FreeWorkDays = newEmployeeDto.FreeWorkDays;
             }
             else
             {
-                newEmployee.FreeWorkDays = newEmployeeDto.FreeWorkDays;
+                newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
             }
             
 
@@ -114,7 +114,7 @@ namespace XplicityApp.Services
                 throw new InvalidOperationException();
             }
 
-            if (updateData.FreeWorkDays != 0)
+            if (updateData.FreeWorkDays != employeeToUpdate.FreeWorkDays)
             {
                 employeeToUpdate.FreeWorkDays = updateData.FreeWorkDays;
             }

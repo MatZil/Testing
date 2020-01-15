@@ -84,6 +84,7 @@ export function tokenGetter() {
     MatToolbarModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatCheckbox,
     PdfViewerModule,
     MatDialogModule,
     MatSnackBarModule,
