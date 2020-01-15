@@ -24,7 +24,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatDatepickerModule, MatNativeDateModule, MatCheckbox, MatCheckboxModule } from '@angular/material';
+import { MatDatepickerModule, MatNativeDateModule, MatRadioModule, MatCheckboxModule } from '@angular/material';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
@@ -84,7 +84,7 @@ export function tokenGetter() {
     MatToolbarModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatCheckbox,
+    MatRadioModule,
     PdfViewerModule,
     MatDialogModule,
     MatSnackBarModule,
