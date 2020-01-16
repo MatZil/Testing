@@ -8,6 +8,8 @@ using Xunit.Abstractions;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
+using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
+using Moq;
 
 namespace Tests
 {
@@ -18,6 +20,7 @@ namespace Tests
         private readonly ITestOutputHelper _output;
         private readonly UserService _usersService;
         private readonly UserManager<User> _userManager;
+        private readonly IOvertimeUtility _overtimeUtility;
         //private readonly RoleManager<IdentityRole> _roleManager;
 
         public UserTests(ITestOutputHelper output)
@@ -27,12 +30,12 @@ namespace Tests
             var contextMapperTuple = setup.Initialize();
             _context = contextMapperTuple.Item1;
             var mapper = contextMapperTuple.Item2;
-
+            _overtimeUtility = new Mock<IOvertimeUtility>().Object;
             _userManager = setup.InitializeUserManager(_context);
             //_roleManager = _setup.InitializeRoleManager(_context);
   
             EmployeesRepository employeesRepository = new EmployeesRepository(_context, _userManager);
-            _usersService = new UserService(_userManager);
+            _usersService = new UserService(_overtimeUtility, _userManager);
         }
 
         //[Theory]
@@ -62,7 +65,7 @@ namespace Tests
         //    await _usersService.Update(id, updateEmployeeDto);
         //    var actual = _context.Employees.Find(id).Surname;
         //    _output.WriteLine(initial + "   >>   " + actual);
-            
+
         //    Assert.Equal(expected, actual);
         //}
 

@@ -147,6 +147,19 @@ export class HolidaysTableComponent implements OnInit {
     this.refreshTable(this.selected);
   }
 
+  getStatusName(status) {
+    return this.enumConverter.determineHolidayStatus(status);
+  }
+
+  getStatusColor(status) {
+    return this.enumConverter.determineHolidayStatusColor(status);
+  }
+
+  getOvertime(paid, overtimeDays) {
+    if (paid) { return overtimeDays}
+    else { return "-"}
+  }
+
   isAdmin() {
     if (this.role === 'Admin') {
       return true;

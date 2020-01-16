@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Dtos.Employees;
-using Xplicity_Holidays.Dtos.Inventory;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
@@ -20,6 +16,7 @@ namespace Xplicity_Holidays.Services
         private readonly IMapper _mapper;
         private readonly ITimeService _timeService;
         private readonly IUserService _userService;
+
         public EmployeesService(IEmployeeRepository repository, IMapper mapper,
                                 ITimeService timeService,  IUserService userService)
         {

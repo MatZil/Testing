@@ -4,6 +4,7 @@ using Xplicity_Holidays.Services;
 using Xunit;
 using Xplicity_Holidays.Infrastructure.Database;
 using Xplicity_Holidays.Infrastructure.Utils;
+using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using AutoMapper;
 using Xplicity_Holidays.Services.Interfaces;
 using Moq;
@@ -23,6 +24,7 @@ namespace Tests
         private readonly IMapper _mapper;
         private readonly EmployeesRepository _employeesRepository;
         private readonly TimeService _timeService;
+        private readonly IOvertimeUtility _overtimeUtility;
 
         public HolidayConfirmTests(ITestOutputHelper output)
         {
@@ -40,10 +42,12 @@ namespace Tests
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
             var emailService = new Mock<IEmailService>();
             var docxGeneratorService = new Mock<IDocxGeneratorService>();
+            _overtimeUtility = new Mock<IOvertimeUtility>().Object;
 
-            _holidaysService = new HolidaysService(_holidaysRepository, mapper, _timeService);
+            _holidaysService = new HolidaysService(_holidaysRepository, mapper, _timeService, _overtimeUtility);
             _holidayConfirmService = new HolidayConfirmService(emailService.Object, mapper, _holidaysRepository,
-                                                                _employeesRepository, clientsRepository, _holidaysService, _timeService, docxGeneratorService.Object);
+                                                                _employeesRepository, clientsRepository, _holidaysService, 
+                                                                _timeService, docxGeneratorService.Object, _overtimeUtility);
         }
 
 
@@ -114,7 +118,7 @@ namespace Tests
             var holiday = await _holidaysRepository.GetById(holidayId);
             var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
 
-            var expected = initial - holiday.OvertimeHours;
+            var expected = initial - _overtimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
 
             _holidayConfirmService.call("UpdateEmployeesOvertime", holidayDto);
 

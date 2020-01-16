@@ -37,7 +37,7 @@ namespace Xplicity_Holidays.Controllers
         {
             var userEmail = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var currentUser = await _userService.GetCurrentUser(userEmail);
-            
+
             return Ok(currentUser);
         }
         // GET: api/Employees/5

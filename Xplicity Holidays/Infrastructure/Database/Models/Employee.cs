@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Xplicity_Holidays.Infrastructure.Enums;
-using Xplicity_Holidays.Infrastructure.Static_Files;
 
 namespace Xplicity_Holidays.Infrastructure.Database.Models
 {
     public class Employee: BaseEntity
     {
-        private double _oneOvertimeHour = 1.5;
-        private int _dailyHourLimit = 8;
-        private int _minutesInHour = 60;
-
         [Required]
         [MinLength(3)]
         [MaxLength(15)]
@@ -54,11 +49,10 @@ namespace Xplicity_Holidays.Infrastructure.Database.Models
         public ICollection<InventoryItem> InventoryItems { get; set; }
 
         [NotMapped]
-        public double OvertimeDays { get { return OvertimeHours * _oneOvertimeHour / _dailyHourLimit; } set { } } //Current amount of overtime days (converted from hours)
-        private double _hoursTillNextOvertimeDay { get { return Math.Abs(OvertimeDays - (int)OvertimeDays - 1) * _dailyHourLimit / _oneOvertimeHour; } set { } }
+        public double OvertimeDays { get; set; } //Current amount of overtime days (converted from hours)
         [NotMapped]
-        public int NextOvertimeHours { get { return (int)_hoursTillNextOvertimeDay; } set { } }
+        public int NextOvertimeHours { get; set; } //Hours left till next overtime day
         [NotMapped]
-        public int NextOvertimeMinutes { get { return (int)Math.Ceiling((_hoursTillNextOvertimeDay - NextOvertimeHours) * _minutesInHour); } set { } }
+        public int NextOvertimeMinutes { get; set; } //Minutes left till next overtime day
     }
 }

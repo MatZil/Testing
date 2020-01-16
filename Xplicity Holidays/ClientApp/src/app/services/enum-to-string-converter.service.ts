@@ -34,4 +34,17 @@ export class EnumToStringConverterService {
         return 'Confirmed';
     }
   }
+
+  determineHolidayStatusColor(status: number): string {
+    switch (status) {
+      case HolidayStatus.Pending:
+        return 'orange';
+
+      case HolidayStatus.Rejected:
+        return 'red';
+
+      case HolidayStatus.Confirmed:
+        return 'green';
+    }
+  }
 }

@@ -17,12 +17,14 @@ namespace Xplicity_Holidays.Services
         private readonly IHolidaysRepository _repository;
         private readonly IMapper _mapper;
         private readonly ITimeService _timeService;
+        private readonly IOvertimeUtility _overtimeUtility;
 
-        public HolidaysService(IHolidaysRepository repository, IMapper mapper, ITimeService timeService)
+        public HolidaysService(IHolidaysRepository repository, IMapper mapper, ITimeService timeService, IOvertimeUtility overtimeUtility)
         {
             _repository = repository;
             _mapper = mapper;
             _timeService = timeService;
+            _overtimeUtility = overtimeUtility;
         }
 
         public async Task<GetHolidayDto> GetById(int id)
@@ -37,7 +39,7 @@ namespace Xplicity_Holidays.Services
         {
             var holidays = await _repository.GetAll();
             var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays).OrderByDescending(h => h.RequestCreatedDate).ToList();
-            
+
             return holidaysDto;
         }
 
@@ -108,6 +110,7 @@ namespace Xplicity_Holidays.Services
         {
             var holidays = await _repository.GetByEmployeeStatus(employeeStatus);
             var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays).OrderByDescending(h => h.RequestCreatedDate).ToList();
+
             return holidaysDto;
         }
     }

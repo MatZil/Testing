@@ -7,7 +7,9 @@ using Xplicity_Holidays.Dtos.Holidays;
 using Xunit.Abstractions;
 using System;
 using Xplicity_Holidays.Infrastructure.Utils;
+using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Infrastructure.Enums;
+using Moq;
 
 namespace Tests
 {
@@ -19,6 +21,7 @@ namespace Tests
         private readonly ITestOutputHelper _output;
         private readonly HolidaysService _holidaysService;
         private readonly HolidaysRepository _holidaysRepository;
+        private readonly IOvertimeUtility _overtimeUtility;
 
         public HolidayTests(ITestOutputHelper output)
         {
@@ -30,8 +33,9 @@ namespace Tests
             _holidaysCount = setup.GetCount("holidays");
 
             var timeService = new TimeService();
+            _overtimeUtility = new Mock<IOvertimeUtility>().Object;
             _holidaysRepository = new HolidaysRepository(_context);
-            _holidaysService = new HolidaysService(_holidaysRepository, _mapper, timeService);
+            _holidaysService = new HolidaysService(_holidaysRepository, _mapper, timeService, _overtimeUtility);
         }
 
         [Theory]

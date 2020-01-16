@@ -106,11 +106,8 @@
             </td>
             <td>{{hol.fromInclusive | date}}</td>
             <td>{{hol.toExclusive | date}}</td>
-            <td *ngIf="hol.paid">{{hol.overtimeDays}}</td>
-            <td *ngIf="!hol.paid">-</td>
-            <td *ngIf="hol.status == 0" style="color:orange">{{enumConverter.determineHolidayStatus(hol.status)}}</td>
-            <td *ngIf="hol.status == 1" style="color:red">{{enumConverter.determineHolidayStatus(hol.status)}}</td>
-            <td *ngIf="hol.status == 2" style="color:green">{{enumConverter.determineHolidayStatus(hol.status)}}</td>
+            <td>{{getOvertime(hol.paid, hol.overtimeDays)}}</td>
+            <td [style.color]="getStatusColor(hol.status)">{{getStatusName(hol.status)}}</td>
             <td>{{hol.requestCreatedDate | date}}</td>
           </tr>
         </tbody>

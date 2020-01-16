@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using Xplicity_Holidays.Infrastructure.Static_Files;
 using Xplicity_Holidays.Infrastructure.Utils;
+using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 
 namespace Xplicity_Holidays.Services
 {
@@ -17,15 +18,15 @@ namespace Xplicity_Holidays.Services
         private readonly IEmailTemplatesRepository _repository;
         private readonly IConfiguration _configuration;
         private readonly IFileService _fileService;
-        private readonly OvertimeService _overtime;
+        private readonly IOvertimeUtility _overtimeUtility;
 
-        public EmailService(IEmailer emailer, IEmailTemplatesRepository repository, IConfiguration configuration, IFileService fileService)
+        public EmailService(IEmailer emailer, IEmailTemplatesRepository repository, IConfiguration configuration, IFileService fileService, IOvertimeUtility overtimeUtility)
         {
             _emailer = emailer;
             _repository = repository;
             _configuration = configuration;
             _fileService = fileService;
-            _overtime = new OvertimeService();
+            _overtimeUtility = overtimeUtility;
         }
 
         public async Task ConfirmHolidayWithClient(Client client, Employee employee, Holiday holiday)
@@ -73,7 +74,7 @@ namespace Xplicity_Holidays.Services
                                                 .Replace("{client.name}", (client.Key is null) ? TeamlessEmployeeTitle.TEAM_NAME : client.Key.CompanyName) + '\n';
                 foreach (var holiday in client)
                 {
-                    var overtimeSentence = _overtime.GetOvertimeSentence(OvertimeEmail.MONTHLY_REPORT, holiday.Item1.OvertimeHours);
+                    var overtimeSentence = _overtimeUtility.GetOvertimeSentence(OvertimeEmail.MONTHLY_REPORT, holiday.Item1.OvertimeDays);
 
                     var messageString = template.Template.Substring(titleEnd)
                                                         .Replace("{employee.fullName}", $"{holiday.Item1.Employee.Name} {holiday.Item1.Employee.Surname}")

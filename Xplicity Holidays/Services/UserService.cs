@@ -1,27 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Xplicity_Holidays.Dtos.Employees;
 using Xplicity_Holidays.Dtos.Users;
 using Xplicity_Holidays.Infrastructure.Database.Models;
 using Xplicity_Holidays.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Xplicity_Holidays.Infrastructure.Database;
+using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 
 namespace Xplicity_Holidays.Services
 {
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
+        private readonly IOvertimeUtility _overtimeUtility;
 
-        public UserService(UserManager<User> userManager)
+        public UserService(IOvertimeUtility overtimeUtility, UserManager<User> userManager)
         {
             _userManager = userManager;
+            _overtimeUtility = overtimeUtility;
         }
         public async Task<User> Create(Employee newEmployee, NewEmployeeDto newEmployeeDto)
         {
@@ -79,7 +76,9 @@ namespace Xplicity_Holidays.Services
             {
                 throw new InvalidOperationException();
             }
-            return currentUser.Employee;
+
+            var currentEmployee = _overtimeUtility.AddOvertimeDetailsToEmployee(currentUser.Employee);
+            return currentEmployee;
         }
     }
 }
