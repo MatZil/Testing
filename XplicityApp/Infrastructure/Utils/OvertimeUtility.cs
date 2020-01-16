@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
-using Xplicity_Holidays.Infrastructure.Database.Models;
-using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
+using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 
-namespace Xplicity_Holidays.Infrastructure.Utils
+namespace XplicityApp.Infrastructure.Utils
 {
     public class OvertimeUtility : IOvertimeUtility
     {

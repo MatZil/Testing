@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 using XplicityApp.Infrastructure.Database.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
-using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 using Moq;
 
 namespace Tests
@@ -33,7 +33,7 @@ namespace Tests
             _overtimeUtility = new Mock<IOvertimeUtility>().Object;
             _userManager = setup.InitializeUserManager(_context);
             //_roleManager = _setup.InitializeRoleManager(_context);
-  
+
             EmployeesRepository employeesRepository = new EmployeesRepository(_context, _userManager);
             _usersService = new UserService(_overtimeUtility, _userManager);
         }

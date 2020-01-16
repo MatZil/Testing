@@ -1,6 +1,6 @@
-﻿using Xplicity_Holidays.Infrastructure.Database.Models;
+﻿using XplicityApp.Infrastructure.Database.Models;
 
-namespace Xplicity_Holidays.Infrastructure.Utils.Interfaces
+namespace XplicityApp.Infrastructure.Utils.Interfaces
 {
     public interface IOvertimeUtility
     {

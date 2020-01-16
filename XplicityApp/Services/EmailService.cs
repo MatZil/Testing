@@ -8,9 +8,6 @@ using XplicityApp.Infrastructure.Emailer;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Static_Files;
 using XplicityApp.Services.Interfaces;
-using System.Threading.Tasks;
-using XplicityApp.Infrastructure.Static_Files;
-using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 
 namespace XplicityApp.Services

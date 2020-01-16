@@ -7,21 +7,11 @@ using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Infrastructure.Static_Files;
 using XplicityApp.Services.Interfaces;
-using System;
 using XplicityApp.Infrastructure.Enums;
-using XplicityApp.Infrastructure.Utils;
-using Microsoft.Extensions.Configuration;
-using XplicityApp.Dtos.Holidays;
-using XplicityApp.Infrastructure.Database.Models;
-using XplicityApp.Infrastructure.Enums;
-using XplicityApp.Infrastructure.Repositories;
-using XplicityApp.Infrastructure.Static_Files;
-using XplicityApp.Infrastructure.Utils.Interfaces;
-using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Services
 {
-    public class HolidayConfirmService: IHolidayConfirmService
+    public class HolidayConfirmService : IHolidayConfirmService
     {
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
@@ -34,7 +24,7 @@ namespace XplicityApp.Services
         private readonly IOvertimeUtility _overtimeUtility;
 
         public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays,
-                                     IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients, IHolidaysService holidaysService, 
+                                     IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients, IHolidaysService holidaysService,
                                      ITimeService timeService, IDocxGeneratorService docxGeneratorService, IOvertimeUtility overtimeUtility)
         {
             _emailService = emailService;
@@ -166,7 +156,7 @@ namespace XplicityApp.Services
         }
 
         private async Task<bool> IsValid(Holiday holiday)
-        { 
+        {
             if (holiday.Status == HolidayStatus.Confirmed)
             {
                 return false;
@@ -191,7 +181,7 @@ namespace XplicityApp.Services
 
         private bool ValidDateInterval(Holiday holiday, DateTime currentTime)
         {
-            if(holiday.FromInclusive.Date <= currentTime.Date || holiday.ToExclusive.Date <= holiday.FromInclusive.Date)
+            if (holiday.FromInclusive.Date <= currentTime.Date || holiday.ToExclusive.Date <= holiday.FromInclusive.Date)
             {
                 return false;
             }

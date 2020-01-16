@@ -8,10 +8,11 @@ using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
+using System.Linq;
 
 namespace XplicityApp.Services
 {
-    public class HolidaysService: IHolidaysService
+    public class HolidaysService : IHolidaysService
     {
         private readonly IHolidaysRepository _repository;
         private readonly IMapper _mapper;

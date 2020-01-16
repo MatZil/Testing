@@ -1,4 +1,4 @@
-﻿namespace Xplicity_Holidays.Infrastructure.Static_Files
+﻿namespace XplicityApp.Infrastructure.Static_Files
 {
     public static class OvertimeEmail
     {
