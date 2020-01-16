@@ -1,14 +1,14 @@
 ﻿using Xunit;
-using Xplicity_Holidays.Services;
-using Xplicity_Holidays.Infrastructure.Database;
-using Xplicity_Holidays.Infrastructure.Repositories;
+using XplicityApp.Services;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Repositories;
 using AutoMapper;
-using Xplicity_Holidays.Dtos.Holidays;
+using XplicityApp.Dtos.Holidays;
 using Xunit.Abstractions;
 using System;
-using Xplicity_Holidays.Infrastructure.Utils;
-using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
-using Xplicity_Holidays.Infrastructure.Enums;
+using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Infrastructure.Utils.Interfaces;
+using XplicityApp.Infrastructure.Enums;
 using Moq;
 
 namespace Tests

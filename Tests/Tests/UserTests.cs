@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Xplicity_Holidays.Dtos.Employees;
-using Xplicity_Holidays.Infrastructure.Repositories;
-using Xplicity_Holidays.Services;
+using XplicityApp.Dtos.Employees;
+using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Services;
 using Xunit;
-using Xplicity_Holidays.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database;
 using Xunit.Abstractions;
-using Xplicity_Holidays.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Database.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
