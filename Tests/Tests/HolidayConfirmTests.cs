@@ -1,13 +1,14 @@
-﻿using XplicityApp.Infrastructure.Database.Models;
-using XplicityApp.Infrastructure.Repositories;
-using XplicityApp.Services;
-using Xunit;
-using XplicityApp.Infrastructure.Database;
-using XplicityApp.Infrastructure.Utils;
-using AutoMapper;
-using XplicityApp.Services.Interfaces;
+﻿using AutoMapper;
 using Moq;
+using System;
 using XplicityApp.Dtos.Holidays;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Services;
+using XplicityApp.Services.Interfaces;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Tests
@@ -159,9 +160,8 @@ namespace Tests
         [InlineData(4)]
         public async void When_ConfirmingInvalid_Expect_False(int holidayId)
         {
-            var result = await _holidayConfirmService.IsValid(holidayId);
-
-            Assert.False(result, "Holiday request is deemed to be valid.");
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                async () => await _holidayConfirmService.ValidateHolidayConfirmationReadiness(holidayId));
         }
     }
 }

@@ -116,11 +116,6 @@ namespace XplicityApp.Configurations
         {
             var baseFolder = configuration.GetValue<string>("FileConfig:BaseFolder");
             app.UseStaticFiles();
-
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
-            {
-
-            }
             
             app.UseStaticFiles(new StaticFileOptions
             {

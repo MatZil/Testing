@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System.IO;
 
 namespace XplicityApp
@@ -19,6 +20,12 @@ namespace XplicityApp
                     builder.SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("email-templates-settings.json")
                     .Build())
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddConsole();
+                    logging.AddDebug();
+                })
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
         }
     }
