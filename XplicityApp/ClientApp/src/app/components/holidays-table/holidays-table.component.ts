@@ -69,6 +69,21 @@ export class HolidaysTableComponent implements OnInit {
     this.holidayService.getHolidaysByStatus(status).subscribe(holidays => {
       this.holidays = holidays;
     });
+
+  }
+
+  getDataByRole() {
+    var currentEmployeeHolidays = [];
+    if (!this.isAdmin()) {
+      this.holidays.forEach(holiday => {
+        if (this.isTheRightId(holiday)) {
+          currentEmployeeHolidays.push(holiday);
+        }
+      });
+
+      return currentEmployeeHolidays;
+    }
+    else { return this.holidays; }
   }
 
   onAddButtonClick() {
@@ -118,6 +133,12 @@ export class HolidaysTableComponent implements OnInit {
     }
   }
 
+  getCurrentUserHolidays(holidays: Holidays) {
+    if (this.currentUserId === holidays.employeeId) {
+      return true;
+    }
+  }
+
   getUserNameById(id: number) {
     if (this.users) {
       for (const userIndex of Object.keys(this.users)) {
@@ -153,9 +174,15 @@ export class HolidaysTableComponent implements OnInit {
     return this.enumConverter.determineHolidayStatusColor(status);
   }
 
-  getOvertime(paid, overtimeDays) {
-    if (paid) { return overtimeDays}
-    else { return "-"}
+  getOvertime(holiday) {
+    if (!holiday.paid) { return "-" }
+    else if (this.isAdmin()) { return holiday.overtimeHours }
+    else if (!this.isAdmin()) { return holiday.overtimeDays }
+  }
+
+  isPaid(paid) {
+    if (paid) { return "Yes"}
+    else { return "No"}
   }
 
   isAdmin() {

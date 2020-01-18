@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Utils.Interfaces;
+using XplicityApp.Dtos.Holidays;
 
 namespace XplicityApp.Infrastructure.Utils
 {
@@ -66,11 +67,11 @@ namespace XplicityApp.Infrastructure.Utils
             return employee;
         }
 
-        //public Holiday AddOvertimeDetailsToHoliday(Holiday holiday)
-        //{
-        //    holiday.OvertimeHours = ConvertOvertimeDaysToHours(holiday.OvertimeDays);
+        public GetHolidayDto AddOvertimeDetailsToHoliday(GetHolidayDto holiday)
+        {
+            holiday.OvertimeHours = Math.Round(ConvertOvertimeDaysToHours(holiday.OvertimeDays), 2);
 
-        //    return holiday;
-        //}
+            return holiday;
+        }
     }
 }

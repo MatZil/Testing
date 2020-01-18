@@ -13,12 +13,10 @@ namespace XplicityApp.Services
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
-        private readonly IOvertimeUtility _overtimeUtility;
 
-        public UserService(IOvertimeUtility overtimeUtility, UserManager<User> userManager)
+        public UserService(UserManager<User> userManager)
         {
             _userManager = userManager;
-            _overtimeUtility = overtimeUtility;
         }
         public async Task<User> Create(Employee newEmployee, NewEmployeeDto newEmployeeDto)
         {
@@ -77,8 +75,7 @@ namespace XplicityApp.Services
                 throw new InvalidOperationException();
             }
 
-            var currentEmployee = _overtimeUtility.AddOvertimeDetailsToEmployee(currentUser.Employee);
-            return currentEmployee;
+            return currentUser.Employee;
         }
     }
 }

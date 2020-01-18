@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using XplicityApp.Infrastructure.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace XplicityApp.Infrastructure.Database.Models
 {
@@ -25,8 +26,8 @@ namespace XplicityApp.Infrastructure.Database.Models
         [Required]
         public DateTime RequestCreatedDate { get; set; }
 
-        //[NotMapped]
-        //public double OvertimeHours { get; set; }
+        [NotMapped]
+        public double OvertimeHours { get; set; }
     }
 
 }

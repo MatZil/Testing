@@ -110,8 +110,14 @@ namespace XplicityApp.Services
         {
             var holidays = await _repository.GetByEmployeeStatus(employeeStatus);
             var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays).OrderByDescending(h => h.RequestCreatedDate).ToList();
+            holidaysDto.ForEach(holiday => AddOvertimeDetails(holiday));
 
             return holidaysDto;
+        }
+
+        private GetHolidayDto AddOvertimeDetails(GetHolidayDto holiday)
+        {
+            return _overtimeUtility.AddOvertimeDetailsToHoliday(holiday);
         }
     }
 }

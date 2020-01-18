@@ -1,4 +1,5 @@
 ﻿using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Dtos.Holidays;
 
 namespace XplicityApp.Infrastructure.Utils.Interfaces
 {
@@ -10,6 +11,6 @@ namespace XplicityApp.Infrastructure.Utils.Interfaces
         int GetHoursTillNextOvertimeDay(double overtimeDays);
         int GetMinutesTillNextOvertimeDay(double overtimeDays);
         Employee AddOvertimeDetailsToEmployee(Employee employee);
-        //Holiday AddOvertimeDetailsToHoliday(Holiday holiday);
+        GetHolidayDto AddOvertimeDetailsToHoliday(GetHolidayDto holiday);
     }
 }
