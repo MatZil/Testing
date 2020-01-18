@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using XplicityApp.Dtos.Holidays;
 using XplicityApp.Services.Interfaces;
@@ -9,6 +10,7 @@ namespace XplicityApp.Controllers
     [ApiController]
     public class HolidayConfirmController : ControllerBase
     {
+        private const string HolidayConfirmedMessage = "Holiday confirmed.";
         private readonly IHolidayConfirmService _confirmationService;
         private readonly IHolidaysService _holidaysService;
 
@@ -21,31 +23,39 @@ namespace XplicityApp.Controllers
         [HttpPost]
         public async Task<IActionResult> RequestConfirmationFromClient(NewHolidayDto newHolidayDto)
         {
-            if (!await _confirmationService.IsValid(newHolidayDto))
+            try
             {
-                return BadRequest();
+                await _confirmationService.ValidateNewHolidayConfirmationReadiness(newHolidayDto);
+
+                var holidayId = await _holidaysService.Create(newHolidayDto);
+
+                await _confirmationService.RequestClientApproval(holidayId);
+            }
+            catch (InvalidOperationException exception)
+            {
+                return BadRequest(exception.Message);
             }
 
-            var holidayId = await _holidaysService.Create(newHolidayDto);
-
-            await _confirmationService.RequestClientApproval(holidayId);
-
-            return Ok();
+            return Ok(HolidayConfirmedMessage);
         }
 
         [HttpGet]
         public async Task<IActionResult> ConfirmHoliday(int holidayId)
         {
-            if (!await _confirmationService.IsValid(holidayId))
+            try
             {
-                return BadRequest();
+                await _confirmationService.ValidateHolidayConfirmationReadiness(holidayId);
+
+                await _confirmationService.ConfirmHoliday(holidayId);
+
+                await _confirmationService.GenerateFilesAndNotify(holidayId);
+            }
+            catch (InvalidOperationException exception)
+            {
+                return BadRequest(exception.Message);
             }
 
-            await _confirmationService.ConfirmHoliday(holidayId);
-
-            await _confirmationService.GenerateFilesAndNotify(holidayId);
-
-            return Ok();
+            return Ok(HolidayConfirmedMessage);
         }
     }
 }
