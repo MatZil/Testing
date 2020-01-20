@@ -69,25 +69,26 @@ namespace XplicityApp.Services
             var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
                                                             new DateTime(currentTime.AddYears(1).Year, 1, 1));
 
-            if(newEmployeeDto.IsACurrentEmployee == true)
-            {
-                newEmployee.FreeWorkDays = newEmployeeDto.FreeWorkDays;
+                if (newEmployeeDto.IsCurrentEmployee)
+                {
+                    newEmployee.FreeWorkDays = newEmployeeDto.FreeWorkDays;
+                }
+                else
+                {
+                    newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
+                }
+
+
+                newEmployee.CurrentAvailableLeaves = newEmployee.ParentalLeaveLimit;
+                newEmployee.NextMonthAvailableLeaves = newEmployee.ParentalLeaveLimit;
+
+                await _repository.Create(newEmployee);
+                await _userService.Create(newEmployee, newEmployeeDto);
+
+                var employeeDto = _mapper.Map<NewEmployeeDto>(newEmployee);
+
+                return employeeDto;
             }
-            else
-            {
-                newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
-            }
-            
-
-            newEmployee.CurrentAvailableLeaves = newEmployee.ParentalLeaveLimit;
-            newEmployee.NextMonthAvailableLeaves = newEmployee.ParentalLeaveLimit;
-            
-            await _repository.Create(newEmployee);
-            await _userService.Create(newEmployee, newEmployeeDto);
-
-            var employeeDto = _mapper.Map<NewEmployeeDto>(newEmployee);
-
-            return employeeDto;
         }
 
         public async Task<bool> Delete(int id)

@@ -18,7 +18,7 @@ namespace XplicityApp.Dtos.Employees
         public string Password { get; set; }
         public string Role { get; set; }
         public string Position { get; set; }
-        public bool IsACurrentEmployee { get; set; }
+        public bool IsCurrentEmployee { get; set; }
 
         public DateTime HealthCheckDate { get; set; }
 
