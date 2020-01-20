@@ -89,8 +89,6 @@ namespace XplicityApp.Services
 
                 return employeeDto;
             }
-        }
-
         public async Task<bool> Delete(int id)
         {
             var item = await _repository.GetById(id);
