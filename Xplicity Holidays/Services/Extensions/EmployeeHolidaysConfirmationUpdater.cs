@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
+using Xplicity_Holidays.Services.Extensions.Interfaces;
 
 namespace Xplicity_Holidays.Services.Extensions
 {
-    public class EmployeeHolidaysConfirmationUpdater
+    public class EmployeeHolidaysConfirmationUpdater : IEmployeeHolidaysConfirmationUpdater
     {
         private readonly ITimeService _timeService;
         private readonly IEmployeeRepository _repositoryEmployees;

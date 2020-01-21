@@ -9,7 +9,7 @@ using Xplicity_Holidays.Infrastructure.Enums;
 using Xplicity_Holidays.Infrastructure.Repositories;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services.Interfaces;
-using Xplicity_Holidays.Services.Extensions;
+using Xplicity_Holidays.Services.Extensions.Interfaces;
 
 namespace Xplicity_Holidays.Services
 {
@@ -18,14 +18,15 @@ namespace Xplicity_Holidays.Services
         private readonly ITimeService _timeService;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly EmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
+        private readonly IEmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
 
-        public BackgroundService(ITimeService timeService, IServiceScopeFactory serviceScopeFactory, IHostingEnvironment hostingEnvironment)
+        public BackgroundService(ITimeService timeService, IServiceScopeFactory serviceScopeFactory, IHostingEnvironment hostingEnvironment,
+                                IEmployeeHolidaysBackgroundUpdater employeeHolidaysBackgroundUpdater)
         {
             _serviceScopeFactory = serviceScopeFactory;
             _timeService = timeService;
             _hostingEnvironment = hostingEnvironment;
-            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater();
+            _employeeHolidaysBackgroundUpdater = employeeHolidaysBackgroundUpdater;
         }
 
         public async Task RunBackgroundServices()

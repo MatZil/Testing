@@ -43,7 +43,8 @@ namespace Tests
 
             var _serviceScopeFactory = new Mock<IServiceScopeFactory>().Object;
             var _hostingEnvironment = new Mock<IHostingEnvironment>().Object;
-            _backgroundService = new BackgroundService(_timeService, _serviceScopeFactory, _hostingEnvironment);
+            _backgroundService = new BackgroundService(_timeService, _serviceScopeFactory, _hostingEnvironment,
+                                                       _employeeHolidaysBackgroundUpdater);
         }
 
         //[Fact]

@@ -8,7 +8,7 @@ using Xplicity_Holidays.Infrastructure.Static_Files;
 using Xplicity_Holidays.Services.Interfaces;
 using System;
 using Xplicity_Holidays.Infrastructure.Enums;
-using Xplicity_Holidays.Services.Extensions;
+using Xplicity_Holidays.Services.Extensions.Interfaces;
 
 namespace Xplicity_Holidays.Services
 {
@@ -22,11 +22,12 @@ namespace Xplicity_Holidays.Services
         private readonly IRepository<Client> _repositoryClients;
         private readonly IHolidaysRepository _repositoryHolidays;
         private readonly IDocxGeneratorService _docxGeneratorService;
-        private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
+        private readonly IEmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
 
         public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays,
                                      IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
-                                     IHolidaysService holidaysService, ITimeService timeService, IDocxGeneratorService docxGeneratorService)
+                                     IHolidaysService holidaysService, ITimeService timeService, IDocxGeneratorService docxGeneratorService,
+                                     IEmployeeHolidaysConfirmationUpdater employeeHolidaysConfirmationUpdater)
         {
             _emailService = emailService;
             _mapper = mapper;
@@ -36,7 +37,7 @@ namespace Xplicity_Holidays.Services
             _holidaysService = holidaysService;
             _timeService = timeService;
             _docxGeneratorService = docxGeneratorService;
-            _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(repositoryEmployees, timeService);
+            _employeeHolidaysConfirmationUpdater = employeeHolidaysConfirmationUpdater;
         }
 
         public async Task<bool> RequestClientApproval(int holidayId)

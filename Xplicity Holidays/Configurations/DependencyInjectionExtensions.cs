@@ -9,6 +9,8 @@ using Xplicity_Holidays.Infrastructure.Utils;
 using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 using Xplicity_Holidays.Services;
 using Xplicity_Holidays.Services.Interfaces;
+using Xplicity_Holidays.Services.Extensions;
+using Xplicity_Holidays.Services.Extensions.Interfaces;
 
 namespace Xplicity_Holidays.Configurations
 {
@@ -34,6 +36,8 @@ namespace Xplicity_Holidays.Configurations
                 .AddScoped<IEmailer, Emailer>()
                 .AddScoped<IDocxGenerator, DocxGenerator>()
                 .AddScoped<IFileUtility, FileUtility>()
+                .AddScoped<IEmployeeHolidaysBackgroundUpdater, EmployeeHolidaysBackgroundUpdater>()
+                .AddScoped<IEmployeeHolidaysConfirmationUpdater, EmployeeHolidaysConfirmationUpdater>()
                 .AddSingleton<ITimeService, TimeService>()
                 .AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }

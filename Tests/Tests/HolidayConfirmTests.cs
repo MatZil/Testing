@@ -10,6 +10,7 @@ using Moq;
 using Xplicity_Holidays.Dtos.Holidays;
 using Xunit.Abstractions;
 using Xplicity_Holidays.Services.Extensions;
+using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
 
 namespace Tests
 {
@@ -23,7 +24,7 @@ namespace Tests
         private readonly HolidaysRepository _holidaysRepository;
         private readonly IMapper _mapper;
         private readonly EmployeesRepository _employeesRepository;
-        private readonly TimeService _timeService;
+        private readonly ITimeService _timeService;
         private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
 
         public HolidayConfirmTests(ITestOutputHelper output)
@@ -35,18 +36,19 @@ namespace Tests
             var mapper = contextMapperTuple.Item2;
             _mapper = mapper;
             
-            _timeService = new TimeService();
+            _timeService = new Mock<TimeService>().Object;
             _holidaysRepository = new HolidaysRepository(_context);
             var userManager = setup.InitializeUserManager(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
             var emailService = new Mock<IEmailService>();
             var docxGeneratorService = new Mock<IDocxGeneratorService>();
+            _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _timeService);
 
             _holidaysService = new HolidaysService(_holidaysRepository, mapper, _timeService);
             _holidayConfirmService = new HolidayConfirmService(emailService.Object, mapper, _holidaysRepository,
-                                                                _employeesRepository, clientsRepository, _holidaysService, _timeService, docxGeneratorService.Object);
-            _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _timeService);
+                                                                _employeesRepository, clientsRepository, _holidaysService, 
+                                                                _timeService, docxGeneratorService.Object, _employeeHolidaysConfirmationUpdater);    
         }
 
         [Theory]
