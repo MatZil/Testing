@@ -134,12 +134,12 @@
             <div class="columns">
               <div>
                 <mat-checkbox [(ngModel)]="newUser.isCurrentEmployee" name="isCurrentEmployee">
-                  Add Current Employee Holidays
+                  Enter available holidays manually:
                 </mat-checkbox>
               </div>
-              <div>
+              <div *ngIf="newUser.isCurrentEmployee">
                 <mat-form-field>
-                    <input matInput [(ngModel)]="newUser.freeWorkDays" type="number" step="0.1" name="freeWorkDays" placeholder="Holidays for current employee" />
+                    <input matInput [(ngModel)]="newUser.freeWorkDays" type="number" step="0.1" name="freeWorkDays" placeholder="Employee holidays" />
                 </mat-form-field>
               </div>
             </div>
