@@ -9,7 +9,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
 
-import { NgForm } from '@angular/forms';
+import { NgForm} from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { Role } from '../../models/role';
@@ -41,6 +41,7 @@ export class EmployeesTableComponent implements OnInit {
 
   confirmDeleteModal: NzModalRef;
 
+  active = true;
   searchValue = '';
   listOfSearchAddress: string[] = [];
   sortName: string | null = null;
@@ -89,6 +90,7 @@ export class EmployeesTableComponent implements OnInit {
   getCurrentUserId() {
     return this.authenticationService.getUserId();
   }
+
   onDeleteButtonClick(id: number) {
     this.userService.deleteUser(id).subscribe(() => {
       this.refreshTable();
@@ -120,6 +122,7 @@ export class EmployeesTableComponent implements OnInit {
       nzOnOk: () => this.deleteEmployeeOnModalClose(id)
     });
   }
+
   showStatusConfirm() {
     this.confirmDeleteModal = this.modal.confirm({
       nzTitle: 'Do you want to change status of this user?',
@@ -127,8 +130,11 @@ export class EmployeesTableComponent implements OnInit {
       nzOnOk: () => this.onEditConfirmButtonClick(this.formDataUsersNoId, this.formDataUsers.id)
     });
   }
+
   onSubmit(form: NgForm) {
-    form.resetForm();
+      form.reset();
+      this.active = false;
+      setTimeout(() => this.active = true, 0);
   }
 
   populateUserForm(user: User) {
@@ -148,7 +154,7 @@ export class EmployeesTableComponent implements OnInit {
     setTimeout(() => {
       this.isVisibleCreator = false;
       this.isConfirmLoadingCreator = false;
-    }, 3000);
+    }, 1000);
   }
 
   handleCancelCreator(): void {
