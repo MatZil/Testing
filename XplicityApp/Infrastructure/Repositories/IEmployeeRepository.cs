@@ -10,7 +10,7 @@ namespace XplicityApp.Infrastructure.Repositories
 
         List<Holiday> GetConfirmedHolidays(int employeeId); 
 
-        Task<Employee> FindAnyAdmin();
+        Task<ICollection<Employee>> GetAllAdmins();
 
     }
 }
