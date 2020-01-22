@@ -69,7 +69,7 @@ namespace XplicityApp.Services
             var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
                                                             new DateTime(currentTime.AddYears(1).Year, 1, 1));
 
-                if (newEmployeeDto.isManualHolidaysInput)
+                if (newEmployeeDto.IsManualHolidaysInput)
                 {
                     newEmployee.FreeWorkDays = newEmployeeDto.FreeWorkDays;
                 }
