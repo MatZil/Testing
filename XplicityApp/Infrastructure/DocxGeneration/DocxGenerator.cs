@@ -104,19 +104,19 @@ namespace XplicityApp.Infrastructure.DocxGeneration
 
             var documentContentHtml = GetContentFromTemplate(documentTemplateHtml, replacementMap);
 
-            CreateDocxFromHtml(documentContentHtml, generationPath);
+            await CreateDocxFromHtml(documentContentHtml, generationPath);
             
             return generationPath;
         }
 
-        private async Task<string> GetHtmlTemplateString(string templatePath)
+        private static async Task<string> GetHtmlTemplateString(string templatePath)
         {
             using var reader = new StreamReader(templatePath, Encoding.GetEncoding(1252));
             var htmlTemplateString = await reader.ReadToEndAsync();
             return htmlTemplateString;
         }
 
-        private string GetContentFromTemplate(string templateString, Dictionary<string, string> replacementMap)
+        private static string GetContentFromTemplate(string templateString, Dictionary<string, string> replacementMap)
         {
             foreach (var replacementPair in replacementMap)
             {
@@ -126,9 +126,9 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             return templateString;
         }
 
-        private void CreateDocxFromHtml(string htmlString, string generationPath)
+        private static async Task CreateDocxFromHtml(string htmlString, string generationPath)
         {
-            var altChunkID = "AltChunkId1";
+            const string altChunkID = "AltChunkId1";
             using var newDocument = WordprocessingDocument.Create(generationPath, WordprocessingDocumentType.Document);
             var mainPart = newDocument.AddMainDocumentPart();
             var document = new Document(new Body());
@@ -138,7 +138,7 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             using (var chunkStream = chunk.GetStream(FileMode.Create, FileAccess.Write))
             {
                 using var stringStream = new StreamWriter(chunkStream, Encoding.UTF8);
-                stringStream.Write(htmlString);
+                await stringStream.WriteAsync(htmlString);
             }
 
             var altChunk = new AltChunk { Id = altChunkID };
