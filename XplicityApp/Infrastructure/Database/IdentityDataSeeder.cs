@@ -4,7 +4,7 @@ using XplicityApp.Infrastructure.Database.Models;
 
 namespace XplicityApp.Infrastructure.Database
 {
-    public class IdentityDataSeeder
+    public static class IdentityDataSeeder
     {
         public static void SeedData(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
@@ -12,32 +12,32 @@ namespace XplicityApp.Infrastructure.Database
             SeedUser(userManager, configuration);
         }
 
-        public static void SeedRoles(RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        private static void SeedRoles(RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             if (!roleManager.RoleExistsAsync(configuration.GetValue<string>("AdminData:RoleName")).Result)
             {
-                IdentityRole role = new IdentityRole();
-                role.Name = configuration.GetValue<string>("AdminData:RoleName");
-                IdentityResult result = roleManager.CreateAsync(role).Result;
+                var role = new IdentityRole {Name = configuration.GetValue<string>("AdminData:RoleName")};
+                roleManager.CreateAsync(role).Wait();
             }
 
             if (!roleManager.RoleExistsAsync("Employee").Result)
             {
-                IdentityRole role = new IdentityRole();
-                role.Name = "Employee";
-                IdentityResult result = roleManager.CreateAsync(role).Result;
+                var role = new IdentityRole {Name = "Employee"};
+                roleManager.CreateAsync(role).Wait();
             }
         }
 
-        public static void SeedUser(UserManager<User> userManager, IConfiguration configuration)
+        private static void SeedUser(UserManager<User> userManager, IConfiguration configuration)
         {
-            if (userManager.FindByEmailAsync(configuration.GetValue<string>("AdminData:AdminEmail")).Result == null)
+            if (userManager.GetUsersInRoleAsync("Admin").Result.Count <= 0)
             {
-                User user = new User();
-                user.UserName = configuration.GetValue<string>("AdminData:AdminEmail");
-                user.Email = configuration.GetValue<string>("AdminData:AdminEmail");
-                user.EmployeeId = 1;
-                IdentityResult result = userManager.CreateAsync(user, configuration.GetValue<string>("AdminData:AdminPassword")).Result;
+                var user = new User
+                {
+                    UserName = configuration.GetValue<string>("AdminData:AdminEmail"),
+                    Email = configuration.GetValue<string>("AdminData:AdminEmail"),
+                    EmployeeId = 1
+                };
+                var result = userManager.CreateAsync(user, configuration.GetValue<string>("AdminData:AdminPassword")).Result;
                 
                 if (result.Succeeded)
                 {

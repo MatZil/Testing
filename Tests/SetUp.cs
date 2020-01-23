@@ -1,22 +1,20 @@
-﻿using System;
-using AutoMapper;
-using XplicityApp.Dtos.Employees;
-using XplicityApp.Infrastructure.Database.Models;
-using XplicityApp.Infrastructure.Database;
-using XplicityApp.Configurations;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using XplicityApp.Dtos.Holidays;
-using XplicityApp.Dtos.EmailTemplates;
-using XplicityApp.Infrastructure.Enums;
+using System;
 using System.IO;
-using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Configurations;
+using XplicityApp.Dtos.EmailTemplates;
+using XplicityApp.Dtos.Employees;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 
 
 namespace Tests
@@ -32,7 +30,17 @@ namespace Tests
         private InventoryItem[] _inventoryItems;
         private InventoryCategory[] _inventoryCategories;
 
-        public Tuple<HolidayDbContext,IMapper> Initialize()
+        private HolidayDbContext _context;
+        public HolidayDbContext HolidayDbContext =>
+            _context ??
+            throw new InvalidOperationException("Run initialize method before accessing this property.");
+
+        private IMapper _mapper;
+        public IMapper Mapper =>
+            _mapper ??
+            throw new InvalidOperationException("Run initialize method before accessing this property.");
+
+        public void Initialize()
         {
             var serviceProvider = new ServiceCollection()
                 .AddEntityFrameworkInMemoryDatabase()
@@ -44,16 +52,16 @@ namespace Tests
                 .Options;
 
             var configuration = GetConfiguration();
-            var context = new HolidayDbContext(options, configuration);
-            Seed(context);
+            _context = new HolidayDbContext(options, configuration);
+            Seed(_context);
 
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new AutoMapperConfiguration());
             });
-            var mapper = config.CreateMapper();
+            _mapper = config.CreateMapper();
 
-            return new Tuple<HolidayDbContext, IMapper>(context, mapper);
+            //return new Tuple<HolidayDbContext, IMapper>(_context, _mapper);
         }
 
         public IConfiguration GetConfiguration()
@@ -65,9 +73,9 @@ namespace Tests
             return config;
         }
 
-        public UserManager<User> InitializeUserManager(HolidayDbContext context)
+        public UserManager<User> InitializeUserManager()
         {
-            var userStore = new UserStore<User>(context);
+            var userStore = new UserStore<User>(_context);
 
             var userManager = new UserManager<User>(
                 userStore,
@@ -83,9 +91,9 @@ namespace Tests
             return userManager;
         }
 
-        public RoleManager<IdentityRole> InitializeRoleManager(HolidayDbContext context)
+        public RoleManager<IdentityRole> InitializeRoleManager()
         {
-            var roleStore = new RoleStore<IdentityRole>(context);
+            var roleStore = new RoleStore<IdentityRole>(_context);
 
             var roleManager = new RoleManager<IdentityRole>(
                 roleStore,
@@ -99,14 +107,14 @@ namespace Tests
 
         private void Seed(HolidayDbContext context)
         {
-            _roles = new IdentityRole[]
+            _roles = new[]
             {
-                new IdentityRole()
+                new IdentityRole
                 {
                     Name = "Employee",
                     NormalizedName = "Employee",
                 },
-                new IdentityRole()
+                new IdentityRole
                 {
                     Name = "Admin",
                     NormalizedName = "Admin",
@@ -114,16 +122,16 @@ namespace Tests
             };
             context.Roles.AddRange(_roles);
 
-            _emailTemplates = new EmailTemplate[]
+            _emailTemplates = new[]
             {
-                new EmailTemplate()
+                new EmailTemplate
                 {
                     Purpose = "purpose1",
                     Subject = "subject1",
                     Template = "template1",
                     Instructions = "instructions1"
                 },
-                new EmailTemplate()
+                new EmailTemplate
                 {
                     Purpose = "purpose2",
                     Subject = "subject2",
@@ -133,8 +141,8 @@ namespace Tests
             };
             context.EmailTemplates.AddRange(_emailTemplates);
 
-            _employees = new Employee[] {
-                new Employee()
+            _employees = new[] {
+                new Employee
                 {
                     ClientId = 1,
                     Name = "EmployeeName1",
@@ -149,7 +157,7 @@ namespace Tests
                     CurrentAvailableLeaves = 1,
                     NextMonthAvailableLeaves = 2,
                 },
-                new Employee()
+                new Employee
                 {
                     ClientId = 1,
                     Client = context.Clients.Find(1),
@@ -167,8 +175,8 @@ namespace Tests
             };
             context.Employees.AddRange(_employees);
 
-            _clients = new Client[] {
-                new Client()
+            _clients = new[] {
+                new Client
                 {
                     CompanyName = "CompanyName1",
                     OwnerName = "OwnerName1",
@@ -176,7 +184,7 @@ namespace Tests
                     OwnerEmail = "e1@gmail.com",
                     OwnerPhone = "111"
                 },
-                new Client()
+                new Client
                 {
                     CompanyName = "CompanyName2",
                     OwnerName = "OwnerName2",
@@ -187,8 +195,8 @@ namespace Tests
             };
             context.Clients.AddRange(_clients);
 
-            _holidays = new Holiday[] {
-                new Holiday()
+            _holidays = new[] {
+                new Holiday
                 {
                     Employee = context.Employees.Find(1),
                     EmployeeId = 1,
@@ -198,7 +206,7 @@ namespace Tests
                     Status = HolidayStatus.Unconfirmed,
                     RequestCreatedDate = new DateTime(2019, 10, 13),
                 },
-                new Holiday()
+                new Holiday
                 {
                     Employee = context.Employees.Find(2),
                     EmployeeId = 2,
@@ -208,7 +216,7 @@ namespace Tests
                     Status = HolidayStatus.Confirmed,
                     RequestCreatedDate = new DateTime(2019, 10, 14),
                 },
-                new Holiday()
+                new Holiday
                 {
                     Employee = context.Employees.Find(1),
                     EmployeeId = 1,
@@ -222,8 +230,8 @@ namespace Tests
             };
             context.Holidays.AddRange(_holidays);
 
-            _users = new User[] {
-                new User()
+            _users = new[] {
+                new User
                 {
                     Employee = context.Employees.Find(1),
                     EmployeeId = 1,
@@ -234,14 +242,14 @@ namespace Tests
             };
             context.Users.AddRange(_users);
 
-            _inventoryCategories = new InventoryCategory[]
+            _inventoryCategories = new[]
             {
-                new InventoryCategory()
+                new InventoryCategory
                 {
                     Name = "Category1",
                     Normative = 1
                 },
-                new InventoryCategory()
+                new InventoryCategory
                 {
                     Name = "Category2",
                     Normative = 2
@@ -249,9 +257,9 @@ namespace Tests
             };
             context.InventoryCategories.AddRange(_inventoryCategories);
 
-            _inventoryItems = new InventoryItem[]
+            _inventoryItems = new[]
             {
-                new InventoryItem()
+                new InventoryItem
                 {
                     Name = "Item1",
                     SerialNumber = "Serial no 1",
@@ -262,7 +270,7 @@ namespace Tests
                     Category = context.InventoryCategories.Find(1),
                     InventoryCategoryId = 1
                 },
-                new InventoryItem()
+                new InventoryItem
                 {
                     Name = "Item2",
                     SerialNumber = "Serial no 2",
@@ -281,29 +289,32 @@ namespace Tests
 
         public int GetCount(string type)
         {
-            if (type == "employees")
-                return _employees.Length;
-            else if (type == "clients")
-                return _clients.Length;
-            else if (type == "holidays")
-                return _holidays.Length;
-            else if (type == "users")
-                return _users.Length;
-            else if (type == "emailTemplates")
-                return _emailTemplates.Length;
-            else if (type == "roles")
-                return _roles.Length;
-            else if (type == "inventoryItems")
-                return _inventoryItems.Length;
-            else if (type == "inventoryCategories")
-                return _inventoryCategories.Length;
-
-            return 0;
+            switch (type)
+            {
+                case "employees":
+                    return _employees.Length;
+                case "clients":
+                    return _clients.Length;
+                case "holidays":
+                    return _holidays.Length;
+                case "users":
+                    return _users.Length;
+                case "emailTemplates":
+                    return _emailTemplates.Length;
+                case "roles":
+                    return _roles.Length;
+                case "inventoryItems":
+                    return _inventoryItems.Length;
+                case "inventoryCategories":
+                    return _inventoryCategories.Length;
+                default:
+                    return 0;
+            }
         }
 
-        public NewEmployeeDto NewEmployeeDto(int clientId, string password, string email)
+        public static NewEmployeeDto NewEmployeeDto(int clientId, string password, string email)
         {
-            var newEmployeeDto = new NewEmployeeDto()
+            var newEmployeeDto = new NewEmployeeDto
             {
                 ClientId = clientId,
                 Email = email,
@@ -322,42 +333,42 @@ namespace Tests
             return newEmployeeDto;
         }
 
-        public Employee NewEmployee(int clientId, string email)
+        //public Employee NewEmployee(int clientId, string email)
+        //{
+        //    var newEmployee = new Employee
+        //    {
+        //        ClientId = clientId,
+        //        Email = email,
+
+        //        Name = "EmployeeNameNew",
+        //        Surname = "EmployeeSurnameNew",
+        //        WorksFromDate = new DateTime(2019, 07, 06),
+        //        DaysOfVacation = 20,
+        //        BirthdayDate = new DateTime(1988, 07, 06),
+        //        ParentalLeaveLimit = 30,
+        //        Position = "Position"
+        //    };
+
+        //    return newEmployee;
+        //}
+
+        //public NewHolidayDto NewHolidayDto()
+        //{
+        //    var newHolidayDto = new NewHolidayDto
+        //    {
+        //        EmployeeId = 1,
+        //        Type = HolidayType.Parental,
+        //        FromInclusive = new DateTime(2019, 11, 11),
+        //        ToExclusive = new DateTime(2019, 11, 18),
+        //        Paid = true
+        //    };
+
+        //    return newHolidayDto;
+        //}
+
+        public static NewEmailTemplateDto NewEmailTemplateDto()
         {
-            var newEmployee = new Employee()
-            {
-                ClientId = clientId,
-                Email = email,
-
-                Name = "EmployeeNameNew",
-                Surname = "EmployeeSurnameNew",
-                WorksFromDate = new DateTime(2019, 07, 06),
-                DaysOfVacation = 20,
-                BirthdayDate = new DateTime(1988, 07, 06),
-                ParentalLeaveLimit = 30,
-                Position = "Position"
-            };
-
-            return newEmployee;
-        }
-
-        public NewHolidayDto NewHolidayDto()
-        {
-            var newHolidayDto = new NewHolidayDto()
-            {
-                EmployeeId = 1,
-                Type = HolidayType.Parental,
-                FromInclusive = new DateTime(2019, 11, 11),
-                ToExclusive = new DateTime(2019, 11, 18),
-                Paid = true
-            };
-
-            return newHolidayDto;
-        }
-
-        public NewEmailTemplateDto NewEmailTemplateDto()
-        {
-            var newEmailTemplateDto = new NewEmailTemplateDto()
+            var newEmailTemplateDto = new NewEmailTemplateDto
             {
                 Purpose = "new purpose",
                 Subject = "new subject",
@@ -368,17 +379,17 @@ namespace Tests
             return newEmailTemplateDto;
         }
 
-        public User NewUser()
-        {
-            var newUser = new User()
-            {
-                EmployeeId = 1,
-                Email = "emailNew",
-                UserName = "usrnameNew",
-                NormalizedEmail = "emailNew"
-            };
+        //public User NewUser()
+        //{
+        //    var newUser = new User
+        //    {
+        //        EmployeeId = 1,
+        //        Email = "emailNew",
+        //        UserName = "usrnameNew",
+        //        NormalizedEmail = "emailNew"
+        //    };
 
-            return newUser;
-        }
+        //    return newUser;
+        //}
     }
 }

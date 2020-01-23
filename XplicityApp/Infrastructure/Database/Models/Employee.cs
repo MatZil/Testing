@@ -8,9 +8,6 @@ namespace XplicityApp.Infrastructure.Database.Models
 {
     public class Employee: BaseEntity
     {
-        private double _oneOvertimeHour = 1.5;
-        private int _dailyHourLimit = 8;
-
         [Required]
         [MinLength(3)]
         [MaxLength(15)]
@@ -31,8 +28,6 @@ namespace XplicityApp.Infrastructure.Database.Models
         public double FreeWorkDays { get; set; } //Current amount of free workdays left.
         [Required]
         public double OvertimeHours { get; set; } //Current amount of accumulated overtime hours.
-        [NotMapped]
-        public double OvertimeDays { get{return OvertimeHours * _oneOvertimeHour / _dailyHourLimit; } set {}} //Current amount of overtime days (converted from hours)
         [Required]
         public int ParentalLeaveLimit { get; set; } //Maximum amount of parental leaves employee can get in one month.
         [Required]
