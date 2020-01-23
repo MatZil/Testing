@@ -44,6 +44,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
+      this.currentUser.role = this.userService.getRole();
     });
     this.createFormGroup();
   }
