@@ -22,12 +22,12 @@ namespace Tests
         public BackgroundTests()
         {
             var setup = new SetUp();
-            var contextMapperTuple = setup.Initialize();
-            var context = contextMapperTuple.Item1;
+            setup.Initialize();
+            var context = setup.HolidayDbContext;
 
             _timeService = new TimeService();
             new HolidaysRepository(context);
-            var userManager = setup.InitializeUserManager(context);
+            var userManager = setup.InitializeUserManager();
             _employeesRepository = new EmployeesRepository(context, userManager);
 
             var serviceScopeFactory = new Mock<IServiceScopeFactory>().Object;

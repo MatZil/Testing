@@ -18,20 +18,19 @@ namespace Tests
         private readonly int _holidaysCount;
         private readonly ITestOutputHelper _output;
         private readonly HolidaysService _holidaysService;
-        private readonly HolidaysRepository _holidaysRepository;
 
         public HolidayTests(ITestOutputHelper output)
         {
             _output = output;
             var setup = new SetUp();
-            var contextMapperTuple = setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var _mapper = contextMapperTuple.Item2;
+            setup.Initialize();
+            _context = setup.HolidayDbContext;
+            var mapper = setup.Mapper;
             _holidaysCount = setup.GetCount("holidays");
 
             var timeService = new TimeService();
-            _holidaysRepository = new HolidaysRepository(_context);
-            _holidaysService = new HolidaysService(_holidaysRepository, _mapper, timeService);
+            var holidaysRepository = new HolidaysRepository(_context);
+            _holidaysService = new HolidaysService(holidaysRepository, mapper, timeService);
         }
 
         [Theory]

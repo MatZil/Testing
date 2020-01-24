@@ -108,7 +108,7 @@ namespace XplicityApp.Services
 
             if (upcomingHolidays.Count != 0)
             {
-                await emailService.InformEmployeesAboutHoliday(employees, upcomingHolidays);
+                await emailService.NotifyAllAboutUpcomingAbsences(employees, upcomingHolidays);
             }
         }
 

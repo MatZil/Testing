@@ -1,12 +1,14 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using AutoMapper;
 using XplicityApp.Dtos.Holidays;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Static_Files;
 using XplicityApp.Infrastructure.Utils.Interfaces;
+using XplicityApp.Services.EntityBehavior;
 using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Services
@@ -168,7 +170,8 @@ namespace XplicityApp.Services
             }
         }
 
-        private void ValidDateInterval(Holiday holiday, DateTime currentTime)
+        [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
+        private static void ValidDateInterval(in Holiday holiday, in DateTime currentTime)
         {
             if(holiday.FromInclusive.Date <= currentTime.Date || 
                 holiday.ToExclusive.Date <= holiday.FromInclusive.Date)
@@ -181,7 +184,7 @@ namespace XplicityApp.Services
         {
             if (holiday.OvertimeDays <= 0) return;
 
-            if (holiday.OvertimeDays > employee.OvertimeDays)
+            if (holiday.OvertimeDays > employee.GetOvertimeDays())
             {
                 throw new InvalidOperationException("Requested holiday uses more overtime days than employee has available.");
             }
