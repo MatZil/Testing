@@ -98,15 +98,13 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             return "";
         }
 
-        private async Task<string> ProcessTemplate(string templatePath, string generationPath, Dictionary<string, string> replacementMap)
+        private async Task ProcessTemplate(string templatePath, string generationPath, Dictionary<string, string> replacementMap)
         {
             var documentTemplateHtml = await GetHtmlTemplateString(templatePath);
 
             var documentContentHtml = GetContentFromTemplate(documentTemplateHtml, replacementMap);
 
             await CreateDocxFromHtml(documentContentHtml, generationPath);
-            
-            return generationPath;
         }
 
         private static async Task<string> GetHtmlTemplateString(string templatePath)
