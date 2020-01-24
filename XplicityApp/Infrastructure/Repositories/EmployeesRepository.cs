@@ -72,12 +72,11 @@ namespace XplicityApp.Infrastructure.Repositories
             return holidays;
         }
 
-        public async Task<Employee> FindAnyAdmin()
+        public async Task<ICollection<Employee>> GetAllAdmins()
         {
             var users = await _userManager.GetUsersInRoleAsync("Admin");
-            return await Context.Employees.Where(employees => employees.Id == users[0].EmployeeId).SingleOrDefaultAsync();
+
+            return Context.Employees.AsEnumerable().Where(employee => users.FirstOrDefault(u => u.EmployeeId == employee.Id) != null).ToList();
         }
-
-
     }
 }

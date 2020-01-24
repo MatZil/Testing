@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Emailer;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Static_Files;
+using XplicityApp.Services.EntityBehavior;
 using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Services
@@ -41,31 +43,34 @@ namespace XplicityApp.Services
             _emailer.SendMail(client.OwnerEmail, template.Subject, messageString);
         }
 
-        public async Task ConfirmHolidayWithAdmin(Employee admin, Employee employee, Holiday holiday, string clientStatus)
+        public async Task ConfirmHolidayWithAdmin(ICollection<Employee> admins, Employee employee, Holiday holiday, string clientStatus)
         {
             var overtimeString = "";
             if (holiday.OvertimeDays > 0)
             {
-                overtimeString = " (using " + Math.Round(holiday.OvertimeHours, 2).ToString() + " overtime hours)";
+                overtimeString = " (using " + Math.Round(holiday.OvertimeHours, 2) + " overtime hours)";
             }
 
-            var template = await _repository.GetByPurpose(EmailPurposes.ADMIN_CONFIRMATION);
-            var messageString = template.Template
-                                        .Replace("{admin.name}", admin.Name)
-                                        .Replace("{employee.fullName}", $"{employee.Name} {employee.Surname}")
-                                        .Replace("{holiday.paid}", holiday.Paid ? "Paid" : "Unpaid")
-                                        .Replace("{holiday.type}", holiday.Type.ToString())
-                                        .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
-                                        .Replace("{holiday.to}", holiday.ToExclusive.AddDays(-1).ToShortDateString())
-                                        .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm?holidayId={holiday.Id}")
-                                        .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={holiday.Id}")
-                                        .Replace("{client.status}", clientStatus)
-                                        .Replace("{holiday.overtimeHours}", overtimeString);
+            foreach (var admin in admins)
+            {
+                var template = await _repository.GetByPurpose(EmailPurposes.ADMIN_CONFIRMATION);
+                var messageString = template.Template
+                                            .Replace("{admin.name}", admin.Name)
+                                            .Replace("{employee.fullName}", $"{employee.Name} {employee.Surname}")
+                                            .Replace("{holiday.paid}", holiday.Paid ? "Paid" : "Unpaid")
+                                            .Replace("{holiday.type}", holiday.Type.ToString())
+                                            .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
+                                            .Replace("{holiday.to}", holiday.ToExclusive.AddDays(-1).ToShortDateString())
+                                            .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm?holidayId={holiday.Id}")
+                                            .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={holiday.Id}")
+                                            .Replace("{client.status}", clientStatus)
+                                            .Replace("{holiday.overtimeHours}", overtimeString);
 
-            _emailer.SendMail(admin.Email, template.Subject, messageString);
+                _emailer.SendMail(admin.Email, template.Subject, messageString); 
+            }
         }
 
-        public async Task SendThisMonthsHolidayInfo(Employee admin, List<(Holiday, Client)> holidays)
+        public async Task SendThisMonthsHolidayInfo(ICollection<Employee> admins, List<(Holiday, Client)> holidays)
         {
             var holidayInfo = string.Empty;
             var groupedHolidays = holidays.GroupBy(h => h.Item2);
@@ -88,26 +93,32 @@ namespace XplicityApp.Services
                 }
                 holidayInfo += "\n\n";
             }
-            _emailer.SendMail(admin.Email, template.Subject, holidayInfo);
+
+            foreach (var admin in admins)
+            {
+                _emailer.SendMail(admin.Email, template.Subject, holidayInfo);
+            }
         }
 
-        public async Task InformEmployeesAboutHoliday(ICollection<Employee> employees, ICollection<Holiday> upcomingHolidays)
+        public async Task NotifyAllAboutUpcomingAbsences(ICollection<Employee> allEmployees, ICollection<Holiday> upcomingHolidays)
         {
             var template = await _repository.GetByPurpose(EmailPurposes.HOLIDAY_REMINDER);
-            foreach (var employee in employees)
+            foreach (var recipient in allEmployees)
             {
-                foreach (var h in upcomingHolidays)
+                var messageBuilder = new StringBuilder();
+                foreach (var upcomingHoliday in upcomingHolidays)
                 {
-                    if (h.Employee.Name != employee.Name && h.Employee.Surname != employee.Surname)
+                    if (!upcomingHoliday.Employee.IsSamePerson(recipient))
                     {
-                        var messageString = template.Template
-                                                    .Replace("{employee.fullName}", $"{employee.Name} {employee.Surname}")
-                                                    .Replace("{holiday.from}", h.FromInclusive.ToShortDateString())
-                                                    .Replace("{holiday.to}", h.ToExclusive.AddDays(-1).ToShortDateString());
-
-                        _emailer.SendMail(employee.Email, template.Subject, messageString);
+                        messageBuilder.AppendLine(template.Template
+                                                    .Replace("{employee.fullName}", $"{upcomingHoliday.Employee.Name} {upcomingHoliday.Employee.Surname}")
+                                                    .Replace("{holiday.from}", upcomingHoliday.FromInclusive.ToShortDateString())
+                                                    .Replace("{holiday.to}", upcomingHoliday.ToExclusive.AddDays(-1).ToShortDateString()));
                     }
                 }
+
+                var messageBody = messageBuilder.ToString();
+                _emailer.SendMail(recipient.Email, template.Subject, messageBody);
             }
         }
 
@@ -118,7 +129,7 @@ namespace XplicityApp.Services
             {
                 foreach (var employeeWithBirthday in employeesWithBirthdays)
                 {
-                    if (employee.Name != employeeWithBirthday.Name && employee.Surname != employeeWithBirthday.Surname)
+                    if (!employeeWithBirthday.IsSamePerson(employee))
                     {
                         var messageString = template.Template
                                                     .Replace("{employee.fullName}", $"{employeeWithBirthday.Name} {employeeWithBirthday.Surname}");
@@ -128,13 +139,13 @@ namespace XplicityApp.Services
             }
         }
 
-        public async Task<bool> SendOrderNotification(int fileId, Employee employee, string receiver)
+        public async Task SendOrderNotification(int fileId, Employee employee, string receiver)
         {
             var template = await _repository.GetByPurpose(EmailPurposes.ORDER_NOTIFICATION);
 
             if (template is null)
             {
-                return false;
+                throw new InvalidOperationException($"{EmailPurposes.ORDER_NOTIFICATION} template was not found.");
             }
 
             var messageString = template.Template
@@ -142,8 +153,6 @@ namespace XplicityApp.Services
                                         .Replace("{download.link}", _fileService.GetDownloadLink(fileId));
 
             _emailer.SendMail(receiver, template.Subject, messageString);
-
-            return true;
         }
 
         public async Task<bool> SendRequestNotification(int fileId, string receiver)

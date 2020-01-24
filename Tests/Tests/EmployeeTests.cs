@@ -19,25 +19,24 @@ namespace Tests
         private readonly int _employeesCount;
         private readonly ITestOutputHelper _output;
         private readonly EmployeesService _employeesService;
-        private readonly SetUp _setup;
 
         public EmployeeTests(ITestOutputHelper output)
         {
             _output = output;
-            _setup = new SetUp();
-            var contextMapperTuple = _setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var _mapper = contextMapperTuple.Item2;
-            _employeesCount = _setup.GetCount("employees");
+            var setup = new SetUp();
+            setup.Initialize();
+            _context = setup.HolidayDbContext;
+            var mapper = setup.Mapper;
+            _employeesCount = setup.GetCount("employees");
 
             var timeService = new TimeService();
 
-            var userManager = _setup.InitializeUserManager(_context);
+            var userManager = setup.InitializeUserManager();
             var userService = new Mock<IUserService>().Object;
             //var userService = new UserService(userManager, _mapper);
 
-            EmployeesRepository employeesRepository = new EmployeesRepository(_context, userManager);
-            _employeesService = new EmployeesService(employeesRepository, _mapper, timeService, userService);
+            var employeesRepository = new EmployeesRepository(_context, userManager);
+            _employeesService = new EmployeesService(employeesRepository, mapper, timeService, userService);
         }
 
         [Theory]
@@ -103,7 +102,7 @@ namespace Tests
         [InlineData(1, "", "available@email")]
         public void When_CreatingEmployeeWithoutPassword_Expect_PasswordException(int clientId, string password, string email)
         {
-            var newEmployee = _setup.NewEmployeeDto(clientId, password, email);
+            var newEmployee = SetUp.NewEmployeeDto(clientId, password, email);
 
             var exception = Record.ExceptionAsync(async () => await _employeesService.Create(newEmployee));
             _output.WriteLine(exception.Result.Message);
@@ -115,7 +114,7 @@ namespace Tests
         [InlineData(1, "pass", "taken2@email")]
         public void When_CreatingEmployeeWithTakenEmail_Expect_EmailException(int clientId, string password, string email)
         {
-            var newEmployee = _setup.NewEmployeeDto(clientId, password, email);
+            var newEmployee = SetUp.NewEmployeeDto(clientId, password, email);
 
             var exception = Record.ExceptionAsync(async () => await _employeesService.Create(newEmployee));
             _output.WriteLine(exception.Result.Message);
