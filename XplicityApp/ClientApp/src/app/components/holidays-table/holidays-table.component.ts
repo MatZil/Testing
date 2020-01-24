@@ -152,4 +152,9 @@ export class HolidaysTableComponent implements OnInit {
       return false;
     }
   }
+
+  doesEmployeeHaveOvertimeDays() {
+    if (this.currentUser.overtimeDays >= 1) { return true; }
+    else { return false; }
+  }
 }
