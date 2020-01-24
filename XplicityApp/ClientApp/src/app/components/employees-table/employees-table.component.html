@@ -1,5 +1,5 @@
 <button nz-button nzType="primary" (click)=showModalCreator()>Add new employee</button>
-<form *ngIf="active" #newClientForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(newClientForm)">
+<form #newClientForm="ngForm" class="client-input-form" (ngSubmit)="onSubmit(newClientForm)">
   <nz-modal [(nzVisible)]="isVisibleCreator" [nzTitle]="modalTitl" [nzContent]="modalConten" [nzFooter]="modalFoote"
             (nzOnCancel)="handleCancelCreator()" [nzStyle]="{'top': '0'}">
     <ng-template #modalTitl>

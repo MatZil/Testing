@@ -9,7 +9,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
 
-import { NgForm} from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { Role } from '../../models/role';
@@ -41,7 +41,6 @@ export class EmployeesTableComponent implements OnInit {
 
   confirmDeleteModal: NzModalRef;
 
-  active = true;
   searchValue = '';
   listOfSearchAddress: string[] = [];
   sortName: string | null = null;
@@ -132,9 +131,8 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-      form.reset();
-      this.active = false;
-      setTimeout(() => this.active = true, 0);
+      form.resetForm();
+      setTimeout(() => 0);
   }
 
   populateUserForm(user: User) {
