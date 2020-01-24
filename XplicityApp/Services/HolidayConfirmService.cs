@@ -59,8 +59,8 @@ namespace XplicityApp.Services
         {
             var holiday = await _repositoryHolidays.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
-            var admin = await _repositoryEmployees.FindAnyAdmin();
-            await _emailService.ConfirmHolidayWithAdmin(admin, employee, holiday, clientStatus);
+            var admins = await _repositoryEmployees.GetAllAdmins();
+            await _emailService.ConfirmHolidayWithAdmin(admins, employee, holiday, clientStatus);
 
             return true;
         }
@@ -222,7 +222,7 @@ namespace XplicityApp.Services
             return true;
         }
 
-        private async Task<bool> Notify(int fileId, int holidayId, EmployeeRoleEnum receiver)
+        private async Task Notify(int fileId, int holidayId, EmployeeRoleEnum receiver)
         {
             var holiday = await _repositoryHolidays.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
@@ -230,14 +230,17 @@ namespace XplicityApp.Services
             switch (receiver)
             {
                 case EmployeeRoleEnum.Regular:
-                    return await _emailService.SendRequestNotification(fileId, employee.Email);
+                    await _emailService.SendRequestNotification(fileId, employee.Email);
+                    break;
 
                 case EmployeeRoleEnum.Administrator:
-                    var admin = await _repositoryEmployees.FindAnyAdmin();
-                    return await _emailService.SendOrderNotification(fileId, employee, admin.Email);
+                    var admins = await _repositoryEmployees.GetAllAdmins();
+                    foreach (var admin in admins)
+                    {
+                        await _emailService.SendOrderNotification(fileId, employee, admin.Email); 
+                    }
+                    break;
             }
-
-            return false;
         }
 
         public async Task<bool> GenerateFilesAndNotify(int holidayId)
