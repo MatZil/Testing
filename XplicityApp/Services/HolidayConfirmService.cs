@@ -1,12 +1,14 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using AutoMapper;
 using XplicityApp.Dtos.Holidays;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Static_Files;
 using XplicityApp.Infrastructure.Utils.Interfaces;
+using XplicityApp.Services.EntityBehavior;
 using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Services
@@ -124,74 +126,72 @@ namespace XplicityApp.Services
             await _repositoryEmployees.Update(employee);
         }
 
-        public async Task<bool> IsValid(int id)
+        public async Task ValidateHolidayConfirmationReadiness(int id)
         {
             var holiday = await _repositoryHolidays.GetById(id);
 
             if (holiday == null)
             {
-                return false;
+                throw new InvalidOperationException("Holiday request not found.");
             }
 
-            return await IsValid(holiday) ? true : false;
+            await IsValid(holiday);
         }
 
-        public async Task<bool> IsValid(NewHolidayDto holidayDto)
+        public async Task ValidateNewHolidayConfirmationReadiness(NewHolidayDto holidayDto)
         {
             if (holidayDto == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(holidayDto));
             }
 
             var holiday = _mapper.Map<Holiday>(holidayDto);
 
-            return await IsValid(holiday) ? true : false;
+            await IsValid(holiday);
         }
 
-        private async Task<bool> IsValid(Holiday holiday)
+        private async Task IsValid(Holiday holiday)
         { 
             if (holiday.Status == HolidayStatus.Confirmed)
             {
-                return false;
+                throw new InvalidOperationException("Holiday already confirmed.");
             }
 
             var currentTime = _timeService.GetCurrentTime();
 
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
-
-            if (!ValidDateInterval(holiday, currentTime) || !ValidOvertime(holiday, employee))
-            {
-                return false;
-            }
+            
+            ValidDateInterval(holiday, currentTime);
+            ValidOvertime(holiday, employee);
 
             if (holiday.Type == HolidayType.Parental && !EmployeeEligibleForParental(holiday, employee, currentTime))
             {
-                return false;
+                throw new InvalidOperationException("Employee is not eligible for parental leave.");
             }
-
-            return true;
         }
 
-        private bool ValidDateInterval(Holiday holiday, DateTime currentTime)
+        [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
+        private static void ValidDateInterval(in Holiday holiday, in DateTime currentTime)
         {
-            if(holiday.FromInclusive.Date <= currentTime.Date || holiday.ToExclusive.Date <= holiday.FromInclusive.Date)
+            if(holiday.FromInclusive.Date <= currentTime.Date || 
+                holiday.ToExclusive.Date <= holiday.FromInclusive.Date)
             {
-                return false;
+                throw new InvalidOperationException("Requested dates for holiday are invalid.");
             }
-
-            return true;
         }
 
-        private bool ValidOvertime(Holiday holiday, Employee employee)
+        private void ValidOvertime(Holiday holiday, Employee employee)
         {
-            if (holiday.OvertimeDays < 0 || holiday.OvertimeDays > employee.OvertimeDays)
-                return false;
+            if (holiday.OvertimeDays <= 0) return;
+
+            if (holiday.OvertimeDays > employee.GetOvertimeDays())
+            {
+                throw new InvalidOperationException("Requested holiday uses more overtime days than employee has available.");
+            }
 
             var workdays = _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive);
             if (workdays < holiday.OvertimeDays)
-                return false;
-
-            return true;
+                throw new InvalidOperationException("Requested holiday period doesn't have enough workdays to cover used overtime days.");
         }
 
         private bool EmployeeEligibleForParental(Holiday holiday, Employee employee, DateTime currentTime)

@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Emailer;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Static_Files;
+using XplicityApp.Services.EntityBehavior;
 using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Services
@@ -35,8 +37,8 @@ namespace XplicityApp.Services
                                         .Replace("{holiday.type}", holiday.Type.ToString())
                                         .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
                                         .Replace("{holiday.to}", holiday.ToExclusive.AddDays(-1).ToShortDateString())
-                                        .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/holidayclient?holidayid={holiday.Id}")
-                                        .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/holidaydecline?holidayid={holiday.Id}");
+                                        .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayClient?holidayId={holiday.Id}")
+                                        .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={holiday.Id}");
 
             _emailer.SendMail(client.OwnerEmail, template.Subject, messageString);
         }
@@ -46,7 +48,7 @@ namespace XplicityApp.Services
             var overtimeString = "";
             if (holiday.OvertimeDays > 0)
             {
-                overtimeString = " (using " + Math.Round(holiday.OvertimeHours, 2).ToString() + " overtime hours)";
+                overtimeString = " (using " + Math.Round(holiday.OvertimeHours, 2) + " overtime hours)";
             }
 
             var template = await _repository.GetByPurpose(EmailPurposes.ADMIN_CONFIRMATION);
@@ -57,8 +59,8 @@ namespace XplicityApp.Services
                                         .Replace("{holiday.type}", holiday.Type.ToString())
                                         .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
                                         .Replace("{holiday.to}", holiday.ToExclusive.AddDays(-1).ToShortDateString())
-                                        .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/holidayconfirm?holidayid={holiday.Id}")
-                                        .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/holidaydecline?holidayid={holiday.Id}")
+                                        .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm?holidayId={holiday.Id}")
+                                        .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={holiday.Id}")
                                         .Replace("{client.status}", clientStatus)
                                         .Replace("{holiday.overtimeHours}", overtimeString);
 
@@ -91,23 +93,25 @@ namespace XplicityApp.Services
             _emailer.SendMail(admin.Email, template.Subject, holidayInfo);
         }
 
-        public async Task InformEmployeesAboutHoliday(ICollection<Employee> employees, ICollection<Holiday> upcomingHolidays)
+        public async Task NotifyAllAboutUpcomingAbsences(ICollection<Employee> allEmployees, ICollection<Holiday> upcomingHolidays)
         {
             var template = await _repository.GetByPurpose(EmailPurposes.HOLIDAY_REMINDER);
-            foreach (var employee in employees)
+            foreach (var recipient in allEmployees)
             {
-                foreach (var h in upcomingHolidays)
+                var messageBuilder = new StringBuilder();
+                foreach (var upcomingHoliday in upcomingHolidays)
                 {
-                    if (h.Employee.Name != employee.Name && h.Employee.Surname != employee.Surname)
+                    if (!upcomingHoliday.Employee.IsSamePerson(recipient))
                     {
-                        var messageString = template.Template
-                                                    .Replace("{employee.fullName}", $"{employee.Name} {employee.Surname}")
-                                                    .Replace("{holiday.from}", h.FromInclusive.ToShortDateString())
-                                                    .Replace("{holiday.to}", h.ToExclusive.AddDays(-1).ToShortDateString());
-
-                        _emailer.SendMail(employee.Email, template.Subject, messageString);
+                        messageBuilder.AppendLine(template.Template
+                                                    .Replace("{employee.fullName}", $"{upcomingHoliday.Employee.Name} {upcomingHoliday.Employee.Surname}")
+                                                    .Replace("{holiday.from}", upcomingHoliday.FromInclusive.ToShortDateString())
+                                                    .Replace("{holiday.to}", upcomingHoliday.ToExclusive.AddDays(-1).ToShortDateString()));
                     }
                 }
+
+                var messageBody = messageBuilder.ToString();
+                _emailer.SendMail(recipient.Email, template.Subject, messageBody);
             }
         }
 
@@ -118,7 +122,7 @@ namespace XplicityApp.Services
             {
                 foreach (var employeeWithBirthday in employeesWithBirthdays)
                 {
-                    if (employee.Name != employeeWithBirthday.Name && employee.Surname != employeeWithBirthday.Surname)
+                    if (!employeeWithBirthday.IsSamePerson(employee))
                     {
                         var messageString = template.Template
                                                     .Replace("{employee.fullName}", $"{employeeWithBirthday.Name} {employeeWithBirthday.Surname}");

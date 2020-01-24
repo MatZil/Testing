@@ -1,14 +1,14 @@
-﻿using XplicityApp.Infrastructure.Database.Models;
-using XplicityApp.Infrastructure.Repositories;
-using XplicityApp.Services;
-using Xunit;
-using XplicityApp.Infrastructure.Database;
-using XplicityApp.Infrastructure.Utils;
-using AutoMapper;
-using XplicityApp.Services.Interfaces;
+﻿using AutoMapper;
 using Moq;
+using System;
 using XplicityApp.Dtos.Holidays;
-using Xunit.Abstractions;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Services;
+using XplicityApp.Services.Interfaces;
+using Xunit;
 
 namespace Tests
 {
@@ -17,33 +17,29 @@ namespace Tests
     {
         private readonly HolidayDbContext _context;
         private readonly HolidayConfirmService _holidayConfirmService;
-        private readonly HolidaysService _holidaysService;
-        private readonly ITestOutputHelper _output;
         private readonly HolidaysRepository _holidaysRepository;
         private readonly IMapper _mapper;
         private readonly EmployeesRepository _employeesRepository;
         private readonly TimeService _timeService;
 
-        public HolidayConfirmTests(ITestOutputHelper output)
+        public HolidayConfirmTests()
         {
-            _output = output;
             var setup = new SetUp();
-            var contextMapperTuple = setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var mapper = contextMapperTuple.Item2;
-            _mapper = mapper;
-
+            setup.Initialize();
+            _context = setup.HolidayDbContext;
+            _mapper = setup.Mapper;
+            
             _timeService = new TimeService();
             _holidaysRepository = new HolidaysRepository(_context);
-            var userManager = setup.InitializeUserManager(_context);
+            var userManager = setup.InitializeUserManager();
             _employeesRepository = new EmployeesRepository(_context, userManager);
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
             var emailService = new Mock<IEmailService>();
             var docxGeneratorService = new Mock<IDocxGeneratorService>();
 
-            _holidaysService = new HolidaysService(_holidaysRepository, mapper, _timeService);
-            _holidayConfirmService = new HolidayConfirmService(emailService.Object, mapper, _holidaysRepository,
-                                                                _employeesRepository, clientsRepository, _holidaysService, _timeService, docxGeneratorService.Object);
+            var holidaysService = new HolidaysService(_holidaysRepository, _mapper, _timeService);
+            _holidayConfirmService = new HolidayConfirmService(emailService.Object, _mapper, _holidaysRepository,
+                                                                _employeesRepository, clientsRepository, holidaysService, _timeService, docxGeneratorService.Object);
         }
 
 
@@ -159,9 +155,8 @@ namespace Tests
         [InlineData(4)]
         public async void When_ConfirmingInvalid_Expect_False(int holidayId)
         {
-            var result = await _holidayConfirmService.IsValid(holidayId);
-
-            Assert.False(result, "Holiday request is deemed to be valid.");
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                async () => await _holidayConfirmService.ValidateHolidayConfirmationReadiness(holidayId));
         }
     }
 }

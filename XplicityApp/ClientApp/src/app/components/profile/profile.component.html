@@ -23,7 +23,7 @@
     </mat-tab>
     <mat-tab label="Settings">
         <div>
-            <div>
+            <div *ngIf="isAdmin()">
                 <button class="settings" mat-raised-button (click)="showUploadModal()">Upload holiday policy</button>
             </div>
             <div>
