@@ -213,7 +213,7 @@
       <td>{{employeeStatus[user.status]}} employee</td>
       <td>
         <button nz-button nzType="primary"
-                (click)="populateUserForm(user); showModalEditor(); populateUserFormNoId(user)">
+                (click)="populateUserForm(user); setSelectedUserStatus(); showModalEditor(); populateUserFormNoId(user)">
           Edit
         </button>
       </td>
