@@ -54,12 +54,13 @@ namespace XplicityApp.Configurations
                 .AddScoped<IDocxGeneratorService, DocxGeneratorService>()
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IEmailService, EmailService>()
-                .AddScoped<IBackgroundService, BackgroundService>()
                 .AddScoped<IEmailTemplatesService, EmailTemplatesService>()
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IFileService, FileService>()
                 .AddScoped<IInventoryItemService, InventoryItemService>()
-                .AddScoped<IInventoryCategoryService, InventoryCategoryService>();
+                .AddScoped<IInventoryCategoryService, InventoryCategoryService>()
+                .AddScoped<IBackgroundService, BackgroundService>()
+                .AddHostedService<HostedService>();
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Extensions.Interfaces;
@@ -10,31 +8,33 @@ namespace XplicityApp.Services.Extensions
 {
     public class EmployeeHolidaysBackgroundUpdater : IEmployeeHolidaysBackgroundUpdater
     {
-        public async Task AddFreeWorkDays(ICollection<Employee> employees, ITimeService _timeService, IEmployeeRepository _repository)
+        public async Task AddFreeWorkDays(ITimeService timeService, IEmployeeRepository employeeRepository)
         {
-            var currentTime = _timeService.GetCurrentTime();
+            var currentTime = timeService.GetCurrentTime();
             if (currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.DayOfWeek != DayOfWeek.Sunday)
             {
-                var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
+                var allEmployees = await employeeRepository.GetAll();
+                var workDaysPerYear = timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
                                                             new DateTime(currentTime.AddYears(1).Year, 1, 1));
-                foreach (var employee in employees)
+                foreach (var employee in allEmployees)
                 {
                     employee.FreeWorkDays += Math.Round((double)employee.DaysOfVacation / workDaysPerYear, 2);
-                    await _repository.Update(employee);
+                    await employeeRepository.Update(employee);
                 }
             }
         }
 
-        public async Task ResetParentalLeaves(ICollection<Employee> employees, ITimeService timeService, IEmployeeRepository repository)
+        public async Task ResetParentalLeaves(ITimeService timeService, IEmployeeRepository employeeRepository)
         {
             var currentTime = timeService.GetCurrentTime();
             if (currentTime.Day == 1)
             {
-                foreach (var employee in employees)
+                var allEmployees = await employeeRepository.GetAll();
+                foreach (var employee in allEmployees)
                 {
                     employee.CurrentAvailableLeaves = employee.NextMonthAvailableLeaves;
                     employee.NextMonthAvailableLeaves = employee.ParentalLeaveLimit;
-                    await repository.Update(employee);
+                    await employeeRepository.Update(employee);
                 }
             }
         }

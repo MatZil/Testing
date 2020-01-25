@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
+﻿using Moq;
 using System;
 using System.Collections.Generic;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
-using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Infrastructure.Utils.Interfaces;
-using XplicityApp.Services;
 using Xunit;
 using XplicityApp.Services.Extensions;
 
@@ -17,7 +13,6 @@ namespace Tests
     public class BackgroundTests
     {
         private readonly EmployeesRepository _employeesRepository;
-        private readonly BackgroundService _backgroundService;
         private readonly ITimeService _mockTimeService;
         private readonly EmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
 
@@ -32,33 +27,7 @@ namespace Tests
             new HolidaysRepository(context);
             var userManager = setup.InitializeUserManager();
             _employeesRepository = new EmployeesRepository(context, userManager);
-
-            var mockServiceScopeFactory = new Mock<IServiceScopeFactory>().Object;
-            var mockHostingEnvironment = new Mock<IWebHostEnvironment>().Object;
-            _backgroundService = new BackgroundService(_mockTimeService, mockServiceScopeFactory, mockHostingEnvironment, 
-                                                       _employeeHolidaysBackgroundUpdater);
         }
-
-        //[Fact]
-        //public async void When_CheckingForLastMonthDay_Expect_True()
-        //{
-        //    var admin = new Employee
-        //    {
-        //        ClientId = 1,
-        //        Name = "adminName",
-        //        Surname = "adminSurname",
-        //        Email = "adminEmail@email"
-        //    };
-
-        //    ICollection<Holiday> holidays = await _holidaysRepository.GetAll();
-        //    var emailService = new Mock<IEmailService>().Object;
-        //    IRepository<Client> clientsRepository = new ClientsRepository(_context);
-        //    var holidayInfoService = new HolidayInfoService(_employeesRepository, clientsRepository);
-
-        //    Object[] args = { admin, holidays, emailService, holidayInfoService };
-        //    _backgroundService.call("CheckForLastMonthDay", args);
-        //}
-
             
         [Fact]
         public async void When_AddingFreeWorkDays_Expect_AddsDaysOff()
@@ -72,7 +41,7 @@ namespace Tests
                 initial[index++] = e.FreeWorkDays;
             }
 
-            await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(employees, _mockTimeService, _employeesRepository);
+            await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(_mockTimeService, _employeesRepository);
             
             var countTrue = 0;
 
@@ -115,7 +84,7 @@ namespace Tests
                 expected[index++, 1] = e.ParentalLeaveLimit;
             }
 
-            await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(employees, mockTimeService.Object, _employeesRepository);
+            await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(mockTimeService.Object, _employeesRepository);
 
             var countTrue = 0;
             var actual = new int[employees.Count, 2];

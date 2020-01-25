@@ -1,139 +1,117 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
-using XplicityApp.Services.Interfaces;
 using XplicityApp.Services.Extensions.Interfaces;
+using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Services
 {
     public class BackgroundService : IBackgroundService
     {
         private readonly ITimeService _timeService;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IEmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IHolidaysRepository _holidaysRepository;
+        private readonly IEmailService _emailService;
+        private readonly IHolidayInfoService _holidayInfoService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public BackgroundService(ITimeService timeService, IServiceScopeFactory serviceScopeFactory, IWebHostEnvironment hostingEnvironment,
-                                 IEmployeeHolidaysBackgroundUpdater employeeHolidaysBackgroundUpdater)
+        public BackgroundService(ITimeService timeService, IEmployeeHolidaysBackgroundUpdater employeeHolidaysBackgroundUpdater,
+                            IEmployeeRepository employeeRepository, IHolidaysRepository holidaysRepository,
+                            IEmailService emailService, IHolidayInfoService holidayInfoService,
+                            IWebHostEnvironment webHostEnvironment)
         {
-            _serviceScopeFactory = serviceScopeFactory;
             _timeService = timeService;
-            _hostingEnvironment = hostingEnvironment;
             _employeeHolidaysBackgroundUpdater = employeeHolidaysBackgroundUpdater;
+            _employeeRepository = employeeRepository;
+            _holidaysRepository = holidaysRepository;
+            _emailService = emailService;
+            _holidayInfoService = holidayInfoService;
+            _webHostEnvironment = webHostEnvironment;
         }
-
-        public async Task RunBackgroundServices()
+        public async Task DoBackgroundTasks()
         {
-            while (true)
-            {
-                await DoBackGroundChecks();
+            await SendHolidayReports();
 
-                await Task.Delay(TimeSpan.FromDays(1));
-            }
-        }
+            await BroadcastCoworkersAbsences();
 
-        private async Task DoBackGroundChecks()
-        {
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var employeeRepository = scope.ServiceProvider.GetService<IEmployeeRepository>();
-                var holidayRepository = scope.ServiceProvider.GetService<IHolidaysRepository>();
-                var emailService = scope.ServiceProvider.GetService<IEmailService>();
-                var holidayInfoService = scope.ServiceProvider.GetService<IHolidayInfoService>();
+            await BroadcastCoworkersBirthdays();
 
-                var holidays = await holidayRepository.GetAll();
-                var employees = await employeeRepository.GetAll();
-                var admins = await employeeRepository.GetAllAdmins();
+            await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(_timeService, _employeeRepository);
 
-                await CheckForLastMonthDay(admins, holidays, emailService, holidayInfoService);
-
-                await CheckUpcomingHolidays(employees, holidays, emailService);
-
-                await CheckBirthdays(employees, _timeService, emailService);
-
-                await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(employees, _timeService, employeeRepository);
-
-                await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(employees, _timeService, employeeRepository);
-            }
+            await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(_timeService, _employeeRepository);
         }
 
         private DateTime GetCurrentDateTime()
         {
             DateTime currentTime;
 
-            if (_hostingEnvironment.IsProduction())
+            if (_webHostEnvironment.IsProduction())
             {
                 currentTime = _timeService.GetCurrentTime();
             }
             else
             {
-                currentTime = DateTime.MinValue; //makes sure that it's not month's last day.
+                currentTime = DateTime.MinValue; //makes sure background tasks are not triggered.
             }
 
             return currentTime;
         }
 
-        private async Task CheckForLastMonthDay(ICollection<Employee> admins, ICollection<Holiday> holidays, IEmailService emailService,
-                                          IHolidayInfoService holidayInfoService)
+        private async Task SendHolidayReports()
         {
             var currentTime = GetCurrentDateTime();
 
-            var thisMonthsHolidays = holidays.Where(h => 
-                                                        h.Status == HolidayStatus.Confirmed && 
-                                                        h.FromInclusive.Year == currentTime.Year && 
-                                                        h.FromInclusive.Month == currentTime.Month
+            if (currentTime.Month != currentTime.AddDays(1).Month)
+            {
+                var allHolidays = await _holidaysRepository.GetAll();
+                var currentMonthHolidays = allHolidays.Where(h =>
+                                                                h.Status == HolidayStatus.Confirmed &&
+                                                                h.FromInclusive.Year == currentTime.Year &&
+                                                                h.FromInclusive.Month == currentTime.Month
+                                                            ).ToList();
+
+                var holidaysWithClients = await _holidayInfoService.GetClientsAndHolidays(currentMonthHolidays);
+                var admins = await _employeeRepository.GetAllAdmins();
+
+                await _emailService.SendThisMonthsHolidayInfo(admins, holidaysWithClients);
+            }
+        }
+
+        private async Task BroadcastCoworkersAbsences()
+        {
+            var currentTime = GetCurrentDateTime();
+            var allEmployees = await _employeeRepository.GetAll();
+            var allHolidays = await _holidaysRepository.GetAll();
+            var nextDayHolidays = allHolidays.Where(holiday =>
+                                                        holiday.Status == HolidayStatus.Confirmed &&
+                                                        holiday.FromInclusive.Date == currentTime.AddDays(1).Date
                                                     ).ToList();
 
-            var holidaysWithClients = await holidayInfoService.GetClientsAndHolidays(thisMonthsHolidays);
-
-            var nextDay = currentTime.AddDays(1);
-
-            if (currentTime.Month != nextDay.Month)
+            if (nextDayHolidays.Count > 0)
             {
-                await emailService.SendThisMonthsHolidayInfo(admins, holidaysWithClients);
+                await _emailService.NotifyAllAboutUpcomingAbsences(allEmployees, nextDayHolidays);
             }
         }
 
-        private async Task CheckUpcomingHolidays(ICollection<Employee> employees, ICollection<Holiday> holidays, IEmailService emailService)
+        private async Task BroadcastCoworkersBirthdays()
         {
             var currentTime = GetCurrentDateTime();
+            var allEmployees = await _employeeRepository.GetAll();
+            var employeesWithBirthdays = allEmployees.Where(employee =>
+                                                                employee.BirthdayDate.Month == currentTime.Month &&
+                                                                employee.BirthdayDate.Day == currentTime.Day
+                                                           ).ToList();
 
-            var upcomingHolidays = holidays.Where(holiday => holiday.Status == HolidayStatus.Confirmed && 
-                                                 holiday.FromInclusive.ToShortDateString() == currentTime.AddDays(1).ToShortDateString())
-                                                  .ToList();
-
-            if (upcomingHolidays.Count != 0)
+            if (employeesWithBirthdays.Count > 0)
             {
-                await emailService.NotifyAllAboutUpcomingAbsences(employees, upcomingHolidays);
+                await _emailService.SendBirthDayReminder(employeesWithBirthdays, allEmployees);
             }
         }
-
-        private async Task CheckBirthdays(ICollection<Employee> employees, ITimeService _timeService, IEmailService emailService)
-        {
-            var employeesWithBirthdays = new List<Employee>();
-            var currentTime = GetCurrentDateTime();
-
-            foreach (var employee in employees)
-            {
-                if (employee.BirthdayDate.Month == currentTime.Month && employee.BirthdayDate.Day == currentTime.Day)
-                {
-                    employeesWithBirthdays.Add(employee);
-                }
-            }
-
-            if (employeesWithBirthdays.Count != 0)
-            {
-                await emailService.SendBirthDayReminder(employeesWithBirthdays, employees);
-            }
-        }
-
     }
 }

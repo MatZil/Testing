@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using XplicityApp.Services;
 
 namespace XplicityApp
 {
@@ -26,7 +28,13 @@ namespace XplicityApp
                     logging.AddConsole();
                     logging.AddDebug();
                 })
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder => { 
+                                                webBuilder.UseStartup<Startup>(); 
+                                            })
+                .ConfigureServices(services =>
+                 {
+                     services.AddHostedService<HostedService>();
+                 });
         }
     }
 }
