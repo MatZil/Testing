@@ -257,4 +257,8 @@ export class EmployeesTableComponent implements OnInit {
           : -1
     );
   }
+
+  isStatusChanged() {
+    return this.selected !== this.formDataUsers.status ? true : false;
+  }
 }

@@ -11,7 +11,7 @@
               <div>
                 <mat-form-field>
                   <input matInput [(ngModel)]="newUser.name" type="text" name="name"
-                         placeholder="Employee name" required #nameInput="ngModel" pattern="[a-zA-Ząčęėį�ųūžĄČĘĖĮŠŲŪŽ]*">
+                         placeholder="Employee name" required #nameInput="ngModel" pattern="[a-zA-Ząčęėį�ųūžĄČĘĖĮŠŲŪŽ]*">
                   <mat-error *ngIf="nameInput.invalid" class="error">
                     Please enter a valid name.
                   </mat-error>
@@ -20,7 +20,7 @@
               <div>
                 <mat-form-field>
                   <input matInput [(ngModel)]="newUser.surname" type="text" name="surname"
-                         placeholder="Employee surname" required #surnameInput="ngModel" pattern="[a-zA-Ząčęėį�ųūžĄČĘĖĮŠŲŪŽ]*">
+                         placeholder="Employee surname" required #surnameInput="ngModel" pattern="[a-zA-Ząčęėį�ųūžĄČĘĖĮŠŲŪŽ]*">
                   <mat-error *ngIf="surnameInput.invalid" class="error">
                     Please enter a valid surname.
                   </mat-error>
@@ -234,7 +234,7 @@
                 <mat-form-field>
                   <input matInput [(ngModel)]="formDataUsersNoId.name" type="text" name="name"
                          placeholder="Employee name" #nameInput="ngModel"
-                         required pattern="[a-zA-Ząčęėį�ųūžĄČĘĖĮŠŲŪŽ]*">
+                         required pattern="[a-zA-Ząčęėį�ųūžĄČĘĖĮŠŲŪŽ]*">
                   <mat-error *ngIf="nameInput.invalid" class="error">
                     Please enter a valid name.
                   </mat-error>
@@ -244,7 +244,7 @@
                 <mat-form-field>
                   <input matInput [(ngModel)]="formDataUsersNoId.surname" type="text" name="surname"
                          placeholder="Employee surname" #surnameInput="ngModel"
-                         required pattern="[a-zA-Ząčęėį�ųūžĄČĘĖĮŠŲŪŽ]*">
+                         required pattern="[a-zA-Ząčęėį�ųūžĄČĘĖĮŠŲŪŽ]*">
                   <mat-error *ngIf="surnameInput.invalid" class="error">
                     Please enter a valid surname.
                   </mat-error>
@@ -392,7 +392,7 @@
             Delete
           </button>
           <button nz-button nzType="primary"
-                  (click)="selected !== formDataUsers.status ? showStatusConfirm() : onEditConfirmButtonClick(formDataUsersNoId, formDataUsers.id)"
+                  (click)="isStatusChanged() ? showStatusConfirm() : onEditConfirmButtonClick(formDataUsersNoId, formDataUsers.id)"
                   [disabled]="editUsersForm.form.invalid">
             Confirm edit
           </button>
