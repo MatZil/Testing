@@ -259,9 +259,9 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   setSelectedUserStatus() {
-    if (this.formDataUsers.status == EmployeeStatus.Former) {
+    if (this.formDataUsers.status === EmployeeStatus.Former) {
       this.selected = 0;
-    } else if (this.formDataUsers.status == EmployeeStatus.Current) {
+    } else if (this.formDataUsers.status === EmployeeStatus.Current) {
       this.selected = 1;
     }
   }
