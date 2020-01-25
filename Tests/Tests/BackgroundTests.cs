@@ -17,7 +17,7 @@ namespace Tests
     {
         private readonly EmployeesRepository _employeesRepository;
         private readonly BackgroundService _backgroundService;
-        private readonly TimeService _timeService;
+        private readonly ITimeService _mockTimeService;
 
         public BackgroundTests()
         {
@@ -25,14 +25,14 @@ namespace Tests
             var contextMapperTuple = setup.Initialize();
             var context = contextMapperTuple.Item1;
 
-            _timeService = new TimeService();
+            _mockTimeService = new Mock<ITimeService>().Object;
             new HolidaysRepository(context);
             var userManager = setup.InitializeUserManager(context);
             _employeesRepository = new EmployeesRepository(context, userManager);
 
-            var serviceScopeFactory = new Mock<IServiceScopeFactory>().Object;
-            var hostingEnvironment = new Mock<IWebHostEnvironment>().Object;
-            _backgroundService = new BackgroundService(_timeService, serviceScopeFactory, hostingEnvironment);
+            var mockServiceScopeFactory = new Mock<IServiceScopeFactory>().Object;
+            var mockHostingEnvironment = new Mock<IWebHostEnvironment>().Object;
+            _backgroundService = new BackgroundService(_mockTimeService, mockServiceScopeFactory, mockHostingEnvironment);
         }
 
         //[Fact]
@@ -68,13 +68,13 @@ namespace Tests
                 initial[index++] = e.FreeWorkDays;
             }
 
-            Object[] args = { employees, _timeService, _employeesRepository };
+            Object[] args = { employees, _mockTimeService, _employeesRepository };
             _backgroundService.call("AddFreeWorkDays", args);
 
             
             var countTrue = 0;
 
-            var currentTime = _timeService.GetCurrentTime();
+            var currentTime = _mockTimeService.GetCurrentTime();
             if (currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.DayOfWeek != DayOfWeek.Sunday)
             {
                 var final = new double[employees.Count];

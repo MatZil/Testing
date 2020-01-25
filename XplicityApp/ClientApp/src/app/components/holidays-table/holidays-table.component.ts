@@ -72,7 +72,7 @@ export class HolidaysTableComponent implements OnInit {
 
   }
 
-  getDataByRole() {
+  getHolidaysByRole() {
     var currentEmployeeHolidays = [];
     if (!this.isAdmin()) {
       this.holidays.forEach(holiday => {
@@ -180,7 +180,7 @@ export class HolidaysTableComponent implements OnInit {
     else if (!this.isAdmin()) { return holiday.overtimeDays }
   }
 
-  isPaid(paid) {
+  paidToString(paid) {
     if (paid) { return "Yes"}
     else { return "No"}
   }

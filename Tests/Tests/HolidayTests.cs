@@ -21,7 +21,6 @@ namespace Tests
         private readonly ITestOutputHelper _output;
         private readonly HolidaysService _holidaysService;
         private readonly HolidaysRepository _holidaysRepository;
-        private readonly IOvertimeUtility _overtimeUtility;
 
         public HolidayTests(ITestOutputHelper output)
         {
@@ -32,10 +31,10 @@ namespace Tests
             var _mapper = contextMapperTuple.Item2;
             _holidaysCount = setup.GetCount("holidays");
 
-            var timeService = new TimeService();
-            _overtimeUtility = new Mock<IOvertimeUtility>().Object;
+            var mockTimeService = new Mock<ITimeService>().Object;
+            var mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
             _holidaysRepository = new HolidaysRepository(_context);
-            _holidaysService = new HolidaysService(_holidaysRepository, _mapper, timeService, _overtimeUtility);
+            _holidaysService = new HolidaysService(_holidaysRepository, _mapper, mockTimeService, mockOvertimeUtility);
         }
 
         [Theory]

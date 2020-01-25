@@ -25,7 +25,7 @@ namespace Tests
         private readonly IMapper _mapper;
         private readonly EmployeesRepository _employeesRepository;
         private readonly TimeService _timeService;
-        private readonly IOvertimeUtility _overtimeUtility;
+        private readonly IOvertimeUtility _mockOvertimeUtility;
 
         public HolidayConfirmTests(ITestOutputHelper output)
         {
@@ -41,14 +41,14 @@ namespace Tests
             var userManager = setup.InitializeUserManager(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
-            var emailService = new Mock<IEmailService>();
-            var docxGeneratorService = new Mock<IDocxGeneratorService>();
-            _overtimeUtility = new Mock<IOvertimeUtility>().Object;
+            var mockEmailService = new Mock<IEmailService>();
+            var mockDocxGeneratorService = new Mock<IDocxGeneratorService>();
+            _mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
 
-            _holidaysService = new HolidaysService(_holidaysRepository, mapper, _timeService, _overtimeUtility);
-            _holidayConfirmService = new HolidayConfirmService(emailService.Object, mapper, _holidaysRepository,
-                                                                _employeesRepository, clientsRepository, _holidaysService, 
-                                                                _timeService, docxGeneratorService.Object, _overtimeUtility);
+            _holidaysService = new HolidaysService(_holidaysRepository, mapper, _timeService, _mockOvertimeUtility);
+            _holidayConfirmService = new HolidayConfirmService(mockEmailService.Object, mapper, _holidaysRepository,
+                                                                _employeesRepository, clientsRepository, _holidaysService,
+                                                                _timeService, mockDocxGeneratorService.Object, _mockOvertimeUtility);
         }
 
 
@@ -119,7 +119,7 @@ namespace Tests
             var holiday = await _holidaysRepository.GetById(holidayId);
             var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
 
-            var expected = initial - _overtimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
+            var expected = initial - _mockOvertimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
 
             _holidayConfirmService.call("UpdateEmployeesOvertime", holidayDto);
 

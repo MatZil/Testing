@@ -21,7 +21,6 @@ namespace Tests
         private readonly ITestOutputHelper _output;
         private readonly EmployeesService _employeesService;
         private readonly SetUp _setup;
-        private readonly IOvertimeUtility _overtimeUtility;
 
         public EmployeeTests(ITestOutputHelper output)
         {
@@ -32,15 +31,14 @@ namespace Tests
             var _mapper = contextMapperTuple.Item2;
             _employeesCount = _setup.GetCount("employees");
          
-            var timeService = new Mock<ITimeService>().Object;
-            _overtimeUtility = new Mock<IOvertimeUtility>().Object;
+            var mockTimeService = new Mock<ITimeService>().Object;
+            var mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
 
             var userManager = _setup.InitializeUserManager(_context);
             var userService = new Mock<IUserService>().Object;
-            //var userService = new UserService(userManager, _mapper);
 
             EmployeesRepository employeesRepository = new EmployeesRepository(_context, userManager);
-            _employeesService = new EmployeesService(employeesRepository, _mapper, _overtimeUtility, timeService, userService);
+            _employeesService = new EmployeesService(employeesRepository, _mapper, mockOvertimeUtility, mockTimeService, userService);
         }
 
         [Theory]

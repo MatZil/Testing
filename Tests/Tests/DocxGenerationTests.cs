@@ -6,8 +6,8 @@ using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.DocxGeneration;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
-using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Services;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 using Xunit;
 
 namespace Tests
@@ -19,7 +19,7 @@ namespace Tests
         private readonly EmployeesRepository _employeesRepository;
         private readonly DocxGeneratorService _docxGeneratorService;
         private readonly IConfiguration _config;
-        private readonly TimeService _timeService;
+        private readonly ITimeService _mockTimeService;
 
         public DocxGenerationTests()
         {
@@ -32,9 +32,9 @@ namespace Tests
 
             _holidaysRepository = new HolidaysRepository(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
-            _timeService = new TimeService();
-            var docxGenerationMock = new Mock<IDocxGenerator>();
-            docxGenerationMock.Setup(generator => generator
+            _mockTimeService = new Mock<ITimeService>().Object;
+            var mockDocxGenerationMock = new Mock<IDocxGenerator>();
+            mockDocxGenerationMock.Setup(generator => generator
                                     .GenerateDocx(It.IsAny<Holiday>(), It.IsAny<Employee>(), It.IsAny<FileTypeEnum>())).Returns(
                                     (Holiday holiday, Employee employee, FileTypeEnum documentType) =>
                                     Task.FromResult(
@@ -45,11 +45,11 @@ namespace Tests
                                                 .Replace("{documentType}", documentType.ToString())
                                                 .Replace("{holidayType}", holiday.Type.ToString()),
                                             Type = documentType,
-                                            CreatedAt = _timeService.GetCurrentTime()
+                                            CreatedAt = _mockTimeService.GetCurrentTime()
                                         }.Id));
 
 
-            _docxGeneratorService = new DocxGeneratorService(docxGenerationMock.Object, _holidaysRepository, _employeesRepository);
+            _docxGeneratorService = new DocxGeneratorService(mockDocxGenerationMock.Object, _holidaysRepository, _employeesRepository);
         }
 
         [Theory]
@@ -66,7 +66,7 @@ namespace Tests
                         .Replace("{documentType}", documentType.ToString())
                         .Replace("{holidayType}", holiday.Type.ToString()),
                 Type = documentType,
-                CreatedAt = _timeService.GetCurrentTime()
+                CreatedAt = _mockTimeService.GetCurrentTime()
             }.Id;
 
             var actualId = await _docxGeneratorService.GenerateHolidayDocx(holidayId, documentType);

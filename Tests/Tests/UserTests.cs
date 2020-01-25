@@ -29,7 +29,6 @@ namespace Tests
             _context = contextMapperTuple.Item1;
             var mapper = contextMapperTuple.Item2;
             _userManager = setup.InitializeUserManager(_context);
-            //_roleManager = _setup.InitializeRoleManager(_context);
 
             EmployeesRepository employeesRepository = new EmployeesRepository(_context, _userManager);
             _usersService = new UserService(_userManager);

@@ -77,7 +77,7 @@
 </div>
 
 <div *ngIf="holidays">
-  <nz-table #basicTable [nzData]="getDataByRole()">
+  <nz-table #basicTable [nzData]="getHolidaysByRole()">
     <thead>
       <tr>
         <th *ngIf="isAdmin()">Employee</th>
@@ -95,7 +95,7 @@
       <tr *ngFor="let hol of basicTable.data">
         <td *ngIf="isAdmin()">{{getUserNameById(hol.employeeId)}}</td>
         <td>{{enumConverter.determineHolidayType(hol.type)}}</td>
-        <td>{{isPaid(hol.paid)}}</td>
+        <td>{{paidToString(hol.paid)}}</td>
         <td>{{hol.fromInclusive | date}}</td>
         <td>{{hol.toExclusive | date}}</td>
         <td>{{getOvertime(hol)}}</td>
