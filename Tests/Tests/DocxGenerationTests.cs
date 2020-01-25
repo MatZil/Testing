@@ -1,23 +1,19 @@
-﻿using AutoMapper;
+﻿using Microsoft.Extensions.Configuration;
 using Moq;
-using Xplicity_Holidays.Infrastructure.Database;
-using Xplicity_Holidays.Infrastructure.Enums;
-using Xplicity_Holidays.Infrastructure.Repositories;
-using Xplicity_Holidays.Infrastructure.DocxGeneration;
-using Xplicity_Holidays.Services;
-using Xunit;
-using Microsoft.Extensions.Configuration;
-using Xplicity_Holidays.Infrastructure.Utils;
-using Xplicity_Holidays.Infrastructure.Database.Models;
 using System.Threading.Tasks;
+using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.DocxGeneration;
+using XplicityApp.Infrastructure.Enums;
+using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Services;
+using Xunit;
 
 namespace Tests
 {
     public class DocxGenerationTests
     {
-        private readonly HolidayDbContext _context;
         private readonly HolidaysRepository _holidaysRepository;
-        private readonly EmployeesRepository _employeesRepository;
         private readonly DocxGeneratorService _docxGeneratorService;
         private readonly IConfiguration _config;
         private readonly TimeService _timeService;
@@ -25,14 +21,13 @@ namespace Tests
         public DocxGenerationTests()
         {
             var setup = new SetUp();
-            var contextMapperTuple = setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var mapper = contextMapperTuple.Item2;
+            setup.Initialize();
+            var context = setup.HolidayDbContext;
             _config = setup.GetConfiguration();
-            var userManager = setup.InitializeUserManager(_context);
+            var userManager = setup.InitializeUserManager();
 
-            _holidaysRepository = new HolidaysRepository(_context);
-            _employeesRepository = new EmployeesRepository(_context, userManager);
+            _holidaysRepository = new HolidaysRepository(context);
+            var employeesRepository = new EmployeesRepository(context, userManager);
             _timeService = new TimeService();
             var docxGenerationMock = new Mock<IDocxGenerator>();
             docxGenerationMock.Setup(generator => generator
@@ -50,7 +45,7 @@ namespace Tests
                                         }.Id));
 
 
-            _docxGeneratorService = new DocxGeneratorService(docxGenerationMock.Object, _holidaysRepository, _employeesRepository);
+            _docxGeneratorService = new DocxGeneratorService(docxGenerationMock.Object, _holidaysRepository, employeesRepository);
         }
 
         [Theory]

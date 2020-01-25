@@ -1,38 +1,26 @@
-﻿using AutoMapper;
-using Xplicity_Holidays.Dtos.Employees;
-using Xplicity_Holidays.Infrastructure.Repositories;
-using Xplicity_Holidays.Services;
+﻿using System;
+using XplicityApp.Dtos.Employees;
+using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Services;
 using Xunit;
-using Xplicity_Holidays.Infrastructure.Database;
-using Xunit.Abstractions;
-using Xplicity_Holidays.Infrastructure.Database.Models;
-using Microsoft.AspNetCore.Identity;
-using System;
 
 namespace Tests
 {
     [TestCaseOrderer("Tests.UserTests.AlphabeticalOrderer", "Tests")]
     public class UserTests
     {
-        private readonly HolidayDbContext _context;
-        private readonly ITestOutputHelper _output;
         private readonly UserService _usersService;
-        private readonly UserManager<User> _userManager;
-        //private readonly RoleManager<IdentityRole> _roleManager;
-
-        public UserTests(ITestOutputHelper output)
+        
+        public UserTests()
         {
-            _output = output;
             var setup = new SetUp();
-            var contextMapperTuple = setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var mapper = contextMapperTuple.Item2;
+            setup.Initialize();
+            var context = setup.HolidayDbContext;
 
-            _userManager = setup.InitializeUserManager(_context);
-            //_roleManager = _setup.InitializeRoleManager(_context);
-  
-            EmployeesRepository employeesRepository = new EmployeesRepository(_context, _userManager);
-            _usersService = new UserService(_userManager);
+            var userManager = setup.InitializeUserManager();
+            
+            new EmployeesRepository(context, userManager);
+            _usersService = new UserService(userManager);
         }
 
         //[Theory]

@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using System;
-using Xplicity_Holidays.Dtos.Inventory;
-using Xplicity_Holidays.Infrastructure.Database;
-using Xplicity_Holidays.Infrastructure.Repositories;
-using Xplicity_Holidays.Services;
+﻿using System;
+using XplicityApp.Dtos.Inventory;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Services;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,9 +20,9 @@ namespace Tests
         {
             _output = output;
             var setup = new SetUp();
-            var contextMapperTuple = setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var mapper = contextMapperTuple.Item2;
+            setup.Initialize();
+            _context = setup.HolidayDbContext;
+            var mapper = setup.Mapper;
             _actualNumberOfItemsInInventory = setup.GetCount("inventoryItems");
             var inventoryItemsRepository = new InventoryItemsRepository(_context);
             _inventoryItemService = new InventoryItemService(inventoryItemsRepository,mapper);

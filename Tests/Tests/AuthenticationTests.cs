@@ -1,22 +1,15 @@
-﻿using AutoMapper;
-using Xplicity_Holidays.Services;
+﻿using Microsoft.Extensions.Options;
+using XplicityApp.Configurations;
+using XplicityApp.Services;
 using Xunit;
-using Xplicity_Holidays.Infrastructure.Database;
 using Xunit.Abstractions;
-using Xplicity_Holidays.Infrastructure.Database.Models;
-using Microsoft.AspNetCore.Identity;
-using Xplicity_Holidays.Configurations;
-using Microsoft.Extensions.Options;
 
 namespace Tests
 {
     [TestCaseOrderer("Tests.AuthenticationTests.AlphabeticalOrderer", "Tests")]
     public class AuthenticationTests
     {
-        private readonly HolidayDbContext _context;
         private readonly ITestOutputHelper _output;
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AuthenticationService _authService;
         private readonly int _rolesCount;
 
@@ -24,16 +17,15 @@ namespace Tests
         {
             _output = output;
             var setup = new SetUp();
-            var contextMapperTuple = setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var mapper = contextMapperTuple.Item2;
+            setup.Initialize();
+
             _rolesCount = setup.GetCount("roles");
 
-            _userManager = setup.InitializeUserManager(_context);
-            _roleManager = setup.InitializeRoleManager(_context);
+            var userManager = setup.InitializeUserManager();
+            var roleManager = setup.InitializeRoleManager();
 
-            var opt = Options.Create<AppSettings>(new AppSettings());
-            _authService = new AuthenticationService(opt, _userManager, _roleManager);
+            var opt = Options.Create(new AppSettings());
+            _authService = new AuthenticationService(opt, userManager, roleManager);
         }
 
         //[Theory]

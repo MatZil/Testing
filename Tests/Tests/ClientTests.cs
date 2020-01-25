@@ -1,12 +1,11 @@
-﻿using Xunit;
-using Xplicity_Holidays.Services;
-using Xplicity_Holidays.Infrastructure.Database.Models;
-using Xplicity_Holidays.Infrastructure.Database;
-using Xplicity_Holidays.Infrastructure.Repositories;
-using AutoMapper;
-using Xplicity_Holidays.Dtos.Clients;
+﻿using System;
+using XplicityApp.Dtos.Clients;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Services;
+using Xunit;
 using Xunit.Abstractions;
-using System;
 
 
 namespace Tests
@@ -23,9 +22,9 @@ namespace Tests
         {
             _output = output;
             var setup = new SetUp();
-            var contextMapperTuple = setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var mapper = contextMapperTuple.Item2;
+            setup.Initialize();
+            _context = setup.HolidayDbContext;
+            var mapper = setup.Mapper;
             _clientsCount = setup.GetCount("clients");
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
             _clientsService = new ClientsService(clientsRepository, mapper);

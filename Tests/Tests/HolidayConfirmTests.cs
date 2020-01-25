@@ -1,16 +1,17 @@
-﻿using Xplicity_Holidays.Infrastructure.Database.Models;
-using Xplicity_Holidays.Infrastructure.Repositories;
-using Xplicity_Holidays.Services;
-using Xunit;
-using Xplicity_Holidays.Infrastructure.Database;
-using Xplicity_Holidays.Infrastructure.Utils;
-using AutoMapper;
-using Xplicity_Holidays.Services.Interfaces;
+﻿using AutoMapper;
 using Moq;
-using Xplicity_Holidays.Dtos.Holidays;
+using System;
+using XplicityApp.Dtos.Holidays;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Services;
+using XplicityApp.Services.Interfaces;
+using Xunit;
 using Xunit.Abstractions;
-using Xplicity_Holidays.Services.Extensions;
-using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
+using XplicityApp.Services.Extensions;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 
 namespace Tests
 {
@@ -19,36 +20,32 @@ namespace Tests
     {
         private readonly HolidayDbContext _context;
         private readonly HolidayConfirmService _holidayConfirmService;
-        private readonly HolidaysService _holidaysService;
-        private readonly ITestOutputHelper _output;
         private readonly HolidaysRepository _holidaysRepository;
         private readonly IMapper _mapper;
         private readonly EmployeesRepository _employeesRepository;
         private readonly ITimeService _timeService;
         private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
 
-        public HolidayConfirmTests(ITestOutputHelper output)
+        public HolidayConfirmTests()
         {
-            _output = output;
             var setup = new SetUp();
-            var contextMapperTuple = setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var mapper = contextMapperTuple.Item2;
-            _mapper = mapper;
-            
+            setup.Initialize();
+            _context = setup.HolidayDbContext;
+            _mapper = setup.Mapper;
+
             _timeService = new Mock<TimeService>().Object;
             _holidaysRepository = new HolidaysRepository(_context);
-            var userManager = setup.InitializeUserManager(_context);
+            var userManager = setup.InitializeUserManager();
             _employeesRepository = new EmployeesRepository(_context, userManager);
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
             var emailService = new Mock<IEmailService>();
             var docxGeneratorService = new Mock<IDocxGeneratorService>();
             _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _timeService);
 
-            _holidaysService = new HolidaysService(_holidaysRepository, mapper, _timeService);
-            _holidayConfirmService = new HolidayConfirmService(emailService.Object, mapper, _holidaysRepository,
-                                                                _employeesRepository, clientsRepository, _holidaysService, 
-                                                                _timeService, docxGeneratorService.Object, _employeeHolidaysConfirmationUpdater);    
+            var holidaysService = new HolidaysService(_holidaysRepository, _mapper, _timeService);
+            _holidayConfirmService = new HolidayConfirmService(emailService.Object, _mapper, _holidaysRepository,
+                                                               _employeesRepository, clientsRepository, holidaysService, 
+                                                               _timeService, docxGeneratorService.Object, _employeeHolidaysConfirmationUpdater);
         }
 
         [Theory]
@@ -161,9 +158,8 @@ namespace Tests
         [InlineData(4)]
         public async void When_ConfirmingInvalid_Expect_False(int holidayId)
         {
-            var result = await _holidayConfirmService.IsValid(holidayId);
-
-            Assert.False(result, "Holiday request is deemed to be valid.");
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                async () => await _holidayConfirmService.ValidateHolidayConfirmationReadiness(holidayId));
         }
     }
 }

@@ -1,49 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using Xplicity_Holidays.Infrastructure.Database.Models;
-using Xplicity_Holidays.Infrastructure.Repositories;
-using Xplicity_Holidays.Services;
-using Xunit;
-using Xplicity_Holidays.Infrastructure.Database;
-using Xplicity_Holidays.Infrastructure.Utils;
-using AutoMapper;
-using Xplicity_Holidays.Infrastructure.Utils.Interfaces;
-using Moq;
-using Xunit.Abstractions;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Xplicity_Holidays.Services.Extensions;
+using Moq;
+using System;
+using System.Collections.Generic;
+using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Infrastructure.Utils.Interfaces;
+using XplicityApp.Services;
+using Xunit;
+using XplicityApp.Services.Extensions;
 
 namespace Tests
 {
     [TestCaseOrderer("Tests.BackgroundTests.AlphabeticalOrderer", "Tests")]
     public class BackgroundTests
     {
-        private readonly HolidayDbContext _context;
-        private readonly ITestOutputHelper _output;
-        private readonly HolidaysRepository _holidaysRepository;
         private readonly EmployeesRepository _employeesRepository;
         private readonly BackgroundService _backgroundService;
         private readonly TimeService _timeService;
         private readonly EmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
 
-        public BackgroundTests(ITestOutputHelper output)
+        public BackgroundTests()
         {
-            _output = output;
             var setup = new SetUp();
-            var contextMapperTuple = setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var mapper = contextMapperTuple.Item2;
+            setup.Initialize();
+            var context = setup.HolidayDbContext;
             _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater();
 
             _timeService = new TimeService();
-            _holidaysRepository = new HolidaysRepository(_context);
-            var userManager = setup.InitializeUserManager(_context);
-            _employeesRepository = new EmployeesRepository(_context, userManager);
+            new HolidaysRepository(context);
+            var userManager = setup.InitializeUserManager();
+            _employeesRepository = new EmployeesRepository(context, userManager);
 
-            var _serviceScopeFactory = new Mock<IServiceScopeFactory>().Object;
-            var _hostingEnvironment = new Mock<IHostingEnvironment>().Object;
-            _backgroundService = new BackgroundService(_timeService, _serviceScopeFactory, _hostingEnvironment,
+            var serviceScopeFactory = new Mock<IServiceScopeFactory>().Object;
+            var hostingEnvironment = new Mock<IWebHostEnvironment>().Object;
+            _backgroundService = new BackgroundService(_timeService, serviceScopeFactory, hostingEnvironment,
                                                        _employeeHolidaysBackgroundUpdater);
         }
 
@@ -110,7 +102,7 @@ namespace Tests
         [Fact]
         public async void When_ResettingParentalLeaves_Expect_ResetsLeaves()
         {
-            ICollection<Employee> employees = await _employeesRepository.GetAll();
+            var employees = await _employeesRepository.GetAll();
 
             var timeService = new Mock<ITimeService>();
             timeService.Setup(m => m.GetCurrentTime()).Returns(new DateTime(2019,01,01));

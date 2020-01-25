@@ -1,13 +1,13 @@
 ﻿using Xunit;
-using Xplicity_Holidays.Services;
-using Xplicity_Holidays.Infrastructure.Database;
-using Xplicity_Holidays.Infrastructure.Repositories;
+using XplicityApp.Services;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Repositories;
 using AutoMapper;
-using Xplicity_Holidays.Dtos.Holidays;
+using XplicityApp.Dtos.Holidays;
 using Xunit.Abstractions;
 using System;
-using Xplicity_Holidays.Infrastructure.Utils;
-using Xplicity_Holidays.Infrastructure.Enums;
+using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Infrastructure.Enums;
 
 namespace Tests
 {
@@ -18,20 +18,19 @@ namespace Tests
         private readonly int _holidaysCount;
         private readonly ITestOutputHelper _output;
         private readonly HolidaysService _holidaysService;
-        private readonly HolidaysRepository _holidaysRepository;
 
         public HolidayTests(ITestOutputHelper output)
         {
             _output = output;
             var setup = new SetUp();
-            var contextMapperTuple = setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var _mapper = contextMapperTuple.Item2;
+            setup.Initialize();
+            _context = setup.HolidayDbContext;
+            var mapper = setup.Mapper;
             _holidaysCount = setup.GetCount("holidays");
 
             var timeService = new TimeService();
-            _holidaysRepository = new HolidaysRepository(_context);
-            _holidaysService = new HolidaysService(_holidaysRepository, _mapper, timeService);
+            var holidaysRepository = new HolidaysRepository(_context);
+            _holidaysService = new HolidaysService(holidaysRepository, mapper, timeService);
         }
 
         [Theory]

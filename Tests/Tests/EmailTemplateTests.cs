@@ -1,11 +1,9 @@
 ﻿using System;
-using Xplicity_Holidays.Infrastructure.Repositories;
-using Xplicity_Holidays.Services;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Services;
 using Xunit;
-using Xplicity_Holidays.Infrastructure.Database;
-using AutoMapper;
 using Xunit.Abstractions;
-
 
 namespace Tests
 {
@@ -14,23 +12,21 @@ namespace Tests
     {
         private readonly HolidayDbContext _context;
         private readonly EmailTemplatesService _templatesService;
-        private readonly SetUp _setup;
         private readonly ITestOutputHelper _output;
         private readonly int _templatesCount;
-        private readonly IEmailTemplatesRepository _templatesRepository;
 
         public EmailTemplateTests(ITestOutputHelper output)
         {
             _output = output;
-            _setup = new SetUp();
-            var contextMapperTuple = _setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var _mapper = contextMapperTuple.Item2;
+            var setup = new SetUp();
+            setup.Initialize();
+            _context = setup.HolidayDbContext;
+            var mapper = setup.Mapper;
 
-            _templatesCount = _setup.GetCount("emailTemplates");
+            _templatesCount = setup.GetCount("emailTemplates");
 
-            _templatesRepository = new EmailTemplatesRepository(_context);
-            _templatesService = new EmailTemplatesService(_templatesRepository, _mapper);
+            IEmailTemplatesRepository templatesRepository = new EmailTemplatesRepository(_context);
+            _templatesService = new EmailTemplatesService(templatesRepository, mapper);
         }
 
         [Theory]
@@ -62,7 +58,7 @@ namespace Tests
         [Fact]
         public async void When_CreatingTemplate_Expect_ReturnsNewTemplate()
         {
-            var newEmailTemplate = _setup.NewEmailTemplateDto();
+            var newEmailTemplate = SetUp.NewEmailTemplateDto();
 
             var createdTemplate = await _templatesService.Create(newEmailTemplate);
 
@@ -106,7 +102,7 @@ namespace Tests
         {
             var initial = _context.EmailTemplates.Find(id).Template;
 
-            var updatedEmailTemplate = _setup.NewEmailTemplateDto();
+            var updatedEmailTemplate = SetUp.NewEmailTemplateDto();
             var expected = updatedEmailTemplate.Template;
 
             await _templatesService.Update(id, updatedEmailTemplate);
@@ -120,7 +116,7 @@ namespace Tests
         [InlineData(3)]
         public void When_UpdatingNonexistentTemplate_Expect_InvalidOperationException(int id)
         {
-            var updatedEmailTemplate = _setup.NewEmailTemplateDto();
+            var updatedEmailTemplate = SetUp.NewEmailTemplateDto();
 
             Assert.ThrowsAsync<InvalidOperationException>(async () => await _templatesService.Update(id, updatedEmailTemplate));
         }
