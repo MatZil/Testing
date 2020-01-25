@@ -12,10 +12,12 @@ namespace XplicityApp.Dtos.Employees
         public DateTime BirthdayDate { get; set; }
         public int DaysOfVacation { get; set; }
         public int ParentalLeaveLimit { get; set; }
+        public double FreeWorkDays { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
         public string Position { get; set; }
+        public bool IsManualHolidaysInput { get; set; }
 
         public DateTime HealthCheckDate { get; set; }
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Moq;
 using System.Threading.Tasks;
-using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.DocxGeneration;
 using XplicityApp.Infrastructure.Enums;
@@ -14,9 +13,7 @@ namespace Tests
 {
     public class DocxGenerationTests
     {
-        private readonly HolidayDbContext _context;
         private readonly HolidaysRepository _holidaysRepository;
-        private readonly EmployeesRepository _employeesRepository;
         private readonly DocxGeneratorService _docxGeneratorService;
         private readonly IConfiguration _config;
         private readonly ITimeService _mockTimeService;
@@ -24,14 +21,13 @@ namespace Tests
         public DocxGenerationTests()
         {
             var setup = new SetUp();
-            var contextMapperTuple = setup.Initialize();
-            _context = contextMapperTuple.Item1;
-            var mapper = contextMapperTuple.Item2;
+            setup.Initialize();
+            var context = setup.HolidayDbContext;
             _config = setup.GetConfiguration();
-            var userManager = setup.InitializeUserManager(_context);
+            var userManager = setup.InitializeUserManager();
 
-            _holidaysRepository = new HolidaysRepository(_context);
-            _employeesRepository = new EmployeesRepository(_context, userManager);
+            _holidaysRepository = new HolidaysRepository(context);
+            var employeesRepository = new EmployeesRepository(context, userManager);
             _mockTimeService = new Mock<ITimeService>().Object;
             var mockDocxGenerationMock = new Mock<IDocxGenerator>();
             mockDocxGenerationMock.Setup(generator => generator
@@ -49,7 +45,7 @@ namespace Tests
                                         }.Id));
 
 
-            _docxGeneratorService = new DocxGeneratorService(mockDocxGenerationMock.Object, _holidaysRepository, _employeesRepository);
+            _docxGeneratorService = new DocxGeneratorService(mockDocxGenerationMock.Object, _holidaysRepository, employeesRepository);
         }
 
         [Theory]

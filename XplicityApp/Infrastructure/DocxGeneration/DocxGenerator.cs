@@ -1,9 +1,11 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
@@ -46,7 +48,7 @@ namespace XplicityApp.Infrastructure.DocxGeneration
 
             var fileId = await _fileService.CreateFileRecord(fileName, holidayDocumentType);
 
-            ProcessTemplate(templatePath, generationPath, replacementMap);
+            await ProcessTemplate(templatePath, generationPath, replacementMap);
 
             return fileId;
         }
@@ -99,21 +101,50 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             return "";
         }
 
-        private string ProcessTemplate(string templatePath, string generationPath, Dictionary<string, string> replacementMap)
+        private async Task ProcessTemplate(string templatePath, string generationPath, Dictionary<string, string> replacementMap)
         {
-            using (var template = WordprocessingDocument.CreateFromTemplate(templatePath))
+            var documentTemplateHtml = await GetHtmlTemplateString(templatePath);
+
+            var documentContentHtml = GetContentFromTemplate(documentTemplateHtml, replacementMap);
+
+            await CreateDocxFromHtml(documentContentHtml, generationPath);
+        }
+
+        private static async Task<string> GetHtmlTemplateString(string templatePath)
+        {
+            using var reader = new StreamReader(templatePath, Encoding.GetEncoding(1252));
+            var htmlTemplateString = await reader.ReadToEndAsync();
+            return htmlTemplateString;
+        }
+
+        private static string GetContentFromTemplate(string templateString, Dictionary<string, string> replacementMap)
+        {
+            foreach (var replacementPair in replacementMap)
             {
-                var body = template.MainDocumentPart.Document.Body;
-                foreach (var text in body.Descendants<Text>())
-                {
-                    foreach (var replacementPair in replacementMap)
-                    {
-                        text.Text = text.Text.Replace(replacementPair.Key, replacementPair.Value);
-                    }
-                }
-                template.SaveAs(generationPath).Close();
-                return generationPath;
+                templateString = templateString.Replace(replacementPair.Key, replacementPair.Value);
             }
+
+            return templateString;
+        }
+
+        private static async Task CreateDocxFromHtml(string htmlString, string generationPath)
+        {
+            const string altChunkID = "AltChunkId1";
+            using var newDocument = WordprocessingDocument.Create(generationPath, WordprocessingDocumentType.Document);
+            var mainPart = newDocument.AddMainDocumentPart();
+            var document = new Document(new Body());
+            document.Save(mainPart);
+
+            var chunk = mainPart.AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Xhtml, altChunkID);
+            using (var chunkStream = chunk.GetStream(FileMode.Create, FileAccess.Write))
+            {
+                using var stringStream = new StreamWriter(chunkStream, Encoding.UTF8);
+                await stringStream.WriteAsync(htmlString);
+            }
+
+            var altChunk = new AltChunk { Id = altChunkID };
+            mainPart.Document.Body.InsertAt(altChunk, 0);
+            mainPart.Document.Save();
         }
 
         private string GetTemplatePath(FileTypeEnum holidayDocumentType)

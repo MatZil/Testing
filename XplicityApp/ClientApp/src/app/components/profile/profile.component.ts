@@ -44,6 +44,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
+      this.currentUser.role = this.userService.getRole();
     });
     this.createFormGroup();
   }
@@ -93,6 +94,15 @@ export class ProfileComponent implements OnInit {
             console.log(error);
           }
         );
+    }
+  }
+
+  isAdmin() {
+    if (this.userService.getRole() === 'Admin') {
+      return true;
+    }
+    else {
+      return false;
     }
   }
 }

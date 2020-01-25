@@ -20,7 +20,7 @@ namespace XplicityApp.Services
         }
         public async Task<User> Create(Employee newEmployee, NewEmployeeDto newEmployeeDto)
         {
-            User newUser = new User
+            var newUser = new User
             {
                 Employee = newEmployee,
                 Email = newEmployee.Email,

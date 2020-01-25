@@ -47,9 +47,9 @@ namespace XplicityApp.Services
 
                 var holidays = await holidayRepository.GetAll();
                 var employees = await employeeRepository.GetAll();
-                var admin = await employeeRepository.FindAnyAdmin();
+                var admins = await employeeRepository.GetAllAdmins();
 
-                await CheckForLastMonthDay(admin, holidays, emailService, holidayInfoService);
+                await CheckForLastMonthDay(admins, holidays, emailService, holidayInfoService);
 
                 await CheckUpcomingHolidays(employees, holidays, emailService);
 
@@ -77,7 +77,7 @@ namespace XplicityApp.Services
             return currentTime;
         }
 
-        private async Task CheckForLastMonthDay(Employee admin, ICollection<Holiday> holidays, IEmailService emailService,
+        private async Task CheckForLastMonthDay(ICollection<Employee> admins, ICollection<Holiday> holidays, IEmailService emailService,
                                           IHolidayInfoService holidayInfoService)
         {
             var currentTime = GetCurrentDateTime();
@@ -94,7 +94,7 @@ namespace XplicityApp.Services
 
             if (currentTime.Month != nextDay.Month)
             {
-                await emailService.SendThisMonthsHolidayInfo(admin, holidaysWithClients);
+                await emailService.SendThisMonthsHolidayInfo(admins, holidaysWithClients);
             }
         }
 
@@ -108,7 +108,7 @@ namespace XplicityApp.Services
 
             if (upcomingHolidays.Count != 0)
             {
-                await emailService.InformEmployeesAboutHoliday(employees, upcomingHolidays);
+                await emailService.NotifyAllAboutUpcomingAbsences(employees, upcomingHolidays);
             }
         }
 

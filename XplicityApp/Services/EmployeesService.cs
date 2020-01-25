@@ -72,19 +72,26 @@ namespace XplicityApp.Services
             var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
                                                             new DateTime(currentTime.AddYears(1).Year, 1, 1));
 
-            newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
+                if (newEmployeeDto.IsManualHolidaysInput)
+                {
+                    newEmployee.FreeWorkDays = newEmployeeDto.FreeWorkDays;
+                }
+                else
+                {
+                    newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
+                }
 
-            newEmployee.CurrentAvailableLeaves = newEmployee.ParentalLeaveLimit;
-            newEmployee.NextMonthAvailableLeaves = newEmployee.ParentalLeaveLimit;
-            
-            await _repository.Create(newEmployee);
-            await _userService.Create(newEmployee, newEmployeeDto);
 
-            var employeeDto = _mapper.Map<NewEmployeeDto>(newEmployee);
+                newEmployee.CurrentAvailableLeaves = newEmployee.ParentalLeaveLimit;
+                newEmployee.NextMonthAvailableLeaves = newEmployee.ParentalLeaveLimit;
 
-            return employeeDto;
-        }
+                await _repository.Create(newEmployee);
+                await _userService.Create(newEmployee, newEmployeeDto);
 
+                var employeeDto = _mapper.Map<NewEmployeeDto>(newEmployee);
+
+                return employeeDto;
+            }
         public async Task<bool> Delete(int id)
         {
             var item = await _repository.GetById(id);
@@ -108,7 +115,12 @@ namespace XplicityApp.Services
             {
                 throw new InvalidOperationException();
             }
-            
+
+            if (updateData.FreeWorkDays != employeeToUpdate.FreeWorkDays)
+            {
+                employeeToUpdate.FreeWorkDays = updateData.FreeWorkDays;
+            }
+
             if (updateData.Email != employeeToUpdate.Email)
             {
                 // email has changed so check if the new email is already taken
