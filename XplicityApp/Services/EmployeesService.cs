@@ -16,13 +16,16 @@ namespace XplicityApp.Services
         private readonly IMapper _mapper;
         private readonly ITimeService _timeService;
         private readonly IUserService _userService;
-        public EmployeesService(IEmployeeRepository repository, IMapper mapper,
+        private readonly IOvertimeUtility _overtimeUtility;
+
+        public EmployeesService(IEmployeeRepository repository, IMapper mapper, IOvertimeUtility overtimeUtility,
                                 ITimeService timeService,  IUserService userService)
         {
             _repository = repository;
             _mapper = mapper;
             _userService = userService;
             _timeService = timeService;
+            _overtimeUtility = overtimeUtility;
         }
 
         public async Task<GetEmployeeDto> GetById(int id)
@@ -133,6 +136,11 @@ namespace XplicityApp.Services
 
             await _repository.Update(employeeToUpdate);
             await _userService.Update(id, updateData);
+        }
+
+        public Employee AddOvertimeDetails(Employee employee)
+        {
+            return _overtimeUtility.AddOvertimeDetailsToEmployee(employee);
         }
     }
 }

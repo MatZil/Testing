@@ -47,5 +47,12 @@ namespace XplicityApp.Infrastructure.Database.Models
         public EmployeeStatusEnum Status { get; set; }
 
         public ICollection<InventoryItem> InventoryItems { get; set; }
+
+        [NotMapped]
+        public double OvertimeDays { get; set; } //Current amount of overtime days (converted from hours)
+        [NotMapped]
+        public int NextOvertimeHours { get; set; } //Hours left till next overtime day
+        [NotMapped]
+        public int NextOvertimeMinutes { get; set; } //Minutes left till next overtime day
     }
 }

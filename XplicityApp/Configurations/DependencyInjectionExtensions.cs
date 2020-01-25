@@ -38,6 +38,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<IFileUtility, FileUtility>()
                 .AddScoped<IEmployeeHolidaysBackgroundUpdater, EmployeeHolidaysBackgroundUpdater>()
                 .AddScoped<IEmployeeHolidaysConfirmationUpdater, EmployeeHolidaysConfirmationUpdater>()
+                .AddScoped<IOvertimeUtility, OvertimeUtility>()
                 .AddSingleton<ITimeService, TimeService>()
                 .AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }

@@ -6,6 +6,7 @@ using XplicityApp.Dtos.Employees;
 using XplicityApp.Dtos.Users;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Services.Interfaces;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 
 namespace XplicityApp.Services
 {
@@ -73,6 +74,7 @@ namespace XplicityApp.Services
             {
                 throw new InvalidOperationException();
             }
+
             return currentUser.Employee;
         }
     }

@@ -7,6 +7,7 @@ using XplicityApp.Infrastructure.Database;
 using Xunit.Abstractions;
 using System;
 using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
 using Moq;
 
@@ -29,14 +30,14 @@ namespace Tests
             var mapper = setup.Mapper;
             _employeesCount = setup.GetCount("employees");
 
-            var timeService = new TimeService();
+            var mockTimeService = new Mock<ITimeService>().Object;
+            var mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
 
             var userManager = setup.InitializeUserManager();
             var userService = new Mock<IUserService>().Object;
-            //var userService = new UserService(userManager, _mapper);
 
             var employeesRepository = new EmployeesRepository(_context, userManager);
-            _employeesService = new EmployeesService(employeesRepository, mapper, timeService, userService);
+            _employeesService = new EmployeesService(employeesRepository, mapper, mockOvertimeUtility, mockTimeService, userService);
         }
 
         [Theory]

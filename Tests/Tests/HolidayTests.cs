@@ -7,7 +7,9 @@ using XplicityApp.Dtos.Holidays;
 using Xunit.Abstractions;
 using System;
 using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Infrastructure.Enums;
+using Moq;
 
 namespace Tests
 {
@@ -28,9 +30,10 @@ namespace Tests
             var mapper = setup.Mapper;
             _holidaysCount = setup.GetCount("holidays");
 
-            var timeService = new TimeService();
+            var mockTimeService = new Mock<ITimeService>().Object;
+            var mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
             var holidaysRepository = new HolidaysRepository(_context);
-            _holidaysService = new HolidaysService(holidaysRepository, mapper, timeService);
+            _holidaysService = new HolidaysService(holidaysRepository, mapper, mockTimeService, mockOvertimeUtility);
         }
 
         [Theory]

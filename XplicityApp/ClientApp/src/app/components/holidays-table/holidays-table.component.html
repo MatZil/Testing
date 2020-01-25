@@ -1,8 +1,7 @@
 <div>
-    <button nz-button nzType="primary" (click)=showModalCreator()>Request holidays</button>
-    <div>
-
-        <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Employee status"
+  <div class="columns">
+    <button nz-button nzType="primary" style="float:left;" (click)=showModalCreator()>Request holidays</button>
+    <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Employee status"
             (selectionChange)="changeStatus()" [(value)]="selected">
             <mat-option [value]="1">
                 Current employees
@@ -78,69 +77,31 @@
 </div>
 
 <div *ngIf="holidays">
-    <nz-table *ngIf="isAdmin()" #basicTable [nzData]="holidays">
-        <thead>
-            <tr>
-                <th>Employee</th>
-                <th>Holidays type</th>
-                <th>Paid</th>
-                <th>Date from</th>
-                <th>Date to</th>
-                <th>Status</th>
-                <th>Request creation date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let hol of basicTable.data">
-                <td>{{getUserNameById(hol.employeeId)}}</td>
-                <td>{{enumConverter.determineHolidayType(hol.type)}}</td>
-                <td>
-                    <div *ngIf="hol.paid">
-                        Yes
-                    </div>
-                    <div *ngIf="!hol.paid">
-                        No
-                    </div>
-                </td>
-                <td>{{hol.fromInclusive | date}}</td>
-                <td>{{hol.toExclusive | date}}</td>
-                <td>{{enumConverter.determineHolidayStatus(hol.status)}}</td>
-                <td>{{hol.requestCreatedDate | date}}</td>
-            </tr>
-        </tbody>
-    </nz-table>
-</div>
-
-<div *ngIf="holidays">
-    <nz-table *ngIf="!isAdmin()" #basicTable [nzData]="holidays">
-        <thead>
-            <tr>
-                <th>Holidays type</th>
-                <th>Paid</th>
-                <th>Date from</th>
-                <th>Date to</th>
-                <th>Status</th>
-                <th>Request creation date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let hol of basicTable.data">
-                <ng-container *ngIf="isTheRightId(hol)">
-                    <td>{{enumConverter.determineHolidayType(hol.type)}}</td>
-                    <td>
-                        <div *ngIf="hol.paid">
-                            Yes
-                        </div>
-                        <div *ngIf="!hol.paid">
-                            No
-                        </div>
-                    </td>
-                    <td>{{hol.fromInclusive | date}}</td>
-                    <td>{{hol.toExclusive | date}}</td>
-                    <td>{{enumConverter.determineHolidayStatus(hol.status)}}</td>
-                    <td>{{hol.requestCreatedDate | date}}</td>
-                </ng-container>
-            </tr>
-        </tbody>
-    </nz-table>
+  <nz-table #basicTable [nzData]="getHolidaysByRole()">
+    <thead>
+      <tr>
+        <th *ngIf="isAdmin()">Employee</th>
+        <th>Holidays type</th>
+        <th>Paid</th>
+        <th>Date from</th>
+        <th>Date to</th>
+        <th *ngIf="isAdmin()">Overtime hours</th>
+        <th *ngIf="!isAdmin()">Overtime days</th>
+        <th>Status</th>
+        <th>Request creation date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let hol of basicTable.data">
+        <td *ngIf="isAdmin()">{{getUserNameById(hol.employeeId)}}</td>
+        <td>{{enumConverter.determineHolidayType(hol.type)}}</td>
+        <td>{{paidToString(hol.paid)}}</td>
+        <td>{{hol.fromInclusive | date}}</td>
+        <td>{{hol.toExclusive | date}}</td>
+        <td>{{getOvertime(hol)}}</td>
+        <td [style.color]="getStatusColor(hol.status)">{{getStatusName(hol.status)}}</td>
+        <td>{{hol.requestCreatedDate | date}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
 </div>

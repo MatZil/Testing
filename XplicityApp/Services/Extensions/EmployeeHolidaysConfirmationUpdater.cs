@@ -11,16 +11,20 @@ namespace XplicityApp.Services.Extensions
     {
         private readonly ITimeService _timeService;
         private readonly IEmployeeRepository _repositoryEmployees;
-        public EmployeeHolidaysConfirmationUpdater(IEmployeeRepository repositoryEmployees, ITimeService timeService)
+        private readonly IOvertimeUtility _overtimeUtility;
+
+        public EmployeeHolidaysConfirmationUpdater(IEmployeeRepository repositoryEmployees, ITimeService timeService, IOvertimeUtility overtimeUtility)
         {
             _repositoryEmployees = repositoryEmployees;
             _timeService = timeService;
+            _overtimeUtility = overtimeUtility;
         }
 
         public async Task UpdateEmployeesOvertime(GetHolidayDto holidayDto)
         {
             var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
-            employee.OvertimeHours -= holidayDto.OvertimeHours;
+            var requestedOvertimeHours = _overtimeUtility.ConvertOvertimeDaysToHours(holidayDto.OvertimeDays);
+            employee.OvertimeHours -= requestedOvertimeHours;
             await _repositoryEmployees.Update(employee);
         }
 

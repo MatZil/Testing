@@ -203,7 +203,7 @@ namespace Tests
                     Type = HolidayType.Parental,
                     FromInclusive = DateTime.Today.AddDays(1),
                     ToExclusive = DateTime.Today.AddDays(15),
-                    Status = HolidayStatus.Unconfirmed,
+                    Status = HolidayStatus.Pending,
                     RequestCreatedDate = new DateTime(2019, 10, 13),
                 },
                 new Holiday

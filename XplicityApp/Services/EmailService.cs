@@ -10,6 +10,7 @@ using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Static_Files;
 using XplicityApp.Services.EntityBehavior;
 using XplicityApp.Services.Interfaces;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 
 namespace XplicityApp.Services
 {
@@ -19,13 +20,15 @@ namespace XplicityApp.Services
         private readonly IEmailTemplatesRepository _repository;
         private readonly IConfiguration _configuration;
         private readonly IFileService _fileService;
+        private readonly IOvertimeUtility _overtimeUtility;
 
-        public EmailService(IEmailer emailer, IEmailTemplatesRepository repository, IConfiguration configuration, IFileService fileService)
+        public EmailService(IEmailer emailer, IEmailTemplatesRepository repository, IConfiguration configuration, IFileService fileService, IOvertimeUtility overtimeUtility)
         {
             _emailer = emailer;
             _repository = repository;
             _configuration = configuration;
             _fileService = fileService;
+            _overtimeUtility = overtimeUtility;
         }
 
         public async Task ConfirmHolidayWithClient(Client client, Employee employee, Holiday holiday)
@@ -43,13 +46,8 @@ namespace XplicityApp.Services
             _emailer.SendMail(client.OwnerEmail, template.Subject, messageString);
         }
 
-        public async Task ConfirmHolidayWithAdmin(ICollection<Employee> admins, Employee employee, Holiday holiday, string clientStatus)
+        public async Task ConfirmHolidayWithAdmin(ICollection<Employee> admins, Employee employee, Holiday holiday, string clientStatus, string overtimeSentence)
         {
-            var overtimeString = "";
-            if (holiday.OvertimeDays > 0)
-            {
-                overtimeString = " (using " + Math.Round(holiday.OvertimeHours, 2) + " overtime hours)";
-            }
 
             foreach (var admin in admins)
             {
@@ -64,7 +62,7 @@ namespace XplicityApp.Services
                                             .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm?holidayId={holiday.Id}")
                                             .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={holiday.Id}")
                                             .Replace("{client.status}", clientStatus)
-                                            .Replace("{holiday.overtimeHours}", overtimeString);
+                                            .Replace("{holiday.overtimeHours}", overtimeSentence);
 
                 _emailer.SendMail(admin.Email, template.Subject, messageString); 
             }
@@ -82,13 +80,15 @@ namespace XplicityApp.Services
                                                 .Replace("{client.name}", (client.Key is null) ? TeamlessEmployeeTitle.TEAM_NAME : client.Key.CompanyName) + '\n';
                 foreach (var holiday in client)
                 {
+                    var overtimeSentence = _overtimeUtility.GetOvertimeSentence(OvertimeEmail.MONTHLY_REPORT, holiday.Item1.OvertimeDays);
+
                     var messageString = template.Template.Substring(titleEnd)
                                                         .Replace("{employee.fullName}", $"{holiday.Item1.Employee.Name} {holiday.Item1.Employee.Surname}")
                                                         .Replace("{holiday.paid}", holiday.Item1.Paid ? "Paid" : "Unpaid")
                                                         .Replace("{holiday.type}", holiday.Item1.Type.ToString())
                                                         .Replace("{holiday.from}", holiday.Item1.FromInclusive.ToShortDateString())
                                                         .Replace("{holiday.to}", holiday.Item1.ToExclusive.AddDays(-1).ToShortDateString())
-                                                        .Replace("{holiday.overtimeHours}", holiday.Item1.OvertimeHours.ToString());
+                                                        .Replace("{holiday.overtimeHours}", overtimeSentence);
                     holidayInfo += messageString;
                 }
                 holidayInfo += "\n\n";

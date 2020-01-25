@@ -20,13 +20,15 @@ namespace XplicityApp.Infrastructure.DocxGeneration
         private readonly ITimeService _timeService;
         private readonly IFileUtility _fileUtility;
         private readonly IFileService _fileService;
+        private readonly IOvertimeUtility _overtimeUtility;
 
-        public DocxGenerator(IConfiguration configuration, ITimeService timeService, IFileUtility fileUtility, IFileService fileService)
+        public DocxGenerator(IConfiguration configuration, ITimeService timeService, IFileUtility fileUtility, IFileService fileService, IOvertimeUtility overtimeUtility)
         {
             _configuration = configuration;
             _timeService = timeService;
             _fileUtility = fileUtility;
             _fileService = fileService;
+            _overtimeUtility = overtimeUtility;
         }
 
         public async Task<int> GenerateDocx(Holiday holiday, Employee employee, FileTypeEnum holidayDocumentType)
@@ -57,8 +59,9 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             var overtimeRequestString = "";
             if (holiday.OvertimeDays > 0)
             {
-                overtimeOrderString = _configuration["DocxGeneration:OvertimeOrder"].Replace("{OVERTIME_HOURS}", Math.Round(holiday.OvertimeHours, 2).ToString());
-                overtimeRequestString = _configuration["DocxGeneration:OvertimeRequest"].Replace("{OVERTIME_HOURS}", Math.Round(holiday.OvertimeHours, 2).ToString());
+                var overtimeHours = _overtimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
+                overtimeOrderString = _configuration["DocxGeneration:OvertimeOrder"].Replace("{OVERTIME_HOURS}", Math.Round(overtimeHours, 2).ToString());
+                overtimeRequestString = _configuration["DocxGeneration:OvertimeRequest"].Replace("{OVERTIME_HOURS}", Math.Round(overtimeHours, 2).ToString());
             }
 
             return new Dictionary<string, string>

@@ -8,6 +8,7 @@ export class Holidays {
     fromInclusive: Date;
     toExclusive: Date;
     overtimeDays: number;
+    overtimeHours: number;
     isCofirmed: boolean;
     paid: boolean;
     status: HolidayStatus;

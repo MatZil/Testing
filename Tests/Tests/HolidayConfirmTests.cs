@@ -6,12 +6,11 @@ using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services;
 using XplicityApp.Services.Interfaces;
 using Xunit;
-using Xunit.Abstractions;
 using XplicityApp.Services.Extensions;
-using XplicityApp.Infrastructure.Utils.Interfaces;
 
 namespace Tests
 {
@@ -23,7 +22,8 @@ namespace Tests
         private readonly HolidaysRepository _holidaysRepository;
         private readonly IMapper _mapper;
         private readonly EmployeesRepository _employeesRepository;
-        private readonly ITimeService _timeService;
+        private readonly TimeService _timeService;
+        private readonly IOvertimeUtility _mockOvertimeUtility;
         private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
 
         public HolidayConfirmTests()
@@ -38,14 +38,16 @@ namespace Tests
             var userManager = setup.InitializeUserManager();
             _employeesRepository = new EmployeesRepository(_context, userManager);
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
-            var emailService = new Mock<IEmailService>();
-            var docxGeneratorService = new Mock<IDocxGeneratorService>();
-            _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _timeService);
+            var mockEmailService = new Mock<IEmailService>();
+            var mockDocxGeneratorService = new Mock<IDocxGeneratorService>();
+            _mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
+            _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _timeService, _mockOvertimeUtility);
 
-            var holidaysService = new HolidaysService(_holidaysRepository, _mapper, _timeService);
-            _holidayConfirmService = new HolidayConfirmService(emailService.Object, _mapper, _holidaysRepository,
-                                                               _employeesRepository, clientsRepository, holidaysService, 
-                                                               _timeService, docxGeneratorService.Object, _employeeHolidaysConfirmationUpdater);
+            var holidaysService = new HolidaysService(_holidaysRepository, _mapper, _timeService, _mockOvertimeUtility);
+            _holidayConfirmService = new HolidayConfirmService(mockEmailService.Object, _mapper, _holidaysRepository,
+                                                               _employeesRepository, clientsRepository, holidaysService,
+                                                               _timeService, mockDocxGeneratorService.Object, _mockOvertimeUtility, 
+                                                               _employeeHolidaysConfirmationUpdater);
         }
 
         [Theory]
@@ -113,7 +115,7 @@ namespace Tests
             var holiday = await _holidaysRepository.GetById(holidayId);
             var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
 
-            var expected = initial - holiday.OvertimeHours;
+            var expected = initial - _mockOvertimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
 
             await _employeeHolidaysConfirmationUpdater.UpdateEmployeesOvertime(holidayDto);
 

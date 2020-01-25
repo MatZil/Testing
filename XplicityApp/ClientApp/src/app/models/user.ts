@@ -11,6 +11,8 @@ export class User {
     freeWorkDays: number;
     overtimeHours: number;
     overtimeDays: number;
+    nextOvertimeHours: number;
+    nextOvertimeMinutes: number;
     parentalLeaveLimit: number;
     currentAvailableLeaves: number;
     nextMonthAvailableLeaves: number;
