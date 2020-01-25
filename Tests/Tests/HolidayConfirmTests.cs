@@ -9,6 +9,9 @@ using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Services;
 using XplicityApp.Services.Interfaces;
 using Xunit;
+using Xunit.Abstractions;
+using XplicityApp.Services.Extensions;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 
 namespace Tests
 {
@@ -20,7 +23,8 @@ namespace Tests
         private readonly HolidaysRepository _holidaysRepository;
         private readonly IMapper _mapper;
         private readonly EmployeesRepository _employeesRepository;
-        private readonly TimeService _timeService;
+        private readonly ITimeService _timeService;
+        private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
 
         public HolidayConfirmTests()
         {
@@ -28,20 +32,21 @@ namespace Tests
             setup.Initialize();
             _context = setup.HolidayDbContext;
             _mapper = setup.Mapper;
-            
-            _timeService = new TimeService();
+
+            _timeService = new Mock<TimeService>().Object;
             _holidaysRepository = new HolidaysRepository(_context);
             var userManager = setup.InitializeUserManager();
             _employeesRepository = new EmployeesRepository(_context, userManager);
             IRepository<Client> clientsRepository = new ClientsRepository(_context);
             var emailService = new Mock<IEmailService>();
             var docxGeneratorService = new Mock<IDocxGeneratorService>();
+            _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _timeService);
 
             var holidaysService = new HolidaysService(_holidaysRepository, _mapper, _timeService);
             _holidayConfirmService = new HolidayConfirmService(emailService.Object, _mapper, _holidaysRepository,
-                                                                _employeesRepository, clientsRepository, holidaysService, _timeService, docxGeneratorService.Object);
+                                                               _employeesRepository, clientsRepository, holidaysService, 
+                                                               _timeService, docxGeneratorService.Object, _employeeHolidaysConfirmationUpdater);
         }
-
 
         [Theory]
         [InlineData(1)]
@@ -66,8 +71,6 @@ namespace Tests
         [InlineData(2)]
         public async void When_ConfirmingHoliday_Expect_True(int holidayId)
         {
-            var holiday = await _holidaysRepository.GetById(holidayId);
-
             await _holidayConfirmService.ConfirmHoliday(holidayId);
 
             var updatedHoliday = await _holidaysRepository.GetById(holidayId);
@@ -91,7 +94,7 @@ namespace Tests
             var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
             var expected = initial - workdays + holiday.OvertimeDays;
 
-            _holidayConfirmService.call("UpdateEmployeesWorkdays", holidayDto);
+            await _employeeHolidaysConfirmationUpdater.UpdateEmployeesWorkdays(holidayDto);
 
             employee = await _employeesRepository.GetById(index);
             var actual = employee.FreeWorkDays;
@@ -112,7 +115,7 @@ namespace Tests
 
             var expected = initial - holiday.OvertimeHours;
 
-            _holidayConfirmService.call("UpdateEmployeesOvertime", holidayDto);
+            await _employeeHolidaysConfirmationUpdater.UpdateEmployeesOvertime(holidayDto);
 
             employee = await _employeesRepository.GetById(index);
             var actual = employee.OvertimeHours;
@@ -126,14 +129,14 @@ namespace Tests
         public async void When_UpdatingParentalLeaves_Expect_UpdatesParentalLeaves(int holidayId)
         {
             var holiday = await _holidaysRepository.GetById(holidayId);
-            var holidayDto = _mapper.Map<GetHolidayDto>((Holiday)holiday);
+            var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
 
             var employee = await _employeesRepository.GetById(holidayDto.EmployeeId);
             var initial = new int[2];
             initial[0] = employee.CurrentAvailableLeaves;
             initial[1] = employee.NextMonthAvailableLeaves;
 
-            _holidayConfirmService.call("UpdateParentalLeaves", holidayDto);
+            await _employeeHolidaysConfirmationUpdater.UpdateParentalLeaves(holidayDto);
 
             var final = new int[2];
             final[0] = employee.CurrentAvailableLeaves;

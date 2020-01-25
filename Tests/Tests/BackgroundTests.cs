@@ -9,6 +9,7 @@ using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services;
 using Xunit;
+using XplicityApp.Services.Extensions;
 
 namespace Tests
 {
@@ -18,12 +19,14 @@ namespace Tests
         private readonly EmployeesRepository _employeesRepository;
         private readonly BackgroundService _backgroundService;
         private readonly TimeService _timeService;
+        private readonly EmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
 
         public BackgroundTests()
         {
             var setup = new SetUp();
             setup.Initialize();
             var context = setup.HolidayDbContext;
+            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater();
 
             _timeService = new TimeService();
             new HolidaysRepository(context);
@@ -32,7 +35,8 @@ namespace Tests
 
             var serviceScopeFactory = new Mock<IServiceScopeFactory>().Object;
             var hostingEnvironment = new Mock<IWebHostEnvironment>().Object;
-            _backgroundService = new BackgroundService(_timeService, serviceScopeFactory, hostingEnvironment);
+            _backgroundService = new BackgroundService(_timeService, serviceScopeFactory, hostingEnvironment,
+                                                       _employeeHolidaysBackgroundUpdater);
         }
 
         //[Fact]
@@ -68,9 +72,7 @@ namespace Tests
                 initial[index++] = e.FreeWorkDays;
             }
 
-            Object[] args = { employees, _timeService, _employeesRepository };
-            _backgroundService.call("AddFreeWorkDays", args);
-
+            await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(employees, _timeService, _employeesRepository);
             
             var countTrue = 0;
 
@@ -113,8 +115,7 @@ namespace Tests
                 expected[index++, 1] = e.ParentalLeaveLimit;
             }
 
-            object[] args = { employees, timeService.Object, _employeesRepository };
-            _backgroundService.call("ResetParentalLeaves", args);
+            await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(employees, timeService.Object, _employeesRepository);
 
             var countTrue = 0;
             var actual = new int[employees.Count, 2];
