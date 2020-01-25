@@ -9,6 +9,7 @@ using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services;
 using Xunit;
+using XplicityApp.Services.Extensions;
 
 namespace Tests
 {
@@ -18,12 +19,14 @@ namespace Tests
         private readonly EmployeesRepository _employeesRepository;
         private readonly BackgroundService _backgroundService;
         private readonly ITimeService _mockTimeService;
+        private readonly EmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
 
         public BackgroundTests()
         {
             var setup = new SetUp();
             setup.Initialize();
             var context = setup.HolidayDbContext;
+            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater();
 
             _mockTimeService = new Mock<ITimeService>().Object;
             new HolidaysRepository(context);
@@ -32,7 +35,8 @@ namespace Tests
 
             var mockServiceScopeFactory = new Mock<IServiceScopeFactory>().Object;
             var mockHostingEnvironment = new Mock<IWebHostEnvironment>().Object;
-            _backgroundService = new BackgroundService(_mockTimeService, mockServiceScopeFactory, mockHostingEnvironment);
+            _backgroundService = new BackgroundService(_mockTimeService, mockServiceScopeFactory, mockHostingEnvironment, 
+                                                       _employeeHolidaysBackgroundUpdater);
         }
 
         //[Fact]
@@ -68,9 +72,7 @@ namespace Tests
                 initial[index++] = e.FreeWorkDays;
             }
 
-            Object[] args = { employees, _mockTimeService, _employeesRepository };
-            _backgroundService.call("AddFreeWorkDays", args);
-
+            await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(employees, _mockTimeService, _employeesRepository);
             
             var countTrue = 0;
 
@@ -102,8 +104,8 @@ namespace Tests
         {
             var employees = await _employeesRepository.GetAll();
 
-            var timeService = new Mock<ITimeService>();
-            timeService.Setup(m => m.GetCurrentTime()).Returns(new DateTime(2019,01,01));
+            var mockTimeService = new Mock<ITimeService>();
+            mockTimeService.Setup(m => m.GetCurrentTime()).Returns(new DateTime(2019,01,01));
 
             var expected = new int[employees.Count, 2];
             var index = 0;
@@ -113,8 +115,7 @@ namespace Tests
                 expected[index++, 1] = e.ParentalLeaveLimit;
             }
 
-            object[] args = { employees, timeService.Object, _employeesRepository };
-            _backgroundService.call("ResetParentalLeaves", args);
+            await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(employees, mockTimeService.Object, _employeesRepository);
 
             var countTrue = 0;
             var actual = new int[employees.Count, 2];

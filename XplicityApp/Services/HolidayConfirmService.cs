@@ -9,6 +9,7 @@ using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.EntityBehavior;
 using XplicityApp.Infrastructure.Static_Files;
 using XplicityApp.Services.Interfaces;
+using XplicityApp.Services.Extensions.Interfaces;
 using XplicityApp.Infrastructure.Enums;
 
 namespace XplicityApp.Services
@@ -23,11 +24,13 @@ namespace XplicityApp.Services
         private readonly IRepository<Client> _repositoryClients;
         private readonly IHolidaysRepository _repositoryHolidays;
         private readonly IDocxGeneratorService _docxGeneratorService;
+        private readonly IEmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
         private readonly IOvertimeUtility _overtimeUtility;
 
         public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays,
-                                     IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients, IHolidaysService holidaysService,
-                                     ITimeService timeService, IDocxGeneratorService docxGeneratorService, IOvertimeUtility overtimeUtility)
+                                     IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
+                                     IHolidaysService holidaysService, ITimeService timeService, IDocxGeneratorService docxGeneratorService,
+                                     IOvertimeUtility overtimeUtility, IEmployeeHolidaysConfirmationUpdater employeeHolidaysConfirmationUpdater)
         {
             _emailService = emailService;
             _mapper = mapper;
@@ -38,6 +41,7 @@ namespace XplicityApp.Services
             _timeService = timeService;
             _docxGeneratorService = docxGeneratorService;
             _overtimeUtility = overtimeUtility;
+            _employeeHolidaysConfirmationUpdater = employeeHolidaysConfirmationUpdater;
         }
 
         public async Task<bool> RequestClientApproval(int holidayId)
@@ -57,7 +61,6 @@ namespace XplicityApp.Services
 
             return true;
         }
-
 
         public async Task<bool> RequestAdminApproval(int holidayId, string clientStatus)
         {
@@ -79,58 +82,15 @@ namespace XplicityApp.Services
 
             if (getHolidayDto.Type == HolidayType.Parental)
             {
-                await UpdateParentalLeaves(getHolidayDto);
+                await _employeeHolidaysConfirmationUpdater.UpdateParentalLeaves(getHolidayDto);
             }
             else if (getHolidayDto.Type == HolidayType.Annual && getHolidayDto.Paid)
             {
-                await UpdateEmployeesWorkdays(getHolidayDto);
-                await UpdateEmployeesOvertime(getHolidayDto);
+                await _employeeHolidaysConfirmationUpdater.UpdateEmployeesWorkdays(getHolidayDto);
+                await _employeeHolidaysConfirmationUpdater.UpdateEmployeesOvertime(getHolidayDto);
             }
         }
 
-        private async Task UpdateEmployeesWorkdays(GetHolidayDto holidayDto)
-        {
-            var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
-            workdays -= holidayDto.OvertimeDays;
-            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
-            employee.FreeWorkDays -= workdays;
-            await _repositoryEmployees.Update(employee);
-        }
-
-        private async Task UpdateEmployeesOvertime(GetHolidayDto holidayDto)
-        {
-            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
-            var requestedOvertimeHours = _overtimeUtility.ConvertOvertimeDaysToHours(holidayDto.OvertimeDays);
-            employee.OvertimeHours -= requestedOvertimeHours;
-            await _repositoryEmployees.Update(employee);
-        }
-
-        private async Task UpdateParentalLeaves(GetHolidayDto holidayDto)
-        {
-            var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
-            var leaveTime = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
-            var currentTime = _timeService.GetCurrentTime();
-
-            if (holidayDto.FromInclusive.Month != holidayDto.ToExclusive.AddDays(-1).Month)
-            {
-                var leaveTimeCurrentMonth = _timeService.GetWorkDays(holidayDto.FromInclusive,
-                                        new DateTime(holidayDto.FromInclusive.AddMonths(1).Year, holidayDto.FromInclusive.AddMonths(1).Month, 1));
-
-                var leaveTimeNextMonth = leaveTime - leaveTimeCurrentMonth;
-                employee.CurrentAvailableLeaves -= leaveTimeCurrentMonth;
-                employee.NextMonthAvailableLeaves -= leaveTimeNextMonth;
-            }
-            else if (holidayDto.FromInclusive.Month == currentTime.Month)
-            {
-                employee.CurrentAvailableLeaves -= leaveTime;
-            }
-            else
-            {
-                employee.NextMonthAvailableLeaves -= leaveTime;
-            }
-
-            await _repositoryEmployees.Update(employee);
-        }
 
         public async Task ValidateHolidayConfirmationReadiness(int id)
         {
