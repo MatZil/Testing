@@ -37,7 +37,7 @@
                                 </mat-error>
                             </mat-select>
                         </mat-form-field>
-                        <mat-form-field *ngIf="selectedType == 0 && requestHolidays.paid">
+                        <mat-form-field *ngIf="shouldDisplayOvertimeInput()">
                                 <input matInput [(ngModel)]="requestHolidays.overtimeDays" type="number" min="0" max={{currentUser.overtimeDays}} 
                                     name="overtimeHours" placeholder="Overtime days" #nameInput="ngModel">
                         </mat-form-field>
