@@ -28,7 +28,7 @@ export class EmployeesTableComponent implements OnInit {
   formDataUsersNoId: Updateuser;
   newUser: Newuser = new Newuser();
   employeeStatus = EmployeeStatus;
-  selected: any;
+  currentEmployeeStatus: any;
   employeeIdForEquipment: number;
 
   clients: Client[] = [];
@@ -259,14 +259,10 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   setSelectedUserStatus() {
-    if (this.formDataUsers.status === EmployeeStatus.Former) {
-      this.selected = 0;
-    } else if (this.formDataUsers.status === EmployeeStatus.Current) {
-      this.selected = 1;
-    }
+    this.currentEmployeeStatus = this.formDataUsers.status;
   }
 
   isStatusChanged() {
-    return this.selected !== this.formDataUsers.status ? true : false;
+    return this.currentEmployeeStatus !== this.formDataUsers.status ? true : false;
   }
 }

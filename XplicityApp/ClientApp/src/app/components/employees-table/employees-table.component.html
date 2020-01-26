@@ -348,7 +348,7 @@
               <div>
                 <mat-form-field>
                   <mat-select [(ngModel)]="formDataUsersNoId.status" name="status"
-                              placeholder="Employee status" required #statusInput="ngModel" [(value)]="selected"
+                              placeholder="Employee status" required #statusInput="ngModel" [(value)]="currentEmployeeStatus"
                               [disabled]="formDataUsers.id === getCurrentUserId()">
                     <mat-option [value]="0">
                       Former employee
