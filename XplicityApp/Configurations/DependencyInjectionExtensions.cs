@@ -11,6 +11,8 @@ using XplicityApp.Services;
 using XplicityApp.Services.Interfaces;
 using XplicityApp.Services.Extensions;
 using XplicityApp.Services.Extensions.Interfaces;
+using XplicityApp.Services.BackgroundFunctions.Interfaces;
+using XplicityApp.Services.BackgroundFunctions;
 
 namespace XplicityApp.Configurations
 {
@@ -60,7 +62,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<IInventoryItemService, InventoryItemService>()
                 .AddScoped<IInventoryCategoryService, InventoryCategoryService>()
                 .AddScoped<IBackgroundService, BackgroundService>()
-                .AddHostedService<DailyTaskHostedService>();
+                .AddHostedService<TimedDailyTaskHostedService>();
         }
     }
 }

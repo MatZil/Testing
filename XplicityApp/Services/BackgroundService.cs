@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
-using XplicityApp.Services.Extensions.Interfaces;
+using XplicityApp.Services.BackgroundFunctions.Interfaces;
 using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Services
@@ -20,11 +21,12 @@ namespace XplicityApp.Services
         private readonly IEmailService _emailService;
         private readonly IHolidayInfoService _holidayInfoService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ILogger<BackgroundService> _logger;
 
         public BackgroundService(ITimeService timeService, IEmployeeHolidaysBackgroundUpdater employeeHolidaysBackgroundUpdater,
                             IEmployeeRepository employeeRepository, IHolidaysRepository holidaysRepository,
                             IEmailService emailService, IHolidayInfoService holidayInfoService,
-                            IWebHostEnvironment webHostEnvironment)
+                            IWebHostEnvironment webHostEnvironment, ILogger<BackgroundService> logger)
         {
             _timeService = timeService;
             _employeeHolidaysBackgroundUpdater = employeeHolidaysBackgroundUpdater;
@@ -33,18 +35,25 @@ namespace XplicityApp.Services
             _emailService = emailService;
             _holidayInfoService = holidayInfoService;
             _webHostEnvironment = webHostEnvironment;
+            _logger = logger;
         }
         public async Task DoBackgroundTasks()
         {
+            _logger.LogInformation("Background tasks were initiated at " + _timeService.GetCurrentTime());
+
             await SendHolidayReports();
 
             await BroadcastCoworkersAbsences();
 
             await BroadcastCoworkersBirthdays();
 
-            await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(_timeService, _employeeRepository);
+            var allEmployees = await _employeeRepository.GetAll();
 
-            await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(_timeService, _employeeRepository);
+            await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(allEmployees);
+
+            await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(allEmployees);
+
+            _logger.LogInformation("Background tasks ended at " + _timeService.GetCurrentTime());
         }
 
         private DateTime GetCurrentDateTime()
@@ -65,53 +74,80 @@ namespace XplicityApp.Services
 
         private async Task SendHolidayReports()
         {
+            _logger.LogInformation("SendHolidayReports() was initiated at " + _timeService.GetCurrentTime());
+
             var currentTime = GetCurrentDateTime();
 
             if (currentTime.Month != currentTime.AddDays(1).Month)
             {
-                var allHolidays = await _holidaysRepository.GetAll();
-                var currentMonthHolidays = allHolidays.Where(h =>
-                                                                h.Status == HolidayStatus.Confirmed &&
-                                                                h.FromInclusive.Year == currentTime.Year &&
-                                                                h.FromInclusive.Month == currentTime.Month
-                                                            ).ToList();
+                try
+                {
+                    var allHolidays = await _holidaysRepository.GetAll();
+                    var currentMonthHolidays = allHolidays.Where(h =>
+                                                                    h.Status == HolidayStatus.Confirmed &&
+                                                                    h.FromInclusive.Year == currentTime.Year &&
+                                                                    h.FromInclusive.Month == currentTime.Month
+                                                                ).ToList();
 
-                var holidaysWithClients = await _holidayInfoService.GetClientsAndHolidays(currentMonthHolidays);
-                var admins = await _employeeRepository.GetAllAdmins();
+                    var holidaysWithClients = await _holidayInfoService.GetClientsAndHolidays(currentMonthHolidays);
+                    var admins = await _employeeRepository.GetAllAdmins();
 
-                await _emailService.SendThisMonthsHolidayInfo(admins, holidaysWithClients);
+                    await _emailService.SendThisMonthsHolidayInfo(admins, holidaysWithClients);
+                } catch (Exception exception)
+                {
+                    _logger.LogInformation(exception.ToString() + " occurred in SendHolidayReports() at " + _timeService.GetCurrentTime());
+                }
             }
+
+            _logger.LogInformation("SendHolidayReports() ended at " + _timeService.GetCurrentTime());
         }
 
         private async Task BroadcastCoworkersAbsences()
         {
-            var currentTime = GetCurrentDateTime();
-            var allEmployees = await _employeeRepository.GetAll();
-            var allHolidays = await _holidaysRepository.GetAll();
-            var nextDayHolidays = allHolidays.Where(holiday =>
-                                                        holiday.Status == HolidayStatus.Confirmed &&
-                                                        holiday.FromInclusive.Date == currentTime.AddDays(1).Date
-                                                    ).ToList();
-
-            if (nextDayHolidays.Count > 0)
+            _logger.LogInformation("BroadcastCoworkersAbsences() was initiated at " + _timeService.GetCurrentTime());
+            try
             {
-                await _emailService.NotifyAllAboutUpcomingAbsences(allEmployees, nextDayHolidays);
+                var currentTime = GetCurrentDateTime();
+                var allEmployees = await _employeeRepository.GetAll();
+                var allHolidays = await _holidaysRepository.GetAll();
+                var nextDayHolidays = allHolidays.Where(holiday =>
+                                                            holiday.Status == HolidayStatus.Confirmed &&
+                                                            holiday.FromInclusive.Date == currentTime.AddDays(1).Date
+                                                        ).ToList();
+
+                if (nextDayHolidays.Count > 0)
+                {
+                    await _emailService.NotifyAllAboutUpcomingAbsences(allEmployees, nextDayHolidays);
+                }
+            } catch (Exception exception)
+            {
+                _logger.LogInformation(exception.ToString() + " occurred in BroadcastCoworkersAbsences at " + _timeService.GetCurrentTime());
             }
+
+            _logger.LogInformation("BroadcastCoworkersAbsences() ended at " + _timeService.GetCurrentTime());
         }
 
         private async Task BroadcastCoworkersBirthdays()
         {
-            var currentTime = GetCurrentDateTime();
-            var allEmployees = await _employeeRepository.GetAll();
-            var employeesWithBirthdays = allEmployees.Where(employee =>
-                                                                employee.BirthdayDate.Month == currentTime.Month &&
-                                                                employee.BirthdayDate.Day == currentTime.Day
-                                                           ).ToList();
-
-            if (employeesWithBirthdays.Count > 0)
+            _logger.LogInformation("BroadcastCoworkersBirthdays() was initiated at " + _timeService.GetCurrentTime());
+            try
             {
-                await _emailService.SendBirthDayReminder(employeesWithBirthdays, allEmployees);
+                var currentTime = GetCurrentDateTime();
+                var allEmployees = await _employeeRepository.GetAll();
+                var employeesWithBirthdays = allEmployees.Where(employee =>
+                                                                    employee.BirthdayDate.Month == currentTime.Month &&
+                                                                    employee.BirthdayDate.Day == currentTime.Day
+                                                               ).ToList();
+
+                if (employeesWithBirthdays.Count > 0)
+                {
+                    await _emailService.SendBirthDayReminder(employeesWithBirthdays, allEmployees);
+                }
+            } catch (Exception exception)
+            {
+                _logger.LogInformation(exception.ToString() + " occurred in BroadcastCoworkersBirthdays() at" + _timeService.GetCurrentTime());
             }
+            _logger.LogInformation("BroadcastCoworkersBirthdays() ended at " + _timeService.GetCurrentTime());
         }
     }
 }

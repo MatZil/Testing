@@ -5,7 +5,8 @@ using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using Xunit;
-using XplicityApp.Services.Extensions;
+using XplicityApp.Services.BackgroundFunctions;
+using Microsoft.Extensions.Logging;
 
 namespace Tests
 {
@@ -21,12 +22,13 @@ namespace Tests
             var setup = new SetUp();
             setup.Initialize();
             var context = setup.HolidayDbContext;
-            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater();
 
             _mockTimeService = new Mock<ITimeService>().Object;
             new HolidaysRepository(context);
             var userManager = setup.InitializeUserManager();
             _employeesRepository = new EmployeesRepository(context, userManager);
+            var mockLogger = new Mock<ILogger<EmployeeHolidaysBackgroundUpdater>>().Object;
+            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater(_mockTimeService, _employeesRepository, mockLogger);
         }
             
         [Fact]
@@ -41,7 +43,7 @@ namespace Tests
                 initial[index++] = e.FreeWorkDays;
             }
 
-            await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(_mockTimeService, _employeesRepository);
+            await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(employees);
             
             var countTrue = 0;
 
@@ -84,7 +86,7 @@ namespace Tests
                 expected[index++, 1] = e.ParentalLeaveLimit;
             }
 
-            await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(mockTimeService.Object, _employeesRepository);
+            await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(employees);
 
             var countTrue = 0;
             var actual = new int[employees.Count, 2];
