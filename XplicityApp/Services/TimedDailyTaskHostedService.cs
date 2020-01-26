@@ -28,7 +28,7 @@ namespace XplicityApp.Services
         {
             _logger.LogInformation(GetType().Name + " has started at " + _timeService.GetCurrentTime());
 
-            _timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
+            _timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromDays(1));
 
             return Task.CompletedTask;
         }
