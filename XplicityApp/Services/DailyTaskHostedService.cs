@@ -6,11 +6,11 @@ using System.Threading;
 
 namespace XplicityApp.Services
 {
-    public class HostedService : Microsoft.Extensions.Hosting.BackgroundService
+    public class DailyTaskHostedService : Microsoft.Extensions.Hosting.BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public HostedService(IServiceProvider serviceProvider)
+        public DailyTaskHostedService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }

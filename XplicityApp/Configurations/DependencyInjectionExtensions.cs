@@ -60,7 +60,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<IInventoryItemService, InventoryItemService>()
                 .AddScoped<IInventoryCategoryService, InventoryCategoryService>()
                 .AddScoped<IBackgroundService, BackgroundService>()
-                .AddHostedService<HostedService>();
+                .AddHostedService<DailyTaskHostedService>();
         }
     }
 }
