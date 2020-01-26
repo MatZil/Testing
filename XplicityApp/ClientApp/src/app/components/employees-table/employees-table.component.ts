@@ -28,7 +28,7 @@ export class EmployeesTableComponent implements OnInit {
   formDataUsersNoId: Updateuser;
   newUser: Newuser = new Newuser();
   employeeStatus = EmployeeStatus;
-  currentEmployeeStatus: any;
+  currentEmployeeStatus: EmployeeStatus;
   employeeIdForEquipment: number;
 
   clients: Client[] = [];
