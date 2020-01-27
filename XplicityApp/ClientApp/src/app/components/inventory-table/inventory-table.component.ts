@@ -50,7 +50,8 @@ export class InventoryTableComponent implements OnInit {
   }
   onCategoryChange() {
     this.input.get('inventoryCategoryId').valueChanges.subscribe(selectedCategoryId => {
-      if (selectedCategoryId !== 4) {
+      const licenseCategoryId = 4;
+      if (selectedCategoryId !== licenseCategoryId) {
         this.input.get('expiryDate').reset();
         this.input.get('expiryDate').disable();
       } else {
@@ -63,7 +64,6 @@ export class InventoryTableComponent implements OnInit {
       this.inventoryService.getEquipmentByEmployeeId(id).subscribe(inventoryItems => {
         this.equipment = inventoryItems;
       });
-      this.selectedEmployee = id;
     } else {
       this.inventoryService.getAllInventoryItems().subscribe(inventoryItems => {
         this.equipment = inventoryItems;
@@ -72,6 +72,7 @@ export class InventoryTableComponent implements OnInit {
   }
   showNewItemModal() {
     this.isVisibleNewItemModal = true;
+    this.selectedEmployee = this.employeeId;
   }
 
   closeNewItemModal() {
@@ -110,6 +111,7 @@ export class InventoryTableComponent implements OnInit {
 
   modify(data) {
     this.input.setValue(data);
+    this.selectedEmployee = this.employeeId;
     this.isModifying = true;
     this.isVisibleNewItemModal = true;
   }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Xplicity_Holidays.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database;
 
 namespace Xplicity_Holidays.Migrations
 {
