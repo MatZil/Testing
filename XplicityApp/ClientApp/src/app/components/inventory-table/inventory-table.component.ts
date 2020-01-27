@@ -37,7 +37,7 @@ export class InventoryTableComponent implements OnInit {
       serialNumber: [null, [Validators.required]],
       price: [null, [Validators.required]],
       purchaseDate: [null, [Validators.required]],
-      expiryDate: [null],
+      expiryDate: [null, [Validators.required]],
       category: [null],
       comment: [null],
       inventoryCategoryId: [null, [Validators.required]],
@@ -46,6 +46,17 @@ export class InventoryTableComponent implements OnInit {
     this.getAllUsers();
     this.getCategoriesList();
     this.refreshTable(this.employeeId);
+    this.onCategoryChange();
+  }
+  onCategoryChange() {
+    this.input.get('inventoryCategoryId').valueChanges.subscribe(selectedCategoryId => {
+      if (selectedCategoryId !== 4) {
+        this.input.get('expiryDate').reset();
+        this.input.get('expiryDate').disable();
+      } else {
+        this.input.get('expiryDate').enable();
+      }
+    });
   }
   refreshTable(id: number) {
     if (id) {
@@ -66,16 +77,16 @@ export class InventoryTableComponent implements OnInit {
   closeNewItemModal() {
     this.isVisibleNewItemModal = false;
     this.isModifying = false;
+    this.input.reset();
   }
 
   saveInventoryItem() {
     if (!this.isModifying) {
-      console.log(this.input.value);
       this.inventoryService.createNewInventoryItem(this.input.value).subscribe(() => {
         this.refreshTable(this.employeeId);
+
       });
     } else {
-      console.log(this.input.value);
       this.inventoryService.updateInventoryItem(this.input.value.id, this.input.value).subscribe(() => {
         this.refreshTable(this.employeeId);
       });
