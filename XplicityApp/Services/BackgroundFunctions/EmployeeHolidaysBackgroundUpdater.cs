@@ -39,7 +39,8 @@ namespace XplicityApp.Services.BackgroundFunctions
                         await _employeeRepository.Update(employee);
                     }
                 }
-            } catch (Exception exception)
+            } 
+            catch (Exception exception)
             {
                 _logger.LogInformation(exception.ToString() + " occurred in AddFreeWorkDays() at " + _timeService.GetCurrentTime());
             }
@@ -61,7 +62,8 @@ namespace XplicityApp.Services.BackgroundFunctions
                         await _employeeRepository.Update(employee);
                     }
                 }
-            } catch (Exception exception)
+            } 
+            catch (Exception exception)
             {
                 _logger.LogInformation(exception.ToString() + " occurred in ResetParentalLeave() at " + _timeService.GetCurrentTime());
             }

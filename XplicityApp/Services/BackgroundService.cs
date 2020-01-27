@@ -93,7 +93,8 @@ namespace XplicityApp.Services
                     var admins = await _employeeRepository.GetAllAdmins();
 
                     await _emailService.SendThisMonthsHolidayInfo(admins, holidaysWithClients);
-                } catch (Exception exception)
+                } 
+                catch (Exception exception)
                 {
                     _logger.LogInformation(exception.ToString() + " occurred in SendHolidayReports() at " + _timeService.GetCurrentTime());
                 }
@@ -115,11 +116,12 @@ namespace XplicityApp.Services
                                                             holiday.FromInclusive.Date == currentTime.AddDays(1).Date
                                                         ).ToList();
 
-                if (nextDayHolidays.Count > 0)
+                if (nextDayHolidays.Any())
                 {
                     await _emailService.NotifyAllAboutUpcomingAbsences(allEmployees, nextDayHolidays);
                 }
-            } catch (Exception exception)
+            } 
+            catch (Exception exception)
             {
                 _logger.LogInformation(exception.ToString() + " occurred in BroadcastCoworkersAbsences at " + _timeService.GetCurrentTime());
             }
@@ -139,11 +141,12 @@ namespace XplicityApp.Services
                                                                     employee.BirthdayDate.Day == currentTime.Day
                                                                ).ToList();
 
-                if (employeesWithBirthdays.Count > 0)
+                if (employeesWithBirthdays.Any())
                 {
                     await _emailService.SendBirthDayReminder(employeesWithBirthdays, allEmployees);
                 }
-            } catch (Exception exception)
+            } 
+            catch (Exception exception)
             {
                 _logger.LogInformation(exception.ToString() + " occurred in BroadcastCoworkersBirthdays() at" + _timeService.GetCurrentTime());
             }
