@@ -4,6 +4,6 @@ namespace XplicityApp.Services.Interfaces
 {
     public interface IBackgroundService
     {
-        Task RunBackgroundServices();
+        Task DoBackgroundTasks();
     }
 }
