@@ -14,7 +14,7 @@
     },
     "License": {
       "Name": "Software license",
-      "Deprecation": null
+      "Deprecation": "0"
     }
   }
 }

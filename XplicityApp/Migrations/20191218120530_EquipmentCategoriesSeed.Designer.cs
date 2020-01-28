@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XplicityApp.Infrastructure.Database;
 
-namespace Xplicity_Holidays.Migrations
+namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
     [Migration("20191218120530_EquipmentCategoriesSeed")]

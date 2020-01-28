@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Xplicity_Holidays.Migrations
+namespace XplicityApp.Migrations
 {
     public partial class EquipmentCategoriesSeed : Migration
     {
