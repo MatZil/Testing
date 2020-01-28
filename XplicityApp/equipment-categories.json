@@ -1,0 +1,20 @@
+{
+  "EquipmentCategories": {
+    "Furniture": {
+      "Name": "Furniture",
+      "Deprecation": "6"
+    },
+    "Electronics": {
+      "Name": "Computers and telecommunication equipment",
+      "Deprecation": "3"
+    },
+    "Other": {
+      "Name": "Other equipment",
+      "Deprecation": "4"
+    },
+    "License": {
+      "Name": "Software license",
+      "Deprecation": "0"
+    }
+  }
+}

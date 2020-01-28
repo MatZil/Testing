@@ -37,7 +37,7 @@ export class InventoryTableComponent implements OnInit {
       serialNumber: [null, [Validators.required]],
       price: [null, [Validators.required]],
       purchaseDate: [null, [Validators.required]],
-      expiryDate: [null],
+      expiryDate: [null, [Validators.required]],
       category: [null],
       comment: [null],
       inventoryCategoryId: [null, [Validators.required]],
@@ -46,13 +46,24 @@ export class InventoryTableComponent implements OnInit {
     this.getAllUsers();
     this.getCategoriesList();
     this.refreshTable(this.employeeId);
+    this.onCategoryChange();
+  }
+  onCategoryChange() {
+    this.input.get('inventoryCategoryId').valueChanges.subscribe(selectedCategoryId => {
+      const licenseCategoryId = 4;
+      if (selectedCategoryId !== licenseCategoryId) {
+        this.input.get('expiryDate').reset();
+        this.input.get('expiryDate').disable();
+      } else {
+        this.input.get('expiryDate').enable();
+      }
+    });
   }
   refreshTable(id: number) {
     if (id) {
       this.inventoryService.getEquipmentByEmployeeId(id).subscribe(inventoryItems => {
         this.equipment = inventoryItems;
       });
-      this.selectedEmployee = id;
     } else {
       this.inventoryService.getAllInventoryItems().subscribe(inventoryItems => {
         this.equipment = inventoryItems;
@@ -61,21 +72,22 @@ export class InventoryTableComponent implements OnInit {
   }
   showNewItemModal() {
     this.isVisibleNewItemModal = true;
+    this.selectedEmployee = this.employeeId;
   }
 
   closeNewItemModal() {
     this.isVisibleNewItemModal = false;
     this.isModifying = false;
+    this.input.reset();
   }
 
   saveInventoryItem() {
     if (!this.isModifying) {
-      console.log(this.input.value);
       this.inventoryService.createNewInventoryItem(this.input.value).subscribe(() => {
         this.refreshTable(this.employeeId);
+
       });
     } else {
-      console.log(this.input.value);
       this.inventoryService.updateInventoryItem(this.input.value.id, this.input.value).subscribe(() => {
         this.refreshTable(this.employeeId);
       });
@@ -99,6 +111,7 @@ export class InventoryTableComponent implements OnInit {
 
   modify(data) {
     this.input.setValue(data);
+    this.selectedEmployee = this.employeeId;
     this.isModifying = true;
     this.isVisibleNewItemModal = true;
   }

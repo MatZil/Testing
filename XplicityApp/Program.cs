@@ -16,10 +16,13 @@ namespace XplicityApp
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration(builder => builder.SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("email-templates-settings.json")
-                .Build())
-                .ConfigureLogging(logging => {
+                .ConfigureAppConfiguration(builder => 
+                    builder.SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("email-templates-settings.json")
+                    .AddJsonFile("equipment-categories.json")
+                    .Build())
+                .ConfigureLogging(logging =>
+                {
                     logging.ClearProviders();
                     logging.AddConsole();
                     logging.AddDebug();
