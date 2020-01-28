@@ -11,6 +11,8 @@ using XplicityApp.Services;
 using XplicityApp.Services.Interfaces;
 using XplicityApp.Services.Extensions;
 using XplicityApp.Services.Extensions.Interfaces;
+using XplicityApp.Services.BackgroundFunctions.Interfaces;
+using XplicityApp.Services.BackgroundFunctions;
 
 namespace XplicityApp.Configurations
 {
@@ -54,12 +56,13 @@ namespace XplicityApp.Configurations
                 .AddScoped<IDocxGeneratorService, DocxGeneratorService>()
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IEmailService, EmailService>()
-                .AddScoped<IBackgroundService, BackgroundService>()
                 .AddScoped<IEmailTemplatesService, EmailTemplatesService>()
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IFileService, FileService>()
                 .AddScoped<IInventoryItemService, InventoryItemService>()
-                .AddScoped<IInventoryCategoryService, InventoryCategoryService>();
+                .AddScoped<IInventoryCategoryService, InventoryCategoryService>()
+                .AddScoped<IBackgroundService, BackgroundService>()
+                .AddHostedService<TimedDailyTaskHostedService>();
         }
     }
 }
