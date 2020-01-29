@@ -15,4 +15,6 @@ export class Newuser {
     position: string;
     healthCheckDate: Date;
     status: EmployeeStatus;
+    isManualHolidaysInput: boolean;
+    freeWorkDays: number;
 }
