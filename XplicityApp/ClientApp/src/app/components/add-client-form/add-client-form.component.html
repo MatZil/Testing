@@ -1,0 +1,103 @@
+<form #addClientForm="ngForm" class="client-input-form">
+  <h1 mat-dialog-title>
+    Add new client
+  </h1>
+
+  <mat-dialog-content>
+    <mat-card>
+      <div>
+        <mat-form-field>
+          <input matInput
+                 [(ngModel)]="data.newClient.companyName"
+                 type="text"
+                 name="companyName"
+                 placeholder="Company name"
+                 required
+                 #nameInput="ngModel" />
+          <mat-error *ngIf="
+                nameInput.invalid && (nameInput.dirty || nameInput.touched)
+              "
+                     class="error">
+            Company name cannot be empty.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <input matInput
+                 [(ngModel)]="data.newClient.ownerName"
+                 type="text"
+                 name="ownerName"
+                 placeholder="Owner name"
+                 required
+                 #nameInput="ngModel" />
+          <mat-error *ngIf="
+                nameInput.invalid && (nameInput.dirty || nameInput.touched)
+              "
+                     class="error">
+            Owner name cannot be empty.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <input matInput
+                 [(ngModel)]="data.newClient.ownerSurname"
+                 type="text"
+                 name="ownerSurname"
+                 placeholder="Owner surname"
+                 required
+                 #nameInput="ngModel" />
+          <mat-error *ngIf="
+                nameInput.invalid && (nameInput.dirty || nameInput.touched)
+              "
+                     class="error">
+            Owner surname cannot be empty.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <input matInput
+                 [(ngModel)]="data.newClient.ownerEmail"
+                 type="email"
+                 name="ownerEmail"
+                 placeholder="Owner email"
+                 required
+                 #nameInput="ngModel"
+                 pattern="[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}" />
+          <mat-error *ngIf="
+                nameInput.invalid && (nameInput.dirty || nameInput.touched)
+              "
+                     class="error">
+            Owner email cannot be empty.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <input matInput
+                 [(ngModel)]="data.newClient.ownerPhone"
+                 type="text"
+                 name="ownerPhone"
+                 placeholder="Owner phone"
+                 required
+                 #nameInput="ngModel" />
+          <mat-error *ngIf="
+                nameInput.invalid && (nameInput.dirty || nameInput.touched)
+              "
+                     class="error">
+            Owner phone cannot be empty.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </mat-card>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-flat-button mat-button-base [mat-dialog-close]>Cancel</button>
+    <button mat-flat-button color="primary" [mat-dialog-close]="data.newClient" [disabled]="!addClientForm.form.valid">
+      Add client
+    </button>
+  </mat-dialog-actions>
+</form>

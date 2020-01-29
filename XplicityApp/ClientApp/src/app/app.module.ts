@@ -24,7 +24,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatDatepickerModule, MatNativeDateModule, MatRadioModule, MatCheckboxModule } from '@angular/material';
+import {
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatRadioModule,
+  MatCheckboxModule
+} from '@angular/material';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
@@ -42,6 +47,8 @@ import { UploadComponent } from './components/upload/upload.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { InventoryTableComponent } from './components/inventory-table/inventory-table.component';
 import { OvertimeDisplayComponent } from './components/overtime-display/overtime-display.component';
+import { AddClientFormComponent } from './components/add-client-form/add-client-form.component';
+import { EditClientFormComponent } from './components/edit-client-form/edit-client-form.component';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -63,7 +70,9 @@ export function tokenGetter() {
     EmailtemplatesTableComponent,
     UploadComponent,
     OvertimeDisplayComponent,
-    InventoryTableComponent
+    InventoryTableComponent,
+    AddClientFormComponent,
+    EditClientFormComponent
   ],
   imports: [
     BrowserModule,
@@ -99,11 +108,16 @@ export function tokenGetter() {
       }
     })
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US },
-  [RoleGuardService],
-  { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-  { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
+  entryComponents: [
+    EditClientFormComponent,
+    AddClientFormComponent
+  ],
+  providers: [
+    { provide: NZ_I18N, useValue: en_US },
+    [RoleGuardService],
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}
