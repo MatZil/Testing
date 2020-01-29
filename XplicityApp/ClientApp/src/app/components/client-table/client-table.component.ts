@@ -14,8 +14,7 @@ export interface AddModalClient {
 }
 
 export interface EditModalClient {
-  formData: Newclient,
-  isDelete: false
+  editClient: Newclient
 }
 
 @Component({
