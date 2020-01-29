@@ -14,7 +14,8 @@ export interface AddModalClient {
 }
 
 export interface EditModalClient {
-  formData: Newclient
+  formData: Newclient,
+  isDelete: false
 }
 
 @Component({
@@ -139,9 +140,9 @@ export class ClientTableComponent implements OnInit {
 
     });
     dialogRef.afterClosed().subscribe(editClient => {
-      if (editClient) {
+      if (typeof (editClient) === "object") {
         this.editClient(editClient, client.id);
-      } else {
+      } else if (typeof (editClient) === "boolean") {
         this.showDeleteConfirm(client.id);
       }
     })
@@ -153,7 +154,7 @@ export class ClientTableComponent implements OnInit {
       data: {
         newClient: this.newClient
       }
-   });
+    });
 
     dialogRef.afterClosed().subscribe(newClient => {
       if (newClient) {
@@ -167,7 +168,6 @@ export class ClientTableComponent implements OnInit {
   editClient(client: Newclient, id: number) {
     this.clientService.editClient(client, id).subscribe(() => this.refreshTable()
     );
-  
   }
 
   addNewClient(client: Newclient) {

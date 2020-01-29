@@ -54,8 +54,8 @@
 
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button mat-flat-button mat-button-base  [mat-dialog-close]>Cancel</button>
-    <button mat-flat-button color="warn" (click)="closeModal(null)">Delete</button>
+    <button mat-flat-button mat-button-base [mat-dialog-close]>Cancel</button>
+    <button mat-flat-button color="warn" (click)="closeModal(true)">Delete</button>
     <button mat-flat-button color="primary" (click)="closeModal(data.editClient)" [disabled]="editClientForm.form.invalid">
       Confirm edit
     </button>
