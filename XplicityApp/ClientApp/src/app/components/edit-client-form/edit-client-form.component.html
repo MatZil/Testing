@@ -1,4 +1,4 @@
-<form #editClientForm="ngForm" class="client-input-form">
+<form #editClientForm="ngForm">
   <h1 mat-dialog-title>
     Edit client
   </h1>
@@ -6,7 +6,7 @@
     <mat-card>
       <div>
         <mat-form-field>
-          <input matInput [(ngModel)]="data.editClient.companyName" type="text" name="companyName"
+          <input matInput [(ngModel)]="data.clientToEdit.companyName" type="text" name="companyName"
                  placeholder="Company name" required #nameInput="ngModel">
           <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
             Company name cannot be empty.
@@ -15,7 +15,7 @@
       </div>
       <div>
         <mat-form-field>
-          <input matInput [(ngModel)]="data.editClient.ownerName" type="text" name="ownerName"
+          <input matInput [(ngModel)]="data.clientToEdit.ownerName" type="text" name="ownerName"
                  placeholder="Owner name" required #nameInput="ngModel">
           <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
             Owner name cannot be empty.
@@ -24,7 +24,7 @@
       </div>
       <div>
         <mat-form-field>
-          <input matInput [(ngModel)]="data.editClient.ownerSurname" type="text" name="ownerSurname"
+          <input matInput [(ngModel)]="data.clientToEdit.ownerSurname" type="text" name="ownerSurname"
                  placeholder="Owner surname" required #nameInput="ngModel">
           <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
             Owner surname cannot be empty.
@@ -33,9 +33,8 @@
       </div>
       <div>
         <mat-form-field>
-          <input matInput [(ngModel)]="data.editClient.ownerEmail" type="email" name="ownerEmail"
-                 placeholder="Owner email" required #nameInput="ngModel"
-                 pattern="[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}">
+          <input matInput [(ngModel)]="data.clientToEdit.ownerEmail" type="email" name="ownerEmail"
+                 placeholder="Owner email" required #nameInput="ngModel">
           <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
             Owner email is invalid.
           </mat-error>
@@ -43,7 +42,7 @@
       </div>
       <div>
         <mat-form-field>
-          <input matInput [(ngModel)]="data.editClient.ownerPhone" type="text" name="ownerPhone"
+          <input matInput [(ngModel)]="data.clientToEdit.ownerPhone" type="text" name="ownerPhone"
                  placeholder="Owner phone" required #nameInput="ngModel">
           <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
             Owner phone cannot be empty.
@@ -56,7 +55,7 @@
   <mat-dialog-actions align="end">
     <button mat-flat-button mat-button-base [mat-dialog-close]>Cancel</button>
     <button mat-flat-button color="warn" (click)="closeModal(true)">Delete</button>
-    <button mat-flat-button color="primary" (click)="closeModal(data.editClient)" [disabled]="editClientForm.form.invalid">
+    <button mat-flat-button color="primary" (click)="closeModal(data.clientToEdit)" [disabled]="editClientForm.form.invalid">
       Confirm edit
     </button>
   </mat-dialog-actions>

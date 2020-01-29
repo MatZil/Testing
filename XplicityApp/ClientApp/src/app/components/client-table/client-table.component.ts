@@ -14,7 +14,7 @@ export interface AddModalClient {
 }
 
 export interface EditModalClient {
-  editClient: Newclient
+  clientToEdit : Newclient
 }
 
 @Component({
@@ -24,14 +24,14 @@ export interface EditModalClient {
 })
 
 export class ClientTableComponent implements OnInit {
-  client: Client[] = [];
+  clients: Client[] = [];
   formData: Client;
   formDataNoId: Newclient;
   newClient: Newclient = new Newclient();
 
   confirmDeleteModal: NzModalRef;
 
-  searchValue = "";
+  searchValue = '';
   listOfSearchAddress: string[] = [];
   sortName: string | null = null;
   sortValue: string | null = null;
@@ -50,14 +50,14 @@ export class ClientTableComponent implements OnInit {
 
   refreshTable(): void {
     this.clientService.getClient().subscribe(clients => {
-      this.client = clients;
-      this.listOfData = [...this.client];
+      this.clients = clients;
+      this.listOfData = [...this.clients];
     });
   }
 
   updateField() {
     this.clientService.getClient().subscribe(client => {
-      this.client = client;
+      this.clients = client;
     });
   }
 
@@ -87,7 +87,7 @@ export class ClientTableComponent implements OnInit {
   }
 
   reset(): void {
-    this.searchValue = "";
+    this.searchValue = '';
     this.search();
   }
 
@@ -116,7 +116,7 @@ export class ClientTableComponent implements OnInit {
         ownerPhone: string;
       }) => filterFunc(item)
     );
-    this.client = data.sort((a, b) =>
+    this.clients = data.sort((a, b) =>
       this.sortValue === "ascend"
         ? // tslint:disable-next-line:no-non-null-assertion
         a[this.sortName!] > b[this.sortName!]
@@ -134,7 +134,7 @@ export class ClientTableComponent implements OnInit {
     const dialogRef = this.dialog.open(EditClientFormComponent, {
       width: '550px',
       data: {
-        editClient: this.formDataNoId
+        clientToEdit : this.formDataNoId
       }
 
     });

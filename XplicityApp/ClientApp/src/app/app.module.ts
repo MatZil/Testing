@@ -115,7 +115,8 @@ export function tokenGetter() {
   entryComponents: [
     EditClientFormComponent,
     AddClientFormComponent,
-    AddEmployeeFormComponent, EditEmployeeFormComponent
+    AddEmployeeFormComponent,
+    EditEmployeeFormComponent
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
@@ -125,4 +126,4 @@ export function tokenGetter() {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

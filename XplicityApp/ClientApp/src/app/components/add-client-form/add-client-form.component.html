@@ -1,7 +1,5 @@
-<form #addClientForm="ngForm" class="client-input-form">
-  <h1 mat-dialog-title>
-    Add new client
-  </h1>
+<form #addClientForm="ngForm">
+  <h1 mat-dialog-title>Add new client</h1>
 
   <mat-dialog-content>
     <mat-card>
@@ -14,10 +12,7 @@
                  placeholder="Company name"
                  required
                  #nameInput="ngModel" />
-          <mat-error *ngIf="
-                nameInput.invalid && (nameInput.dirty || nameInput.touched)
-              "
-                     class="error">
+          <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
             Company name cannot be empty.
           </mat-error>
         </mat-form-field>
@@ -31,10 +26,7 @@
                  placeholder="Owner name"
                  required
                  #nameInput="ngModel" />
-          <mat-error *ngIf="
-                nameInput.invalid && (nameInput.dirty || nameInput.touched)
-              "
-                     class="error">
+          <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
             Owner name cannot be empty.
           </mat-error>
         </mat-form-field>
@@ -48,10 +40,7 @@
                  placeholder="Owner surname"
                  required
                  #nameInput="ngModel" />
-          <mat-error *ngIf="
-                nameInput.invalid && (nameInput.dirty || nameInput.touched)
-              "
-                     class="error">
+          <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
             Owner surname cannot be empty.
           </mat-error>
         </mat-form-field>
@@ -64,12 +53,8 @@
                  name="ownerEmail"
                  placeholder="Owner email"
                  required
-                 #nameInput="ngModel"
-                 pattern="[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}" />
-          <mat-error *ngIf="
-                nameInput.invalid && (nameInput.dirty || nameInput.touched)
-              "
-                     class="error">
+                 #nameInput="ngModel" />
+          <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
             Owner email cannot be empty.
           </mat-error>
         </mat-form-field>
@@ -83,10 +68,7 @@
                  placeholder="Owner phone"
                  required
                  #nameInput="ngModel" />
-          <mat-error *ngIf="
-                nameInput.invalid && (nameInput.dirty || nameInput.touched)
-              "
-                     class="error">
+          <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
             Owner phone cannot be empty.
           </mat-error>
         </mat-form-field>

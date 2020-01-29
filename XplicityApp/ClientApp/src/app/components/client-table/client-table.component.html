@@ -1,6 +1,4 @@
-<button nz-button nzType="primary" (click)="openAddForm()">
-  Add new client
-</button>
+<button nz-button nzType="primary" (click)="openAddForm()">Add new client</button>
 
 <nz-table #basicTable [nzData]="client">
   <thead>
@@ -33,13 +31,7 @@
       <td>{{ clien.ownerEmail }}</td>
       <td>{{ clien.ownerPhone }}</td>
       <td>
-        <button nz-button
-                nzType="primary"
-                (click)="
-            openEditForm(clien)
-          ">
-          Edit
-        </button>
+        <button nz-button nzType="primary" (click)="openEditForm(clien)">Edit</button>
       </td>
     </tr>
   </tbody>
