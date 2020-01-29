@@ -14,4 +14,5 @@ export class Updateuser {
     position: string;
     healthCheckDate: Date;
     status: EmployeeStatus;
+    freeWorkDays: number;
 }

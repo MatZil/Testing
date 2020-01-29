@@ -9,11 +9,26 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
 
-import { NgForm } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { Role } from '../../models/role';
 import { EmployeeStatus } from '../../models/employee-status.enum';
+import { MatDialog } from '@angular/material';
+import { AddEmployeeFormComponent } from '../add-employee-form/add-employee-form.component';
+import { EditEmployeeFormComponent } from '../edit-employee-form/edit-employee-form.component';
+
+export interface AddModalData {
+  newUser: Newuser;
+  roles: Role[];
+  clients: Client[];
+}
+
+export interface EditModalData {
+  userToUpdate: Updateuser;
+  roles: Role[];
+  clients: Client[];
+  isEditingSelf: boolean;
+}
 
 @Component({
   selector: 'app-employees-table',
@@ -23,20 +38,16 @@ import { EmployeeStatus } from '../../models/employee-status.enum';
 export class EmployeesTableComponent implements OnInit {
   users: User[];
   roles: Role[];
-  roleName: string;
-  formDataUsers: User;
-  formDataUsersNoId: Updateuser;
+
+  userToUpdate: Updateuser;
   newUser: Newuser = new Newuser();
+
   employeeStatus = EmployeeStatus;
-  currentEmployeeStatus: EmployeeStatus;
+
   employeeIdForEquipment: number;
 
   clients: Client[] = [];
-  oneClient: Client;
 
-  isVisibleCreator = false;
-  isConfirmLoadingCreator = false;
-  isVisibleEditor = false;
   isVisibleEquipmentModal = false;
 
   confirmDeleteModal: NzModalRef;
@@ -52,8 +63,9 @@ export class EmployeesTableComponent implements OnInit {
     private clientService: ClientService,
     private modal: NzModalService,
     private notification: NzNotificationService,
-    private authenticationService: AuthenticationService
-  ) {}
+    private authenticationService: AuthenticationService,
+    public dialog: MatDialog
+  ) { }
 
   ngOnInit() {
     this.refreshTable();
@@ -76,95 +88,82 @@ export class EmployeesTableComponent implements OnInit {
     });
   }
 
-  onAddButtonClick(newUser: Newuser) {
-    newUser.status = this.employeeStatus.Current;
+  registerUser(newUser: Newuser) {
+    if (newUser.clientId === 0) {
+      newUser.clientId = null;
+    }
+    newUser.status = EmployeeStatus.Current;
     this.userService.registerUser(newUser).subscribe(() => {
       this.refreshTable();
-      this.handleOkCreator();
     }, error => {
       this.showUnexpectedError();
     });
   }
 
-  getCurrentUserId() {
-    return this.authenticationService.getUserId();
-  }
-
-  onDeleteButtonClick(id: number) {
+  deleteUserById(id: number) {
     this.userService.deleteUser(id).subscribe(() => {
       this.refreshTable();
     });
   }
 
-  onEditButtonClick(user: User) {
-    this.userService.getUser(user.id).subscribe();
-  }
-
-  onEditConfirmButtonClick(user: Updateuser, id: number) {
+  editUser(user: Updateuser, id: number) {
+    if (user.clientId === 0) {
+      user.clientId = null;
+    }
     this.userService.editUser(user, id).subscribe(() => {
       this.refreshTable();
-      this.handleCancelEditor();
     }, error => {
       this.showUnexpectedError();
     });
   }
 
-  deleteEmployeeOnModalClose(id: number) {
-    this.onDeleteButtonClick(id);
-    this.handleCancelEditor();
-  }
-
-  showDeleteConfirm(id: number): void {
+  showDeleteConfirm(userToDelete: User): void {
     this.confirmDeleteModal = this.modal.confirm({
-      nzTitle: 'Do you want to delete this section?',
-      nzContent: 'When clicked the OK button this section will be deleted',
-      nzOnOk: () => this.deleteEmployeeOnModalClose(id)
+      nzTitle: 'Are you sure?',
+      nzContent: `If you confirm, ${userToDelete.name} ${userToDelete.surname} will be permanently deleted.`,
+      nzOnOk: () => this.deleteUserById(userToDelete.id)
     });
   }
 
-  showStatusConfirm() {
-    this.confirmDeleteModal = this.modal.confirm({
-      nzTitle: 'Do you want to change status of this user?',
-      nzContent: 'When clicked the OK button the status will be changed',
-      nzOnOk: () => this.onEditConfirmButtonClick(this.formDataUsersNoId, this.formDataUsers.id)
+  openAddForm(): void {
+    const dialogRef = this.dialog.open(AddEmployeeFormComponent, {
+      width: '550px',
+      data: {
+        newUser: this.newUser,
+        roles: this.roles,
+        clients: this.clients
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(newUser => {
+      if (newUser) {
+        this.registerUser(newUser);
+        this.newUser = new Newuser();
+      }
     });
   }
 
-  onSubmit(form: NgForm) {
-      form.resetForm();
-      setTimeout(() => 0);
+  openEditForm(user: User): void {
+    this.userToUpdate = Object.assign({}, user);
+    const dialogRef = this.dialog.open(EditEmployeeFormComponent, {
+      width: '550px',
+      data: {
+        userToUpdate: this.userToUpdate,
+        roles: this.roles,
+        clients: this.clients,
+        isEditingSelf: user.id === this.getCurrentUserId()
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(userToUpdate => {
+      if (userToUpdate) {
+        this.editUser(userToUpdate, user.id);
+      }
+    });
   }
 
-  populateUserForm(user: User) {
-    this.formDataUsers = Object.assign({}, user);
-  }
-
-  populateUserFormNoId(user: Newuser) {
-    this.formDataUsersNoId = Object.assign({}, user);
-  }
-
-  showModalCreator(): void {
-    this.isVisibleCreator = true;
-  }
-
-  handleOkCreator(): void {
-    this.isConfirmLoadingCreator = true;
-    setTimeout(() => {
-      this.isVisibleCreator = false;
-      this.isConfirmLoadingCreator = false;
-    }, 1000);
-  }
-
-  handleCancelCreator(): void {
-    this.isVisibleCreator = false;
-  }
-
-  showModalEditor(): void {
-    this.isVisibleEditor = true;
-  }
-
-  handleCancelEditor(): void {
-    this.isVisibleEditor = false;
+  getCurrentUserId() {
+    return this.authenticationService.getUserId();
   }
 
   getClientName(id: number) {
@@ -189,6 +188,7 @@ export class EmployeesTableComponent implements OnInit {
     this.isVisibleEquipmentModal = true;
 
   }
+
   closeEquipmentModal() {
     this.isVisibleEquipmentModal = false;
   }
@@ -256,13 +256,5 @@ export class EmployeesTableComponent implements OnInit {
           ? 1
           : -1
     );
-  }
-
-  setSelectedUserStatus() {
-    this.currentEmployeeStatus = this.formDataUsers.status;
-  }
-
-  isStatusChanged() {
-    return this.currentEmployeeStatus !== this.formDataUsers.status ? true : false;
   }
 }

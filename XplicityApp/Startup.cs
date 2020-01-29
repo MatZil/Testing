@@ -41,7 +41,7 @@ namespace XplicityApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBackgroundService backgroundService, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -92,7 +92,6 @@ namespace XplicityApp
             });
 
             IdentityDataSeeder.SeedData(userManager, roleManager, Configuration);
-            var _ = backgroundService.RunBackgroundServices();
         }
     }
 }

@@ -1,0 +1,12 @@
+.divider {
+    display: flex;
+    justify-content: space-between;
+}
+
+.floatRight {
+    float: right;
+}
+
+h1 {
+    text-align: center;
+}

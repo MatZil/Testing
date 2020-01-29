@@ -19,6 +19,7 @@ namespace XplicityApp
                 .ConfigureAppConfiguration(builder => 
                     builder.SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("email-templates-settings.json")
+                    .AddJsonFile("equipment-categories.json")
                     .Build())
                 .ConfigureLogging(logging =>
                 {
@@ -26,7 +27,9 @@ namespace XplicityApp
                     logging.AddConsole();
                     logging.AddDebug();
                 })
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder => { 
+                    webBuilder.UseStartup<Startup>(); 
+                });
         }
     }
 }

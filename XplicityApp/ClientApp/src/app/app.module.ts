@@ -73,7 +73,10 @@ export function tokenGetter() {
     InventoryTableComponent,
     AddClientFormComponent,
     EditClientFormComponent
+    AddEmployeeFormComponent,
+    EditEmployeeFormComponent
   ],
+  entryComponents: [AddEmployeeFormComponent, EditEmployeeFormComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
