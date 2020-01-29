@@ -116,11 +116,11 @@
         </div>
         <div class="divider">
             <div>
-                <mat-checkbox [(ngModel)]="data.newUser.IsManualHolidaysInput" name="IsManualHolidaysInput">
+                <mat-checkbox [(ngModel)]="data.newUser.isManualHolidaysInput" name="IsManualHolidaysInput">
                     Enter available holidays manually:
                 </mat-checkbox>
             </div>
-            <div *ngIf="data.newUser.IsManualHolidaysInput">
+            <div *ngIf="data.newUser.isManualHolidaysInput">
                 <mat-form-field>
                     <input matInput [(ngModel)]="data.newUser.freeWorkDays" name="freeWorkDays" type="number" step="0.1" placeholder="Employee holidays">
                 </mat-form-field>

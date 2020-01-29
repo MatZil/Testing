@@ -27,6 +27,7 @@ export interface EditModalData {
   userToUpdate: Updateuser;
   roles: Role[];
   clients: Client[];
+  isEditingSelf: boolean;
 }
 
 @Component({
@@ -149,7 +150,8 @@ export class EmployeesTableComponent implements OnInit {
       data: {
         userToUpdate: this.userToUpdate,
         roles: this.roles,
-        clients: this.clients
+        clients: this.clients,
+        isEditingSelf: user.id === this.getCurrentUserId()
       }
     });
 

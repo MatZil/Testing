@@ -102,7 +102,7 @@
             </div>
             <div>
                 <mat-form-field>
-                    <mat-select [(ngModel)]="data.userToUpdate.status" name="status" placeholder="Employee status" required #statusInput="ngModel" [(value)]="currentEmployeeStatus" [disabled]="data.userToUpdate.id === getCurrentUserId()">
+                    <mat-select [(ngModel)]="data.userToUpdate.status" name="status" placeholder="Employee status" required #statusInput="ngModel" [disabled]="data.isEditingSelf">
                         <mat-option [value]="0">
                             Former employee
                         </mat-option>
