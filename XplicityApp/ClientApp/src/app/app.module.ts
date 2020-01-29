@@ -49,6 +49,8 @@ import { InventoryTableComponent } from './components/inventory-table/inventory-
 import { OvertimeDisplayComponent } from './components/overtime-display/overtime-display.component';
 import { AddClientFormComponent } from './components/add-client-form/add-client-form.component';
 import { EditClientFormComponent } from './components/edit-client-form/edit-client-form.component';
+import { AddEmployeeFormComponent } from './components/add-employee-form/add-employee-form.component';
+import { EditEmployeeFormComponent } from './components/edit-employee-form/edit-employee-form.component';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -72,11 +74,10 @@ export function tokenGetter() {
     OvertimeDisplayComponent,
     InventoryTableComponent,
     AddClientFormComponent,
-    EditClientFormComponent
+    EditClientFormComponent,
     AddEmployeeFormComponent,
     EditEmployeeFormComponent
   ],
-  entryComponents: [AddEmployeeFormComponent, EditEmployeeFormComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -113,7 +114,8 @@ export function tokenGetter() {
   ],
   entryComponents: [
     EditClientFormComponent,
-    AddClientFormComponent
+    AddClientFormComponent,
+    AddEmployeeFormComponent, EditEmployeeFormComponent
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
