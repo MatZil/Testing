@@ -25,7 +25,6 @@ export interface EditModalClient {
 
 export class ClientTableComponent implements OnInit {
   clients: Client[] = [];
-  formData: Client;
   formDataNoId: Newclient;
   newClient: Newclient = new Newclient();
 
