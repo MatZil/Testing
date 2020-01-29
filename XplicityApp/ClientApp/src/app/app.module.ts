@@ -42,6 +42,8 @@ import { UploadComponent } from './components/upload/upload.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { InventoryTableComponent } from './components/inventory-table/inventory-table.component';
 import { OvertimeDisplayComponent } from './components/overtime-display/overtime-display.component';
+import { AddEmployeeFormComponent } from './components/add-employee-form/add-employee-form.component';
+import { EditEmployeeFormComponent } from './components/edit-employee-form/edit-employee-form.component';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -63,8 +65,11 @@ export function tokenGetter() {
     EmailtemplatesTableComponent,
     UploadComponent,
     OvertimeDisplayComponent,
-    InventoryTableComponent
+    InventoryTableComponent,
+    AddEmployeeFormComponent,
+    EditEmployeeFormComponent
   ],
+  entryComponents: [AddEmployeeFormComponent, EditEmployeeFormComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
