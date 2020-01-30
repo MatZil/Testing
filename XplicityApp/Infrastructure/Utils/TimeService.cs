@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nager.Date;
+using System;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 
 namespace XplicityApp.Infrastructure.Utils
@@ -10,17 +11,28 @@ namespace XplicityApp.Infrastructure.Utils
             return DateTime.Now;
         }
 
+        public bool IsFreeWorkDay(DateTime workDay)
+        {
+            if (workDay.DayOfWeek == DayOfWeek.Saturday || workDay.DayOfWeek == DayOfWeek.Sunday
+                                                || DateSystem.IsPublicHoliday(workDay, CountryCode.LT))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public int GetWorkDays(DateTime from, DateTime to)
         {
             var workDays = 0;
 
             while (from < to)
             {
-                if (from.DayOfWeek == DayOfWeek.Saturday || from.DayOfWeek == DayOfWeek.Sunday)
+                if (IsFreeWorkDay(from))
                 {
                     from = from.AddDays(1);
                     continue;
                 }
+
                 workDays++;
                 from = from.AddDays(1);
             }

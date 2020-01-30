@@ -13,5 +13,6 @@ namespace XplicityApp.Services.Interfaces
         Task Update(int id, UpdateEmployeeDto updateData);
         Task<bool> Delete(int id);
         Employee AddOvertimeDetails(Employee employee);
+        Task<bool> HasActiveUnpaidHoliday(int id);
     }
 }

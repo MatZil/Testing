@@ -117,7 +117,7 @@ namespace XplicityApp.Services
         }
 
         private async Task IsValid(Holiday holiday)
-        { 
+        {
             if (holiday.Status == HolidayStatus.Confirmed)
             {
                 throw new InvalidOperationException("Holiday already confirmed.");

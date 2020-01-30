@@ -1,12 +1,10 @@
-﻿using AutoMapper;
-using XplicityApp.Dtos.Employees;
+﻿using XplicityApp.Dtos.Employees;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services;
 using Xunit;
 using XplicityApp.Infrastructure.Database;
 using Xunit.Abstractions;
 using System;
-using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
 using Moq;
@@ -32,10 +30,8 @@ namespace Tests
 
             var mockTimeService = new Mock<ITimeService>().Object;
             var mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
-
             var userManager = setup.InitializeUserManager();
             var userService = new Mock<IUserService>().Object;
-
             var employeesRepository = new EmployeesRepository(_context, userManager);
             _employeesService = new EmployeesService(employeesRepository, mapper, mockOvertimeUtility, mockTimeService, userService);
         }
@@ -210,6 +206,5 @@ namespace Tests
 
             Assert.False(deletedEmployee);
         }
-
     }
 }

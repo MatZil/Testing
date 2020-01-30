@@ -36,6 +36,7 @@
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+    <PackageReference Include="Nager.Date" Version="1.25.8" />
   </ItemGroup>
 
   <ItemGroup>

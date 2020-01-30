@@ -2,14 +2,14 @@
 using XplicityApp.Services;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Repositories;
-using AutoMapper;
 using XplicityApp.Dtos.Holidays;
 using Xunit.Abstractions;
 using System;
-using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Infrastructure.Enums;
 using Moq;
+using XplicityApp.Services.Interfaces;
+using XplicityApp.Infrastructure.Utils;
 
 namespace Tests
 {
@@ -20,6 +20,9 @@ namespace Tests
         private readonly int _holidaysCount;
         private readonly ITestOutputHelper _output;
         private readonly HolidaysService _holidaysService;
+        private readonly ITimeService mockTimeService;
+        private readonly EmployeesService _employeesService;
+        private readonly EmployeesRepository _employeesRepository;
 
         public HolidayTests(ITestOutputHelper output)
         {
@@ -28,12 +31,17 @@ namespace Tests
             setup.Initialize();
             _context = setup.HolidayDbContext;
             var mapper = setup.Mapper;
+            var userManager = setup.InitializeUserManager();
             _holidaysCount = setup.GetCount("holidays");
 
-            var mockTimeService = new Mock<ITimeService>().Object;
+            var timeService = new TimeService();
+            mockTimeService = new Mock<ITimeService>().Object;
+            var mockUserService = new Mock<IUserService>().Object;
             var mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
             var holidaysRepository = new HolidaysRepository(_context);
+            _employeesRepository = new EmployeesRepository(_context, userManager);
             _holidaysService = new HolidaysService(holidaysRepository, mapper, mockTimeService, mockOvertimeUtility);
+            _employeesService = new EmployeesService(_employeesRepository, mapper, mockOvertimeUtility, timeService, mockUserService);
         }
 
         [Theory]
@@ -43,6 +51,25 @@ namespace Tests
         {
             var retrievedHoliday = await _holidaysService.GetById(id);
             Assert.NotNull(retrievedHoliday);
+        }
+
+        [Fact]
+        public void When_GetPublicHolidays_Expect_DaysCountWithoutHolidays()
+        {
+            var timeService = new TimeService();
+            var retrievedHolidays = timeService.GetWorkDays(new DateTime(2020, 12, 23), new DateTime(2020, 12, 27));
+
+            Assert.Equal(1, retrievedHolidays);
+        }
+
+        [Theory]
+        [InlineData(2, true)]
+        [InlineData(1, false)]
+        public async void When_PublicHolidaysIsUnpaid_Expect_ThisDayIsUnpaid(int id, bool expected)
+        {
+            var result = await _employeesService.HasActiveUnpaidHoliday(id);
+
+            Assert.Equal(expected, result);
         }
 
         [Theory]
