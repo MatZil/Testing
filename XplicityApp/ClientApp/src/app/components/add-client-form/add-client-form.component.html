@@ -7,42 +7,30 @@
         <mat-form-field>
           <input matInput
                  [(ngModel)]="data.newClient.companyName"
-                 type="text"
                  name="companyName"
                  placeholder="Company name"
                  required
                  #nameInput="ngModel" />
-          <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-            Company name cannot be empty.
-          </mat-error>
         </mat-form-field>
       </div>
       <div>
         <mat-form-field>
           <input matInput
                  [(ngModel)]="data.newClient.ownerName"
-                 type="text"
                  name="ownerName"
                  placeholder="Owner name"
                  required
                  #nameInput="ngModel" />
-          <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-            Owner name cannot be empty.
-          </mat-error>
         </mat-form-field>
       </div>
       <div>
         <mat-form-field>
           <input matInput
                  [(ngModel)]="data.newClient.ownerSurname"
-                 type="text"
                  name="ownerSurname"
                  placeholder="Owner surname"
                  required
                  #nameInput="ngModel" />
-          <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-            Owner surname cannot be empty.
-          </mat-error>
         </mat-form-field>
       </div>
       <div>
@@ -54,23 +42,16 @@
                  placeholder="Owner email"
                  required
                  #nameInput="ngModel" />
-          <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-            Owner email cannot be empty.
-          </mat-error>
         </mat-form-field>
       </div>
       <div>
         <mat-form-field>
           <input matInput
                  [(ngModel)]="data.newClient.ownerPhone"
-                 type="text"
                  name="ownerPhone"
                  placeholder="Owner phone"
                  required
                  #nameInput="ngModel" />
-          <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
-            Owner phone cannot be empty.
-          </mat-error>
         </mat-form-field>
       </div>
     </mat-card>

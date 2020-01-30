@@ -25,8 +25,8 @@ export interface EditModalClient {
 
 export class ClientTableComponent implements OnInit {
   clients: Client[] = [];
-  formDataNoId: Newclient;
   newClient: Newclient = new Newclient();
+  newClientFormData: Newclient;
 
   confirmDeleteModal: NzModalRef;
 
@@ -129,11 +129,11 @@ export class ClientTableComponent implements OnInit {
   }
 
   openEditForm(client: Client): void {
-    this.formDataNoId = Object.assign({}, client);
+    this.newClientFormData = Object.assign({}, client);
     const dialogRef = this.dialog.open(EditClientFormComponent, {
       width: '550px',
       data: {
-        clientToEdit : this.formDataNoId
+        clientToEdit: this.newClientFormData
       }
 
     });

@@ -24,14 +24,17 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let clien of basicTable.data">
-      <td>{{ clien.companyName }}</td>
-      <td>{{ clien.ownerName }}</td>
-      <td>{{ clien.ownerSurname }}</td>
-      <td>{{ clien.ownerEmail }}</td>
-      <td>{{ clien.ownerPhone }}</td>
+    <tr *ngFor="let client of basicTable.data">
+      <td>{{ client.companyName }}</td>
+      <td>{{ client.ownerName }}</td>
+      <td>{{ client.ownerSurname }}</td>
+      <td>{{ client.ownerEmail }}</td>
+      <td>{{ client.ownerPhone }}</td>
       <td>
-        <button nz-button nzType="primary" (click)="openEditForm(clien)">Edit</button>
+        <button nz-button nzType="primary" (click)="openEditForm(client)">Edit</button>
+      </td>
+      <td>
+        <button mat-flat-button color="warn" (click)="showDeleteConfirm(client.id)">Delete</button>
       </td>
     </tr>
   </tbody>
