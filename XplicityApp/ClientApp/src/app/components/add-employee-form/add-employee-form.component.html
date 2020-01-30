@@ -1,19 +1,19 @@
-<form #newEmployeeForm="ngForm">
+<form [formGroup]="controlGroup">
     <h1 mat-dialog-title>Add new employee</h1>
     <mat-card>
         <div class="divider">
             <div>
                 <mat-form-field>
-                    <input matInput [(ngModel)]="data.newUser.name" name="name" placeholder="Employee name" required #nameInput="ngModel" pattern="[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]*">
-                    <mat-error *ngIf="nameInput.invalid" class="error">
+                    <input matInput placeholder="Employee name" formControlName="name">
+                    <mat-error *ngIf="controlGroup.controls.name.invalid" class="error">
                         Please enter a valid name.
                     </mat-error>
                 </mat-form-field>
             </div>
             <div>
                 <mat-form-field>
-                    <input matInput [(ngModel)]="data.newUser.surname" name="surname" placeholder="Employee surname" required #surnameInput="ngModel" pattern="[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]*">
-                    <mat-error *ngIf="surnameInput.invalid" class="error">
+                    <input matInput placeholder="Employee surname" formControlName="surname">
+                    <mat-error *ngIf="controlGroup.controls.surname.invalid" class="error">
                         Please enter a valid surname.
                     </mat-error>
                 </mat-form-field>
@@ -22,19 +22,19 @@
         <div class="divider">
             <div>
                 <mat-form-field>
-                    <input matInput [(ngModel)]="data.newUser.email" type="email" name="email" placeholder="Employee email" #emailInput="ngModel" required email>
-                    <mat-error *ngIf="emailInput.invalid" class="error">
+                    <input matInput placeholder="Employee email" formControlName="email">
+                    <mat-error *ngIf="controlGroup.controls.email.invalid" class="error">
                         Please enter a valid email.
                     </mat-error>
                 </mat-form-field>
             </div>
             <div>
                 <mat-form-field>
-                    <input matInput [(ngModel)]="data.newUser.password" type="password" name="password" placeholder="Employee password" required minlength="6" #passwordInput="ngModel">
-                    <mat-error *ngIf="passwordInput.errors?.required" class="error">
+                    <input matInput type="password" placeholder="Employee password" formControlName="password">
+                    <mat-error *ngIf="controlGroup.controls.password.errors?.required" class="error">
                         Please enter password.
                     </mat-error>
-                    <mat-error *ngIf="passwordInput.errors?.minlength" class="error">
+                    <mat-error *ngIf="controlGroup.controls.password.errors?.minlength" class="error">
                         Enter at least 6 symbols.
                     </mat-error>
                 </mat-form-field>
@@ -43,7 +43,7 @@
         <div class="divider">
             <div>
                 <mat-form-field>
-                    <mat-select [(ngModel)]="data.newUser.clientId" id="clientDropdown" name="client" placeholder="Client">
+                    <mat-select placeholder="Client" formControlName="clientId">
                         <mat-option [value]="0">No client</mat-option>
                         <div *ngFor="let client of data.clients">
                             <mat-option [value]="client.id">{{client.companyName}}</mat-option>
@@ -53,8 +53,8 @@
             </div>
             <div>
                 <mat-form-field>
-                    <input matInput [(ngModel)]="data.newUser.worksFromDate" type="date" name="workStart" placeholder="Started working from date" required #workStartInput="ngModel">
-                    <mat-error *ngIf="workStartInput.invalid" class="error">
+                    <input matInput type="date" placeholder="Started working from date" formControlName="worksFromDate">
+                    <mat-error *ngIf="controlGroup.controls.worksFromDate.invalid" class="error">
                         Date cannot be empty.
                     </mat-error>
                 </mat-form-field>
@@ -63,16 +63,16 @@
         <div class="divider">
             <div>
                 <mat-form-field>
-                    <input matInput [(ngModel)]="data.newUser.birthdayDate" type="date" name="birthday" placeholder="Employee birthday date" required #birthdayInput="ngModel">
-                    <mat-error *ngIf="birthdayInput.invalid" class="error">
+                    <input matInput type="date" placeholder="Employee birthday date" formControlName="birthdayDate">
+                    <mat-error *ngIf="controlGroup.controls.birthdayDate.invalid" class="error">
                         Date cannot be empty.
                     </mat-error>
                 </mat-form-field>
             </div>
             <div>
                 <mat-form-field>
-                    <input matInput [(ngModel)]="data.newUser.healthCheckDate" name="healthCheck" type="date" placeholder="Employee health check-up date" required #healthInput="ngModel">
-                    <mat-error *ngIf="healthInput.invalid" class="error">
+                    <input matInput type="date" placeholder="Employee health check-up date" formControlName="healthCheckDate">
+                    <mat-error *ngIf="controlGroup.controls.healthCheckDate.invalid" class="error">
                         Date cannot be empty.
                     </mat-error>
                 </mat-form-field>
@@ -81,7 +81,7 @@
         <div class="divider">
             <div>
                 <mat-form-field>
-                    <mat-select [(ngModel)]="data.newUser.daysOfVacation" name="daysOfVacation" placeholder="Days of vacation" #daysInput="ngModel">
+                    <mat-select placeholder="Days of vacation" formControlName="daysOfVacation">
                         <mat-option [value]="20">20</mat-option>
                         <mat-option [value]="25">25</mat-option>
                     </mat-select>
@@ -89,7 +89,7 @@
             </div>
             <div>
                 <mat-form-field>
-                    <mat-select [(ngModel)]="data.newUser.parentalLeaveLimit" name="parentalLeaveLimit" placeholder="Parental leave limit" #parentalInput="ngModel">
+                    <mat-select placeholder="Parental leave limit" formControlName="parentalLeaveLimit">
                         <mat-option [value]="0">0</mat-option>
                         <mat-option [value]="1">1</mat-option>
                         <mat-option [value]="2">2</mat-option>
@@ -100,15 +100,15 @@
         <div class="divider">
             <div>
                 <mat-form-field>
-                    <mat-select [(ngModel)]="data.newUser.role" name="role" placeholder="Employee role" #roleInput="ngModel">
+                    <mat-select placeholder="Employee role" formControlName="role">
                         <mat-option *ngFor="let role of data.roles" [value]="role.name">{{role.name}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
             <div>
                 <mat-form-field>
-                    <input matInput [(ngModel)]="data.newUser.position" name="position" placeholder="Employee position" required #positionInput="ngModel">
-                    <mat-error *ngIf="positionInput.invalid" class="error">
+                    <input matInput placeholder="Employee position" formControlName="position">
+                    <mat-error *ngIf="controlGroup.controls.position.invalid" class="error">
                         Position cannot be empty.
                     </mat-error>
                 </mat-form-field>
@@ -116,20 +116,20 @@
         </div>
         <div class="divider">
             <div>
-                <mat-checkbox [(ngModel)]="data.newUser.isManualHolidaysInput" name="IsManualHolidaysInput">
+                <mat-checkbox formControlName="isManualHolidaysInput">
                     Enter available holidays manually:
                 </mat-checkbox>
             </div>
-            <div *ngIf="data.newUser.isManualHolidaysInput">
+            <div *ngIf="controlGroup.controls.isManualHolidaysInput.value">
                 <mat-form-field>
-                    <input matInput [(ngModel)]="data.newUser.freeWorkDays" name="freeWorkDays" type="number" step="0.1" placeholder="Employee holidays">
+                    <input matInput type="number" step="0.1" placeholder="Free work days" formControlName="freeWorkDays">
                 </mat-form-field>
             </div>
         </div>
     </mat-card>
     <mat-card>
-        <button mat-flat-button color="primary" [mat-dialog-close]="data.newUser" [disabled]="!newEmployeeForm.form.valid">
-          Add employee
+        <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="controlGroup.invalid">
+            Add Employee
         </button>
         <button mat-flat-button color="warn" class="floatRight" [mat-dialog-close]>Cancel</button>
     </mat-card>

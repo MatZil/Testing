@@ -74,7 +74,11 @@ namespace XplicityApp.Services
 
                 if (newEmployeeDto.IsManualHolidaysInput)
                 {
-                    newEmployee.FreeWorkDays = newEmployeeDto.FreeWorkDays;
+                    if (newEmployeeDto.FreeWorkDays is null)
+                    {
+                        throw new NullReferenceException();
+                    }
+                    newEmployee.FreeWorkDays = (double)newEmployeeDto.FreeWorkDays;
                 }
                 else
                 {

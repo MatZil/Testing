@@ -144,7 +144,7 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   openEditForm(user: User): void {
-    this.userToUpdate = Object.assign({}, user);
+    this.userToUpdate = Object.assign(user);
     const dialogRef = this.dialog.open(EditEmployeeFormComponent, {
       width: '550px',
       data: {
