@@ -138,10 +138,8 @@ export class ClientTableComponent implements OnInit {
 
     });
     dialogRef.afterClosed().subscribe(editClient => {
-      if (typeof (editClient) === "object") {
+      if (editClient) {
         this.editClient(editClient, client.id);
-      } else if (typeof (editClient) === "boolean") {
-        this.showDeleteConfirm(client.id);
       }
     })
   }
