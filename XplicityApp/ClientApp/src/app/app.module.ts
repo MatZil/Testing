@@ -53,7 +53,7 @@ import { AddEmployeeFormComponent } from './components/add-employee-form/add-emp
 import { EditEmployeeFormComponent } from './components/edit-employee-form/edit-employee-form.component';
 registerLocaleData(en);
 export function tokenGetter() {
-  return localStorage.getItem("token");
+  return localStorage.getItem('token');
 }
 @NgModule({
   declarations: [
@@ -107,8 +107,8 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        whitelistedDomains: ["http://localhost:4200"],
-        blacklistedRoutes: ["example.com/examplebadroute/"]
+        whitelistedDomains: ['http://localhost:4200'],
+        blacklistedRoutes: ['example.com/examplebadroute/']
       }
     })
   ],

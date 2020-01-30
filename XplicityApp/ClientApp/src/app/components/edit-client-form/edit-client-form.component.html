@@ -8,32 +8,45 @@
         <mat-form-field>
           <input matInput [(ngModel)]="data.clientToEdit.companyName" name="companyName"
                  placeholder="Company name" required #nameInput="ngModel">
+          <mat-error *ngIf="nameInput.invalid" class="error">
+            Company name cannot be empty.
+          </mat-error>
         </mat-form-field>
       </div>
       <div>
         <mat-form-field>
           <input matInput [(ngModel)]="data.clientToEdit.ownerName" name="ownerName"
                  placeholder="Owner name" required #nameInput="ngModel">
-
+          <mat-error *ngIf="nameInput.invalid" class="error">
+            Owner name cannot be empty.
+          </mat-error>
         </mat-form-field>
       </div>
       <div>
         <mat-form-field>
           <input matInput [(ngModel)]="data.clientToEdit.ownerSurname" name="ownerSurname"
                  placeholder="Owner surname" required #nameInput="ngModel">
-
+          <mat-error *ngIf="nameInput.invalid" class="error">
+            Owner surname cannot be empty.
+          </mat-error>
         </mat-form-field>
       </div>
       <div>
         <mat-form-field>
           <input matInput [(ngModel)]="data.clientToEdit.ownerEmail" type="email" name="ownerEmail"
                  placeholder="Owner email" required #nameInput="ngModel">
+          <mat-error *ngIf="nameInput.invalid" class="error">
+            Owner email cannot be empty.
+          </mat-error>
         </mat-form-field>
       </div>
       <div>
         <mat-form-field>
           <input matInput [(ngModel)]="data.clientToEdit.ownerPhone" name="ownerPhone"
                  placeholder="Owner phone" required #nameInput="ngModel">
+          <mat-error *ngIf="nameInput.invalid" class="error">
+            Owner phone cannot be empty.
+          </mat-error>
         </mat-form-field>
       </div>
     </mat-card>

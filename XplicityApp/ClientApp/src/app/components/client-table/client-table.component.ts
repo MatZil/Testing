@@ -14,13 +14,13 @@ export interface AddModalClient {
 }
 
 export interface EditModalClient {
-  clientToEdit : Newclient
+  clientToEdit: Newclient
 }
 
 @Component({
-  selector: "app-client-table",
-  templateUrl: "./client-table.component.html",
-  styleUrls: ["./client-table.component.scss"]
+  selector: 'app-client-table',
+  templateUrl: './client-table.component.html',
+  styleUrls: ['./client-table.component.scss']
 })
 
 export class ClientTableComponent implements OnInit {
@@ -54,34 +54,24 @@ export class ClientTableComponent implements OnInit {
     });
   }
 
-  updateField() {
-    this.clientService.getClient().subscribe(client => {
-      this.clients = client;
-    });
-  }
-
   onDeleteButtonClick(id: number) {
     this.clientService.deleteClient(id).subscribe(() => {
       this.refreshTable();
     });
   }
 
-  deleteClientOnModalClose(id: number) {
-    this.onDeleteButtonClick(id);
-  }
-
   showDeleteConfirm(id: number): void {
     this.confirmDeleteModal = this.modal.confirm({
-      nzTitle: "Do you want to delete this section?",
-      nzContent: "When clicked the OK button this section will be deleted",
-      nzOnOk: () => this.deleteClientOnModalClose(id)
+      nzTitle: 'Do you want to delete this section?',
+      nzContent: 'When clicked the OK button this section will be deleted',
+      nzOnOk: () => this.onDeleteButtonClick(id)
     });
   }
 
   createBasicNotification(): void {
     this.notification.blank(
-      "Form error",
-      "A client with this company name already exists"
+      'Form error',
+      'A client with this company name already exists'
     );
   }
 
@@ -116,7 +106,7 @@ export class ClientTableComponent implements OnInit {
       }) => filterFunc(item)
     );
     this.clients = data.sort((a, b) =>
-      this.sortValue === "ascend"
+      this.sortValue === 'ascend'
         ? // tslint:disable-next-line:no-non-null-assertion
         a[this.sortName!] > b[this.sortName!]
           ? 1
@@ -156,13 +146,15 @@ export class ClientTableComponent implements OnInit {
       if (newClient) {
         this.addNewClient(newClient);
         this.newClient = new Newclient();
-      }
+        }
     });
   }
 
 
   editClient(client: Newclient, id: number) {
-    this.clientService.editClient(client, id).subscribe(() => this.refreshTable()
+    this.clientService.editClient(client, id).subscribe(() => {
+      this.refreshTable();
+    }
     );
   }
 
