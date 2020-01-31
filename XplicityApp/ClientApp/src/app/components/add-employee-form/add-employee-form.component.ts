@@ -10,6 +10,9 @@ import { Newuser } from 'src/app/models/newuser';
 })
 export class AddEmployeeFormComponent {
 
+  readonly minDate = new Date(1900, 1, 1);
+  readonly maxDate = new Date(2100, 1, 1);
+
   constructor(
     public dialogRef: MatDialogRef<AddEmployeeFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AddModalData) {

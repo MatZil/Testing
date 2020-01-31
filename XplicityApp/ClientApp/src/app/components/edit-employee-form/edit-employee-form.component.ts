@@ -11,6 +11,8 @@ import { EmployeeStatus } from 'src/app/models/employee-status.enum';
 })
 export class EditEmployeeFormComponent {
   initialStatusValue: EmployeeStatus;
+  readonly minDate = new Date(1900, 1, 1);
+  readonly maxDate = new Date(2100, 1, 1);
 
   constructor(
     private authenticationService: AuthenticationService,

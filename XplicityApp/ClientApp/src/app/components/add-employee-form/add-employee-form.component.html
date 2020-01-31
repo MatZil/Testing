@@ -52,31 +52,45 @@
                 </mat-form-field>
             </div>
             <div>
-                <mat-form-field>
-                    <input matInput [(ngModel)]="data.newUser.worksFromDate" type="date" name="workStart" placeholder="Started working from date" required #workStartInput="ngModel">
-                    <mat-error *ngIf="workStartInput.invalid" class="error">
-                        Date cannot be empty.
-                    </mat-error>
+              <div>
+                <mat-form-field class="inputDatetimeField">
+                  <input matInput [matDatepicker]="worksFromDate" placeholder="Started working from date" (click)="worksFromDate.open()"
+                         [(ngModel)]="data.newUser.worksFromDate" name="worksFromDate" required #workStartInput="ngModel"
+                         [min]="minDate" [max]="maxDate">
+                  <mat-datepicker #worksFromDate></mat-datepicker>
+                  <mat-datepicker-toggle matSuffix [for]="worksFromDate"></mat-datepicker-toggle>
+                  <mat-error *ngIf="workStartInput.invalid" class="error">
+                    Date cannot be empty.
+                  </mat-error>
                 </mat-form-field>
+              </div>
             </div>
-        </div>
+          </div>
         <div class="divider">
-            <div>
-                <mat-form-field>
-                    <input matInput [(ngModel)]="data.newUser.birthdayDate" type="date" name="birthday" placeholder="Employee birthday date" required #birthdayInput="ngModel">
-                    <mat-error *ngIf="birthdayInput.invalid" class="error">
-                        Date cannot be empty.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-form-field>
-                    <input matInput [(ngModel)]="data.newUser.healthCheckDate" name="healthCheck" type="date" placeholder="Employee health check-up date" required #healthInput="ngModel">
-                    <mat-error *ngIf="healthInput.invalid" class="error">
-                        Date cannot be empty.
-                    </mat-error>
-                </mat-form-field>
-            </div>
+          <div>
+            <mat-form-field style="width:90%">
+              <input matInput [matDatepicker]="birthDayDate" placeholder="Employee birthday date" (click)="birthDayDate.open()"
+                     [(ngModel)]="data.newUser.birthdayDate" name="birthDayDate" required #birthdayInput="ngModel"
+                     [min]="minDate" [max]="maxDate">
+              <mat-datepicker-toggle matSuffix [for]="birthDayDate"></mat-datepicker-toggle>
+              <mat-datepicker #birthDayDate></mat-datepicker>
+              <mat-error *ngIf="birthdayInput.invalid" class="error">
+                Date cannot be empty.
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="inputDatetimeField">
+              <input matInput [matDatepicker]="healthCheckDate" placeholder="Employee health check-up date" (click)="healthCheckDate.open()"
+                     [(ngModel)]="data.newUser.healthCheckDate" name="healthCheckDate" required #healthInput="ngModel"
+                     [min]="minDate" [max]="maxDate">
+              <mat-datepicker-toggle matSuffix [for]="healthCheckDate"></mat-datepicker-toggle>
+              <mat-datepicker #healthCheckDate></mat-datepicker>
+              <mat-error *ngIf="healthInput.invalid" class="error">
+                Date cannot be empty.
+              </mat-error>
+            </mat-form-field>
+          </div>
         </div>
         <div class="divider">
             <div>

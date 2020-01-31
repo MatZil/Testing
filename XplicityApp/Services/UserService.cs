@@ -6,7 +6,7 @@ using XplicityApp.Dtos.Employees;
 using XplicityApp.Dtos.Users;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Services.Interfaces;
-using XplicityApp.Infrastructure.Utils.Interfaces;
+using System.Linq;
 
 namespace XplicityApp.Services
 {
@@ -74,8 +74,15 @@ namespace XplicityApp.Services
             {
                 throw new InvalidOperationException();
             }
-
             return currentUser.Employee;
+        }
+
+        public async Task<string> GetUserRole(int id)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.EmployeeId == id);
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var userRole = userRoles.OfType<string>().FirstOrDefault();
+            return userRole;
         }
     }
 }

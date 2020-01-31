@@ -40,6 +40,10 @@ namespace XplicityApp.Services
         {
             var employees = await _repository.GetAll();
             var employeesDto = _mapper.Map<GetEmployeeDto[]>(employees);
+            foreach (var employee in employeesDto)
+            {
+                employee.Role = await _userService.GetUserRole(employee.Id);
+            }
 
             return employeesDto;
         }

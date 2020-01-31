@@ -10,3 +10,8 @@
 h1 {
     text-align: center;
 }
+
+.inputDatetimeField {
+  width: 90%;
+  left: 10%;
+}
