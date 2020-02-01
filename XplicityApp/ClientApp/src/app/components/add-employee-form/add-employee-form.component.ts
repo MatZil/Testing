@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Newuser } from 'src/app/models/newuser';
 import { AddModalData } from './add-modal-data';
+import { EmployeeStatus } from 'src/app/models/employee-status.enum';
 
 @Component({
   selector: 'app-add-employee-form',
@@ -59,6 +60,8 @@ export class AddEmployeeFormComponent implements OnInit {
     if (formUser.clientId === 0) {
       formUser.clientId = null;
     }
+
+    formUser.status = EmployeeStatus.Current;
 
     return formUser;
   }

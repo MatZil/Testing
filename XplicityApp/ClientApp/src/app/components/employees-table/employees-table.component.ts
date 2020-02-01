@@ -72,7 +72,6 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   registerUser(newUser: Newuser) {
-    newUser.status = EmployeeStatus.Current;
     this.userService.registerUser(newUser).subscribe(() => {
       this.refreshTable();
     }, error => {

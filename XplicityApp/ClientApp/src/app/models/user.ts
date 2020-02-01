@@ -1,24 +1,10 @@
-import { EmployeeStatus } from './employee-status.enum';
+import { Updateuser } from './updateuser';
 
-export class User {
+export class User extends Updateuser {
     id: number;
-    name: string;
-    surname: string;
-    clientId: number;
-    worksFromDate: Date;
-    birthdayDate: Date;
-    daysOfVacation: number;
-    freeWorkDays: number;
-    overtimeHours: number;
     overtimeDays: number;
     nextOvertimeHours: number;
     nextOvertimeMinutes: number;
-    parentalLeaveLimit: number;
     currentAvailableLeaves: number;
     nextMonthAvailableLeaves: number;
-    email: string;
-    role: string;
-    position: string;
-    healthCheckDate: Date;
-    status: EmployeeStatus;
 }
