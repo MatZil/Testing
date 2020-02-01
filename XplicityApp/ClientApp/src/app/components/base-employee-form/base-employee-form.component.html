@@ -1,0 +1,102 @@
+<div [formGroup]="baseForm">
+    <div class="divider">
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="Employee name" formControlName="name">
+                <mat-error *ngIf="baseForm.controls.name.invalid" class="error">
+                    Please enter a valid name.
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="Employee surname" formControlName="surname">
+                <mat-error *ngIf="baseForm.controls.surname.invalid" class="error">
+                    Please enter a valid surname.
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="divider">
+        <div>
+            <mat-form-field>
+                <mat-select placeholder="Client" formControlName="clientId">
+                    <mat-option [value]="0">No client</mat-option>
+                    <div *ngFor="let client of clients">
+                        <mat-option [value]="client.id">{{client.companyName}}</mat-option>
+                    </div>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input matInput type="date" placeholder="Started working from date" formControlName="worksFromDate">
+                <mat-error *ngIf="baseForm.controls.worksFromDate.invalid" class="error">
+                    Date cannot be empty.
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="divider">
+        <div>
+            <mat-form-field>
+                <input matInput type="date" placeholder="Employee birthday date" formControlName="birthdayDate">
+                <mat-error *ngIf="baseForm.controls.birthdayDate.invalid" class="error">
+                    Date cannot be empty.
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input matInput type="date" placeholder="Employee health check-up date" formControlName="healthCheckDate">
+                <mat-error *ngIf="baseForm.controls.healthCheckDate.invalid" class="error">
+                    Date cannot be empty.
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="divider">
+        <div>
+            <mat-form-field>
+                <mat-select placeholder="Days of vacation" formControlName="daysOfVacation">
+                    <mat-option [value]="20">20</mat-option>
+                    <mat-option [value]="25">25</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-select placeholder="Parental leave limit" formControlName="parentalLeaveLimit">
+                    <mat-option [value]="0">0</mat-option>
+                    <mat-option [value]="1">1</mat-option>
+                    <mat-option [value]="2">2</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="divider">
+        <div>
+            <mat-form-field>
+                <mat-select placeholder="Employee role" formControlName="role">
+                    <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="Employee position" formControlName="position">
+                <mat-error *ngIf="baseForm.controls.position.invalid" class="error">
+                    Position cannot be empty.
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div style="float: left;">
+        <mat-form-field>
+            <input matInput placeholder="Employee email" formControlName="email">
+            <mat-error *ngIf="baseForm.controls.email.invalid" class="error">
+                Please enter a valid email.
+            </mat-error>
+        </mat-form-field>
+    </div>
+</div>

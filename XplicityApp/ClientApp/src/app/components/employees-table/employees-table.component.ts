@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-
 import { User } from '../../models/user';
 import { Newuser } from '../../models/newuser';
 import { Updateuser } from '../../models/updateuser';
 import { UserService } from '../../services/user.service';
 import { AuthenticationService } from '../../services/authentication.service';
-
 import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
-
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { Role } from '../../models/role';
@@ -16,19 +13,6 @@ import { EmployeeStatus } from '../../models/employee-status.enum';
 import { MatDialog } from '@angular/material';
 import { AddEmployeeFormComponent } from '../add-employee-form/add-employee-form.component';
 import { EditEmployeeFormComponent } from '../edit-employee-form/edit-employee-form.component';
-
-export interface AddModalData {
-  newUser: Newuser;
-  roles: Role[];
-  clients: Client[];
-}
-
-export interface EditModalData {
-  userToUpdate: Updateuser;
-  roles: Role[];
-  clients: Client[];
-  isEditingSelf: boolean;
-}
 
 @Component({
   selector: 'app-employees-table',
@@ -40,7 +24,6 @@ export class EmployeesTableComponent implements OnInit {
   roles: Role[];
 
   userToUpdate: Updateuser;
-  newUser: Newuser = new Newuser();
 
   employeeStatus = EmployeeStatus;
 
@@ -89,9 +72,6 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   registerUser(newUser: Newuser) {
-    if (newUser.clientId === 0) {
-      newUser.clientId = null;
-    }
     newUser.status = EmployeeStatus.Current;
     this.userService.registerUser(newUser).subscribe(() => {
       this.refreshTable();
@@ -107,9 +87,6 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   editUser(user: Updateuser, id: number) {
-    if (user.clientId === 0) {
-      user.clientId = null;
-    }
     this.userService.editUser(user, id).subscribe(() => {
       this.refreshTable();
     }, error => {
@@ -129,7 +106,6 @@ export class EmployeesTableComponent implements OnInit {
     const dialogRef = this.dialog.open(AddEmployeeFormComponent, {
       width: '550px',
       data: {
-        newUser: this.newUser,
         roles: this.roles,
         clients: this.clients
       }
@@ -138,7 +114,6 @@ export class EmployeesTableComponent implements OnInit {
     dialogRef.afterClosed().subscribe(newUser => {
       if (newUser) {
         this.registerUser(newUser);
-        this.newUser = new Newuser();
       }
     });
   }

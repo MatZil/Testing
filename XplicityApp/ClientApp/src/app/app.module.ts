@@ -44,6 +44,7 @@ import { InventoryTableComponent } from './components/inventory-table/inventory-
 import { OvertimeDisplayComponent } from './components/overtime-display/overtime-display.component';
 import { AddEmployeeFormComponent } from './components/add-employee-form/add-employee-form.component';
 import { EditEmployeeFormComponent } from './components/edit-employee-form/edit-employee-form.component';
+import { BaseEmployeeFormComponent } from './components/base-employee-form/base-employee-form.component';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -67,7 +68,8 @@ export function tokenGetter() {
     OvertimeDisplayComponent,
     InventoryTableComponent,
     AddEmployeeFormComponent,
-    EditEmployeeFormComponent
+    EditEmployeeFormComponent,
+    BaseEmployeeFormComponent
   ],
   entryComponents: [AddEmployeeFormComponent, EditEmployeeFormComponent],
   imports: [
