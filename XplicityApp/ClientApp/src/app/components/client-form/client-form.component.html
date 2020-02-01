@@ -1,12 +1,18 @@
-<form #editClientForm="ngForm">
+<form #clientForm="ngForm">
   <h1 mat-dialog-title>
-    Edit client
+    <div *ngIf="checkModalType(); else elseTitleBlock">
+      Add client
+    </div>
+    <ng-template #elseTitleBlock>
+      Edit client
+    </ng-template>
   </h1>
+
   <mat-dialog-content>
     <mat-card>
       <div>
         <mat-form-field>
-          <input matInput [(ngModel)]="data.clientToEdit.companyName" name="companyName"
+          <input matInput [(ngModel)]="data.clientFormData.companyName" name="companyName"
                  placeholder="Company name" required #nameInput="ngModel">
           <mat-error *ngIf="nameInput.invalid" class="error">
             Company name cannot be empty.
@@ -15,7 +21,7 @@
       </div>
       <div>
         <mat-form-field>
-          <input matInput [(ngModel)]="data.clientToEdit.ownerName" name="ownerName"
+          <input matInput [(ngModel)]="data.clientFormData.ownerName" name="ownerName"
                  placeholder="Owner name" required #nameInput="ngModel">
           <mat-error *ngIf="nameInput.invalid" class="error">
             Owner name cannot be empty.
@@ -24,7 +30,7 @@
       </div>
       <div>
         <mat-form-field>
-          <input matInput [(ngModel)]="data.clientToEdit.ownerSurname" name="ownerSurname"
+          <input matInput [(ngModel)]="data.clientFormData.ownerSurname" name="ownerSurname"
                  placeholder="Owner surname" required #nameInput="ngModel">
           <mat-error *ngIf="nameInput.invalid" class="error">
             Owner surname cannot be empty.
@@ -33,7 +39,7 @@
       </div>
       <div>
         <mat-form-field>
-          <input matInput [(ngModel)]="data.clientToEdit.ownerEmail" type="email" name="ownerEmail"
+          <input matInput [(ngModel)]="data.clientFormData.ownerEmail" type="email" name="ownerEmail"
                  placeholder="Owner email" required #nameInput="ngModel">
           <mat-error *ngIf="nameInput.invalid" class="error">
             Owner email cannot be empty.
@@ -42,7 +48,7 @@
       </div>
       <div>
         <mat-form-field>
-          <input matInput [(ngModel)]="data.clientToEdit.ownerPhone" name="ownerPhone"
+          <input matInput [(ngModel)]="data.clientFormData.ownerPhone" name="ownerPhone"
                  placeholder="Owner phone" required #nameInput="ngModel">
           <mat-error *ngIf="nameInput.invalid" class="error">
             Owner phone cannot be empty.
@@ -54,8 +60,17 @@
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button mat-flat-button mat-button-base [mat-dialog-close]>Cancel</button>
-    <button mat-flat-button color="primary" (click)="closeModal(data.clientToEdit)" [disabled]="editClientForm.form.invalid">
-      Confirm edit
-    </button>
+    <div *ngIf="checkModalType(); then thenButtonBlock else elseButtonBlock"></div>
+    <ng-template #thenButtonBlock>
+      <button mat-flat-button color="primary" [mat-dialog-close]="data.clientFormData" [disabled]="clientForm.form.invalid">
+        Add client
+      </button>
+    </ng-template>
+    <ng-template #elseButtonBlock>
+      <button mat-flat-button color="primary" (click)="closeModal(data.clientFormData)" [disabled]="clientForm.form.invalid">
+        Confirm edit
+      </button>
+    </ng-template>
   </mat-dialog-actions>
+
 </form>
