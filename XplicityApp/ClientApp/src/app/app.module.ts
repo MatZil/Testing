@@ -51,6 +51,7 @@ import { AddClientFormComponent } from './components/add-client-form/add-client-
 import { EditClientFormComponent } from './components/edit-client-form/edit-client-form.component';
 import { AddEmployeeFormComponent } from './components/add-employee-form/add-employee-form.component';
 import { EditEmployeeFormComponent } from './components/edit-employee-form/edit-employee-form.component';
+import { BaseEmployeeFormComponent } from './components/base-employee-form/base-employee-form.component';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -76,7 +77,8 @@ export function tokenGetter() {
     AddClientFormComponent,
     EditClientFormComponent,
     AddEmployeeFormComponent,
-    EditEmployeeFormComponent
+    EditEmployeeFormComponent,
+    BaseEmployeeFormComponent
   ],
   imports: [
     BrowserModule,

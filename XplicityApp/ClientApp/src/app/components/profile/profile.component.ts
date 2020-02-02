@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../models/user';
+import { TableRowUserModel } from '../../models/table-row-user-model';
 import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../services/user.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -14,7 +14,7 @@ import { FileType } from '../../enums/fileType';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  currentUser: User;
+  currentUser: TableRowUserModel;
   hideOldPassword = true;
   hideFirstPassword = true;
   hideSecondPassword = true;

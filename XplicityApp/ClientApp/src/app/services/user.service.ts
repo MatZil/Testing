@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { User } from '../models/user';
+import { TableRowUserModel } from '../models/table-row-user-model';
 import { Updateuser } from '../models/updateuser';
 import { PasswordChangeModel } from '../models/password-change-model';
 import decode from 'jwt-decode';
@@ -22,16 +22,16 @@ export class UserService {
 
     constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
-    getAllUsers(): Observable<User[]> {
-        return this.http.get<User[]>(this.userApi);
+    getAllUsers(): Observable<TableRowUserModel[]> {
+        return this.http.get<TableRowUserModel[]>(this.userApi);
     }
 
-    getUser(id: number): Observable<User> {
-        return this.http.get<User>(`${this.userApi}/${id}`);
+    getUser(id: number): Observable<TableRowUserModel> {
+        return this.http.get<TableRowUserModel>(`${this.userApi}/${id}`);
     }
 
-    registerUser(user: Newuser): Observable<User> {
-      return this.http.post<User>(this.userApi, user);
+    registerUser(user: Newuser): Observable<TableRowUserModel> {
+      return this.http.post<TableRowUserModel>(this.userApi, user);
     }
 
     deleteUser(id: number) {
@@ -46,8 +46,8 @@ export class UserService {
         return this.http.post(`${this.userApi}/${id}/ChangePassword`, passwordChangeModel);
     }
 
-    getCurrentUser(): Observable<User> {
-        return this.http.get<User>(`${this.userApi}/self`);
+    getCurrentUser(): Observable<TableRowUserModel> {
+      return this.http.get<TableRowUserModel>(`${this.userApi}/self`);
     }
 
     getRole(): string {

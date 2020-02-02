@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InventoryService } from 'src/app/services/inventory.service';
 import { InventoryCategory } from 'src/app/models/inventory-category';
 import { InventoryCategoryService } from 'src/app/services/inventory-category.service';
-import { User } from 'src/app/models/user';
+import { TableRowUserModel } from 'src/app/models/table-row-user-model';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class InventoryTableComponent implements OnInit {
   isVisibleNewItemModal = false;
   input: FormGroup;
   categories: InventoryCategory[] = [];
-  employees: User[] = [];
+  employees: TableRowUserModel[] = [];
   selectedEmployee;
   isModifying = false;
 

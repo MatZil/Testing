@@ -1,0 +1,108 @@
+<div [formGroup]="baseForm">
+    <div class="divider">
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="Name" formControlName="name">
+                <mat-error *ngIf="baseForm.controls.name.invalid" class="error">
+                    Please enter a valid name.
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="Surname" formControlName="surname">
+                <mat-error *ngIf="baseForm.controls.surname.invalid" class="error">
+                    Please enter a valid surname.
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="divider">
+        <div>
+            <mat-form-field>
+                <mat-select placeholder="Client" formControlName="clientId">
+                    <mat-option [value]="0">No client</mat-option>
+                    <div *ngFor="let client of clients">
+                        <mat-option [value]="client.id">{{client.companyName}}</mat-option>
+                    </div>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="inputDatetimeField">
+                <input matInput [matDatepicker]="worksFromDate" (focus)="worksFromDate.open()" name="worksFromDate" [min]="minDate" [max]="maxDate" placeholder="Started working from" formControlName="worksFromDate">
+                <mat-datepicker #worksFromDate></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="worksFromDate"></mat-datepicker-toggle>
+                <mat-error *ngIf="baseForm.controls.worksFromDate.invalid" class="error">
+                    Date cannot be empty.
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="divider">
+        <div>
+            <mat-form-field>
+                <mat-select placeholder="Monthly parental leave limit" formControlName="parentalLeaveLimit">
+                    <mat-option [value]="0">0</mat-option>
+                    <mat-option [value]="1">1</mat-option>
+                    <mat-option [value]="2">2</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="inputDatetimeField">
+                <input matInput [matDatepicker]="healthCheckDate" (focus)="healthCheckDate.open()" name="healthCheckDate" placeholder="Health check-up" formControlName="healthCheckDate">
+                <mat-datepicker #healthCheckDate></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="healthCheckDate"></mat-datepicker-toggle>
+                <mat-error *ngIf="baseForm.controls.healthCheckDate.invalid" class="error">
+                    Date cannot be empty.
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="divider">
+        <div>
+            <mat-form-field>
+                <mat-select placeholder="Annual amount of free work days" formControlName="daysOfVacation">
+                    <mat-option [value]="20">20</mat-option>
+                    <mat-option [value]="25">25</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="inputDatetimeField">
+                <input matInput [matDatepicker]="birthdayDate" (focus)="birthdayDate.open()" name="birthdayDate" placeholder="Birthday" formControlName="birthdayDate">
+                <mat-datepicker #birthdayDate></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="birthdayDate"></mat-datepicker-toggle>
+                <mat-error *ngIf="baseForm.controls.birthdayDate.invalid" class="error">
+                    Date cannot be empty.
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="divider">
+        <div>
+            <mat-form-field>
+                <mat-select placeholder="Role" formControlName="role">
+                    <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="Position" formControlName="position">
+                <mat-error *ngIf="baseForm.controls.position.invalid" class="error">
+                    Position cannot be empty.
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div style="float: left;">
+        <mat-form-field>
+            <input matInput placeholder="E-mail" formControlName="email">
+            <mat-error *ngIf="baseForm.controls.email.invalid" class="error">
+                Please enter a valid email.
+            </mat-error>
+        </mat-form-field>
+    </div>
+</div>
