@@ -53,6 +53,7 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
+    <button mat-flat-button mat-button-base [mat-dialog-close]>Cancel</button>
     <button mat-flat-button color="primary" (click)="closeModal(data.clientFormData)" [disabled]="clientForm.form.invalid">
       {{data.formConfirmationButtonName}}
     </button>
