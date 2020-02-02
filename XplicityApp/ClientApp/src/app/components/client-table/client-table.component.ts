@@ -7,7 +7,6 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { MatDialog } from '@angular/material';
 import { ClientFormComponent } from '../client-form/client-form.component';
-import { ModalType } from '../client-form/modal-type.enum';
 
 @Component({
   selector: 'app-client-table',
@@ -116,7 +115,8 @@ export class ClientTableComponent implements OnInit {
       width: '550px',
       data: {
         clientFormData: this.newClientFormData,
-        modalType: ModalType.EditClientModal
+        formTitle: 'Edit client',
+        formConfirmationButtonName: 'Confirm edit'
       }
     });
 
@@ -132,7 +132,8 @@ export class ClientTableComponent implements OnInit {
       width: '550px',
       data: {
         clientFormData: this.newClient,
-        modalType: ModalType.AddClientModal
+        formTitle: 'Add client',
+        formConfirmationButtonName: 'Add client'
       }
     });
 

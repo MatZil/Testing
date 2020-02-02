@@ -1,13 +1,12 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { ClientModal } from './client-modal';
-import { ModalType } from './modal-type.enum';
 
 @Component({
   selector: 'app-client-form',
-  templateUrl: './client-form.component.html',
-  styleUrls: ['./client-form.component.scss']
+  templateUrl: './client-form.component.html'
 })
+
 export class ClientFormComponent{
 
   constructor(
@@ -17,13 +16,5 @@ export class ClientFormComponent{
 
   closeModal(returnValue: any) {
     this.dialogRef.close(returnValue);
-  }
-
-  isAddingNewClient() {
-    if (this.data.modalType === ModalType.AddClientModal) {
-      return true;
-    }
-
-    return false;
   }
 }

@@ -1,13 +1,6 @@
 <form #clientForm="ngForm">
 
-  <h1 mat-dialog-title>
-    <div *ngIf="isAddingNewClient(); else clientEditingFormTitle">
-      Add client
-    </div>
-    <ng-template #clientEditingFormTitle>
-      Edit client
-    </ng-template>
-  </h1>
+  <h1 mat-dialog-title>{{data.formTitle}}</h1>
 
   <mat-dialog-content>
     <mat-card>
@@ -60,18 +53,9 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-flat-button mat-button-base [mat-dialog-close]>Cancel</button>
-    <div *ngIf="isAddingNewClient(); then clientAddingFormButton else clientEditingFromButton"></div>
-    <ng-template #clientAddingFormButton>
-      <button mat-flat-button color="primary" [mat-dialog-close]="data.clientFormData" [disabled]="clientForm.form.invalid">
-        Add client
-      </button>
-    </ng-template>
-    <ng-template #clientEditingFromButton>
-      <button mat-flat-button color="primary" (click)="closeModal(data.clientFormData)" [disabled]="clientForm.form.invalid">
-        Confirm edit
-      </button>
-    </ng-template>
+    <button mat-flat-button color="primary" (click)="closeModal(data.clientFormData)" [disabled]="clientForm.form.invalid">
+      {{data.formConfirmationButtonName}}
+    </button>
   </mat-dialog-actions>
 
 </form>
