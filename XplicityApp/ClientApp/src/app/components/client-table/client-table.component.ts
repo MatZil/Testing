@@ -9,11 +9,6 @@ import { MatDialog } from '@angular/material';
 import { ModalType } from '../../enums/modal-type.enum';
 import { ClientFormComponent } from '../client-form/client-form.component';
 
-export interface ClientModal {
-  clientFormData: Newclient,
-  modalType: ModalType
-}
-
 @Component({
   selector: 'app-client-table',
   templateUrl: './client-table.component.html',

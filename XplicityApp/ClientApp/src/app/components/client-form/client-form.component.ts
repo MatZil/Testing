@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { ClientModal } from '../client-table/client-table.component';
 import { ModalType } from '../../enums/modal-type.enum';
+import { ClientModal } from './client-modal';
 
 @Component({
   selector: 'app-client-form',
@@ -19,10 +19,11 @@ export class ClientFormComponent{
     this.dialogRef.close(returnValue);
   }
 
-  checkModalType() {
+  isCheckModalType() {
     if (this.data.modalType === ModalType.Add) {
       return true;
     }
+
     return false;
   }
 }
