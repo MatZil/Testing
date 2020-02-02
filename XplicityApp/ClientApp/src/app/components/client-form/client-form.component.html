@@ -1,7 +1,7 @@
 <form #clientForm="ngForm">
 
   <h1 mat-dialog-title>
-    <div *ngIf="checkModalType(); else elseTitleBlock">
+    <div *ngIf="isCheckModalType(); else elseTitleBlock">
       Add client
     </div>
     <ng-template #elseTitleBlock>
@@ -61,7 +61,7 @@
 
   <mat-dialog-actions align="end">
     <button mat-flat-button mat-button-base [mat-dialog-close]>Cancel</button>
-    <div *ngIf="checkModalType(); then thenButtonBlock else elseButtonBlock"></div>
+    <div *ngIf="isCheckModalType(); then thenButtonBlock else elseButtonBlock"></div>
     <ng-template #thenButtonBlock>
       <button mat-flat-button color="primary" [mat-dialog-close]="data.clientFormData" [disabled]="clientForm.form.invalid">
         Add client
