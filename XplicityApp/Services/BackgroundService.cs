@@ -93,7 +93,7 @@ namespace XplicityApp.Services
                     var admins = await _employeeRepository.GetAllAdmins();
 
                     await _emailService.SendThisMonthsHolidayInfo(admins, holidaysWithClients);
-                } 
+                }
                 catch (Exception exception)
                 {
                     _logger.LogInformation(exception.ToString() + " occurred in SendHolidayReports() at " + _timeService.GetCurrentTime());
@@ -120,7 +120,7 @@ namespace XplicityApp.Services
                 {
                     await _emailService.NotifyAllAboutUpcomingAbsences(allEmployees, nextDayHolidays);
                 }
-            } 
+            }
             catch (Exception exception)
             {
                 _logger.LogInformation(exception.ToString() + " occurred in BroadcastCoworkersAbsences at " + _timeService.GetCurrentTime());
@@ -145,7 +145,7 @@ namespace XplicityApp.Services
                 {
                     await _emailService.SendBirthDayReminder(employeesWithBirthdays, allEmployees);
                 }
-            } 
+            }
             catch (Exception exception)
             {
                 _logger.LogInformation(exception.ToString() + " occurred in BroadcastCoworkersBirthdays() at" + _timeService.GetCurrentTime());

@@ -31,7 +31,7 @@ export class UserService {
     }
 
     registerUser(user: Newuser): Observable<User> {
-        return this.http.post<User>(this.userApi, user);
+      return this.http.post<User>(this.userApi, user);
     }
 
     deleteUser(id: number) {

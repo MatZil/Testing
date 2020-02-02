@@ -19,7 +19,7 @@ namespace XplicityApp.Services
         private readonly IOvertimeUtility _overtimeUtility;
 
         public EmployeesService(IEmployeeRepository repository, IMapper mapper, IOvertimeUtility overtimeUtility,
-                                ITimeService timeService,  IUserService userService)
+                                ITimeService timeService, IUserService userService)
         {
             _repository = repository;
             _mapper = mapper;
@@ -40,6 +40,10 @@ namespace XplicityApp.Services
         {
             var employees = await _repository.GetAll();
             var employeesDto = _mapper.Map<GetEmployeeDto[]>(employees);
+            foreach (var employee in employeesDto)
+            {
+                employee.Role = await _userService.GetUserRole(employee.Id);
+            }
 
             return employeesDto;
         }
@@ -62,7 +66,7 @@ namespace XplicityApp.Services
             {
                 throw new Exception("Email \"" + newEmployeeDto.Email + "\" is already taken");
             }
-                
+
             var newEmployee = _mapper.Map<Employee>(newEmployeeDto);
 
             var currentTime = _timeService.GetCurrentTime();
@@ -72,30 +76,30 @@ namespace XplicityApp.Services
             var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
                                                             new DateTime(currentTime.AddYears(1).Year, 1, 1));
 
-                if (newEmployeeDto.IsManualHolidaysInput)
+            if (newEmployeeDto.IsManualHolidaysInput)
+            {
+                if (newEmployeeDto.FreeWorkDays is null)
                 {
-                    if (newEmployeeDto.FreeWorkDays is null)
-                    {
-                        throw new NullReferenceException();
-                    }
-                    newEmployee.FreeWorkDays = (double)newEmployeeDto.FreeWorkDays;
+                    throw new NullReferenceException();
                 }
-                else
-                {
-                    newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
-                }
-
-
-                newEmployee.CurrentAvailableLeaves = newEmployee.ParentalLeaveLimit;
-                newEmployee.NextMonthAvailableLeaves = newEmployee.ParentalLeaveLimit;
-
-                await _repository.Create(newEmployee);
-                await _userService.Create(newEmployee, newEmployeeDto);
-
-                var employeeDto = _mapper.Map<NewEmployeeDto>(newEmployee);
-
-                return employeeDto;
+                newEmployee.FreeWorkDays = (double)newEmployeeDto.FreeWorkDays;
             }
+            else
+            {
+                newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
+            }
+
+
+            newEmployee.CurrentAvailableLeaves = newEmployee.ParentalLeaveLimit;
+            newEmployee.NextMonthAvailableLeaves = newEmployee.ParentalLeaveLimit;
+
+            await _repository.Create(newEmployee);
+            await _userService.Create(newEmployee, newEmployeeDto);
+
+            var employeeDto = _mapper.Map<NewEmployeeDto>(newEmployee);
+
+            return employeeDto;
+        }
         public async Task<bool> Delete(int id)
         {
             var item = await _repository.GetById(id);
@@ -145,6 +149,22 @@ namespace XplicityApp.Services
         public Employee AddOvertimeDetails(Employee employee)
         {
             return _overtimeUtility.AddOvertimeDetailsToEmployee(employee);
+        }
+
+        public async Task<bool> HasActiveUnpaidHoliday(int employeeId)
+        {
+            var currentTime = _timeService.GetCurrentTime();
+            var employeeHolidays = _repository.GetConfirmedHolidays(employeeId);
+
+            foreach (var holiday in employeeHolidays)
+            {
+                if (holiday.FromInclusive <= currentTime && holiday.ToExclusive > currentTime && !holiday.Paid)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

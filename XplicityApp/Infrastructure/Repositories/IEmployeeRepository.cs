@@ -8,7 +8,7 @@ namespace XplicityApp.Infrastructure.Repositories
     {
         Task<Employee> FindByEmail(string email);
 
-        List<Holiday> GetConfirmedHolidays(int employeeId); 
+        List<Holiday> GetConfirmedHolidays(int employeeId);
 
         Task<ICollection<Employee>> GetAllAdmins();
 

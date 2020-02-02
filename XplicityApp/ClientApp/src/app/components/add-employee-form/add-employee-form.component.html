@@ -4,7 +4,7 @@
         <app-base-employee-form formControlName="baseForm" [clients]="data.clients" [roles]="data.roles"></app-base-employee-form>
         <div class="alignRight">
             <mat-form-field>
-                <input matInput type="password" placeholder="Employee password" formControlName="password">
+                <input matInput type="password" placeholder="Password" formControlName="password">
                 <mat-error *ngIf="addEmployeeForm.controls.password.errors?.required" class="error">
                     Please enter password.
                 </mat-error>

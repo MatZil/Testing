@@ -26,6 +26,9 @@ export class BaseEmployeeFormComponent implements OnInit, ControlValueAccessor, 
   @Input() clients: Client[];
   @Input() roles: Role[];
 
+  readonly minDate = new Date(1900, 1, 1);
+  readonly maxDate = new Date(2100, 1, 1);
+
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {

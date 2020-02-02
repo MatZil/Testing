@@ -75,7 +75,6 @@ namespace XplicityApp.Infrastructure.Repositories
         public async Task<ICollection<Employee>> GetAllAdmins()
         {
             var users = await _userManager.GetUsersInRoleAsync("Admin");
-
             return Context.Employees.AsEnumerable().Where(employee => users.FirstOrDefault(u => u.EmployeeId == employee.Id) != null).ToList();
         }
     }

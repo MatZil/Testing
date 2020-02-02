@@ -205,16 +205,18 @@ namespace Tests
                     ToExclusive = DateTime.Today.AddDays(15),
                     Status = HolidayStatus.Pending,
                     RequestCreatedDate = new DateTime(2019, 10, 13),
+                    Paid = false
                 },
                 new Holiday
                 {
                     Employee = context.Employees.Find(2),
                     EmployeeId = 2,
                     Type = HolidayType.Annual,
-                    FromInclusive = DateTime.Today.AddDays(1),
+                    FromInclusive = DateTime.Today.AddDays(-1),
                     ToExclusive = DateTime.Today.AddDays(7),
                     Status = HolidayStatus.Confirmed,
                     RequestCreatedDate = new DateTime(2019, 10, 14),
+                    Paid = false
                 },
                 new Holiday
                 {
@@ -226,6 +228,7 @@ namespace Tests
                     Status = HolidayStatus.Confirmed,
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 10, 14),
+                    Paid = true
                 },
             };
             context.Holidays.AddRange(_holidays);

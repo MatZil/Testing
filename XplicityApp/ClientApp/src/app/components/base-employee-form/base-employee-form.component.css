@@ -2,3 +2,9 @@
     display: flex;
     justify-content: space-between;
 }
+
+.inputDatetimeField {
+    width: 90%;
+    left: 10%;
+    position: relative !important;
+}

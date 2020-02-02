@@ -5,8 +5,10 @@ using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using Xunit;
+using Nager.Date;
 using XplicityApp.Services.BackgroundFunctions;
 using Microsoft.Extensions.Logging;
+using XplicityApp.Services.Interfaces;
 
 namespace Tests
 {
@@ -22,15 +24,15 @@ namespace Tests
             var setup = new SetUp();
             setup.Initialize();
             var context = setup.HolidayDbContext;
-
-            _mockTimeService = new Mock<ITimeService>().Object;
-            new HolidaysRepository(context);
             var userManager = setup.InitializeUserManager();
+
             _employeesRepository = new EmployeesRepository(context, userManager);
+            _mockTimeService = new Mock<ITimeService>().Object;
             var mockLogger = new Mock<ILogger<EmployeeHolidaysBackgroundUpdater>>().Object;
-            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater(_mockTimeService, _employeesRepository, mockLogger);
+            var mockEmployeesService = new Mock<IEmployeesService>().Object;
+            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater(_mockTimeService, _employeesRepository, mockLogger, mockEmployeesService);
         }
-            
+
         [Fact]
         public async void When_AddingFreeWorkDays_Expect_AddsDaysOff()
         {
@@ -44,11 +46,10 @@ namespace Tests
             }
 
             await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(employees);
-            
             var countTrue = 0;
 
             var currentTime = _mockTimeService.GetCurrentTime();
-            if (currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.DayOfWeek != DayOfWeek.Sunday)
+            if (currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.DayOfWeek != DayOfWeek.Sunday && !DateSystem.IsPublicHoliday(currentTime, CountryCode.LT))
             {
                 var final = new double[employees.Count];
                 index = 0;
@@ -103,6 +104,5 @@ namespace Tests
 
             Assert.Equal(employees.Count, countTrue);
         }
-
     }
 }
