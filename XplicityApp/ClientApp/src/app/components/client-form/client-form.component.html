@@ -1,10 +1,10 @@
 <form #clientForm="ngForm">
 
   <h1 mat-dialog-title>
-    <div *ngIf="isCheckModalType(); else elseTitleBlock">
+    <div *ngIf="isAddingNewClient(); else clientEditingFormTitle">
       Add client
     </div>
-    <ng-template #elseTitleBlock>
+    <ng-template #clientEditingFormTitle>
       Edit client
     </ng-template>
   </h1>
@@ -61,13 +61,13 @@
 
   <mat-dialog-actions align="end">
     <button mat-flat-button mat-button-base [mat-dialog-close]>Cancel</button>
-    <div *ngIf="isCheckModalType(); then thenButtonBlock else elseButtonBlock"></div>
-    <ng-template #thenButtonBlock>
+    <div *ngIf="isAddingNewClient(); then clientAddingFormButton else clientEditingFromButton"></div>
+    <ng-template #clientAddingFormButton>
       <button mat-flat-button color="primary" [mat-dialog-close]="data.clientFormData" [disabled]="clientForm.form.invalid">
         Add client
       </button>
     </ng-template>
-    <ng-template #elseButtonBlock>
+    <ng-template #clientEditingFromButton>
       <button mat-flat-button color="primary" (click)="closeModal(data.clientFormData)" [disabled]="clientForm.form.invalid">
         Confirm edit
       </button>

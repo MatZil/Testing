@@ -1,5 +1,5 @@
-import { ModalType } from "../../enums/modal-type.enum";
 import { Newclient } from "../../models/newclient";
+import { ModalType } from "./modal-type.enum";
 
 export interface ClientModal {
   clientFormData: Newclient,
