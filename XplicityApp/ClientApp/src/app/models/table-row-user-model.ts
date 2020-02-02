@@ -1,6 +1,6 @@
 import { Updateuser } from './updateuser';
 
-export class User extends Updateuser {
+export class TableRowUserModel extends Updateuser {
     id: number;
     overtimeDays: number;
     nextOvertimeHours: number;

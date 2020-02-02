@@ -80,7 +80,7 @@ namespace XplicityApp.Services
             {
                 if (newEmployeeDto.FreeWorkDays is null)
                 {
-                    throw new NullReferenceException();
+                    throw new ArgumentNullException();
                 }
                 newEmployee.FreeWorkDays = (double)newEmployeeDto.FreeWorkDays;
             }

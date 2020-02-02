@@ -5,7 +5,7 @@ import { Newholidays } from '../../models/newholidays';
 import { Requestholidays } from '../../models/requestholidays';
 import { HolidaysService } from '../../services/holidays.service';
 
-import { User } from '../../models/user';
+import { TableRowUserModel } from '../../models/table-row-user-model';
 import { UserService } from '../../services/user.service';
 import { AuthenticationService } from '../../services/authentication.service';
 
@@ -31,8 +31,8 @@ export class HolidaysTableComponent implements OnInit {
 
   confirmDeleteModal: NzModalRef;
 
-  users: User[];
-  currentUser: User;
+  users: TableRowUserModel[];
+  currentUser: TableRowUserModel;
   currentUserId: number;
   holidaysType: string;
   holidaysStatus: string;

@@ -1,6 +1,6 @@
 import { EmployeeStatus } from './employee-status.enum';
 
-export class BaseUser {
+export abstract class BaseUser {
     name: string;
     surname: string;
     clientId: number;

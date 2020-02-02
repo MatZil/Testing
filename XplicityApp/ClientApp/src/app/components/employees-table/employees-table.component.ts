@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../models/user';
+import { TableRowUserModel } from '../../models/table-row-user-model';
 import { Newuser } from '../../models/newuser';
 import { Updateuser } from '../../models/updateuser';
 import { UserService } from '../../services/user.service';
@@ -20,7 +20,7 @@ import { EditEmployeeFormComponent } from '../edit-employee-form/edit-employee-f
   styleUrls: ['./employees-table.component.scss']
 })
 export class EmployeesTableComponent implements OnInit {
-  users: User[];
+  users: TableRowUserModel[];
   roles: Role[];
 
   userToUpdate: Updateuser;
@@ -39,7 +39,7 @@ export class EmployeesTableComponent implements OnInit {
   listOfSearchAddress: string[] = [];
   sortName: string | null = null;
   sortValue: string | null = null;
-  listOfData: User[] = [];
+  listOfData: TableRowUserModel[] = [];
 
   constructor(
     private userService: UserService,
@@ -93,7 +93,7 @@ export class EmployeesTableComponent implements OnInit {
     });
   }
 
-  showDeleteConfirm(userToDelete: User): void {
+  showDeleteConfirm(userToDelete: TableRowUserModel): void {
     this.confirmDeleteModal = this.modal.confirm({
       nzTitle: 'Are you sure?',
       nzContent: `If you confirm, ${userToDelete.name} ${userToDelete.surname} will be permanently deleted.`,
@@ -117,7 +117,7 @@ export class EmployeesTableComponent implements OnInit {
     });
   }
 
-  openEditForm(user: User): void {
+  openEditForm(user: TableRowUserModel): void {
     this.userToUpdate = Object.assign(user);
     const dialogRef = this.dialog.open(EditEmployeeFormComponent, {
       width: '550px',

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { User } from '../../models/user';
+import { TableRowUserModel } from '../../models/table-row-user-model';
 import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../services/user.service';
 import { Holidays } from '../../models/holidays';
@@ -11,7 +11,7 @@ import { HolidaysService } from '../../services/holidays.service';
 @Component({ templateUrl: 'sidebar.component.html', styleUrls: ['sidebar.component.scss'] })
 export class SidebarComponent implements OnInit {
   isCollapsed = false;
-  currentUser: User;
+  currentUser: TableRowUserModel;
   users = [];
   holidays: Holidays[];
   errorMessage: string;
@@ -22,7 +22,7 @@ export class SidebarComponent implements OnInit {
     private holidaysService: HolidaysService,
     private userService: UserService
   ) {
-    this.currentUser = new User();
+    this.currentUser = new TableRowUserModel();
   }
 
   deleteUser(id: number) {
