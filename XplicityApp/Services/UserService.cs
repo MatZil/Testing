@@ -79,10 +79,12 @@ namespace XplicityApp.Services
 
         public async Task<string> GetUserRole(int id)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.EmployeeId == id);
+            var user = await _userManager.Users.Where(x => x.EmployeeId == id).FirstOrDefaultAsync();
+
             var userRoles = await _userManager.GetRolesAsync(user);
-            var userRole = userRoles.OfType<string>().FirstOrDefault();
-            return userRole;
+            var firstUserRole = userRoles.FirstOrDefault();
+
+            return firstUserRole;
         }
     }
 }
