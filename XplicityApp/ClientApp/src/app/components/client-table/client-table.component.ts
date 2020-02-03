@@ -6,16 +6,7 @@ import { ClientService } from '../../services/client.service';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { MatDialog } from '@angular/material';
-import { EditClientFormComponent } from '../edit-client-form/edit-client-form.component';
-import { AddClientFormComponent } from '../add-client-form/add-client-form.component';
-
-export interface AddModalClient {
-  newClient: Newclient;
-}
-
-export interface EditModalClient {
-  clientToEdit: Newclient
-}
+import { ClientFormComponent } from '../client-form/client-form.component';
 
 @Component({
   selector: 'app-client-table',
@@ -120,13 +111,15 @@ export class ClientTableComponent implements OnInit {
 
   openEditForm(client: Client): void {
     this.newClientFormData = Object.assign({}, client);
-    const dialogRef = this.dialog.open(EditClientFormComponent, {
+    const dialogRef = this.dialog.open(ClientFormComponent, {
       width: '550px',
       data: {
-        clientToEdit: this.newClientFormData
+        clientFormData: this.newClientFormData,
+        formTitle: 'Edit client',
+        formConfirmationButtonName: 'Confirm edit'
       }
-
     });
+
     dialogRef.afterClosed().subscribe(editClient => {
       if (editClient) {
         this.editClient(editClient, client.id);
@@ -135,10 +128,12 @@ export class ClientTableComponent implements OnInit {
   }
 
   openAddForm() {
-    const dialogRef = this.dialog.open(AddClientFormComponent, {
+    const dialogRef = this.dialog.open(ClientFormComponent, {
       width: '550px',
       data: {
-        newClient: this.newClient
+        clientFormData: this.newClient,
+        formTitle: 'Add client',
+        formConfirmationButtonName: 'Add client'
       }
     });
 
