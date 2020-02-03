@@ -1,153 +1,40 @@
-<form #editEmployeeForm="ngForm">
+<form [formGroup]="editEmployeeForm">
     <h1 mat-dialog-title>Edit employee</h1>
     <mat-card>
+        <app-base-employee-form formControlName="baseForm" [clients]="data.clients" [roles]="data.roles"></app-base-employee-form>
+        <div class="alignRight">
+            <mat-form-field>
+                <mat-select placeholder="Status" formControlName="status">
+                    <mat-option [value]="0">
+                        Former employee
+                    </mat-option>
+                    <mat-option [value]="1">
+                        Current employee
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
         <div class="divider">
             <div>
                 <mat-form-field>
-                    <input matInput [(ngModel)]="data.userToUpdate.name" name="name" placeholder="Employee name" #nameInput="ngModel" required pattern="[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]*">
-                    <mat-error *ngIf="nameInput.invalid" class="error">
-                        Please enter a valid name.
+                    <input matInput type="number" step="0.01" placeholder="Free work days" formControlName="freeWorkDays">
+                    <mat-error *ngIf="editEmployeeForm.controls.freeWorkDays.invalid" class="error">
+                        Free work days cannot be empty.
                     </mat-error>
                 </mat-form-field>
             </div>
             <div>
                 <mat-form-field>
-                    <input matInput [(ngModel)]="data.userToUpdate.surname" name="surname" placeholder="Employee surname" #surnameInput="ngModel" required pattern="[a-zA-ZąčęėįšųūžĄČĘĖĮŠŲŪŽ]*">
-                    <mat-error *ngIf="surnameInput.invalid" class="error">
-                        Please enter a valid surname.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="divider">
-            <div>
-                <mat-form-field>
-                    <mat-select [(ngModel)]="data.userToUpdate.clientId" name="clientId" placeholder="Client">
-                        <mat-option [value]="0">No client</mat-option>
-                        <div *ngFor="let client of data.clients">
-                            <mat-option [value]="client.id">{{client.companyName}}</mat-option>
-                        </div>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div>
-              <mat-form-field class="inputDatetimeField">
-                <input matInput [matDatepicker]="worksFromDate" placeholder="Started working from date" (click)="worksFromDate.open()"
-                       [(ngModel)]="data.userToUpdate.worksFromDate" name="worksFromDate" required #workStartInput="ngModel"
-                       [min]="minDate" [max]="maxDate">
-                <mat-datepicker-toggle matSuffix [for]="worksFromDate"></mat-datepicker-toggle>
-                <mat-datepicker #worksFromDate></mat-datepicker>
-                <mat-error *ngIf="workStartInput.invalid" class="error">
-                  Date cannot be empty.
-                </mat-error>
-              </mat-form-field>
-            </div>
-        </div>
-        <div class="divider">
-          <div>
-            <mat-form-field style="width:90%">
-              <input matInput [matDatepicker]="birthDayDate" placeholder="Employee birthday date" (click)="birthDayDate.open()"
-                     [(ngModel)]="data.userToUpdate.birthdayDate" name="birthDayDate" required #birthdayInput="ngModel"
-                     [min]="minDate" [max]="maxDate">
-              <mat-datepicker-toggle matSuffix [for]="birthDayDate"></mat-datepicker-toggle>
-              <mat-datepicker #birthDayDate></mat-datepicker>
-              <mat-error *ngIf="birthdayInput.invalid" class="error">
-                Date cannot be empty.
-              </mat-error>
-            </mat-form-field>
-          </div>
-          <div>
-            <mat-form-field class="inputDatetimeField">
-              <input matInput [matDatepicker]="healthCheckDate" placeholder="Employee health check-up date" (click)="healthCheckDate.open()"
-                     [(ngModel)]="data.userToUpdate.healthCheckDate" name="healthCheckDate" required #healthInput="ngModel"
-                     [min]="minDate" [max]="maxDate">
-              <mat-datepicker-toggle matSuffix [for]="healthCheckDate"></mat-datepicker-toggle>
-              <mat-datepicker #healthCheckDate></mat-datepicker>
-              <mat-error *ngIf="healthInput.invalid" class="error">
-                Date cannot be empty.
-              </mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="divider">
-            <div>
-                <mat-form-field>
-                    <mat-select [(ngModel)]="data.userToUpdate.daysOfVacation" name="daysOfVacation" placeholder="Days of vacation" #daysInput="ngModel">
-                        <mat-option [value]="20">20</mat-option>
-                        <mat-option [value]="25">25</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-form-field>
-                    <mat-select [(ngModel)]="data.userToUpdate.parentalLeaveLimit" name="parentalLeaveLimit" placeholder="Parental leave limit" #parentalInput="ngModel">
-                        <mat-option [value]="0">0</mat-option>
-                        <mat-option [value]="1">1</mat-option>
-                        <mat-option [value]="2">2</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="divider">
-            <div>
-                <mat-form-field>
-                    <input matInput [(ngModel)]="data.userToUpdate.freeWorkDays" type="number" step="0.01" name="freeWorkDays" placeholder="Amount of holidays" #freeWorkDaysInput="ngModel">
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-form-field>
-                    <input matInput [(ngModel)]="data.userToUpdate.overtimeHours" type="number" min="0" name="overtimeHours" placeholder="Overtime hours" #overtimeInput="ngModel" required>
-                    <mat-error *ngIf="overtimeInput.invalid" class="error">
+                    <input matInput type="number" min="0" placeholder="Overtime hours" formControlName="overtimeHours">
+                    <mat-error *ngIf="editEmployeeForm.controls.overtimeHours.invalid" class="error">
                         Overtime hours cannot be empty.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="divider">
-            <div>
-                <mat-form-field>
-                    <input matInput [(ngModel)]="data.userToUpdate.email" type="email" name="email" placeholder="Employee email" #emailInput="ngModel" required email>
-                    <mat-error *ngIf="emailInput.invalid" class="error">
-                        Please enter a valid email.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-form-field>
-                    <mat-select [(ngModel)]="data.userToUpdate.status" name="status" placeholder="Employee status" required #statusInput="ngModel" [disabled]="data.isEditingSelf">
-                        <mat-option [value]="0">
-                            Former employee
-                        </mat-option>
-                        <mat-option [value]="1">
-                            Current employee
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
-
-        <div class="divider">
-            <div>
-                <mat-form-field>
-                    <mat-select [(ngModel)]="data.userToUpdate.role" name="role" placeholder="Employee role" #roleInput="ngModel">
-                        <mat-option *ngFor="let role of data.roles" [value]="role.name">
-                            {{role.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div>
-                <mat-form-field>
-                    <input matInput [(ngModel)]="data.userToUpdate.position" name="position" placeholder="Employee position" #positionInput="ngModel" required>
-                    <mat-error *ngIf="positionInput.invalid" class="error">
-                        Position cannot be empty.
                     </mat-error>
                 </mat-form-field>
             </div>
         </div>
     </mat-card>
     <mat-card>
-        <button mat-flat-button color="primary" (click)="confirmEdit()" [disabled]="editEmployeeForm.form.invalid">
+        <button mat-flat-button color="primary" (click)="confirmEdit()" [disabled]="editEmployeeForm.invalid">
           Edit employee
         </button>
         <button mat-flat-button color="warn" (click)="closeModal(null)" class="floatRight">Cancel</button>

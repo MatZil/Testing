@@ -7,11 +7,10 @@
     float: right;
 }
 
-h1 {
-    text-align: center;
+.alignRight {
+    text-align: right;
 }
 
-.inputDatetimeField {
-  width: 90%;
-  left: 10%;
+h1 {
+    text-align: center;
 }
