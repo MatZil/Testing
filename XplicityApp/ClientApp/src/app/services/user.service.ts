@@ -26,6 +26,10 @@ export class UserService {
         return this.http.get<TableRowUserModel[]>(this.userApi);
     }
 
+    emailExists(email: string): Observable<boolean> {
+        return this.http.get<boolean>(`${this.userApi}/${email}/exists`);
+    }
+
     getUser(id: number): Observable<TableRowUserModel> {
         return this.http.get<TableRowUserModel>(`${this.userApi}/${id}`);
     }

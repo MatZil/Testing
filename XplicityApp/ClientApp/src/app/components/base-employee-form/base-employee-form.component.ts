@@ -1,7 +1,12 @@
 import { Component, Input, forwardRef, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor } from '@angular/forms';
+import {
+  FormGroup, FormBuilder, FormControl, Validators, NG_VALUE_ACCESSOR, NG_VALIDATORS,
+  ControlValueAccessor, NG_ASYNC_VALIDATORS,
+} from '@angular/forms';
 import { Client } from 'src/app/models/client';
 import { Role } from 'src/app/models/role';
+import { UserService } from 'src/app/services/user.service';
+import { uniqueEmailValidator } from './unique-email-validator';
 
 @Component({
   selector: 'app-base-employee-form',
@@ -17,6 +22,11 @@ import { Role } from 'src/app/models/role';
       provide: NG_VALIDATORS,
       useExisting: forwardRef(() => BaseEmployeeFormComponent),
       multi: true
+    },
+    {
+      provide: NG_ASYNC_VALIDATORS,
+      useExisting: forwardRef(() => BaseEmployeeFormComponent),
+      multi: true
     }
   ]
 })
@@ -29,7 +39,8 @@ export class BaseEmployeeFormComponent implements OnInit, ControlValueAccessor, 
   readonly minDate = new Date(1900, 1, 1);
   readonly maxDate = new Date(2100, 1, 1);
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder,
+    private userService: UserService) { }
 
   ngOnInit() {
     this.initializeFormGroup();
@@ -48,7 +59,7 @@ export class BaseEmployeeFormComponent implements OnInit, ControlValueAccessor, 
       email: ['', [
         Validators.required,
         Validators.email
-      ]],
+      ], uniqueEmailValidator(this.userService)],
       position: ['', [
         Validators.required
       ]],
