@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Audit.EntityFramework;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using XplicityApp.Infrastructure.Database.Models;
 
 namespace XplicityApp.Infrastructure.Database
 {
-    public class HolidayDbContext : IdentityDbContext<User>
+    public class HolidayDbContext : AuditIdentityDbContext<User>
     {
         public DbSet<Client> Clients { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -15,6 +16,7 @@ namespace XplicityApp.Infrastructure.Database
         public DbSet<InventoryCategory> InventoryCategories { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
         private readonly IConfiguration _configuration;
+        public DbSet<AuditLog> AuditLogs { get; set; }
 
         public HolidayDbContext(DbContextOptions options, IConfiguration configuration) : base(options)
         {
