@@ -90,13 +90,13 @@ namespace XplicityApp.Configurations
         {
             Audit.Core.Configuration.Setup()
                 .UseEntityFramework(ef => ef
-                    .AuditTypeMapper(t => typeof(AuditLog))
-                        .AuditEntityAction<AuditLog>((ev, entry, entity) =>
+                    .AuditTypeMapper(type => typeof(AuditLog))
+                        .AuditEntityAction<AuditLog>((auditEvent, auditEntry, auditObject) =>
                         {
-                            entity.AuditData = entry.ToJson();
-                            entity.EntityType = entry.EntityType.Name;
-                            entity.AuditDate = DateTime.Now;
-                            entity.AuditUser = Environment.UserName;
+                            auditObject.Data = auditEntry.ToJson();
+                            auditObject.EntityType = auditEntry.EntityType.Name;
+                            auditObject.Date = DateTime.Now;
+                            auditObject.User = Environment.UserName;
                         })
                 .IgnoreMatchedProperties(true));
         }

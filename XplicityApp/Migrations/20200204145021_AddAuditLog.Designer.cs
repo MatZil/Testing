@@ -10,8 +10,8 @@ using XplicityApp.Infrastructure.Database;
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20200204105957_AddAuditLogTable")]
-    partial class AddAuditLogTable
+    [Migration("20200204145021_AddAuditLog")]
+    partial class AddAuditLog
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -159,19 +159,19 @@ namespace XplicityApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AuditData")
+                    b.Property<string>("Data")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasMaxLength(6000);
 
-                    b.Property<DateTime>("AuditDate")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("AuditUser")
+                    b.Property<string>("EntityType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EntityType")
+                    b.Property<string>("User")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

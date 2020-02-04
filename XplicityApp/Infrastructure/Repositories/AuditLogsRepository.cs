@@ -43,9 +43,12 @@ namespace XplicityApp.Infrastructure.Repositories
             return auditLog;
         }
 
-        public Task<bool> Update(AuditLog entity)
+        public async Task<bool> Update(AuditLog entity)
         {
-            throw new NotImplementedException();
+            Context.AuditLogs.Attach(entity);
+            var changes = await Context.SaveChangesAsync();
+
+            return changes > 0;
         }
     }
 }

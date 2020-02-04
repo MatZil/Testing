@@ -7,12 +7,12 @@ namespace XplicityApp.Infrastructure.Database.Models
     {
         [Required]
         [MaxLength(6000)]
-        public string AuditData { get; set; }
+        public string Data { get; set; }
         [Required]
         public string EntityType { get; set; }
         [Required]
-        public DateTime AuditDate { get; set; }
+        public DateTime Date { get; set; }
         [Required]
-        public string AuditUser { get; set; }
+        public string User { get; set; }
     }
 }
