@@ -1,5 +1,3 @@
-<app-overtime-display class="holidaysLeftMessage"></app-overtime-display>
-
 <mat-tab-group>
     <mat-tab label="General">
         <div *ngIf="currentUser" class="employeesInfo">
@@ -19,6 +17,11 @@
                 <p><b>Available parental leaves next month</b>: {{ currentUser.nextMonthAvailableLeaves }}</p>
             </div>
             <p><b>Role</b>: {{ currentUser.role }}</p>
+        </div>
+
+        <div *ngIf="currentUser" class="holidaysInfo">
+            <h1><b>Holiday information</b></h1>
+            <p><app-overtime-display></app-overtime-display></p>
         </div>
     </mat-tab>
     <mat-tab label="Settings">
