@@ -14,6 +14,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
+using System.Collections.Generic;
+using System.Linq;
+using Audit.Core;
+using Audit.EntityFramework.Providers;
 
 namespace XplicityApp.Configurations
 {
@@ -82,6 +86,21 @@ namespace XplicityApp.Configurations
             }
         }
 
+        public static void SetUpAudit(this IServiceCollection services)
+        {
+            Audit.Core.Configuration.Setup()
+                .UseEntityFramework(ef => ef
+                    .AuditTypeMapper(type => typeof(AuditLog))
+                        .AuditEntityAction<AuditLog>((auditEvent, auditEntry, auditObject) =>
+                        {
+                            auditObject.Data = auditEntry.ToJson();
+                            auditObject.EntityType = auditEntry.EntityType.Name;
+                            auditObject.Date = DateTime.Now;
+                            auditObject.User = Environment.UserName;
+                        })
+                .IgnoreMatchedProperties(true));
+        }
+
         public static void SetUpAutoMapper(this IServiceCollection services)
         {
             var config = new AutoMapper.MapperConfiguration(cfg =>
@@ -97,8 +116,8 @@ namespace XplicityApp.Configurations
         public static void ConfigureCors(this IServiceCollection services)
         {
             services.AddCors(options => options.AddPolicy("ExposeResponseHeaders", policyBuilder => {
-                    policyBuilder.WithExposedHeaders("Content-Disposition");
-                }));
+                policyBuilder.WithExposedHeaders("Content-Disposition");
+            }));
         }
 
         public static void UseCorsExt(this IApplicationBuilder app)
@@ -116,7 +135,7 @@ namespace XplicityApp.Configurations
         {
             var baseFolder = configuration.GetValue<string>("FileConfig:BaseFolder");
             app.UseStaticFiles();
-            
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), baseFolder)),
