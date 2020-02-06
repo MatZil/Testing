@@ -1,5 +1,13 @@
-<div class="container">
-    <h1 class="titleCenter">Xplicity Holidays</h1>
-    <app-overtime-display class="holidaysCount"></app-overtime-display>
+<div *ngIf="currentUser" class="container">
+  <h1 class="titleCenter">Xplicity Holidays</h1>
+  <div class="holidaysCount">
+    <h1><b>Holiday information</b></h1>
+    <app-overtime-display></app-overtime-display>
     <app-pdf></app-pdf>
+  </div>
 </div>
+
+
+
+
+
