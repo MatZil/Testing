@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
@@ -77,8 +78,10 @@ namespace XplicityApp.Services
             _logger.LogInformation("SendHolidayReports() was initiated at " + _timeService.GetCurrentTime());
 
             var currentTime = GetCurrentDateTime();
+            var tomorrow = currentTime.AddDays(1);
+            var startDay = _timeService.GetWorkDays(currentTime, tomorrow); //check if it next workday
 
-            if (currentTime.Month != currentTime.AddDays(1).Month)
+            if (currentTime.Month != currentTime.AddDays(1).Month && currentTime.Day != startDay)
             {
                 try
                 {
