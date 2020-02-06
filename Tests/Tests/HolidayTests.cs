@@ -99,7 +99,7 @@ namespace Tests
                 EmployeeId = employeeId,
                 Type = HolidayType.Parental,
                 FromInclusive = new DateTime(2019, 10, 24),
-                ToExclusive = new DateTime(2019, 10, 28),
+                ToInclusive = new DateTime(2019, 10, 28),
             };
 
             int createdHolidayId = -1;

@@ -126,7 +126,7 @@ namespace XplicityApp.Services
             var currentTime = _timeService.GetCurrentTime();
 
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
-            
+
             ValidDateInterval(holiday, currentTime);
             ValidOvertime(holiday, employee);
 
@@ -139,8 +139,7 @@ namespace XplicityApp.Services
         [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
         private static void ValidDateInterval(in Holiday holiday, in DateTime currentTime)
         {
-            if(holiday.FromInclusive.Date <= currentTime.Date || 
-                holiday.ToExclusive.Date <= holiday.FromInclusive.Date)
+            if (holiday.FromInclusive.Date <= currentTime.Date || holiday.ToInclusive.Date < holiday.FromInclusive.Date)
             {
                 throw new InvalidOperationException("Requested dates for holiday are invalid.");
             }
@@ -155,20 +154,20 @@ namespace XplicityApp.Services
                 throw new InvalidOperationException("Requested holiday uses more overtime days than employee has available.");
             }
 
-            var workdays = _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive);
+            var workdays = _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToInclusive);
             if (workdays < holiday.OvertimeDays)
+            {
                 throw new InvalidOperationException("Requested holiday period doesn't have enough workdays to cover used overtime days.");
+            }
         }
 
         private bool EmployeeEligibleForParental(Holiday holiday, Employee employee, DateTime currentTime)
         {
-            var leaveTime = _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToExclusive);
+            var leaveTime = _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToInclusive);
 
-            if (holiday.FromInclusive.Month != holiday.ToExclusive.AddDays(-1).Month)
+            if (holiday.FromInclusive.Month != holiday.ToInclusive.Month)
             {
-                var leaveTimeCurrentMonth = _timeService.GetWorkDays(holiday.FromInclusive,
-                    new DateTime(holiday.FromInclusive.AddMonths(1).Year, holiday.FromInclusive.AddMonths(1).Month, 1));
-
+                var leaveTimeCurrentMonth = _timeService.GetRemainingMonthWorkDays(holiday.FromInclusive);
                 var leaveTimeNextMonth = leaveTime - leaveTimeCurrentMonth;
 
                 if (employee.CurrentAvailableLeaves < leaveTimeCurrentMonth || employee.NextMonthAvailableLeaves < leaveTimeNextMonth)
@@ -203,7 +202,7 @@ namespace XplicityApp.Services
                     var admins = await _repositoryEmployees.GetAllAdmins();
                     foreach (var admin in admins)
                     {
-                        await _emailService.SendOrderNotification(fileId, employee, admin.Email); 
+                        await _emailService.SendOrderNotification(fileId, employee, admin.Email);
                     }
                     break;
             }

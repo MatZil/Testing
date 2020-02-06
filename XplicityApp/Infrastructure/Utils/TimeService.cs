@@ -4,7 +4,7 @@ using XplicityApp.Infrastructure.Utils.Interfaces;
 
 namespace XplicityApp.Infrastructure.Utils
 {
-    public class TimeService: ITimeService
+    public class TimeService : ITimeService
     {
         public DateTime GetCurrentTime()
         {
@@ -21,23 +21,36 @@ namespace XplicityApp.Infrastructure.Utils
             return false;
         }
 
-        public int GetWorkDays(DateTime from, DateTime to)
+        public int GetWorkDays(DateTime fromInclusive, DateTime toInclusive)
         {
             var workDays = 0;
 
-            while (from < to)
+            while (fromInclusive <= toInclusive)
             {
-                if (IsFreeWorkDay(from))
+                if (IsFreeWorkDay(fromInclusive))
                 {
-                    from = from.AddDays(1);
+                    fromInclusive = fromInclusive.AddDays(1);
                     continue;
                 }
 
                 workDays++;
-                from = from.AddDays(1);
+                fromInclusive = fromInclusive.AddDays(1);
             }
 
             return workDays;
+        }
+
+        public int GetCurrentYearWorkDays()
+        {
+            var currentYear = GetCurrentTime().Year;
+            return GetWorkDays(new DateTime(currentYear, 1, 1), new DateTime(currentYear, 12, 31));
+        }
+
+        public int GetRemainingMonthWorkDays(DateTime fromInclusive)
+        {
+            var followingMonth = fromInclusive.AddMonths(1);
+            var lastMonthDay = new DateTime(followingMonth.Year, followingMonth.Month, 1).AddDays(-1);
+            return GetWorkDays(fromInclusive, lastMonthDay);
         }
     }
 }
