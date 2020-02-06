@@ -19,7 +19,7 @@ namespace XplicityApp.Infrastructure.Repositories
 
         public async Task<ICollection<InventoryItem>> GetAll()
         {
-            var inventoryItems = await _context.InventoryItems.Include(i => i.Category).ToArrayAsync();
+            var inventoryItems = await _context.InventoryItems.Include(i => i.Category).Include(i => i.Employee).ToArrayAsync();
             return inventoryItems;
         }
 

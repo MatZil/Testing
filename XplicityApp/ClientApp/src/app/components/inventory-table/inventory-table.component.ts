@@ -39,6 +39,7 @@ export class InventoryTableComponent implements OnInit {
       purchaseDate: [null, [Validators.required]],
       expiryDate: [null, [Validators.required]],
       category: [null],
+      employee: [null],
       comment: [null],
       inventoryCategoryId: [null, [Validators.required]],
       employeeId: [null]

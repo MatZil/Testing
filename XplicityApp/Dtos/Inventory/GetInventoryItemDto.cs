@@ -24,5 +24,7 @@ namespace XplicityApp.Dtos.Inventory
         public decimal Price { get; set; }
 
         public int EmployeeId { get; set; }
+
+        public Employee Employee { get; set; }
     }
 }
