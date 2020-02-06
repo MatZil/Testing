@@ -166,5 +166,10 @@ namespace XplicityApp.Services
 
             return false;
         }
+
+        public async Task<bool> EmailExists(string email)
+        {
+            return await _repository.EmailExists(email);
+        }
     }
 }
