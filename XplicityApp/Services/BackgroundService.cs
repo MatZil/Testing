@@ -78,10 +78,8 @@ namespace XplicityApp.Services
             _logger.LogInformation("SendHolidayReports() was initiated at " + _timeService.GetCurrentTime());
 
             var currentTime = GetCurrentDateTime();
-            var tomorrow = currentTime.AddDays(1);
-            var startDay = _timeService.GetWorkDays(currentTime, tomorrow); //check if it next workday
 
-            if (currentTime.Month != currentTime.AddDays(1).Month && currentTime.Day != startDay)
+            if (currentTime.Month != currentTime.AddDays(1).Month)
             {
                 try
                 {
@@ -112,11 +110,18 @@ namespace XplicityApp.Services
             try
             {
                 var currentTime = GetCurrentDateTime();
+                var nextWorkDay = currentTime.AddDays(1);
+
+                while (_timeService.IsFreeWorkDay(nextWorkDay))
+                {
+                    nextWorkDay = nextWorkDay.AddDays(1);
+                }
+
                 var allEmployees = await _employeeRepository.GetAll();
                 var allHolidays = await _holidaysRepository.GetAll();
                 var nextDayHolidays = allHolidays.Where(holiday =>
                                                             holiday.Status == HolidayStatus.Confirmed &&
-                                                            holiday.FromInclusive.Date == currentTime.AddDays(1).Date
+                                                            holiday.FromInclusive.Date == nextWorkDay.Date
                                                         ).ToList();
 
                 if (nextDayHolidays.Any())
