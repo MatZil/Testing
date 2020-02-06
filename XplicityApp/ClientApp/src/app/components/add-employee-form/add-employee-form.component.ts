@@ -44,6 +44,10 @@ export class AddEmployeeFormComponent implements OnInit {
     });
   }
 
+  isFormInvalid(baseForm: FormGroup): boolean {
+    return !(baseForm.valid && this.addEmployeeForm.valid);
+  }
+
   onSubmit(): void {
     const newUser = this.getFormUser();
 

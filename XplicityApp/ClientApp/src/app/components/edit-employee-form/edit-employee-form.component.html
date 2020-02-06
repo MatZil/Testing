@@ -1,7 +1,7 @@
 <form [formGroup]="editEmployeeForm">
     <h1 mat-dialog-title>Edit employee</h1>
     <mat-card>
-        <app-base-employee-form formControlName="baseForm" [clients]="data.clients" [roles]="data.roles"></app-base-employee-form>
+        <app-base-employee-form #baseComponent="baseEmployeeComponent" formControlName="baseForm" [clients]="data.clients" [roles]="data.roles" [initialEmail]="data.userToUpdate.email"></app-base-employee-form>
         <div class="alignRight">
             <mat-form-field>
                 <mat-select placeholder="Status" formControlName="status">
@@ -34,7 +34,7 @@
         </div>
     </mat-card>
     <mat-card>
-        <button mat-flat-button color="primary" (click)="confirmEdit()" [disabled]="editEmployeeForm.invalid">
+        <button mat-flat-button color="primary" (click)="confirmEdit()" [disabled]="isFormInvalid(baseComponent.baseForm)">
           Edit employee
         </button>
         <button mat-flat-button color="warn" (click)="closeModal(null)" class="floatRight">Cancel</button>
