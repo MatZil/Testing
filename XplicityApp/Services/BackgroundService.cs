@@ -110,23 +110,27 @@ namespace XplicityApp.Services
             try
             {
                 var currentTime = GetCurrentDateTime();
-                var nextWorkDay = currentTime.AddDays(1);
 
-                while (_timeService.IsFreeWorkDay(nextWorkDay))
+                if (_timeService.IsFreeWorkDay(currentTime))
                 {
-                    nextWorkDay = nextWorkDay.AddDays(1);
-                }
+                    var nextWorkDay = currentTime.AddDays(1);
 
-                var allEmployees = await _employeeRepository.GetAll();
-                var allHolidays = await _holidaysRepository.GetAll();
-                var nextDayHolidays = allHolidays.Where(holiday =>
-                                                            holiday.Status == HolidayStatus.Confirmed &&
-                                                            holiday.FromInclusive.Date == nextWorkDay.Date
-                                                        ).ToList();
+                    while (_timeService.IsFreeWorkDay(nextWorkDay))
+                    {
+                        nextWorkDay = nextWorkDay.AddDays(1);
+                    }
 
-                if (nextDayHolidays.Any())
-                {
-                    await _emailService.NotifyAllAboutUpcomingAbsences(allEmployees, nextDayHolidays);
+                    var allEmployees = await _employeeRepository.GetAll();
+                    var allHolidays = await _holidaysRepository.GetAll();
+                    var nextDayHolidays = allHolidays.Where(holiday =>
+                                                                holiday.Status == HolidayStatus.Confirmed &&
+                                                                holiday.FromInclusive.Date == nextWorkDay.Date
+                                                            ).ToList();
+
+                    if (nextDayHolidays.Any())
+                    {
+                        await _emailService.NotifyAllAboutUpcomingAbsences(allEmployees, nextDayHolidays);
+                    }
                 }
             }
             catch (Exception exception)
