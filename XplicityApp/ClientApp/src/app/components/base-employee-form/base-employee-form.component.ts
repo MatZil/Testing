@@ -1,8 +1,5 @@
 import { Component, Input, forwardRef, OnInit } from '@angular/core';
-import {
-  FormGroup, FormBuilder, FormControl, Validators, NG_VALUE_ACCESSOR, NG_VALIDATORS,
-  ControlValueAccessor, NG_ASYNC_VALIDATORS,
-} from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { Client } from 'src/app/models/client';
 import { Role } from 'src/app/models/role';
 import { UserService } from 'src/app/services/user.service';
@@ -17,29 +14,22 @@ import { uniqueEmailValidator } from './unique-email-validator';
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => BaseEmployeeFormComponent),
       multi: true
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BaseEmployeeFormComponent),
-      multi: true
-    },
-    {
-      provide: NG_ASYNC_VALIDATORS,
-      useExisting: forwardRef(() => BaseEmployeeFormComponent),
-      multi: true
     }
-  ]
+  ],
+  exportAs: 'baseEmployeeComponent'
 })
 
-export class BaseEmployeeFormComponent implements OnInit, ControlValueAccessor, Validators {
+export class BaseEmployeeFormComponent implements OnInit, ControlValueAccessor {
   baseForm: FormGroup;
   @Input() clients: Client[];
   @Input() roles: Role[];
+  @Input() initialEmail?: string;
 
   readonly minDate = new Date(1900, 1, 1);
   readonly maxDate = new Date(2100, 1, 1);
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(
+    private formBuilder: FormBuilder,
     private userService: UserService) { }
 
   ngOnInit() {
@@ -59,7 +49,7 @@ export class BaseEmployeeFormComponent implements OnInit, ControlValueAccessor, 
       email: ['', [
         Validators.required,
         Validators.email
-      ], uniqueEmailValidator(this.userService)],
+      ], uniqueEmailValidator(this.userService, this.initialEmail)],
       position: ['', [
         Validators.required
       ]],
@@ -90,8 +80,4 @@ export class BaseEmployeeFormComponent implements OnInit, ControlValueAccessor, 
   }
 
   registerOnTouched(fn: any) { }
-
-  validate(_: FormControl) {
-    return this.baseForm.valid ? null : { invalidForm: { valid: false, message: 'BaseEmployeeForm fields are invalid.' } };
-  }
 }

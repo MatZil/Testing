@@ -20,9 +20,13 @@ export class EditEmployeeFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: EditModalData) {}
 
   ngOnInit() {
-    this.initialStatusValue = this.data.userToUpdate.status;
+    this.saveInitialValues();
     this.adjustClientId();
     this.initializeFormGroup();
+  }
+
+  saveInitialValues() {
+    this.initialStatusValue = this.data.userToUpdate.status;
   }
 
   closeModal(returnValue: any): void {
@@ -68,5 +72,9 @@ export class EditEmployeeFormComponent implements OnInit {
       ]],
       status: [{value: this.data.userToUpdate.status, disabled: this.data.isEditingSelf}]
     });
+  }
+
+  isFormInvalid(baseForm: FormGroup): boolean {
+    return !(baseForm.valid && this.editEmployeeForm.valid);
   }
 }
