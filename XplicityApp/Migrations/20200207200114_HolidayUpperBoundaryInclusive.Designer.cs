@@ -10,7 +10,7 @@ using XplicityApp.Infrastructure.Database;
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20200207084252_HolidayUpperBoundaryInclusive")]
+    [Migration("20200207200114_HolidayUpperBoundaryInclusive")]
     partial class HolidayUpperBoundaryInclusive
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
