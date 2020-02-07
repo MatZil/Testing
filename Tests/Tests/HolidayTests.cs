@@ -99,11 +99,10 @@ namespace Tests
                 EmployeeId = employeeId,
                 Type = HolidayType.Parental,
                 FromInclusive = new DateTime(2019, 10, 24),
-                ToInclusive = new DateTime(2019, 10, 28),
+                ToInclusive = new DateTime(2019, 10, 27),
             };
 
-            int createdHolidayId = -1;
-            createdHolidayId = await _holidaysService.Create(newHoliday);
+            var createdHolidayId = await _holidaysService.Create(newHoliday);
             var createdHoliday = _context.Holidays.Find(createdHolidayId);
 
             Assert.True(createdHolidayId > -1 && createdHoliday != null);
