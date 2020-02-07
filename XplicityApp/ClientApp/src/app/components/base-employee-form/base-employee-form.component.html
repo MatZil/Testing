@@ -100,7 +100,10 @@
     <div style="float: left;">
         <mat-form-field>
             <input matInput placeholder="E-mail" formControlName="email">
-            <mat-error *ngIf="baseForm.controls.email.invalid" class="error">
+            <mat-error *ngIf="baseForm.controls.email.errors?.emailExists">
+                This email already exists!
+            </mat-error>
+            <mat-error *ngIf="baseForm.controls.email.errors?.required || baseForm.controls.email.errors?.email" class="error">
                 Please enter a valid email.
             </mat-error>
         </mat-form-field>

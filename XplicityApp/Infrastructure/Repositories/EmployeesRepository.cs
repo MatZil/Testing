@@ -77,5 +77,10 @@ namespace XplicityApp.Infrastructure.Repositories
             var users = await _userManager.GetUsersInRoleAsync("Admin");
             return Context.Employees.AsEnumerable().Where(employee => users.FirstOrDefault(u => u.EmployeeId == employee.Id) != null).ToList();
         }
+
+        public async Task<bool> EmailExists(string email)
+        {
+            return await Context.Employees.Select(employee => employee.Email).ContainsAsync(email);
+        }
     }
 }
