@@ -7,10 +7,8 @@ namespace XplicityApp.Infrastructure.Repositories
     public interface IEmployeeRepository : IRepository<Employee>
     {
         Task<Employee> FindByEmail(string email);
-
         List<Holiday> GetConfirmedHolidays(int employeeId);
-
         Task<ICollection<Employee>> GetAllAdmins();
-
+        Task<bool> EmailExists(string email);
     }
 }

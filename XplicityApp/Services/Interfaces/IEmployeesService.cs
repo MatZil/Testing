@@ -14,5 +14,6 @@ namespace XplicityApp.Services.Interfaces
         Task<bool> Delete(int id);
         Employee AddOvertimeDetails(Employee employee);
         Task<bool> HasActiveUnpaidHoliday(int id);
+        Task<bool> EmailExists(string email);
     }
 }

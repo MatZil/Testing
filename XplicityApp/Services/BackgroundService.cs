@@ -75,9 +75,8 @@ namespace XplicityApp.Services
 
         private async Task SendHolidayReports()
         {
-            _logger.LogInformation("SendHolidayReports() was initiated at " + _timeService.GetCurrentTime());
-
             var currentTime = GetCurrentDateTime();
+            _logger.LogInformation("SendHolidayReports() was initiated at " + currentTime);
 
             if (currentTime.Month != currentTime.AddDays(1).Month)
             {
@@ -97,19 +96,19 @@ namespace XplicityApp.Services
                 }
                 catch (Exception exception)
                 {
-                    _logger.LogInformation(exception.ToString() + " occurred in SendHolidayReports() at " + _timeService.GetCurrentTime());
+                    _logger.LogInformation(exception.ToString() + " occurred in SendHolidayReports() at " + currentTime);
                 }
             }
 
-            _logger.LogInformation("SendHolidayReports() ended at " + _timeService.GetCurrentTime());
+            _logger.LogInformation("SendHolidayReports() ended at " + currentTime);
         }
 
         private async Task BroadcastCoworkersAbsences()
         {
-            _logger.LogInformation("BroadcastCoworkersAbsences() was initiated at " + _timeService.GetCurrentTime());
+            var currentTime = GetCurrentDateTime();
+            _logger.LogInformation("BroadcastCoworkersAbsences() was initiated at " + currentTime);
             try
             {
-                var currentTime = GetCurrentDateTime();
 
                 if (_timeService.IsFreeWorkDay(currentTime))
                 {
@@ -130,18 +129,18 @@ namespace XplicityApp.Services
             }
             catch (Exception exception)
             {
-                _logger.LogInformation(exception.ToString() + " occurred in BroadcastCoworkersAbsences at " + _timeService.GetCurrentTime());
+                _logger.LogInformation(exception.ToString() + " occurred in BroadcastCoworkersAbsences at " + currentTime);
             }
 
-            _logger.LogInformation("BroadcastCoworkersAbsences() ended at " + _timeService.GetCurrentTime());
+            _logger.LogInformation("BroadcastCoworkersAbsences() ended at " + currentTime);
         }
 
         private async Task BroadcastCoworkersBirthdays()
         {
-            _logger.LogInformation("BroadcastCoworkersBirthdays() was initiated at " + _timeService.GetCurrentTime());
+            var currentTime = GetCurrentDateTime();
+            _logger.LogInformation("BroadcastCoworkersBirthdays() was initiated at " + currentTime);
             try
             {
-                var currentTime = GetCurrentDateTime();
                 var allEmployees = await _employeeRepository.GetAll();
                 var employeesWithBirthdays = allEmployees.Where(employee =>
                                                                     employee.BirthdayDate.Month == currentTime.Month &&
@@ -155,9 +154,9 @@ namespace XplicityApp.Services
             }
             catch (Exception exception)
             {
-                _logger.LogInformation(exception.ToString() + " occurred in BroadcastCoworkersBirthdays() at" + _timeService.GetCurrentTime());
+                _logger.LogInformation(exception.ToString() + " occurred in BroadcastCoworkersBirthdays() at" + currentTime);
             }
-            _logger.LogInformation("BroadcastCoworkersBirthdays() ended at " + _timeService.GetCurrentTime());
+            _logger.LogInformation("BroadcastCoworkersBirthdays() ended at " + currentTime);
         }
     }
 }

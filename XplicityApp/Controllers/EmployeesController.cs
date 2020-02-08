@@ -95,6 +95,14 @@ namespace XplicityApp.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        [Produces(typeof(bool))]
+        [Route("{email}/exists")]
+        [Authorize(Roles="Admin")]
+        public async Task<IActionResult> EmailExists(string email)
+        {
+            return Ok(await _employeesService.EmailExists(email));
+        }
     }
 }
 

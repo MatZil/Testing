@@ -30,7 +30,7 @@ namespace XplicityApp.Services.Extensions
 
         public async Task UpdateEmployeesWorkdays(GetHolidayDto holidayDto)
         {
-            var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
+            var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToInclusive);
             workdays -= holidayDto.OvertimeDays;
             var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
             employee.FreeWorkDays -= workdays;
@@ -40,14 +40,12 @@ namespace XplicityApp.Services.Extensions
         public async Task UpdateParentalLeaves(GetHolidayDto holidayDto)
         {
             var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
-            var leaveTime = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
+            var leaveTime = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToInclusive);
             var currentTime = _timeService.GetCurrentTime();
 
-            if (holidayDto.FromInclusive.Month != holidayDto.ToExclusive.AddDays(-1).Month)
+            if (holidayDto.FromInclusive.Month != holidayDto.ToInclusive.Month)
             {
-                var leaveTimeCurrentMonth = _timeService.GetWorkDays(holidayDto.FromInclusive,
-                                        new DateTime(holidayDto.FromInclusive.AddMonths(1).Year, holidayDto.FromInclusive.AddMonths(1).Month, 1));
-
+                var leaveTimeCurrentMonth = _timeService.GetRemainingMonthWorkDays(holidayDto.FromInclusive);
                 var leaveTimeNextMonth = leaveTime - leaveTimeCurrentMonth;
                 employee.CurrentAvailableLeaves -= leaveTimeCurrentMonth;
                 employee.NextMonthAvailableLeaves -= leaveTimeNextMonth;
