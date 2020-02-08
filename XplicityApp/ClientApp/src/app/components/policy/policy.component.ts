@@ -8,7 +8,6 @@ import { UrlService } from 'src/app/services/url.service';
   styleUrls: ['./policy.component.scss']
 })
 export class PolicyComponent implements OnInit {
-  pageNumber = 1;
   policyPath: string;
   showPolicy = false;
 
