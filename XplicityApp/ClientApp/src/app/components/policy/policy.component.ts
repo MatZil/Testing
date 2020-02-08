@@ -1,5 +1,6 @@
-import { Component, OnInit, Inject, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 import { FilesService } from '../../services/files.service';
+import { UrlService } from 'src/app/services/url.service';
 
 @Component({
   selector: 'app-policy',
@@ -10,20 +11,18 @@ export class PolicyComponent implements OnInit {
   pageNumber = 1;
   policyPath: string;
   showPolicy = false;
-  baseApplicationUrl: string;
+
   constructor(
     private fileService: FilesService,
-    private elementRef: ElementRef,
-    @Inject('BASE_URL') baseUrl: string) {
-      this.baseApplicationUrl = baseUrl;
-    }
+    private urlService: UrlService,
+    private elementRef: ElementRef) {}
 
   ngOnInit() {
   }
 
   onButtonClick() {
     this.fileService.getPolicyRelativePath().subscribe(relativePath => {
-        this.policyPath = this.baseApplicationUrl + relativePath;
+        this.policyPath = this.urlService.getAbsolutePath(relativePath);
         this.showPolicy = true;
       }
     );
