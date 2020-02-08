@@ -52,5 +52,17 @@ namespace XplicityApp.Infrastructure.Utils
             var lastMonthDay = new DateTime(followingMonth.Year, followingMonth.Month, 1).AddDays(-1);
             return GetWorkDays(fromInclusive, lastMonthDay);
         }
+
+        public DateTime GetNextWorkDay(DateTime currentTime)
+        {
+            var nextWorkDay = currentTime.AddDays(1);
+
+            while (IsFreeWorkDay(nextWorkDay))
+            {
+                nextWorkDay = nextWorkDay.AddDays(1);
+            }
+
+            return nextWorkDay;
+        }
     }
 }

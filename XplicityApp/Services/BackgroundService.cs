@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
@@ -108,16 +109,22 @@ namespace XplicityApp.Services
             _logger.LogInformation("BroadcastCoworkersAbsences() was initiated at " + currentTime);
             try
             {
-                var allEmployees = await _employeeRepository.GetAll();
-                var allHolidays = await _holidaysRepository.GetAll();
-                var nextDayHolidays = allHolidays.Where(holiday =>
-                                                            holiday.Status == HolidayStatus.Confirmed &&
-                                                            holiday.FromInclusive.Date == currentTime.AddDays(1).Date
-                                                        ).ToList();
 
-                if (nextDayHolidays.Any())
+                if (_timeService.IsFreeWorkDay(currentTime))
                 {
-                    await _emailService.NotifyAllAboutUpcomingAbsences(allEmployees, nextDayHolidays);
+                    var nextWorkDay = _timeService.GetNextWorkDay(currentTime);
+
+                    var allEmployees = await _employeeRepository.GetAll();
+                    var allHolidays = await _holidaysRepository.GetAll();
+                    var nextDayHolidays = allHolidays.Where(holiday =>
+                                                                holiday.Status == HolidayStatus.Confirmed &&
+                                                                holiday.FromInclusive.Date == nextWorkDay.Date
+                                                            ).ToList();
+
+                    if (nextDayHolidays.Any())
+                    {
+                        await _emailService.NotifyAllAboutUpcomingAbsences(allEmployees, nextDayHolidays);
+                    }
                 }
             }
             catch (Exception exception)
