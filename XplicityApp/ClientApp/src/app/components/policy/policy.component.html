@@ -1,0 +1,5 @@
+<button nz-button nzType="primary" (click)="onButtonClick()">View holiday policy</button>
+<div *ngIf=showPolicy>
+    <pdf-viewer [src]="policyPath" [render-text]="true" [page]="pageNumber" [show-all]="true" style="display: block;">
+    </pdf-viewer>
+</div>

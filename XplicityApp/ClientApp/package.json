@@ -25,6 +25,7 @@
     "@auth0/angular-jwt": "^3.0.0",
     "@nguniversal/module-map-ngfactory-loader": "8.1.1",
     "@syncfusion/ej2-angular-schedule": "^17.4.43",
+    "@types/mime-types": "^2.1.0",
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.4.1",
     "core-js": "^3.6.4",

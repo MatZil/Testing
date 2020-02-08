@@ -36,7 +36,7 @@ import { EmployeesTableComponent } from './components/employees-table/employees-
 import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
-import { PdfComponent } from './components/pdf/pdf.component';
+import { PolicyComponent } from './components/policy/policy.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -68,7 +68,7 @@ export function tokenGetter() {
     HomeComponent,
     ProfileComponent,
     HolidaysTableComponent,
-    PdfComponent,
+    PolicyComponent,
     EmailtemplatesTableComponent,
     UploadComponent,
     OvertimeDisplayComponent,

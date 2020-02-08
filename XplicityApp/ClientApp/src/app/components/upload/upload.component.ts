@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpEventType } from '@angular/common/http';
-import * as mime from 'mime-types';
+
 import { AlertService } from 'src/app/services/alert.service';
 import { FileType } from '../../enums/fileType';
 import { FilesService } from 'src/app/services/files.service';
@@ -11,42 +11,26 @@ import { FilesService } from 'src/app/services/files.service';
   styleUrls: ['./upload.component.scss']
 })
 export class UploadComponent implements OnInit {
-  @Input()
-  public fileType: number;
-  public fileName: string;
-  public progress: number;
-  constructor(private alertService: AlertService, private fileService: FilesService) { }
+  @Input() fileType: FileType;
+  progress: number;
+
+  constructor(
+    private alertService: AlertService,
+    private fileService: FilesService) { }
 
   ngOnInit() {
   }
 
-  public uploadFile = (files) => {
+  public uploadFile = (files: string | any[]) => {
     if (files.length === 0) {
       return;
     }
-    let fileToUpload = <File>files[0];
-    if (fileToUpload.size > 1048576) {
-      this.alertService.displayMessage('The file is too large. File size limit is 10mb');
+    const fileToUpload = <File>files[0];
+    const errorMessage = this.fileService.getValidationErrorMessage(fileToUpload, this.fileType);
+    if (errorMessage !== '') {
+      this.alertService.displayMessage(errorMessage);
       return;
     }
-    if (this.fileType === FileType.HolidayPolicy && fileToUpload.type !== mime.lookup('pdf')) {
-
-      this.alertService.displayMessage('You can only upload pdf files for holiday policy');
-      return;
-    }
-    else if (this.fileType === FileType.Document) {
-      if (fileToUpload.type !== mime.lookup('docx') && fileToUpload.type !== mime.lookup('doc')) {
-        this.alertService.displayMessage('You can only upload doc and docx files for this option');
-        return;
-      }
-    }
-    else if (this.fileType === FileType.Image) {
-      if (fileToUpload.type !== mime.lookup('jpg') && fileToUpload.type !== mime.lookup('png')) {
-        this.alertService.displayMessage('You can only upload jpeg and png files for this option');
-        return;
-      }
-    }
-    this.fileName = fileToUpload.name;
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
     formData.append('fileType', this.fileType.toString());
@@ -54,8 +38,7 @@ export class UploadComponent implements OnInit {
     this.fileService.upload(formData).subscribe(event => {
       if (event.type === HttpEventType.UploadProgress) {
         this.progress = Math.round(100 * event.loaded / event.total);
-      }
-      else if (event.type === HttpEventType.Response) {
+      } else if (event.type === HttpEventType.Response) {
         this.alertService.displayMessage('You have successfuly uploaded a file');
       }
     });
