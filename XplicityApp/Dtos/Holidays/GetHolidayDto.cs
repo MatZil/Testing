@@ -9,7 +9,7 @@ namespace XplicityApp.Dtos.Holidays
         public int EmployeeId { get; set; }
         public HolidayType Type { get; set; }
         public DateTime FromInclusive { get; set; }
-        public DateTime ToExclusive { get; set; }
+        public DateTime ToInclusive { get; set; }
         public int OvertimeDays { get; set; }
         public double OvertimeHours { get; set; }
         public HolidayStatus Status { get; set; }

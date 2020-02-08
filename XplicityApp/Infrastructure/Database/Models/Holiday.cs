@@ -16,7 +16,7 @@ namespace XplicityApp.Infrastructure.Database.Models
         [Required]
         public DateTime FromInclusive { get; set; }
         [Required]
-        public DateTime ToExclusive { get; set; }
+        public DateTime ToInclusive { get; set; }
         [Required]
         public int OvertimeDays { get; set; }
         [Required]

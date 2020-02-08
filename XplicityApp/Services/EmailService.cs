@@ -39,7 +39,7 @@ namespace XplicityApp.Services
                                         .Replace("{employee.fullName}", $"{employee.Name} {employee.Surname}")
                                         .Replace("{holiday.type}", holiday.Type.ToString())
                                         .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
-                                        .Replace("{holiday.to}", holiday.ToExclusive.AddDays(-1).ToShortDateString())
+                                        .Replace("{holiday.to}", holiday.ToInclusive.ToShortDateString())
                                         .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayClient?holidayId={holiday.Id}")
                                         .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={holiday.Id}");
 
@@ -58,7 +58,7 @@ namespace XplicityApp.Services
                                             .Replace("{holiday.paid}", holiday.Paid ? "Paid" : "Unpaid")
                                             .Replace("{holiday.type}", holiday.Type.ToString())
                                             .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
-                                            .Replace("{holiday.to}", holiday.ToExclusive.AddDays(-1).ToShortDateString())
+                                            .Replace("{holiday.to}", holiday.ToInclusive.ToShortDateString())
                                             .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm?holidayId={holiday.Id}")
                                             .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={holiday.Id}")
                                             .Replace("{client.status}", clientStatus)
@@ -87,7 +87,7 @@ namespace XplicityApp.Services
                                                         .Replace("{holiday.paid}", holiday.Item1.Paid ? "Paid" : "Unpaid")
                                                         .Replace("{holiday.type}", holiday.Item1.Type.ToString())
                                                         .Replace("{holiday.from}", holiday.Item1.FromInclusive.ToShortDateString())
-                                                        .Replace("{holiday.to}", holiday.Item1.ToExclusive.AddDays(-1).ToShortDateString())
+                                                        .Replace("{holiday.to}", holiday.Item1.ToInclusive.ToShortDateString())
                                                         .Replace("{holiday.overtimeHours}", overtimeSentence);
                     holidayInfo += messageString;
                 }
@@ -113,7 +113,7 @@ namespace XplicityApp.Services
                         messageBuilder.AppendLine(template.Template
                                                     .Replace("{employee.fullName}", $"{upcomingHoliday.Employee.Name} {upcomingHoliday.Employee.Surname}")
                                                     .Replace("{holiday.from}", upcomingHoliday.FromInclusive.ToShortDateString())
-                                                    .Replace("{holiday.to}", upcomingHoliday.ToExclusive.AddDays(-1).ToShortDateString()));
+                                                    .Replace("{holiday.to}", upcomingHoliday.ToInclusive.ToShortDateString()));
                     }
                 }
 
