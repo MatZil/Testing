@@ -1,4 +1,4 @@
-.titleCenter{
+.titleCenter {
     position: absolute;
     color: midnightblue;
     font-size: 70px;
@@ -6,17 +6,19 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
-.container{
+
+.container {
     position: relative;
 }
+
 .holidaysCount {
-  position: fixed;
-  font-size: 15px;
-  top: 10em;
-  left: 15em;
-  height: 15em;
-  border-style: solid;
-  padding: 10px;
-  background-color: azure;
-  text-align: center;
+    position: fixed;
+    font-size: 15px;
+    top: 10em;
+    left: 15em;
+    height: 15em;
+    border-style: solid;
+    padding: 10px;
+    background-color: azure;
+    text-align: center;
 }

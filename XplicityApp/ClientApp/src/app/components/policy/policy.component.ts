@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ElementRef, HostListener } from '@angular/core';
 import { FilesService } from '../../services/files.service';
 
 @Component({
@@ -13,6 +13,7 @@ export class PolicyComponent implements OnInit {
   baseApplicationUrl: string;
   constructor(
     private fileService: FilesService,
+    private elementRef: ElementRef,
     @Inject('BASE_URL') baseUrl: string) {
       this.baseApplicationUrl = baseUrl;
     }
@@ -23,23 +24,16 @@ export class PolicyComponent implements OnInit {
   onButtonClick() {
     this.fileService.getPolicyRelativePath().subscribe(relativePath => {
         this.policyPath = this.baseApplicationUrl + relativePath;
+        this.showPolicy = true;
       }
     );
-    this.showPolicy = true;
-    const img: any = document.querySelector(this.policyPath);
-    if (typeof (FileReader) !== 'undefined') {
-      const reader = new FileReader();
-
-      reader.onload = (e: any) => {
-        this.policyPath = e.target.result;
-      };
-
-      reader.readAsArrayBuffer(img.files[0]);
-    }
   }
 
-  exitPdf() {
-    this.showPolicy = false;
+  @HostListener('document:click', ['$event'])
+  exitPdf(event: any) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.showPolicy = false;
+    }
   }
 
 }

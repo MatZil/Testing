@@ -12,6 +12,7 @@ import { FilesService } from 'src/app/services/files.service';
 })
 export class UploadComponent implements OnInit {
   @Input() fileType: FileType;
+  fileName: string;
   progress: number;
 
   constructor(
@@ -31,6 +32,7 @@ export class UploadComponent implements OnInit {
       this.alertService.displayMessage(errorMessage);
       return;
     }
+    this.fileName = fileToUpload.name;
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
     formData.append('fileType', this.fileType.toString());
