@@ -39,5 +39,17 @@ namespace XplicityApp.Infrastructure.Utils
 
             return workDays;
         }
+
+        public DateTime GetNextWorkDay(DateTime currentTime)
+        {
+            var nextWorkDay = currentTime.AddDays(1);
+
+            while (IsFreeWorkDay(nextWorkDay))
+            {
+                nextWorkDay = nextWorkDay.AddDays(1);
+            }
+
+            return nextWorkDay;
+        }
     }
 }

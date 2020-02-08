@@ -113,12 +113,7 @@ namespace XplicityApp.Services
 
                 if (_timeService.IsFreeWorkDay(currentTime))
                 {
-                    var nextWorkDay = currentTime.AddDays(1);
-
-                    while (_timeService.IsFreeWorkDay(nextWorkDay))
-                    {
-                        nextWorkDay = nextWorkDay.AddDays(1);
-                    }
+                    var nextWorkDay = _timeService.GetNextWorkDay(currentTime);
 
                     var allEmployees = await _employeeRepository.GetAll();
                     var allHolidays = await _holidaysRepository.GetAll();
