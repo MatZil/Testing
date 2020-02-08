@@ -55,6 +55,14 @@
     <Compile Remove="Migrations\20200207195205_HolidayUpperBoundaryInclusive.Designer.cs" />
     <Compile Remove="Migrations\20200207195946_HolidayUpperBoundaryInclusive.cs" />
     <Compile Remove="Migrations\20200207195946_HolidayUpperBoundaryInclusive.Designer.cs" />
+    <Compile Remove="Migrations\20200208184459_PolicySeed.cs" />
+    <Compile Remove="Migrations\20200208184459_PolicySeed.Designer.cs" />
+    <Compile Remove="Migrations\20200208184620_PolicySeed.cs" />
+    <Compile Remove="Migrations\20200208184620_PolicySeed.Designer.cs" />
+    <Compile Remove="Migrations\20200208184939_PolicySeed.cs" />
+    <Compile Remove="Migrations\20200208184939_PolicySeed.Designer.cs" />
+    <Compile Remove="Migrations\20200208185358_PolicySeed.cs" />
+    <Compile Remove="Migrations\20200208185358_PolicySeed.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
