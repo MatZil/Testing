@@ -49,6 +49,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200207084252_HolidayUpperBoundaryInclusive.cs" />
+    <Compile Remove="Migrations\20200207084252_HolidayUpperBoundaryInclusive.Designer.cs" />
+    <Compile Remove="Migrations\20200207195205_HolidayUpperBoundaryInclusive.cs" />
+    <Compile Remove="Migrations\20200207195205_HolidayUpperBoundaryInclusive.Designer.cs" />
+    <Compile Remove="Migrations\20200207195946_HolidayUpperBoundaryInclusive.cs" />
+    <Compile Remove="Migrations\20200207195946_HolidayUpperBoundaryInclusive.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\favicon.ico" />
   </ItemGroup>
 

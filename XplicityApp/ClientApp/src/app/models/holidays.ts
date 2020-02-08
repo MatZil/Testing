@@ -6,7 +6,7 @@ export class Holidays {
     employeeId: number;
     type: HolidayType;
     fromInclusive: Date;
-    toExclusive: Date;
+    toInclusive: Date;
     overtimeDays: number;
     overtimeHours: number;
     isCofirmed: boolean;

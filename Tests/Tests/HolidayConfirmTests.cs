@@ -93,7 +93,7 @@ namespace Tests
             var holiday = await _holidaysRepository.GetById(holidayId);
             var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
 
-            var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToExclusive);
+            var workdays = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToInclusive);
             var expected = initial - workdays + holiday.OvertimeDays;
 
             await _employeeHolidaysConfirmationUpdater.UpdateEmployeesWorkdays(holidayDto);

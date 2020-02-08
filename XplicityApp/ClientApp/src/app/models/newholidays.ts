@@ -5,7 +5,7 @@ export class Newholidays {
     employeeId: number;
     type: HolidayType;
     fromInclusive: Date;
-    toExclusive: Date;
+    toInclusive: Date;
     overtimeDays: number;
     isCofirmed: boolean;
     paid: boolean;
