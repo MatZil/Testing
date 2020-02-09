@@ -52,20 +52,6 @@ namespace XplicityApp.Controllers
             return Ok(holiday);
         }
 
-        // PUT: api/holidays/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] UpdateHolidayDto newHoliday)
-        {
-            var succesful = await _holidaysService.Update(id, newHoliday);
-
-            if (!succesful)
-            {
-                return BadRequest();
-            }
-
-            return NoContent();
-        }
-
         // DELETE: api/holidays/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

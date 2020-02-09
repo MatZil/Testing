@@ -1,20 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-
-import { Holidays } from '../../models/holidays';
-import { Newholidays } from '../../models/newholidays';
-import { Requestholidays } from '../../models/requestholidays';
+import { Holiday } from '../../models/holiday';
+import { NewHoliday } from '../../models/new-holiday';
 import { HolidaysService } from '../../services/holidays.service';
-
 import { TableRowUserModel } from '../../models/table-row-user-model';
 import { UserService } from '../../services/user.service';
-import { AuthenticationService } from '../../services/authentication.service';
-
-import { NgForm } from '@angular/forms';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd';
-
 import { EnumToStringConverterService } from 'src/app/services/enum-to-string-converter.service';
-import { HolidayType } from 'src/app/enums/holidayType';
-import { HeadersService } from 'src/app/services/headers.service';
+import { MatDialog } from '@angular/material';
+import { HolidayRequestFormComponent } from '../holiday-request-form/holiday-request-form.component';
+import { HolidayStatus } from 'src/app/enums/holidayStatus';
+import { EmployeeStatus } from 'src/app/models/employee-status.enum';
 
 @Component({
   selector: 'app-holidays-table',
@@ -22,179 +16,107 @@ import { HeadersService } from 'src/app/services/headers.service';
   styleUrls: ['./holidays-table.component.scss']
 })
 export class HolidaysTableComponent implements OnInit {
-  holidays: Holidays[];
-  requestHolidays: Requestholidays = new Requestholidays();
-  selected = 1;
-  isVisibleCreator = false;
-  isConfirmLoadingCreator = false;
-  isVisibleEditor = false;
-
-  confirmDeleteModal: NzModalRef;
-
-  users: TableRowUserModel[];
+  holidays: Holiday[] = [];
+  selectedEmployeeStatus: EmployeeStatus = EmployeeStatus.Current;
   currentUser: TableRowUserModel;
-  currentUserId: number;
-  holidaysType: string;
-  holidaysStatus: string;
-  role: string;
-  overtimeDays: number;
-
-  selectedType: any;
 
   constructor(
-    private authenticationService: AuthenticationService,
     private userService: UserService,
-      private holidayService: HolidaysService,
-      private headersService: HeadersService = new HeadersService(),
-      private modal: NzModalService,
-      public enumConverter: EnumToStringConverterService  ) {
-    this.currentUserId = this.authenticationService.getUserId();
-    this.requestHolidays.employeeId = this.currentUserId;
-  }
+    private holidayService: HolidaysService,
+    public enumConverter: EnumToStringConverterService,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.refreshTable(this.selected);
-
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
-
-    this.userService.getAllUsers().subscribe(users => {
-      this.users = users;
-    });
-    this.role = this.userService.getRole();
+    this.refreshTable(this.selectedEmployeeStatus);
   }
 
-  refreshTable(status: number) {
+  refreshTable(status: EmployeeStatus) {
     this.holidayService.getHolidaysByStatus(status).subscribe(holidays => {
       this.holidays = holidays;
     });
-
   }
 
-  getHolidaysByRole() {
-    var currentEmployeeHolidays = [];
+  addHoliday(newHoliday: NewHoliday) {
+    this.holidayService.addHoliday(newHoliday).subscribe(() => {
+      this.refreshTable(this.selectedEmployeeStatus);
+    });
+  }
+
+  openRequestHolidayModal() {
+    const dialogRef = this.dialog.open(HolidayRequestFormComponent, {
+      width: '350px',
+      data: {
+        employeeId: this.currentUser.id,
+        isParentalAvailable: this.currentUser.currentAvailableLeaves > 0 || this.currentUser.nextMonthAvailableLeaves > 0
+      }
+    });
+    dialogRef.afterClosed().subscribe(newHoliday => {
+      if (newHoliday) {
+        this.addHoliday(newHoliday);
+      }
+    });
+  }
+
+  getHolidaysByRole(): Holiday[] {
+    const currentEmployeeHolidays = [];
     if (!this.isAdmin()) {
       this.holidays.forEach(holiday => {
-        if (this.isTheRightId(holiday)) {
+        if (this.belongsToCurrentUser(holiday)) {
           currentEmployeeHolidays.push(holiday);
         }
       });
 
       return currentEmployeeHolidays;
     }
-    else { return this.holidays; }
+    return this.holidays;
   }
 
-  onAddButtonClick() {
-    this.requestHolidays.employeeId = this.currentUser.id;
-    this.holidayService.addHolidays(this.requestHolidays).subscribe(() => {
-      this.refreshTable(this.selected);
-    });
-  }
-
-  showModalCreator(): void {
-    this.isVisibleCreator = true;
-  }
-
-  handleOkCreator(): void {
-    this.isConfirmLoadingCreator = true;
-    setTimeout(() => {
-      this.isVisibleCreator = false;
-      this.isConfirmLoadingCreator = false;
-    }, 3000);
-  }
-
-  handleCancelCreator(): void {
-    this.isVisibleCreator = false;
-  }
-
-  showModalEditor(): void {
-    this.isVisibleEditor = true;
-  }
-
-  handleCancelEditor(): void {
-    this.isVisibleEditor = false;
-  }
-
-  onSubmit(form: NgForm) {
-    form.resetForm();
-  }
-
-  onEditConfirmButtonClick(holidays: Newholidays, id: number) {
-    this.holidayService.editHolidays(holidays, id).subscribe(() => {
-      this.refreshTable(this.selected);
-    });
-  }
-
-  isTheRightId(holidays: Holidays) {
-    if (this.currentUserId === holidays.employeeId) {
+  belongsToCurrentUser(holiday: Holiday) {
+    if (this.currentUser.id === holiday.employeeId) {
       return true;
     }
   }
 
-  getCurrentUserHolidays(holidays: Holidays) {
-    if (this.currentUserId === holidays.employeeId) {
-      return true;
-    }
+  getFullNameById(id: number): string {
+    let fullName: string;
+    this.userService.getUser(id).subscribe(user => {
+      fullName = `${user.name} ${user.surname}`;
+    });
+    return fullName;
   }
 
-  getUserNameById(id: number) {
-    if (this.users) {
-      for (const userIndex of Object.keys(this.users)) {
-        const user = this.users[userIndex];
-        if (user.id === id) {
-          return user.name + ' ' + user.surname;
-        }
-      }
-    }
-  }
-
-  changePaid() {
-    this.requestHolidays.paid = !this.requestHolidays.paid;
-  }
-
-  setPaid() {
-    if (this.requestHolidays.type === HolidayType.Parental) {
-      this.requestHolidays.paid = true;
-    } else if (this.requestHolidays.type === HolidayType.Science) {
-      this.requestHolidays.paid = false;
-    }
-  }
-
-  changeStatus() {
-    this.refreshTable(this.selected);
-  }
-
-  getStatusName(status) {
+  getStatusName(status: HolidayStatus): string {
     return this.enumConverter.determineHolidayStatus(status);
   }
 
-  getStatusColor(status) {
+  getStatusColor(status: HolidayStatus): string {
     return this.enumConverter.determineHolidayStatusColor(status);
   }
 
-  getOvertime(holiday) {
-    if (!holiday.paid) { return "-" }
-    else if (this.isAdmin()) { return holiday.overtimeHours }
-    else if (!this.isAdmin()) { return holiday.overtimeDays }
+  getOvertime(holiday: Holiday): number | string {
+    if (!holiday.paid) {
+      return '-';
+    } else if (this.isAdmin()) {
+      return holiday.overtimeHours;
+    }
+    return holiday.overtimeDays;
   }
 
-  paidToString(paid) {
-    if (paid) { return "Yes"}
-    else { return "No"}
-  }
-
-  isAdmin() {
-    if (this.role === 'Admin') {
-      return true;
+  paidToString(paid: boolean): string {
+    if (paid) {
+      return 'Yes';
     } else {
-      return false;
+      return 'No';
     }
   }
 
-  shouldDisplayOvertimeInput() {
-    if (this.requestHolidays.paid && this.currentUser.overtimeDays >= 1) { return true; }
-    else { return false; }
+  isAdmin(): boolean {
+    if (this.currentUser && this.currentUser.role === 'Admin') {
+      return true;
+    }
+    return false;
   }
 }

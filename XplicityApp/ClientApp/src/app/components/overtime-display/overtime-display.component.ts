@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { TableRowUserModel } from '../../models/table-row-user-model';
-import { Requestholidays } from '../../models/requestholidays';
-import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -11,16 +9,9 @@ import { UserService } from '../../services/user.service';
 })
 export class OvertimeDisplayComponent implements OnInit {
   currentUser: TableRowUserModel;
-  currentUserId: number;
-  requestHolidays: Requestholidays = new Requestholidays();
 
   constructor(
-    private authenticationService: AuthenticationService,
-    private userService: UserService
-  ) {
-    this.currentUserId = this.authenticationService.getUserId();
-    this.requestHolidays.employeeId = this.currentUserId;
-  }
+    private userService: UserService) {}
 
   ngOnInit() {
     this.userService.getCurrentUser().subscribe(user => {

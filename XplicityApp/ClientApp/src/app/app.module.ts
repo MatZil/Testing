@@ -51,6 +51,7 @@ import { AddEmployeeFormComponent } from './components/add-employee-form/add-emp
 import { EditEmployeeFormComponent } from './components/edit-employee-form/edit-employee-form.component';
 import { BaseEmployeeFormComponent } from './components/base-employee-form/base-employee-form.component';
 import { ClientFormComponent } from './components/client-form/client-form.component';
+import { HolidayRequestFormComponent } from './components/holiday-request-form/holiday-request-form.component';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -76,7 +77,8 @@ export function tokenGetter() {
     AddEmployeeFormComponent,
     EditEmployeeFormComponent,
     BaseEmployeeFormComponent,
-    ClientFormComponent
+    ClientFormComponent,
+    HolidayRequestFormComponent
   ],
   imports: [
     BrowserModule,
@@ -115,7 +117,8 @@ export function tokenGetter() {
   entryComponents: [
     AddEmployeeFormComponent,
     EditEmployeeFormComponent,
-    ClientFormComponent
+    ClientFormComponent,
+    HolidayRequestFormComponent
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

@@ -72,23 +72,21 @@ namespace XplicityApp.Services
             return deleted;
         }
 
-        public async Task<bool> Update(int id, UpdateHolidayDto updateData)
+        public async Task<bool> Update(int id, UpdateHolidayDto updatedHoliday)
         {
-            if (updateData == null)
+            if (updatedHoliday is null)
             {
-                throw new ArgumentNullException(nameof(updateData));
+                throw new ArgumentNullException(nameof(updatedHoliday));
             }
 
             var itemToUpdate = await _repository.GetById(id);
-
-            if (itemToUpdate == null)
+            if (itemToUpdate is null)
             {
                 return false;
             }
 
-            _mapper.Map(updateData, itemToUpdate);
-            var successful = await _repository.Update(itemToUpdate);
-            return successful;
+            _mapper.Map(updatedHoliday, itemToUpdate);
+            return await _repository.Update(itemToUpdate);
         }
 
         public async Task<bool> Decline(int id)
