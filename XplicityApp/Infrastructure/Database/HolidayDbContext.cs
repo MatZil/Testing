@@ -66,6 +66,8 @@ namespace XplicityApp.Infrastructure.Database
             InitialDataSeeder.CreateInitialEmailTemplates(builder, _configuration);
 
             InitialDataSeeder.CreateEquipmentCategories(builder, _configuration);
+
+            InitialDataSeeder.CreateInitialPolicyRecord(builder);
         }
     }
 }

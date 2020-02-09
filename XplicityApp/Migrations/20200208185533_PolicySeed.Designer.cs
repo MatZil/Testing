@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XplicityApp.Infrastructure.Database;
 
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    partial class HolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200208185533_PolicySeed")]
+    partial class PolicySeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -586,43 +588,6 @@ Please use the first line for team's title, second line for individual employee'
                     b.ToTable("InventoryItems");
                 });
 
-            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.InventoryItemTag", b =>
-                {
-                    b.Property<int>("InventoryItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.HasKey("InventoryItemId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("InventoryItemsTags");
-                });
-
-            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Tag", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(10)")
-                        .HasMaxLength(10);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tags");
-                });
-
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.User", b =>
                 {
                     b.Property<string>("Id")
@@ -769,21 +734,6 @@ Please use the first line for team's title, second line for individual employee'
                     b.HasOne("XplicityApp.Infrastructure.Database.Models.InventoryCategory", "Category")
                         .WithMany("Items")
                         .HasForeignKey("InventoryCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.InventoryItemTag", b =>
-                {
-                    b.HasOne("XplicityApp.Infrastructure.Database.Models.InventoryItem", "InventoryItem")
-                        .WithMany("InventoryItemsTags")
-                        .HasForeignKey("InventoryItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("XplicityApp.Infrastructure.Database.Models.Tag", "Tag")
-                        .WithMany("InventoryItemsTags")
-                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
