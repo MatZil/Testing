@@ -4,6 +4,7 @@ using XplicityApp.Dtos.EmailTemplates;
 using XplicityApp.Dtos.Employees;
 using XplicityApp.Dtos.Holidays;
 using XplicityApp.Dtos.Inventory;
+using XplicityApp.Dtos.Tags;
 using XplicityApp.Infrastructure.Database.Models;
 
 namespace XplicityApp.Configurations
@@ -59,6 +60,12 @@ namespace XplicityApp.Configurations
 
             CreateMap<GetInventoryCategoryDto, InventoryCategory>(MemberList.None);
             CreateMap<InventoryCategory, GetInventoryCategoryDto>(MemberList.None);
+
+            CreateMap<TagDto, Tag>(MemberList.None);
+            CreateMap<Tag, TagDto>(MemberList.None);
+
+            CreateMap<NewTagDto, Tag>(MemberList.None);
+            CreateMap<Tag, NewTagDto>(MemberList.None);
         }
     }
 }

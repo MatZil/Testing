@@ -1,5 +1,4 @@
 ﻿using Audit.EntityFramework;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using XplicityApp.Infrastructure.Database.Models;
@@ -15,6 +14,8 @@ namespace XplicityApp.Infrastructure.Database
         public DbSet<FileRecord> FileRecords { get; set; }
         public DbSet<InventoryCategory> InventoryCategories { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<InventoryItemTag> InventoryItemsTags { get; set; }
         private readonly IConfiguration _configuration;
         public DbSet<AuditLog> AuditLogs { get; set; }
 
@@ -36,9 +37,28 @@ namespace XplicityApp.Infrastructure.Database
                 entity.HasIndex(e => e.Email).IsUnique();
             });
 
-            builder.Entity<EmailTemplate>(entity => {
+            builder.Entity<EmailTemplate>(entity =>
+            {
                 entity.HasIndex(e => e.Purpose).IsUnique();
             });
+
+            builder.Entity<InventoryItemTag>().HasKey(entity =>
+            new
+            {
+                entity.InventoryItemId,
+                entity.TagId
+            });
+
+            builder.Entity<InventoryItemTag>()
+                .HasOne(entity => entity.InventoryItem)
+                .WithMany(e => e.InventoryItemsTags)
+                .HasForeignKey(entity => entity.InventoryItemId);
+
+            builder.Entity<InventoryItemTag>()
+                .HasOne(entity => entity.Tag)
+                .WithMany(e => e.InventoryItemsTags)
+                .HasForeignKey(entity => entity.TagId);
+
             base.OnModelCreating(builder);
 
             InitialDataSeeder.CreateInitialAdmin(builder, _configuration);

@@ -41,6 +41,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<IEmployeeHolidaysBackgroundUpdater, EmployeeHolidaysBackgroundUpdater>()
                 .AddScoped<IEmployeeHolidaysConfirmationUpdater, EmployeeHolidaysConfirmationUpdater>()
                 .AddScoped<IOvertimeUtility, OvertimeUtility>()
+                .AddScoped<ITagsRepository, TagsRepository>()
                 .AddSingleton<ITimeService, TimeService>()
                 .AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }
@@ -62,6 +63,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<IInventoryItemService, InventoryItemService>()
                 .AddScoped<IInventoryCategoryService, InventoryCategoryService>()
                 .AddScoped<IBackgroundService, BackgroundService>()
+                 .AddScoped<ITagsService, TagsService>()
                 .AddHostedService<TimedDailyTaskHostedService>();
         }
     }
