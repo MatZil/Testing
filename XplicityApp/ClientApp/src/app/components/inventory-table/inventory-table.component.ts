@@ -7,6 +7,16 @@ import { InventoryCategoryService } from 'src/app/services/inventory-category.se
 import { TableRowUserModel } from 'src/app/models/table-row-user-model';
 import { UserService } from 'src/app/services/user.service';
 
+import { ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material';
+import { TagService } from '../../services/tag.service';
+import { Tag } from '../../models/tag';
+import { NewTag } from '../../models/new-tag';
+
+export interface Fruit {
+  name: string;
+}
+
 @Component({
   selector: 'app-inventory-table',
   templateUrl: './inventory-table.component.html',
@@ -23,11 +33,20 @@ export class InventoryTableComponent implements OnInit {
   selectedEmployee;
   isModifying = false;
 
+  addOnBlur = true;
+  readonly separatorKeysCodes: number[] = [ENTER];
+
+  tags: NewTag[] = [];
+  tagSugenstions: Tag[] = [];
+  newTag: NewTag = new NewTag();
+
+
   constructor(
     private inventoryService: InventoryService,
     private formBuilder: FormBuilder,
     private categoryService: InventoryCategoryService,
-    private userService: UserService
+    private userService: UserService,
+    private tagsService: TagService
   ) { }
 
   ngOnInit() {
@@ -115,4 +134,37 @@ export class InventoryTableComponent implements OnInit {
     this.isModifying = true;
     this.isVisibleNewItemModal = true;
   }
+
+  add(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    console.log(value);
+
+    if (value !== '') {
+      this.tagsService.getAllByFilter(value).subscribe(tags => this.tagSugenstions = tags);
+      console.log(this.tagSugenstions);
+
+
+      this.newTag.Title = value;
+      this.tags.push(this.newTag);
+      this.tagsService.createNewTag(this.newTag);
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+      this.newTag = new NewTag();
+      this.tagSugenstions = [];
+    }
+  }
+
+  remove(tag: NewTag): void {
+    const index = this.tags.indexOf(tag);
+
+    if (index >= 0) {
+      this.tags.splice(index, 1);
+    }
+  }
 }
+

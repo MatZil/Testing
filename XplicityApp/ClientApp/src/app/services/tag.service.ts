@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Tag } from '../models/tag';
-import { Observable } from 'rxjs';
 import { NewTag } from '../models/new-tag';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +12,11 @@ export class TagService {
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
-  getAllByFilter(tagTitle: string): Observable<Tag[]> {
-    return this.http.get<Tag[]>(this.tagApi +`/`+ tagTitle);
+  getAllByFilter(tagTitle: string) {
+    return this.http.get<Tag[]>(`${this.tagApi}/find/` + tagTitle);
   }
 
-  createNewTag(newTag: NewTag) {
-    console.log(newTag);
+  createNewTag(newTag: NewTag): Observable<any> {
     return this.http.post(this.tagApi, newTag);
   }
 }

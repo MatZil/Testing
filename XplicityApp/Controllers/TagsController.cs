@@ -10,7 +10,7 @@ namespace XplicityApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class TagsController : ControllerBase
     {
         private readonly ITagsService _tagsService;
@@ -59,7 +59,7 @@ namespace XplicityApp.Controllers
 
         [HttpPost]
         [Produces(typeof(int))]
-        public async Task<IActionResult> Post(NewTagDto newTagDto)
+        public async Task<IActionResult> Post([FromBody] NewTagDto newTagDto)
         {
             try
             {
