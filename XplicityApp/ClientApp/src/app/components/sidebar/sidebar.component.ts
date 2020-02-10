@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { TableRowUserModel } from '../../models/table-row-user-model';
 import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../services/user.service';
-import { Holidays } from '../../models/holidays';
+import { Holiday } from '../../models/holiday';
 import { HolidaysService } from '../../services/holidays.service';
 
 @Component({ templateUrl: 'sidebar.component.html', styleUrls: ['sidebar.component.scss'] })
@@ -13,7 +13,7 @@ export class SidebarComponent implements OnInit {
   isCollapsed = false;
   currentUser: TableRowUserModel;
   users = [];
-  holidays: Holidays[];
+  holidays: Holiday[];
   errorMessage: string;
   role: string;
   constructor(
@@ -55,8 +55,7 @@ export class SidebarComponent implements OnInit {
   isAdmin() {
     if (this.role === 'Admin') {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }

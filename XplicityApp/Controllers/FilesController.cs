@@ -32,7 +32,7 @@ namespace XplicityApp.Controllers
 
         private IActionResult GetFile(string fileName, FileTypeEnum fileType)
         {
-            var fullPath = Path.Combine(_fileService.GetDirectory(fileType), fileName);
+            var fullPath = Path.Combine(_fileService.GetRelativeDirectory(fileType), fileName);
 
             var stream = new FileStream(fullPath, FileMode.Open);
 

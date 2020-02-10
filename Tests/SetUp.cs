@@ -29,6 +29,7 @@ namespace Tests
         private IdentityRole[] _roles;
         private InventoryItem[] _inventoryItems;
         private InventoryCategory[] _inventoryCategories;
+        private Tag[] _tags;
 
         private HolidayDbContext _context;
         public HolidayDbContext HolidayDbContext =>
@@ -202,7 +203,7 @@ namespace Tests
                     EmployeeId = 1,
                     Type = HolidayType.Parental,
                     FromInclusive = DateTime.Today.AddDays(1),
-                    ToExclusive = DateTime.Today.AddDays(15),
+                    ToInclusive = DateTime.Today.AddDays(14),
                     Status = HolidayStatus.Pending,
                     RequestCreatedDate = new DateTime(2019, 10, 13),
                     Paid = false
@@ -213,7 +214,7 @@ namespace Tests
                     EmployeeId = 2,
                     Type = HolidayType.Annual,
                     FromInclusive = DateTime.Today.AddDays(-1),
-                    ToExclusive = DateTime.Today.AddDays(7),
+                    ToInclusive = DateTime.Today.AddDays(6),
                     Status = HolidayStatus.Confirmed,
                     RequestCreatedDate = new DateTime(2019, 10, 14),
                     Paid = false
@@ -224,7 +225,7 @@ namespace Tests
                     EmployeeId = 1,
                     Type = HolidayType.Annual,
                     FromInclusive = DateTime.Today.AddDays(1),
-                    ToExclusive = DateTime.Today.AddDays(7),
+                    ToInclusive = DateTime.Today.AddDays(6),
                     Status = HolidayStatus.Confirmed,
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 10, 14),
@@ -287,6 +288,21 @@ namespace Tests
             };
             context.InventoryItems.AddRange(_inventoryItems);
 
+            _tags = new[]
+            {
+                new Tag
+                {
+                    Id = 1,
+                    Title = "Tag1"
+                },
+                  new Tag
+                {
+                    Id = 2,
+                    Title = "Tag2"
+                },
+            };
+            context.Tags.AddRange(_tags);
+
             context.SaveChanges();
         }
 
@@ -310,6 +326,8 @@ namespace Tests
                     return _inventoryItems.Length;
                 case "inventoryCategories":
                     return _inventoryCategories.Length;
+                case "tags":
+                    return _tags.Length;
                 default:
                     return 0;
             }

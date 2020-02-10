@@ -1,0 +1,11 @@
+h1 {
+    text-align: center;
+}
+
+.floatRight {
+    float: right;
+}
+
+.inputDatetimeField {
+    width: 67%;
+}

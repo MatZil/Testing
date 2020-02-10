@@ -40,33 +40,18 @@ namespace XplicityApp.Services
             return fileId;
         }
 
-        public async Task<string> Upload(IFormFile formFile, FileTypeEnum fileType)
+        public async Task Upload(IFormFile formFile, FileTypeEnum fileType)
         {
             if (formFile.Length > 0)
             {
-                var fileId =  await CreateFileRecord(formFile.FileName, fileType);
-                var file = await _fileRepository.GetById(fileId);
-
-                var filePath = Path.Combine(GetDirectory(file.Type), file.Id.ToString());
-
-                var pathToSave = Path.Combine(_environment.WebRootPath, filePath);
-                if (!Directory.Exists(pathToSave))
-                {
-                    Directory.CreateDirectory(pathToSave);
-                }
-                var fullPath = Path.Combine(pathToSave, formFile.FileName);
-                using (var stream = new FileStream(fullPath, FileMode.Create))
-                {
-                    formFile.CopyTo(stream);
-                }
-
-                return filePath;
+                await CreateFileRecord(formFile.FileName, fileType);
+                var fullPath = Path.Combine(_environment.ContentRootPath, GetRelativeDirectory(fileType), formFile.FileName);
+                using var fileStream = new FileStream(fullPath, FileMode.Create);
+                formFile.CopyTo(fileStream);
             }
-
-            return string.Empty;
         }
 
-        public string GetDirectory(FileTypeEnum fileType)
+        public string GetRelativeDirectory(FileTypeEnum fileType)
         {
             switch (fileType)
             {
@@ -88,12 +73,10 @@ namespace XplicityApp.Services
 
             return "";
         }
-        public async Task<string> GetByType(FileTypeEnum fileType)
+        public async Task<string> GetNewestPolicyPath()
         {
-            var file = await _fileRepository.FindByType(fileType);
-            var folderName = Path.Combine(GetDirectory(file.Type), file.Id.ToString());
-            var filePath = Path.Combine(folderName, file.Name).Replace(@"\", "/");
-            return filePath;
+            var policy = await _fileRepository.GetNewestPolicy();
+            return Path.Combine(GetRelativeDirectory(policy.Type), policy.Name);
         }
 
         public async Task<FileRecord> GetById(int fileId)

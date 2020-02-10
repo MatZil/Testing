@@ -1,10 +1,10 @@
 import { HolidayType } from '../enums/holidayType';
 
-export class Requestholidays {
+export class NewHoliday {
     employeeId: number;
     type: HolidayType;
     fromInclusive: Date;
-    toExclusive: Date;
+    toInclusive: Date;
     overtimeDays: number;
     paid: boolean;
 }

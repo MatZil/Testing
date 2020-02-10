@@ -36,8 +36,8 @@ import { EmployeesTableComponent } from './components/employees-table/employees-
 import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
-import { PdfComponent } from './components/pdf/pdf.component';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { PolicyComponent } from './components/policy/policy.component';
+import { PdfJsViewerModule } from 'ng2-pdfjs-viewer';
 import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RoleGuardService } from './helpers/role-guard';
@@ -51,6 +51,7 @@ import { AddEmployeeFormComponent } from './components/add-employee-form/add-emp
 import { EditEmployeeFormComponent } from './components/edit-employee-form/edit-employee-form.component';
 import { BaseEmployeeFormComponent } from './components/base-employee-form/base-employee-form.component';
 import { ClientFormComponent } from './components/client-form/client-form.component';
+import { HolidayRequestFormComponent } from './components/holiday-request-form/holiday-request-form.component';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -68,7 +69,7 @@ export function tokenGetter() {
     HomeComponent,
     ProfileComponent,
     HolidaysTableComponent,
-    PdfComponent,
+    PolicyComponent,
     EmailtemplatesTableComponent,
     UploadComponent,
     OvertimeDisplayComponent,
@@ -76,7 +77,8 @@ export function tokenGetter() {
     AddEmployeeFormComponent,
     EditEmployeeFormComponent,
     BaseEmployeeFormComponent,
-    ClientFormComponent
+    ClientFormComponent,
+    HolidayRequestFormComponent
   ],
   imports: [
     BrowserModule,
@@ -98,7 +100,7 @@ export function tokenGetter() {
     MatDatepickerModule,
     MatNativeDateModule,
     MatRadioModule,
-    PdfViewerModule,
+    PdfJsViewerModule,
     MatDialogModule,
     MatSnackBarModule,
     MatTabsModule,
@@ -115,7 +117,8 @@ export function tokenGetter() {
   entryComponents: [
     AddEmployeeFormComponent,
     EditEmployeeFormComponent,
-    ClientFormComponent
+    ClientFormComponent,
+    HolidayRequestFormComponent
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

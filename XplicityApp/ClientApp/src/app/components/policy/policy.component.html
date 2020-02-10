@@ -1,0 +1,4 @@
+<div *ngIf="showPolicy" class="pdf-viewer">
+    <ng2-pdfjs-viewer pdfSrc="{{policyPath}}" zoom="75" pagemode="none"></ng2-pdfjs-viewer>
+</div>
+<button nz-button nzType="primary" (click)="onButtonClick()">View holiday policy</button>

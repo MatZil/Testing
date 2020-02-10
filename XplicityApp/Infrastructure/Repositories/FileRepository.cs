@@ -52,10 +52,11 @@ namespace XplicityApp.Infrastructure.Repositories
             return changes > 0;
         }
 
-        public async Task<FileRecord> FindByType(FileTypeEnum fileType)
+        public async Task<FileRecord> GetNewestPolicy()
         {
-            var file = await _context.FileRecords.Where(f => f.Type == fileType).OrderBy(f => f.CreatedAt).LastAsync();
-            return file;
+            return await _context.FileRecords.Where(file => file.Type == FileTypeEnum.HolidayPolicy)
+                                             .OrderBy(file => file.CreatedAt)
+                                             .LastAsync();
         }
     }
 }

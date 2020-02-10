@@ -25,7 +25,7 @@ namespace XplicityApp.Infrastructure.Utils
         {
             var holiday = await _holidaysRepository.GetById(holidayId);
 
-            var generationPath = Path.Combine(_fileService.GetDirectory(holidayDocumentType),
+            var generationPath = Path.Combine(_fileService.GetRelativeDirectory(holidayDocumentType),
                                               _configuration["DocxGeneration:NameFormat"]
                                                 .Replace("{holidayId}", holiday.Id.ToString())
                                                 .Replace("{documentType}", holidayDocumentType.ToString())
