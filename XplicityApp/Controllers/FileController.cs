@@ -21,26 +21,16 @@ namespace XplicityApp.Controllers
         public async Task<IActionResult> Upload()
         {
             var file = Request.Form.Files[0];
-            FileTypeEnum fileType = (FileTypeEnum)Enum.Parse(typeof(FileTypeEnum), Request.Form["fileType"]);
-            var filePath = await _fileService.Upload(file, fileType);
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                return Ok(new { filePath });
-            }
-            return BadRequest();
+            var fileType = (FileTypeEnum)Enum.Parse(typeof(FileTypeEnum), Request.Form["fileType"]);
+            await _fileService.Upload(file, fileType);
+            return Ok();
         }
 
         [HttpGet]
-        [Route("GetByType")]
-        public async Task<IActionResult> GetByType(FileTypeEnum fileType)
+        [Route("Policy")]
+        public async Task<IActionResult> GetNewestPolicy()
         {
-            var path = await _fileService.GetByType(fileType);
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                return BadRequest();
-            }
-
-            return Ok(path);
+            return Ok(await _fileService.GetNewestPolicyPath());
         }
     }
 }

@@ -69,24 +69,21 @@ namespace XplicityApp.Services
 
             var newEmployee = _mapper.Map<Employee>(newEmployeeDto);
 
-            var currentTime = _timeService.GetCurrentTime();
-
-            var workedTime = _timeService.GetWorkDays(newEmployee.WorksFromDate, currentTime);
-
-            var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
-                                                            new DateTime(currentTime.AddYears(1).Year, 1, 1));
-
-            if (newEmployeeDto.IsManualHolidaysInput)
+            if (!newEmployeeDto.IsManualHolidaysInput)
+            {
+                var currentTime = _timeService.GetCurrentTime();
+                var workedTime = _timeService.GetWorkDays(newEmployee.WorksFromDate, currentTime);
+                var workDaysPerYear = _timeService.GetCurrentYearWorkDays();
+                newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
+            }
+            else
             {
                 if (newEmployeeDto.FreeWorkDays is null)
                 {
                     throw new ArgumentNullException();
                 }
+
                 newEmployee.FreeWorkDays = (double)newEmployeeDto.FreeWorkDays;
-            }
-            else
-            {
-                newEmployee.FreeWorkDays = Math.Round(workedTime * ((double)newEmployee.DaysOfVacation / workDaysPerYear), 2);
             }
 
 
@@ -158,7 +155,7 @@ namespace XplicityApp.Services
 
             foreach (var holiday in employeeHolidays)
             {
-                if (holiday.FromInclusive <= currentTime && holiday.ToExclusive > currentTime && !holiday.Paid)
+                if (holiday.FromInclusive <= currentTime && holiday.ToInclusive >= currentTime && !holiday.Paid)
                 {
                     return true;
                 }

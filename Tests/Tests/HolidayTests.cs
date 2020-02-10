@@ -99,11 +99,10 @@ namespace Tests
                 EmployeeId = employeeId,
                 Type = HolidayType.Parental,
                 FromInclusive = new DateTime(2019, 10, 24),
-                ToExclusive = new DateTime(2019, 10, 28),
+                ToInclusive = new DateTime(2019, 10, 27),
             };
 
-            int createdHolidayId = -1;
-            createdHolidayId = await _holidaysService.Create(newHoliday);
+            var createdHolidayId = await _holidaysService.Create(newHoliday);
             var createdHoliday = _context.Holidays.Find(createdHolidayId);
 
             Assert.True(createdHolidayId > -1 && createdHoliday != null);
@@ -188,20 +187,5 @@ namespace Tests
 
             Assert.ThrowsAsync<InvalidOperationException>(async () => await _holidaysService.Update(id, updatedHoliday));
         }
-
-        //[Theory]
-        //[InlineData(1, 3)]
-        //public void When_UpdatingHolidayWithNonexistentEmployee_Expect_EmployeeException(int holidayId, int employeeId)
-        //{
-        //    var updatedHoliday = new UpdateHolidayDto()
-        //    {
-        //        EmployeeId = employeeId,
-        //    };
-
-        //    var exception = Record.ExceptionAsync(async () => await _holidaysService.Update(holidayId, updatedHoliday));
-        //    _output.WriteLine(exception.Result.Message);
-
-        //    Assert.Equal("Employee not found", exception.Result.Message);
-        //}
     }
 }

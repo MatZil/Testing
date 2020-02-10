@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace XplicityApp.Infrastructure.Database.Models
@@ -28,5 +30,7 @@ namespace XplicityApp.Infrastructure.Database.Models
         public int? EmployeeId { get; set; }
 
         public Employee Employee { get; set; }
+
+        public ICollection<InventoryItemTag> InventoryItemsTags { get; set; }
     }
 }

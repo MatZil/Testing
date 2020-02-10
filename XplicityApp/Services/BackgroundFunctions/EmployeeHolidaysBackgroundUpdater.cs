@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Nager.Date;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,14 +28,13 @@ namespace XplicityApp.Services.BackgroundFunctions
 
         public async Task AddFreeWorkDays(ICollection<Employee> employees)
         {
-            _logger.LogInformation("AddFreeWorkDays() was initiated at " + _timeService.GetCurrentTime());
+            var currentTime = _timeService.GetCurrentTime();
+            _logger.LogInformation("AddFreeWorkDays() was initiated at " + currentTime);
             try
             {
-                var currentTime = _timeService.GetCurrentTime();
                 if (!_timeService.IsFreeWorkDay(currentTime))
                 {
-                    var workDaysPerYear = _timeService.GetWorkDays(new DateTime(currentTime.Year, 1, 1),
-                                                                new DateTime(currentTime.AddYears(1).Year, 1, 1));
+                    var workDaysPerYear = _timeService.GetCurrentYearWorkDays();
                     foreach (var employee in employees)
                     {
                         if (!await _employeesService.HasActiveUnpaidHoliday(employee.Id))
@@ -49,17 +47,17 @@ namespace XplicityApp.Services.BackgroundFunctions
             }
             catch (Exception exception)
             {
-                _logger.LogInformation(exception.ToString() + " occurred in AddFreeWorkDays() at " + _timeService.GetCurrentTime());
+                _logger.LogInformation(exception.ToString() + " occurred in AddFreeWorkDays() at " + currentTime);
             }
-            _logger.LogInformation("AddFreeWorkDays() ended at " + _timeService.GetCurrentTime());
+            _logger.LogInformation("AddFreeWorkDays() ended at " + currentTime);
         }
 
         public async Task ResetParentalLeaves(ICollection<Employee> employees)
         {
-            _logger.LogInformation("ResetParentalLeaves() was initiated at " + _timeService.GetCurrentTime());
+            var currentTime = _timeService.GetCurrentTime();
+            _logger.LogInformation("ResetParentalLeaves() was initiated at " + currentTime);
             try
             {
-                var currentTime = _timeService.GetCurrentTime();
                 if (currentTime.Day == 1)
                 {
                     foreach (var employee in employees)
@@ -72,9 +70,9 @@ namespace XplicityApp.Services.BackgroundFunctions
             }
             catch (Exception exception)
             {
-                _logger.LogInformation(exception.ToString() + " occurred in ResetParentalLeave() at " + _timeService.GetCurrentTime());
+                _logger.LogInformation(exception.ToString() + " occurred in ResetParentalLeave() at " + currentTime);
             }
-            _logger.LogInformation("ResetParentalLeaves() ended at " + _timeService.GetCurrentTime());
+            _logger.LogInformation("ResetParentalLeaves() ended at " + currentTime);
         }
     }
 }

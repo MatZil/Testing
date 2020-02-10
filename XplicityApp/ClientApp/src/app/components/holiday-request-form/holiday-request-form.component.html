@@ -1,0 +1,50 @@
+<form [formGroup]="requestHolidayForm">
+    <h1 mat-dialog-title>Request holidays</h1>
+    <mat-card>
+        <div>
+            <mat-form-field>
+                <mat-select placeholder="Type" formControlName="type">
+                    <mat-option [value]="0">Annual</mat-option>
+                    <mat-option [value]="1" *ngIf="data.isParentalAvailable">
+                        Parental
+                    </mat-option>
+                    <mat-option [value]="2">Science</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="inputDatetimeField">
+                <input matInput [matDatepicker]="fromInclusive" (focus)="fromInclusive.open()" name="fromInclusive" placeholder="From (inclusive)" formControlName="fromInclusive">
+                <mat-datepicker #fromInclusive></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="fromInclusive"></mat-datepicker-toggle>
+                <mat-error *ngIf="requestHolidayForm.controls.fromInclusive.errors?.required" class="error">
+                    Date cannot be empty.
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="inputDatetimeField">
+                <input matInput [matDatepicker]="toInclusive" (focus)="toInclusive.open()" name="toInclusive" placeholder="To (inclusive)" formControlName="toInclusive">
+                <mat-datepicker #toInclusive></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="toInclusive"></mat-datepicker-toggle>
+                <mat-error *ngIf="requestHolidayForm.controls.toInclusive.errors?.required" class="error">
+                    Date cannot be empty.
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div *ngIf="canBePaid()">
+            <mat-checkbox formControlName="paid">Paid</mat-checkbox>
+        </div>
+        <div>
+            <mat-form-field *ngIf="isPaid()">
+                <input matInput type="number" step="1" placeholder="Overtime Days" formControlName="overtimeDays">
+            </mat-form-field>
+        </div>
+    </mat-card>
+    <mat-card>
+        <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="requestHolidayForm.invalid">
+          Request holidays
+        </button>
+        <button mat-flat-button color="warn" [mat-dialog-close] class="floatRight">Cancel</button>
+    </mat-card>
+</form>

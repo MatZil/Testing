@@ -27,6 +27,18 @@ namespace XplicityApp.Infrastructure.Database
             );
         }
 
+        public static void CreateInitialPolicyRecord(ModelBuilder builder)
+        {
+            builder.Entity<FileRecord>().HasData(
+                new FileRecord
+                {
+                    Id = 1,
+                    Name = "Holiday Policy.pdf",
+                    Type = FileTypeEnum.HolidayPolicy,
+                    CreatedAt = DateTime.MinValue
+                });
+        }
+
         public static void CreateInitialEmailTemplates(ModelBuilder builder, IConfiguration configuration)
         {
             CreateAdminConfirmation(builder, configuration);

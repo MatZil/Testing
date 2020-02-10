@@ -23,9 +23,6 @@ namespace XplicityApp.Controllers
         [HttpPost]
         public async Task<IActionResult> RequestConfirmationFromClient(NewHolidayDto newHolidayDto)
         {
-
-            newHolidayDto.ToExclusive = newHolidayDto.ToExclusive.AddDays(1);
-
             try
             {
                 await _confirmationService.ValidateNewHolidayConfirmationReadiness(newHolidayDto);

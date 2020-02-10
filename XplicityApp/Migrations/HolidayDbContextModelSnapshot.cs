@@ -451,6 +451,15 @@ Please use the first line for team's title, second line for individual employee'
                     b.HasKey("Id");
 
                     b.ToTable("FileRecords");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Holiday Policy.pdf",
+                            Type = 1
+                        });
                 });
 
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Holiday", b =>
@@ -478,7 +487,7 @@ Please use the first line for team's title, second line for individual employee'
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ToExclusive")
+                    b.Property<DateTime>("ToInclusive")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Type")
@@ -575,6 +584,43 @@ Please use the first line for team's title, second line for individual employee'
                     b.HasIndex("InventoryCategoryId");
 
                     b.ToTable("InventoryItems");
+                });
+
+            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.InventoryItemTag", b =>
+                {
+                    b.Property<int>("InventoryItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("InventoryItemId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("InventoryItemsTags");
+                });
+
+            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.User", b =>
@@ -723,6 +769,21 @@ Please use the first line for team's title, second line for individual employee'
                     b.HasOne("XplicityApp.Infrastructure.Database.Models.InventoryCategory", "Category")
                         .WithMany("Items")
                         .HasForeignKey("InventoryCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.InventoryItemTag", b =>
+                {
+                    b.HasOne("XplicityApp.Infrastructure.Database.Models.InventoryItem", "InventoryItem")
+                        .WithMany("InventoryItemsTags")
+                        .HasForeignKey("InventoryItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("XplicityApp.Infrastructure.Database.Models.Tag", "Tag")
+                        .WithMany("InventoryItemsTags")
+                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
