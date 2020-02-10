@@ -25,6 +25,6 @@ namespace XplicityApp.Dtos.Inventory
 
         public int EmployeeId { get; set; }
 
-        public Employee Employee { get; set; }
+        public string AssignedTo { get; set; }
     }
 }

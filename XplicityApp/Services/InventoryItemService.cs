@@ -31,6 +31,12 @@ namespace XplicityApp.Services
         {
             var inventoryItems = await _repository.GetAll();
             var inventoryItemsDto = _mapper.Map<GetInventoryItemDto[]>(inventoryItems);
+            int i = 0;
+            foreach (var inventoryItem in inventoryItems)
+            {
+                inventoryItemsDto[i].AssignedTo = inventoryItem.Employee.Name + " " + inventoryItem.Employee.Surname;
+                i++;
+            }
             return inventoryItemsDto;
         }
 
