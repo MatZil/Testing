@@ -5,6 +5,7 @@ import { EditEmployeeFormComponent } from '../edit-employee-form/edit-employee-f
 import { NewHoliday } from 'src/app/models/new-holiday';
 import { HolidayType } from 'src/app/enums/holidayType';
 import { RequestHolidayData } from './request-holiday-data';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-holiday-request-form',
@@ -17,6 +18,7 @@ export class HolidayRequestFormComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
+    private datePipe: DatePipe,
     public dialogRef: MatDialogRef<EditEmployeeFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: RequestHolidayData) { }
 
@@ -64,6 +66,8 @@ export class HolidayRequestFormComponent implements OnInit {
   getFormHoliday(): NewHoliday {
     const formHoliday = Object.assign(this.requestHolidayForm.value);
     formHoliday.employeeId = this.data.employeeId;
+    formHoliday.fromInclusive = this.datePipe.transform(formHoliday.fromInclusive, 'yyyy-MM-dd');
+    formHoliday.toInclusive = this.datePipe.transform(formHoliday.toInclusive, 'yyyy-MM-dd');
     if (!formHoliday.overtimeDays) {
       formHoliday.overtimeDays = 0;
     }

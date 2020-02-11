@@ -4,6 +4,7 @@ import { Client } from 'src/app/models/client';
 import { Role } from 'src/app/models/role';
 import { UserService } from 'src/app/services/user.service';
 import { uniqueEmailValidator } from './unique-email-validator';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-base-employee-form',
@@ -30,6 +31,7 @@ export class BaseEmployeeFormComponent implements OnInit, ControlValueAccessor {
 
   constructor(
     private formBuilder: FormBuilder,
+    private datePipe: DatePipe,
     private userService: UserService) { }
 
   ngOnInit() {
@@ -66,6 +68,19 @@ export class BaseEmployeeFormComponent implements OnInit, ControlValueAccessor {
       role: [],
       daysOfVacation: [],
       parentalLeaveLimit: []
+    });
+    this.stripTimeFromDates();
+  }
+
+  stripTimeFromDates() {
+    this.baseForm.controls.worksFromDate.valueChanges.subscribe(value => {
+      this.baseForm.controls.worksFromDate.setValue(this.datePipe.transform(value, 'yyyy-MM-dd'), { emitEvent: false });
+    });
+    this.baseForm.controls.birthdayDate.valueChanges.subscribe(value => {
+      this.baseForm.controls.birthdayDate.setValue(this.datePipe.transform(value, 'yyyy-MM-dd'), { emitEvent: false });
+    });
+    this.baseForm.controls.healthCheckDate.valueChanges.subscribe(value => {
+      this.baseForm.controls.healthCheckDate.setValue(this.datePipe.transform(value, 'yyyy-MM-dd'), { emitEvent: false });
     });
   }
 
