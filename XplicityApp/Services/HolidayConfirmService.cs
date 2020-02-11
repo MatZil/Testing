@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using XplicityApp.Dtos.Holidays;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
+using XplicityApp.Infrastructure.Static_Files;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.EntityBehavior;
-using XplicityApp.Infrastructure.Static_Files;
-using XplicityApp.Services.Interfaces;
 using XplicityApp.Services.Extensions.Interfaces;
-using XplicityApp.Infrastructure.Enums;
+using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Services
 {
@@ -25,12 +26,21 @@ namespace XplicityApp.Services
         private readonly IHolidaysRepository _repositoryHolidays;
         private readonly IDocxGeneratorService _docxGeneratorService;
         private readonly IEmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
+        private readonly ILogger<HolidayConfirmService> _logger;
         private readonly IOvertimeUtility _overtimeUtility;
 
-        public HolidayConfirmService(IEmailService emailService, IMapper mapper, IHolidaysRepository repositoryHolidays,
-                                     IEmployeeRepository repositoryEmployees, IRepository<Client> repositoryClients,
-                                     IHolidaysService holidaysService, ITimeService timeService, IDocxGeneratorService docxGeneratorService,
-                                     IOvertimeUtility overtimeUtility, IEmployeeHolidaysConfirmationUpdater employeeHolidaysConfirmationUpdater)
+        public HolidayConfirmService(
+            IEmailService emailService,
+            IMapper mapper,
+            IHolidaysRepository repositoryHolidays,
+            IEmployeeRepository repositoryEmployees,
+            IRepository<Client> repositoryClients,
+            IHolidaysService holidaysService,
+            ITimeService timeService,
+            IDocxGeneratorService docxGeneratorService,
+            IOvertimeUtility overtimeUtility,
+            IEmployeeHolidaysConfirmationUpdater employeeHolidaysConfirmationUpdater,
+            ILogger<HolidayConfirmService> logger)
         {
             _emailService = emailService;
             _mapper = mapper;
@@ -42,6 +52,7 @@ namespace XplicityApp.Services
             _docxGeneratorService = docxGeneratorService;
             _overtimeUtility = overtimeUtility;
             _employeeHolidaysConfirmationUpdater = employeeHolidaysConfirmationUpdater;
+            _logger = logger;
         }
 
         public async Task<bool> RequestClientApproval(int holidayId)
@@ -195,6 +206,7 @@ namespace XplicityApp.Services
             switch (receiver)
             {
                 case EmployeeRoleEnum.Regular:
+                    _logger.LogInformation($"About to send request notification to {employee.Email}");
                     await _emailService.SendRequestNotification(fileId, employee.Email);
                     break;
 
@@ -202,6 +214,7 @@ namespace XplicityApp.Services
                     var admins = await _repositoryEmployees.GetAllAdmins();
                     foreach (var admin in admins)
                     {
+                        _logger.LogInformation($"About to send order notification to {admin.Email}");
                         await _emailService.SendOrderNotification(fileId, employee, admin.Email);
                     }
                     break;

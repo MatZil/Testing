@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using XplicityApp.Dtos.Holidays;
@@ -13,11 +14,15 @@ namespace XplicityApp.Controllers
         private const string HolidayConfirmedMessage = "Holiday confirmed.";
         private readonly IHolidayConfirmService _confirmationService;
         private readonly IHolidaysService _holidaysService;
+        private readonly ILogger<HolidayConfirmController> _logger;
 
-        public HolidayConfirmController(IHolidayConfirmService confirmationService, IHolidaysService holidaysService)
+        public HolidayConfirmController(IHolidayConfirmService confirmationService,
+            IHolidaysService holidaysService,
+            ILogger<HolidayConfirmController> logger)
         {
             _confirmationService = confirmationService;
             _holidaysService = holidaysService;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -39,9 +44,10 @@ namespace XplicityApp.Controllers
             return Ok(HolidayConfirmedMessage);
         }
 
-        [HttpGet]
+        [HttpGet("{holidayId}")]
         public async Task<IActionResult> ConfirmHoliday(int holidayId)
         {
+            _logger.LogInformation($"Holiday confirm request received for holiday id:{holidayId}");
             try
             {
                 await _confirmationService.ValidateHolidayConfirmationReadiness(holidayId);
@@ -52,7 +58,8 @@ namespace XplicityApp.Controllers
             }
             catch (InvalidOperationException exception)
             {
-                return BadRequest(exception.Message);
+                _logger.LogError($"Holiday confirm request failed with: {exception.Message}");
+                return Ok(exception.Message);
             }
 
             return Ok(HolidayConfirmedMessage);

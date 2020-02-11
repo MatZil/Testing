@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Utils.Interfaces;
@@ -21,14 +22,22 @@ namespace XplicityApp.Infrastructure.DocxGeneration
         private readonly IFileUtility _fileUtility;
         private readonly IFileService _fileService;
         private readonly IOvertimeUtility _overtimeUtility;
+        private readonly ILogger<DocxGenerator> _logger;
 
-        public DocxGenerator(IConfiguration configuration, ITimeService timeService, IFileUtility fileUtility, IFileService fileService, IOvertimeUtility overtimeUtility)
+        public DocxGenerator(
+            IConfiguration configuration, 
+            ITimeService timeService, 
+            IFileUtility fileUtility, 
+            IFileService fileService, 
+            IOvertimeUtility overtimeUtility,
+            ILogger<DocxGenerator> logger)
         {
             _configuration = configuration;
             _timeService = timeService;
             _fileUtility = fileUtility;
             _fileService = fileService;
             _overtimeUtility = overtimeUtility;
+            _logger = logger;
         }
 
         public async Task<int> GenerateDocx(Holiday holiday, Employee employee, FileTypeEnum holidayDocumentType)
@@ -38,19 +47,28 @@ namespace XplicityApp.Infrastructure.DocxGeneration
                 throw new ArgumentNullException(nameof(holiday), "Holiday does not exist");
             }
 
-            var replacementMap = GetReplacementMap(holiday, employee);
+            try
+            {
+                var replacementMap = GetReplacementMap(holiday, employee);
 
-            var templatePath = GetTemplatePath(holidayDocumentType);
+                var templatePath = GetTemplatePath(holidayDocumentType);
 
-            var generationPath = await _fileUtility.GetGeneratedDocxPath(holiday.Id, holidayDocumentType);
+                var generationPath = await _fileUtility.GetGeneratedDocxPath(holiday.Id, holidayDocumentType);
 
-            var fileName = _fileUtility.ExtractNameFromPath(generationPath);
+                var fileName = _fileUtility.ExtractNameFromPath(generationPath);
 
-            var fileId = await _fileService.CreateFileRecord(fileName, holidayDocumentType);
+                var fileId = await _fileService.CreateFileRecord(fileName, holidayDocumentType);
 
-            await ProcessTemplate(templatePath, generationPath, replacementMap);
+                await ProcessTemplate(templatePath, generationPath, replacementMap);
 
-            return fileId;
+                return fileId;
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError($"Document generation failed for {employee.Email}. Exception message: {exception.Message}");
+
+                throw;
+            }
         }
 
         private Dictionary<string, string> GetReplacementMap(Holiday holiday, Employee employee)
