@@ -11,7 +11,6 @@ namespace XplicityApp.Controllers
     [ApiController]
     public class HolidayConfirmController : ControllerBase
     {
-        private const string HolidayConfirmedMessage = "Holiday confirmed.";
         private readonly IHolidayConfirmService _confirmationService;
         private readonly IHolidaysService _holidaysService;
         private readonly ILogger<HolidayConfirmController> _logger;
@@ -41,7 +40,7 @@ namespace XplicityApp.Controllers
                 return BadRequest(exception.Message);
             }
 
-            return Ok(HolidayConfirmedMessage);
+            return Ok();
         }
 
         [HttpGet("{holidayId}")]
@@ -62,7 +61,7 @@ namespace XplicityApp.Controllers
                 return Ok(exception.Message);
             }
 
-            return Ok(HolidayConfirmedMessage);
+            return Ok();
         }
     }
 }
