@@ -27,6 +27,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.0" />
     <PackageReference Include="MimeKit" Version="2.4.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc5" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.0.0-rc9" />
@@ -41,11 +42,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Templates\GeneratedTemplates\" />
+    <Content Include="Resources\**" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Templates\**" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\**" CopyToPublishDirectory="PreserveNewest" />
+      <Folder Include="Templates\GeneratedTemplates\" />
   </ItemGroup>
 
   <ItemGroup>
