@@ -6,7 +6,7 @@ import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { registerLocaleData } from '@angular/common';
+import { registerLocaleData, DatePipe } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
@@ -123,6 +123,7 @@ export function tokenGetter() {
   providers: [
     { provide: NZ_I18N, useValue: en_US },
     [RoleGuardService],
+    [DatePipe],
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
