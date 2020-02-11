@@ -31,11 +31,15 @@ namespace XplicityApp.Services
         {
             var inventoryItems = await _repository.GetAll();
             var inventoryItemsDto = _mapper.Map<GetInventoryItemDto[]>(inventoryItems);
-            int i = 0;
-            foreach (var inventoryItem in inventoryItems)
+            foreach (var inventoryItemDto in inventoryItemsDto)
             {
-                inventoryItemsDto[i].AssignedTo = inventoryItem.Employee.Name + " " + inventoryItem.Employee.Surname;
-                i++;
+                foreach (var inventoryItem in inventoryItems)
+                {
+                    if (inventoryItemDto.EmployeeId == inventoryItem.EmployeeId)
+                    {
+                        inventoryItemDto.AssignedTo = inventoryItem.Employee.Name + " " + inventoryItem.Employee.Surname;
+                    }
+                }
             }
             return inventoryItemsDto;
         }
