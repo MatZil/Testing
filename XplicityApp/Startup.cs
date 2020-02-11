@@ -57,7 +57,7 @@ namespace XplicityApp
             app.UseCorsExt();
             app.UseHttpsRedirection();
 
-            app.UseStaticFiles();
+            app.SetUpStaticFiles(Configuration);
 
             if (!env.IsDevelopment())
             {
