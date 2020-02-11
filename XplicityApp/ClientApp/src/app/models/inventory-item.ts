@@ -9,4 +9,5 @@ export class InventoryItem {
     expiryDate: Date;
     comment: string;
     category: InventoryCategory;
+    assignedTo: string;
 }
