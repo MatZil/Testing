@@ -7,7 +7,7 @@
         <th>Serial number</th>
         <th>Purchase Date</th>
         <th>Price</th>
-        <th>Assigned</th>
+        <th>Assigned To</th>
         <th>Expiration Date</th>
         <th>Comment</th>
         <th></th>
@@ -20,7 +20,7 @@
         <td>{{data.serialNumber}}</td>
         <td>{{data.purchaseDate | date}}</td>
         <td>{{data.price}}</td>
-        <td>{{data.employee.name}}</td>
+        <td>{{data.assignedTo}}</td>
         <td>{{data.expiryDate | date}}</td>
         <td nzBreakWork>{{data.comment}}</td>
         <td>

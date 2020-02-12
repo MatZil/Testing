@@ -8,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using XplicityApp.Configurations;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
-using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp
 {
@@ -56,7 +55,6 @@ namespace XplicityApp
             }
 
             app.UseCorsExt();
-
             app.UseHttpsRedirection();
 
             app.SetUpStaticFiles(Configuration);
@@ -69,6 +67,7 @@ namespace XplicityApp
             app.ConfigureAndUseSwagger();
 
             app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

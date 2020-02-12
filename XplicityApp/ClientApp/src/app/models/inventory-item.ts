@@ -1,5 +1,4 @@
 import { InventoryCategory } from './inventory-category';
-import { BaseUser } from './base-user';
 
 export class InventoryItem {
     id: number;
@@ -10,5 +9,5 @@ export class InventoryItem {
     expiryDate: Date;
     comment: string;
     category: InventoryCategory;
-    employee: BaseUser;
+    assignedTo: string;
 }
