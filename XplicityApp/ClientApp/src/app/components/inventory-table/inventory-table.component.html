@@ -126,7 +126,8 @@
         </form>
     </ng-template>
     <ng-template #newItemModalFooter>
-        <button nz-button nzType="default" (click)="closeNewItemModal()">Cancel</button>
-        <button nz-button nzType="default" (click)="saveInventoryItem()" [disabled]="this.input.invalid">Save</button>
+      <button *ngIf="isModifying" nzJustify="start" nz-button nzType="default" (click)="archiveItem()">Archive</button>
+      <button nz-button nzType="default" (click)="closeNewItemModal()">Cancel</button>
+      <button nz-button nzType="default" (click)="saveInventoryItem()" [disabled]="this.input.invalid">Save</button>
     </ng-template>
 </nz-modal>
