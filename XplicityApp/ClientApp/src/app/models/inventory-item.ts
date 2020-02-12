@@ -10,4 +10,5 @@ export class InventoryItem {
     comment: string;
     category: InventoryCategory;
     assignedTo: string;
+    archived: boolean;
 }
