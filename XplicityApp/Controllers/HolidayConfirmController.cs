@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using XplicityApp.Dtos.Holidays;
 using XplicityApp.Services.Interfaces;
+using XplicityApp.Services.Validations.Interfaces;
 
 namespace XplicityApp.Controllers
 {
@@ -12,14 +13,18 @@ namespace XplicityApp.Controllers
     public class HolidayConfirmController : ControllerBase
     {
         private readonly IHolidayConfirmService _confirmationService;
+        private readonly IHolidayValidationService _holidayValidationService;
         private readonly IHolidaysService _holidaysService;
         private readonly ILogger<HolidayConfirmController> _logger;
 
-        public HolidayConfirmController(IHolidayConfirmService confirmationService,
+        public HolidayConfirmController(
+            IHolidayConfirmService confirmationService,
+            IHolidayValidationService holidayValidationService,
             IHolidaysService holidaysService,
             ILogger<HolidayConfirmController> logger)
         {
             _confirmationService = confirmationService;
+            _holidayValidationService = holidayValidationService;
             _holidaysService = holidaysService;
             _logger = logger;
         }
@@ -29,10 +34,8 @@ namespace XplicityApp.Controllers
         {
             try
             {
-                await _confirmationService.ValidateNewHolidayConfirmationReadiness(newHolidayDto);
-
+                await _holidayValidationService.ValidateNewHolidayConfirmationReadiness(newHolidayDto);
                 var holidayId = await _holidaysService.Create(newHolidayDto);
-
                 await _confirmationService.RequestClientApproval(holidayId);
             }
             catch (InvalidOperationException exception)
@@ -49,10 +52,8 @@ namespace XplicityApp.Controllers
             _logger.LogInformation($"Holiday confirm request received for holiday id:{holidayId}");
             try
             {
-                await _confirmationService.ValidateHolidayConfirmationReadiness(holidayId);
-
+                await _holidayValidationService.ValidateHolidayConfirmationReadiness(holidayId);
                 await _confirmationService.ConfirmHoliday(holidayId);
-
                 await _confirmationService.GenerateFilesAndNotify(holidayId);
             }
             catch (InvalidOperationException exception)

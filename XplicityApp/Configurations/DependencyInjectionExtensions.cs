@@ -13,6 +13,8 @@ using XplicityApp.Services.Extensions;
 using XplicityApp.Services.Extensions.Interfaces;
 using XplicityApp.Services.BackgroundFunctions.Interfaces;
 using XplicityApp.Services.BackgroundFunctions;
+using XplicityApp.Services.Validations.Interfaces;
+using XplicityApp.Services.Validations;
 
 namespace XplicityApp.Configurations
 {
@@ -54,6 +56,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<IHolidayInfoService, HolidayInfoService>()
                 .AddScoped<IHolidaysService, HolidaysService>()
                 .AddScoped<IHolidayConfirmService, HolidayConfirmService>()
+                .AddScoped<IHolidayValidationService, HolidayValidationService>()
                 .AddScoped<IDocxGeneratorService, DocxGeneratorService>()
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IEmailService, EmailService>()
