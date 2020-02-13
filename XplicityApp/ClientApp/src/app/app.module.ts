@@ -52,6 +52,7 @@ import { EditEmployeeFormComponent } from './components/edit-employee-form/edit-
 import { BaseEmployeeFormComponent } from './components/base-employee-form/base-employee-form.component';
 import { ClientFormComponent } from './components/client-form/client-form.component';
 import { HolidayRequestFormComponent } from './components/holiday-request-form/holiday-request-form.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -106,6 +107,7 @@ export function tokenGetter() {
     MatTabsModule,
     NzUploadModule,
     MatProgressBarModule,
+    MatAutocompleteModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

@@ -59,7 +59,7 @@ namespace XplicityApp.Controllers
 
         [HttpPost]
         [Produces(typeof(int))]
-        public async Task<IActionResult> Post([FromBody] NewTagDto newTagDto)
+        public async Task<IActionResult> Post([FromBody]NewTagDto newTagDto)
         {
             try
             {

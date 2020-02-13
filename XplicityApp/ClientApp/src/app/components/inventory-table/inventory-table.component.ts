@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { InventoryItem } from 'src/app/models/inventory-item';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InventoryService } from 'src/app/services/inventory.service';
@@ -8,14 +8,12 @@ import { TableRowUserModel } from 'src/app/models/table-row-user-model';
 import { UserService } from 'src/app/services/user.service';
 
 import { ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent, MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material';
 import { TagService } from '../../services/tag.service';
 import { Tag } from '../../models/tag';
-import { NewTag } from '../../models/new-tag';
-
-export interface Fruit {
-  name: string;
-}
+import { FormControl } from '@angular/forms';
+import { startWith, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-inventory-table',
@@ -33,13 +31,14 @@ export class InventoryTableComponent implements OnInit {
   selectedEmployee;
   isModifying = false;
 
-  addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER];
+  myControl = new FormControl();
+  tags: Tag[] = [];
+  tagsAfterFiltration: Tag[] =[];
+  tagSugenstions: Observable<Tag[]>;
 
-  tags: NewTag[] = [];
-  tagSugenstions: Tag[] = [];
-  newTag: NewTag = new NewTag();
-
+  @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
   constructor(
     private inventoryService: InventoryService,
@@ -47,7 +46,11 @@ export class InventoryTableComponent implements OnInit {
     private categoryService: InventoryCategoryService,
     private userService: UserService,
     private tagsService: TagService
-  ) { }
+  ) {
+    this.tagSugenstions = this.myControl.valueChanges.pipe(
+      startWith(null),
+      map((value: string | null) => value ? this._tagsFilter(value) : this.tagsAfterFiltration.slice()));
+  }
 
   ngOnInit() {
     this.input = this.formBuilder.group({
@@ -66,6 +69,7 @@ export class InventoryTableComponent implements OnInit {
     this.getCategoriesList();
     this.refreshTable(this.employeeId);
     this.onCategoryChange();
+
   }
   onCategoryChange() {
     this.input.get('inventoryCategoryId').valueChanges.subscribe(selectedCategoryId => {
@@ -138,33 +142,43 @@ export class InventoryTableComponent implements OnInit {
   add(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
+    let currentTagId = 0;
 
-    console.log(value);
+    if ((value || '').trim()) {
+      this.tagsService.createNewTag({ Title: value }).subscribe(id => {
+        currentTagId = +id;
+      });
 
-    if (value !== '') {
-      this.tagsService.getAllByFilter(value).subscribe(tags => this.tagSugenstions = tags);
-      console.log(this.tagSugenstions);
-
-
-      this.newTag.Title = value;
-      this.tags.push(this.newTag);
-      this.tagsService.createNewTag(this.newTag);
+      this.tags.push({ Id: currentTagId, Title: value });
     }
 
-    // Reset the input value
     if (input) {
       input.value = '';
-      this.newTag = new NewTag();
-      this.tagSugenstions = [];
     }
+
+    this.myControl.setValue(null);
   }
 
-  remove(tag: NewTag): void {
+  remove(tag: Tag): void {
     const index = this.tags.indexOf(tag);
 
     if (index >= 0) {
       this.tags.splice(index, 1);
     }
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.tags.push({ Id: 0, Title: event.option.viewValue });
+    this.tagInput.nativeElement.value = '';
+    this.myControl.setValue(null);
+  }
+
+  private _tagsFilter(value: string) : Tag[] {
+    this.tagsService.getAllByFilter(value).subscribe(data => {
+      this.tagsAfterFiltration = data;
+    });
+
+    return this.tagsAfterFiltration.filter(tag => tag);
   }
 }
 
