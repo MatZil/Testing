@@ -23,6 +23,13 @@ export class InventoryTableComponent implements OnInit {
   selectedEmployee;
   isModifying = false;
 
+  searchCategoryValue = '';
+  searchOwnerValue = '';
+  searchDateValue : Date;
+  sortName: string | null = null;
+  sortValue: string | null = null;
+  listOfData: InventoryItem[] = [];
+
   constructor(
     private inventoryService: InventoryService,
     private formBuilder: FormBuilder,
@@ -65,10 +72,12 @@ export class InventoryTableComponent implements OnInit {
     if (id) {
       this.inventoryService.getEquipmentByEmployeeId(id).subscribe(inventoryItems => {
         this.equipment = inventoryItems;
+        this.listOfData = [...this.equipment];
       });
     } else {
       this.inventoryService.getAllInventoryItems().subscribe(inventoryItems => {
         this.equipment = inventoryItems;
+        this.listOfData = [...this.equipment];
       });
     }
   }
@@ -121,4 +130,71 @@ export class InventoryTableComponent implements OnInit {
     this.input.controls.archived.setValue(true);
     this.saveInventoryItem();
   }
+
+  resetCategory(): void {
+    this.searchCategoryValue = '';
+    this.search();
+  }
+  resetOwner(): void {
+    this.searchOwnerValue = '';
+    this.search();
+  }
+  search(): void {
+    const filterFunc = (item: {
+      id: number;
+      name: string;
+      serialNumber: string;
+      price: number;
+      purchaseDate: Date;
+      expiryDate: Date;
+      comment: string;
+      category: InventoryCategory;
+      assignedTo: string;
+      archived: boolean;
+    }) => {
+      if(this.searchDateValue == null){
+        return (
+          item.category.name.toUpperCase().indexOf(this.searchCategoryValue.toUpperCase()) !== -1 &&
+          item.assignedTo.toUpperCase().indexOf(this.searchOwnerValue.toUpperCase()) !== -1
+        );
+      }
+      else {
+        if(item.expiryDate == null)
+          return ( false );
+        else {
+          var targetDate = ((this.searchDateValue.getMonth().toString().length > 1) ? (this.searchDateValue.getMonth() + 1) : ('0' + (this.searchDateValue.getMonth() + 1))) + '/' + ((this.searchDateValue.getDate().toString().length > 1) ? this.searchDateValue.getDate() : ('0' + this.searchDateValue.getDate())) + '/' + this.searchDateValue.getFullYear();
+          var tempDate = new Date(item.expiryDate);
+          var itemDate = ((tempDate.getMonth().toString().length > 1) ? (tempDate.getMonth() + 1) : ('0' + (tempDate.getMonth() + 1))) + '/' + ((tempDate.getDate().toString().length > 1) ? tempDate.getDate() : ('0' + tempDate.getDate())) + '/' + tempDate.getFullYear();
+          return (
+            item.category.name.toUpperCase().indexOf(this.searchCategoryValue.toUpperCase()) !== -1 &&
+            item.assignedTo.toUpperCase().indexOf(this.searchOwnerValue.toUpperCase()) !== -1 &&
+            targetDate.indexOf(itemDate) !== -1
+          );
+        }
+      }
+
+    };
+    const data = this.listOfData.filter((item: {
+      id: number;
+      name: string;
+      serialNumber: string;
+      price: number;
+      purchaseDate: Date;
+      expiryDate: Date;
+      comment: string;
+      category: InventoryCategory;
+      assignedTo: string;
+      archived: boolean;
+    }) => filterFunc(item));
+    this.equipment = data.sort((a, b) =>
+      this.sortValue === 'ascend'
+        ? a[this.sortName!] > b[this.sortName!]
+          ? 1
+          : -1
+        : b[this.sortName!] > a[this.sortName!]
+          ? 1
+          : -1
+    );
+  }
+
 }

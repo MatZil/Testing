@@ -2,13 +2,22 @@
 <nz-table #basicTable [nzData]="equipment">
     <thead>
       <tr>
-        <th>Category</th>
+        <th nzCustomFilter>
+            Category
+            <i class="ant-table-filter-icon" id="byCategory" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="category" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+        </th>
         <th>Name</th>
         <th>Serial number</th>
         <th>Purchase Date</th>
         <th>Price</th>
-        <th>Assigned To</th>
-        <th>Expiration Date</th>
+        <th nzCustomFilter>
+            Assigned To
+            <i class="ant-table-filter-icon" id="byOwner" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="owner" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+        </th>
+        <th>
+            Expiration Date
+            <nz-date-picker [(ngModel)]="searchDateValue" (ngModelChange)="search()"></nz-date-picker>
+        </th>
         <th>Comment</th>
         <th></th>
       </tr>
@@ -31,6 +40,24 @@
       </tr>
     </tbody>
 </nz-table>
+<nz-dropdown-menu #category="nzDropdownMenu" id="byCategory">
+    <div class="search-box">
+        <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchCategoryValue" />
+        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+      Search
+    </button>
+        <button nz-button nzSize="small" (click)="resetCategory()">Reset</button>
+    </div>
+</nz-dropdown-menu>
+<nz-dropdown-menu #owner="nzDropdownMenu" id="byOwner">
+    <div class="search-box">
+        <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchOwnerValue" />
+        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+      Search
+    </button>
+        <button nz-button nzSize="small" (click)="resetOwner()">Reset</button>
+    </div>
+</nz-dropdown-menu>
 <nz-modal [(nzVisible)]="isVisibleNewItemModal" (nzOnCancel)="closeNewItemModal()"
     [nzTitle]="isModifying ? 'Edit equipment' : 'Add new equipment'" nzWidth="600" [nzContent]="newItemModalContent"
     [nzFooter]="newItemModalFooter">
