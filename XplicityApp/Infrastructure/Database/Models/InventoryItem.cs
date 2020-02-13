@@ -34,5 +34,7 @@ namespace XplicityApp.Infrastructure.Database.Models
         public Employee Employee { get; set; }
 
         public ICollection<InventoryItemTag> InventoryItemsTags { get; set; }
+
+        public bool Archived { get; set; }
     }
 }

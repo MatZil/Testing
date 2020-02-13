@@ -41,6 +41,7 @@ export class InventoryTableComponent implements OnInit {
       category: [null],
       assignedTo: [null],
       comment: [null],
+      archived: [false],
       inventoryCategoryId: [null, [Validators.required]],
       employeeId: [null]
     });
@@ -115,5 +116,9 @@ export class InventoryTableComponent implements OnInit {
     this.selectedEmployee = this.employeeId;
     this.isModifying = true;
     this.isVisibleNewItemModal = true;
+  }
+  archiveItem() {
+    this.input.controls.archived.setValue(true);
+    this.saveInventoryItem();
   }
 }
