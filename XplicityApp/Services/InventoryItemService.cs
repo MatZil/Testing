@@ -38,7 +38,13 @@ namespace XplicityApp.Services
                     if (inventoryItemDto.EmployeeId == inventoryItem.EmployeeId)
                     {
                         inventoryItemDto.AssignedTo = inventoryItem.Employee.Name + " " + inventoryItem.Employee.Surname;
+                        break;
                     }
+                }
+
+                if(inventoryItemDto.AssignedTo == null)
+                {
+                    inventoryItemDto.AssignedTo = "Office";
                 }
             }
             return inventoryItemsDto;
