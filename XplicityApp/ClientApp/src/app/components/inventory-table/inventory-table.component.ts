@@ -35,7 +35,8 @@ export class InventoryTableComponent implements OnInit {
   myControl = new FormControl();
   tags: Tag[] = [];
   tagsAfterFiltration: Tag[] =[];
-  tagSugenstions: Observable<Tag[]>;
+  tagSuggestions: Observable<Tag[]>;
+ // itemId: number;
 
   @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
@@ -47,7 +48,7 @@ export class InventoryTableComponent implements OnInit {
     private userService: UserService,
     private tagsService: TagService
   ) {
-    this.tagSugenstions = this.myControl.valueChanges.pipe(
+    this.tagSuggestions = this.myControl.valueChanges.pipe(
       startWith(null),
       map((value: string | null) => value ? this._tagsFilter(value) : this.tagsAfterFiltration.slice()));
   }
@@ -106,7 +107,8 @@ export class InventoryTableComponent implements OnInit {
 
   saveInventoryItem() {
     if (!this.isModifying) {
-      this.inventoryService.createNewInventoryItem(this.input.value).subscribe(() => {
+      this.inventoryService.createNewInventoryItem(this.input.value).subscribe(data => {
+       // this.itemId = data.id;
         this.refreshTable(this.employeeId);
 
       });
@@ -144,7 +146,7 @@ export class InventoryTableComponent implements OnInit {
     const value = event.value;
     let currentTagId = 0;
 
-    if ((value || '').trim()) {
+    if ((value || '').trim() && this.isTagValid(value)) {
       this.tagsService.createNewTag({ Title: value }).subscribe(id => {
         currentTagId = +id;
       });
@@ -168,7 +170,8 @@ export class InventoryTableComponent implements OnInit {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.tags.push({ Id: 0, Title: event.option.viewValue });
+    let tagObject = event.option.viewValue.split(' ', 2);
+    this.tags.push({ Id: +tagObject[1], Title: tagObject[0] });
     this.tagInput.nativeElement.value = '';
     this.myControl.setValue(null);
   }
@@ -179,6 +182,13 @@ export class InventoryTableComponent implements OnInit {
     });
 
     return this.tagsAfterFiltration.filter(tag => tag);
+  }
+
+  isTagValid(tag: string) {
+    if (tag.length > 10 || tag.length < 3) {
+      return false;
+    }
+    return true;
   }
 }
 

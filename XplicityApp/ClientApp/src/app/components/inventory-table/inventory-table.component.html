@@ -86,12 +86,11 @@
                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                    (matChipInputTokenEnd)="add($event)"
                    [matAutocomplete]="auto"
-                   [formControl]="myControl"
-                   />
+                   [formControl]="myControl" />
           </mat-chip-list>
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-            <mat-option *ngFor="let tag of tagSugenstions | async" [value]="tag.title">
-              {{tag.title}}
+            <mat-option *ngFor="let tag of tagSuggestions | async" [value]="tag">
+              {{tag.title}}<span style="display:none"> {{tag.id}}</span>
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
