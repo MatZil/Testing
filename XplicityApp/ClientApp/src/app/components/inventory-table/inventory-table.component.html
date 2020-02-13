@@ -53,12 +53,13 @@
             <nz-form-item>
                 <nz-form-label [nzSpan]="5" nzFor="employeeId">Employee</nz-form-label>
                 <nz-form-control [nzSpan]="10">
-                    <nz-select formControlName="employeeId" nzPlaceHolder="Select employee"
-                        [(ngModel)]="selectedEmployee" nzShowSearch nzAllowClear>
-                        <nz-option *ngFor="let employee of employees" [nzValue]="employee.id"
-                            [nzLabel]="employee.name + ' ' + employee.surname">
-                        </nz-option>
-                    </nz-select>
+                  <nz-select formControlName="employeeId" nzPlaceHolder="Select employee"
+                             [(ngModel)]="selectedEmployee" nzShowSearch nzAllowClear>
+                    <nz-option nzLabel="Office" nzValue=""></nz-option>
+                    <nz-option *ngFor="let employee of employees" [nzValue]="employee.id"
+                               [nzLabel]="employee.name + ' ' + employee.surname">
+                    </nz-option>
+                  </nz-select>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
