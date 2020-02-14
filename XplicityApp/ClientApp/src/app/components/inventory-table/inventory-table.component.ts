@@ -49,7 +49,7 @@ export class InventoryTableComponent implements OnInit {
   ) {
     this.tagSuggestions = this.tagsControl.valueChanges.pipe(
       startWith(null),
-      map((value: string | null) => value ? this._tagsFilter(value) : this.tagsAfterFiltration.slice()));
+      map((tagTitle: string | null) => tagTitle ? this._tagsFilter(tagTitle) : this.tagsAfterFiltration.slice()));
   }
 
   ngOnInit() {
@@ -106,8 +106,7 @@ export class InventoryTableComponent implements OnInit {
 
   saveInventoryItem() {
     if (!this.isModifying) {
-      this.inventoryService.createNewInventoryItem(this.input.value).subscribe(data => {
-        // this.itemId = data.id;
+      this.inventoryService.createNewInventoryItem(this.input.value).subscribe(() => {
         this.refreshTable(this.employeeId);
 
       });
