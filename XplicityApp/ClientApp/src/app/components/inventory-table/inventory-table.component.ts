@@ -152,15 +152,17 @@ export class InventoryTableComponent implements OnInit {
       assignedTo: string;
       archived: boolean;
     }) => {
-      if(this.searchDateValue == null){
+      if(!item.assignedTo)
+      item.assignedTo = 'Office';
+      if(!this.searchDateValue){
         return (
           item.category.name.toUpperCase().indexOf(this.searchCategoryValue.toUpperCase()) !== -1 &&
           item.assignedTo.toUpperCase().indexOf(this.searchOwnerValue.toUpperCase()) !== -1
         );
       }
       else {
-        if(item.expiryDate == null)
-          return ( false );
+        if(!item.expiryDate)
+          return false;
         else {
           var targetDate = ((this.searchDateValue.getMonth().toString().length > 1) ? (this.searchDateValue.getMonth() + 1) : ('0' + (this.searchDateValue.getMonth() + 1))) + '/' + ((this.searchDateValue.getDate().toString().length > 1) ? this.searchDateValue.getDate() : ('0' + this.searchDateValue.getDate())) + '/' + this.searchDateValue.getFullYear();
           var tempDate = new Date(item.expiryDate);
