@@ -33,7 +33,7 @@ export class InventoryTableComponent implements OnInit {
 
   readonly separatorKeysCodes: number[] = [ENTER];
   tagsControl = new FormControl();
-  tags: Tag[] = [];
+  tagsSelected: Tag[] = [];
   tagsAfterFiltration: Tag[] = [];
   tagSuggestions: Observable<Tag[]>;
 
@@ -145,7 +145,7 @@ export class InventoryTableComponent implements OnInit {
 
     if ((tagTitle || '').trim()) {
       this.tagsService.createNewTag({ Title: tagTitle }).subscribe(id => {
-        this.tags.push({ Id: Number(id), Title: tagTitle });
+        this.tagsSelected.push({ Id: Number(id), Title: tagTitle });
       });
     }
 
@@ -157,16 +157,16 @@ export class InventoryTableComponent implements OnInit {
   }
 
   remove(tag: Tag): void {
-    const index = this.tags.indexOf(tag);
+    const index = this.tagsSelected.indexOf(tag);
 
     if (index >= 0) {
-      this.tags.splice(index, 1);
+      this.tagsSelected.splice(index, 1);
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
     let tagObject = event.option.viewValue.split(' ', 2);
-    this.tags.push({ Id: Number(tagObject[1]), Title: tagObject[0] });
+    this.tagsSelected.push({ Id: Number(tagObject[1]), Title: tagObject[0] });
     this.tagInput.nativeElement.value = '';
     this.tagsControl.setValue(null);
   }
