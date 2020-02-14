@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace XplicityApp.Infrastructure.Database.Models
 {
@@ -19,6 +20,7 @@ namespace XplicityApp.Infrastructure.Database.Models
         public DateTime? ExpiryDate { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
         public string Comment { get; set; }
@@ -32,5 +34,7 @@ namespace XplicityApp.Infrastructure.Database.Models
         public Employee Employee { get; set; }
 
         public ICollection<InventoryItemTag> InventoryItemsTags { get; set; }
+
+        public bool Archived { get; set; }
     }
 }

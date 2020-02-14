@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Moq;
 using System;
+using Microsoft.Extensions.Logging;
 using XplicityApp.Dtos.Holidays;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
@@ -11,6 +12,7 @@ using XplicityApp.Services;
 using XplicityApp.Services.Interfaces;
 using Xunit;
 using XplicityApp.Services.Extensions;
+using XplicityApp.Services.Validations;
 
 namespace Tests
 {
@@ -25,6 +27,7 @@ namespace Tests
         private readonly TimeService _timeService;
         private readonly IOvertimeUtility _mockOvertimeUtility;
         private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
+        private readonly HolidayValidationService _holidayValidationService;
 
         public HolidayConfirmTests()
         {
@@ -46,8 +49,13 @@ namespace Tests
             var holidaysService = new HolidaysService(_holidaysRepository, _mapper, _timeService, _mockOvertimeUtility);
             _holidayConfirmService = new HolidayConfirmService(mockEmailService.Object, _mapper, _holidaysRepository,
                                                                _employeesRepository, clientsRepository, holidaysService,
-                                                               _timeService, mockDocxGeneratorService.Object, _mockOvertimeUtility, 
-                                                               _employeeHolidaysConfirmationUpdater);
+                                                                mockDocxGeneratorService.Object, _mockOvertimeUtility, 
+                                                               _employeeHolidaysConfirmationUpdater, new Mock<ILogger<HolidayConfirmService>>().Object);
+            _holidayValidationService = new HolidayValidationService(
+                _holidaysRepository,
+                _employeesRepository,
+                _mapper,
+                _timeService);
         }
 
         [Theory]
@@ -147,21 +155,12 @@ namespace Tests
             Assert.True(initial[0] != final[0] || initial[1] != final[1], "Failed to update employee's parental leaves.");
         }
 
-        //[Theory]
-        //[InlineData(1)]
-        //public async void When_ConfirmingValid_Expect_True(int holidayId)
-        //{
-        //    var result = await _holidayConfirmService.IsValid(holidayId);
-
-        //    Assert.True(result, "Holiday request is deemed to be invalid.");
-        //}
-
         [Theory]
         [InlineData(4)]
         public async void When_ConfirmingInvalid_Expect_False(int holidayId)
         {
             await Assert.ThrowsAsync<InvalidOperationException>(
-                async () => await _holidayConfirmService.ValidateHolidayConfirmationReadiness(holidayId));
+                async () => await _holidayValidationService.ValidateHolidayConfirmationReadiness(holidayId));
         }
     }
 }

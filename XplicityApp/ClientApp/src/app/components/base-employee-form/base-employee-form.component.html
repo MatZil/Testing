@@ -30,7 +30,8 @@
         </div>
         <div>
             <mat-form-field class="inputDatetimeField">
-                <input matInput [matDatepicker]="worksFromDate" (focus)="worksFromDate.open()" name="worksFromDate" [min]="minDate" [max]="maxDate" placeholder="Started working from" formControlName="worksFromDate">
+                <input matInput [matDatepicker]="worksFromDate" (focus)="worksFromDate.open()" name="worksFromDate" [min]="minDate" [max]="maxDate"
+                       placeholder="Started working from" formControlName="worksFromDate" readonly>
                 <mat-datepicker #worksFromDate></mat-datepicker>
                 <mat-datepicker-toggle matSuffix [for]="worksFromDate"></mat-datepicker-toggle>
                 <mat-error *ngIf="baseForm.controls.worksFromDate.invalid" class="error">
@@ -51,7 +52,8 @@
         </div>
         <div>
             <mat-form-field class="inputDatetimeField">
-                <input matInput [matDatepicker]="healthCheckDate" (focus)="healthCheckDate.open()" name="healthCheckDate" placeholder="Health check-up" formControlName="healthCheckDate">
+                <input matInput [matDatepicker]="healthCheckDate" (focus)="healthCheckDate.open()" name="healthCheckDate" [min]="minDate" [max]="maxDate"
+                       placeholder="Health check-up" formControlName="healthCheckDate" readonly>
                 <mat-datepicker #healthCheckDate></mat-datepicker>
                 <mat-datepicker-toggle matSuffix [for]="healthCheckDate"></mat-datepicker-toggle>
                 <mat-error *ngIf="baseForm.controls.healthCheckDate.invalid" class="error">
@@ -71,7 +73,8 @@
         </div>
         <div>
             <mat-form-field class="inputDatetimeField">
-                <input matInput [matDatepicker]="birthdayDate" (focus)="birthdayDate.open()" name="birthdayDate" placeholder="Birthday" formControlName="birthdayDate">
+                <input matInput [matDatepicker]="birthdayDate" (focus)="birthdayDate.open()" name="birthdayDate" [min]="minDate" [max]="maxDate"
+                       placeholder="Birthday" formControlName="birthdayDate" readonly>
                 <mat-datepicker #birthdayDate></mat-datepicker>
                 <mat-datepicker-toggle matSuffix [for]="birthdayDate"></mat-datepicker-toggle>
                 <mat-error *ngIf="baseForm.controls.birthdayDate.invalid" class="error">

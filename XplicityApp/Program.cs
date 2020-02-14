@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.AzureAppServices;
 using System.IO;
 
 namespace XplicityApp
@@ -26,7 +28,11 @@ namespace XplicityApp
                     logging.ClearProviders();
                     logging.AddConsole();
                     logging.AddDebug();
+                    logging.AddAzureWebAppDiagnostics();
                 })
+                .ConfigureServices(serviceCollection => serviceCollection
+                    .Configure<AzureBlobLoggerOptions>(options => 
+                        options.BlobName = "log.txt"))
                 .ConfigureWebHostDefaults(webBuilder => { 
                     webBuilder.UseStartup<Startup>(); 
                 });

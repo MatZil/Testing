@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Threading.Tasks;
@@ -16,14 +15,12 @@ namespace XplicityApp.Services
         private readonly IFileRepository _fileRepository;
         private readonly IConfiguration _configuration;
         private readonly ITimeService _timeService;
-        private readonly IWebHostEnvironment _environment;
 
-        public FileService(IFileRepository fileRepository, IConfiguration configuration, ITimeService timeService, IWebHostEnvironment environment)
+        public FileService(IFileRepository fileRepository, IConfiguration configuration, ITimeService timeService)
         {
             _fileRepository = fileRepository;
             _configuration = configuration;
             _timeService = timeService;
-            _environment = environment;
         }
 
         public async Task<int> CreateFileRecord(string fileName, FileTypeEnum fileType)
@@ -45,7 +42,7 @@ namespace XplicityApp.Services
             if (formFile.Length > 0)
             {
                 await CreateFileRecord(formFile.FileName, fileType);
-                var fullPath = Path.Combine(_environment.ContentRootPath, GetRelativeDirectory(fileType), formFile.FileName);
+                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
                 using var fileStream = new FileStream(fullPath, FileMode.Create);
                 formFile.CopyTo(fileStream);
             }
