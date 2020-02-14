@@ -32,11 +32,10 @@ export class InventoryTableComponent implements OnInit {
   isModifying = false;
 
   readonly separatorKeysCodes: number[] = [ENTER];
-  myControl = new FormControl();
+  tagsControl = new FormControl();
   tags: Tag[] = [];
-  tagsAfterFiltration: Tag[] =[];
+  tagsAfterFiltration: Tag[] = [];
   tagSuggestions: Observable<Tag[]>;
- // itemId: number;
 
   @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
@@ -48,7 +47,7 @@ export class InventoryTableComponent implements OnInit {
     private userService: UserService,
     private tagsService: TagService
   ) {
-    this.tagSuggestions = this.myControl.valueChanges.pipe(
+    this.tagSuggestions = this.tagsControl.valueChanges.pipe(
       startWith(null),
       map((value: string | null) => value ? this._tagsFilter(value) : this.tagsAfterFiltration.slice()));
   }
@@ -108,7 +107,7 @@ export class InventoryTableComponent implements OnInit {
   saveInventoryItem() {
     if (!this.isModifying) {
       this.inventoryService.createNewInventoryItem(this.input.value).subscribe(data => {
-       // this.itemId = data.id;
+        // this.itemId = data.id;
         this.refreshTable(this.employeeId);
 
       });
@@ -143,22 +142,19 @@ export class InventoryTableComponent implements OnInit {
 
   add(event: MatChipInputEvent): void {
     const input = event.input;
-    const value = event.value;
-    let currentTagId = 0;
+    const tagTitle = event.value;
 
-    if ((value || '').trim() && this.isTagValid(value)) {
-      this.tagsService.createNewTag({ Title: value }).subscribe(id => {
-        currentTagId = +id;
+    if ((tagTitle || '').trim()) {
+      this.tagsService.createNewTag({ Title: tagTitle }).subscribe(id => {
+        this.tags.push({ Id: Number(id), Title: tagTitle });
       });
-
-      this.tags.push({ Id: currentTagId, Title: value });
     }
 
     if (input) {
       input.value = '';
     }
 
-    this.myControl.setValue(null);
+    this.tagsControl.setValue(null);
   }
 
   remove(tag: Tag): void {
@@ -171,24 +167,18 @@ export class InventoryTableComponent implements OnInit {
 
   selected(event: MatAutocompleteSelectedEvent): void {
     let tagObject = event.option.viewValue.split(' ', 2);
-    this.tags.push({ Id: +tagObject[1], Title: tagObject[0] });
+    this.tags.push({ Id: Number(tagObject[1]), Title: tagObject[0] });
     this.tagInput.nativeElement.value = '';
-    this.myControl.setValue(null);
+    this.tagsControl.setValue(null);
   }
 
-  private _tagsFilter(value: string) : Tag[] {
+  private _tagsFilter(value: string): Tag[] {
     this.tagsService.getAllByFilter(value).subscribe(data => {
       this.tagsAfterFiltration = data;
     });
 
-    return this.tagsAfterFiltration.filter(tag => tag);
+    return this.tagsAfterFiltration;
   }
 
-  isTagValid(tag: string) {
-    if (tag.length > 10 || tag.length < 3) {
-      return false;
-    }
-    return true;
-  }
 }
 
