@@ -14,7 +14,6 @@ import { Tag } from '../../models/tag';
 import { FormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Component({
   selector: 'app-inventory-table',
