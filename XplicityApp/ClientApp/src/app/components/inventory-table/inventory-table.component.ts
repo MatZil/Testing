@@ -8,12 +8,13 @@ import { TableRowUserModel } from 'src/app/models/table-row-user-model';
 import { UserService } from 'src/app/services/user.service';
 
 import { ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent, MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material';
+import { MatChipInputEvent, MatAutocomplete, MatAutocompleteSelectedEvent, MatSnackBar } from '@angular/material';
 import { TagService } from '../../services/tag.service';
 import { Tag } from '../../models/tag';
 import { FormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Component({
   selector: 'app-inventory-table',
@@ -45,7 +46,8 @@ export class InventoryTableComponent implements OnInit {
     private formBuilder: FormBuilder,
     private categoryService: InventoryCategoryService,
     private userService: UserService,
-    private tagsService: TagService
+    private tagsService: TagService,
+    private snackBar: MatSnackBar
   ) {
     this.tagSuggestions = this.tagsControl.valueChanges.pipe(
       startWith(null),
@@ -140,6 +142,7 @@ export class InventoryTableComponent implements OnInit {
     this.isModifying = true;
     this.isVisibleNewItemModal = true;
   }
+
   archiveItem() {
     this.input.controls.archived.setValue(true);
     this.saveInventoryItem();
@@ -152,6 +155,8 @@ export class InventoryTableComponent implements OnInit {
     if ((tagTitle || '').trim()) {
       this.tagsService.createNewTag({ Title: tagTitle }).subscribe(id => {
         this.tagsSelected.push({ Id: Number(id), Title: tagTitle });
+      }, error => {
+          this.showWarningMessage('Tag is invalid!');
       });
     }
 
@@ -171,8 +176,7 @@ export class InventoryTableComponent implements OnInit {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    let tagObject = event.option.viewValue.split(' ', 2);
-    this.tagsSelected.push({ Id: Number(tagObject[1]), Title: tagObject[0] });
+    this.tagsSelected.push({ Id: event.option.value, Title: event.option.viewValue });
     this.tagInput.nativeElement.value = '';
     this.tagsControl.setValue(null);
   }
@@ -183,6 +187,12 @@ export class InventoryTableComponent implements OnInit {
     });
 
     return this.tagsAfterFiltration;
+  }
+
+  showWarningMessage(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration:3000,
+    })
   }
 
 }

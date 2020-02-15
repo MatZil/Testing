@@ -86,7 +86,7 @@ export function tokenGetter() {
     AppRoutingModule,
     NgZorroAntdModule,
     FormsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: 'never' }),
     HttpClientModule,
     BrowserAnimationsModule,
     MatInputModule,
