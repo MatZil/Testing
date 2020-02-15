@@ -1,4 +1,5 @@
-export class Tag {
+import { NewTag } from "./new-tag";
+
+export class Tag extends NewTag {
   Id: number;
-  Title: string;
 }

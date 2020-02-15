@@ -12,12 +12,12 @@ export class TagService {
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
-  getAllByFilter(tagTitle: string): Observable<Tag[]> {
+  getAllByTitle(tagTitle: string): Observable<Tag[]> {
     return this.http.get<Tag[]>(`${this.tagApi}/find/` + tagTitle);
   }
 
   getAll(): Observable<Tag[]> {
-    return this.http.get<Tag[]>(`${this.tagApi}`);
+    return this.http.get<Tag[]>(this.tagApi);
   }
 
   createNewTag(newTag: NewTag) {

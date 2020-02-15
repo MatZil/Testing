@@ -156,7 +156,7 @@ export class InventoryTableComponent implements OnInit {
       this.tagsService.createNewTag({ Title: tagTitle }).subscribe(id => {
         this.tagsSelected.push({ Id: Number(id), Title: tagTitle });
       }, error => {
-          this.showWarningMessage('Tag is invalid!');
+        this.showWarningMessage('Tag is invalid!');
       });
     }
 
@@ -182,7 +182,7 @@ export class InventoryTableComponent implements OnInit {
   }
 
   private _tagsFilter(value: string): Tag[] {
-    this.tagsService.getAllByFilter(value).subscribe(data => {
+    this.tagsService.getAllByTitle(value).subscribe(data => {
       this.tagsAfterFiltration = data;
     });
 
@@ -191,7 +191,7 @@ export class InventoryTableComponent implements OnInit {
 
   showWarningMessage(message: string) {
     this.snackBar.open(message, 'Close', {
-      duration:3000,
+      duration: 3000,
     })
   }
 
