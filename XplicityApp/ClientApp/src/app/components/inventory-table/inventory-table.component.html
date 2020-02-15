@@ -92,8 +92,8 @@
                    [formControl]="tagsControl" />
           </mat-chip-list>
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-            <mat-option *ngFor="let tag of tagSuggestions | async" [value]="tag">
-              {{tag.title}}<span style="display:none"> {{tag.id}}</span>
+            <mat-option *ngFor="let tag of tagSuggestions | async" [value]="tag.id">
+              {{tag.title}}
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
