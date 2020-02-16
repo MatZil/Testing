@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using XplicityApp.Configurations;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Services
@@ -21,11 +22,17 @@ namespace XplicityApp.Services
         private readonly AppSettings _appSettings;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AuthenticationService(IOptions<AppSettings> appSettings, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly ITimeService _timeService;
+        public AuthenticationService(
+            IOptions<AppSettings> appSettings,
+            UserManager<User> userManager,
+            RoleManager<IdentityRole> roleManager,
+            ITimeService timeService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _appSettings = appSettings.Value;
+            _timeService = timeService;
         }
 
         public async Task<User> Authenticate(string email, string password)
@@ -63,13 +70,13 @@ namespace XplicityApp.Services
             claims.AddRange(roles.Select(role => new Claim("role", role)));
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Secret));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddMinutes(30);
+            var durationTime = _timeService.GetCurrentTime().AddDays(14);
 
             var token = new JwtSecurityToken(
                 "Issuer",
                 "Issuer",
                 claims,
-                expires: expires,
+                expires: durationTime,
                 signingCredentials: credentials
                 );
 
