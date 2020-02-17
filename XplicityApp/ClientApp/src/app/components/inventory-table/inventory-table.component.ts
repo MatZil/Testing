@@ -140,20 +140,7 @@ export class InventoryTableComponent implements OnInit {
     this.search();
   }
   search(): void {
-    const filterFunc = (item: {
-      id: number;
-      name: string;
-      serialNumber: string;
-      price: number;
-      purchaseDate: Date;
-      expiryDate: Date;
-      comment: string;
-      category: InventoryCategory;
-      assignedTo: string;
-      archived: boolean;
-    }) => {
-      if(!item.assignedTo)
-      item.assignedTo = 'Office';
+    const filterFunc = (item: InventoryItem) => {
       if(!this.searchDateValue){
         return (
           item.category.name.toUpperCase().indexOf(this.searchCategoryValue.toUpperCase()) !== -1 &&
@@ -164,9 +151,13 @@ export class InventoryTableComponent implements OnInit {
         if(!item.expiryDate)
           return false;
         else {
-          var targetDate = ((this.searchDateValue.getMonth().toString().length > 1) ? (this.searchDateValue.getMonth() + 1) : ('0' + (this.searchDateValue.getMonth() + 1))) + '/' + ((this.searchDateValue.getDate().toString().length > 1) ? this.searchDateValue.getDate() : ('0' + this.searchDateValue.getDate())) + '/' + this.searchDateValue.getFullYear();
+          var targetDate = this.searchDateValue.getFullYear() + 
+            '/' + ((this.searchDateValue.getMonth().toString().length > 1) ? (this.searchDateValue.getMonth() + 1) : ('0' + (this.searchDateValue.getMonth() + 1))) + 
+            '/' + ((this.searchDateValue.getDate().toString().length > 1) ? this.searchDateValue.getDate() : ('0' + this.searchDateValue.getDate()));//result: YYYY/MM/DD
           var tempDate = new Date(item.expiryDate);
-          var itemDate = ((tempDate.getMonth().toString().length > 1) ? (tempDate.getMonth() + 1) : ('0' + (tempDate.getMonth() + 1))) + '/' + ((tempDate.getDate().toString().length > 1) ? tempDate.getDate() : ('0' + tempDate.getDate())) + '/' + tempDate.getFullYear();
+          var itemDate = tempDate.getFullYear() + 
+          '/' + ((tempDate.getMonth().toString().length > 1) ? (tempDate.getMonth() + 1) : ('0' + (tempDate.getMonth() + 1))) + 
+          '/' + ((tempDate.getDate().toString().length > 1) ? tempDate.getDate() : ('0' + tempDate.getDate()));//result: YYYY/MM/DD
           return (
             item.category.name.toUpperCase().indexOf(this.searchCategoryValue.toUpperCase()) !== -1 &&
             item.assignedTo.toUpperCase().indexOf(this.searchOwnerValue.toUpperCase()) !== -1 &&
@@ -176,18 +167,7 @@ export class InventoryTableComponent implements OnInit {
       }
 
     };
-    const data = this.listOfData.filter((item: {
-      id: number;
-      name: string;
-      serialNumber: string;
-      price: number;
-      purchaseDate: Date;
-      expiryDate: Date;
-      comment: string;
-      category: InventoryCategory;
-      assignedTo: string;
-      archived: boolean;
-    }) => filterFunc(item));
+    const data = this.listOfData.filter((item: InventoryItem) => filterFunc(item));
     this.equipment = data.sort((a, b) =>
       this.sortValue === 'ascend'
         ? a[this.sortName!] > b[this.sortName!]
