@@ -176,17 +176,13 @@ export class InventoryTableComponent implements OnInit {
         if(!item.expiryDate)
           return false;
         else {
-          var targetDate = this.searchDateValue.getFullYear() + 
-            '/' + ((this.searchDateValue.getMonth().toString().length > 1) ? (this.searchDateValue.getMonth() + 1) : ('0' + (this.searchDateValue.getMonth() + 1))) + 
-            '/' + ((this.searchDateValue.getDate().toString().length > 1) ? this.searchDateValue.getDate() : ('0' + this.searchDateValue.getDate()));//result: YYYY/MM/DD
+          var targetDate = Date.parse(this.searchDateValue.toDateString());
           var tempDate = new Date(item.expiryDate);
-          var itemDate = tempDate.getFullYear() + 
-          '/' + ((tempDate.getMonth().toString().length > 1) ? (tempDate.getMonth() + 1) : ('0' + (tempDate.getMonth() + 1))) + 
-          '/' + ((tempDate.getDate().toString().length > 1) ? tempDate.getDate() : ('0' + tempDate.getDate()));//result: YYYY/MM/DD
+          var itemDate = Date.parse(tempDate.toDateString());
           return (
             item.category.name.toUpperCase().indexOf(this.searchCategoryValue.toUpperCase()) !== -1 &&
             item.assignedTo.toUpperCase().indexOf(this.searchOwnerValue.toUpperCase()) !== -1 &&
-            targetDate.indexOf(itemDate) !== -1
+            targetDate == itemDate
           );
         }
       }
