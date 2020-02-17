@@ -46,6 +46,8 @@ export class EditEmployeeFormComponent implements OnInit {
   }
 
   getFormUser(): Updateuser {
+    this.editEmployeeForm.controls.baseForm.value['overtimeHours'] = this.editEmployeeForm.value['overtimeHours'];
+    this.editEmployeeForm.controls.baseForm.value['freeWorkDays'] = this.editEmployeeForm.value['freeWorkDays'];
     const formUser = Object.assign({}, this.editEmployeeForm.value, this.editEmployeeForm.controls.baseForm.value);
 
     if (formUser.clientId === 0) {
