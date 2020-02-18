@@ -8,7 +8,7 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Tests
+namespace Tests.Tests
 {
     [TestCaseOrderer("Tests.ClientTests.AlphabeticalOrderer", "Tests")]
     public class ClientTests
