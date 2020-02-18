@@ -28,6 +28,7 @@ namespace XplicityApp.Infrastructure.Database.Models
 
         [NotMapped]
         public double OvertimeHours { get; set; }
+        public string ConfirmerFullName { get; set; }
     }
 
 }

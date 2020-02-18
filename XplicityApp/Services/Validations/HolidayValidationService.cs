@@ -33,9 +33,9 @@ namespace XplicityApp.Services.Validations
             _timeService = timeService;
         }
 
-        public async Task ValidateHolidayConfirmationReadiness(int id)
+        public async Task ValidateHolidayConfirmationReadiness(int holidayId, int confirmerId)
         {
-            var holiday = await _holidayRepository.GetById(id);
+            var holiday = await _holidayRepository.GetById(holidayId);
 
             if (holiday == null)
             {
@@ -43,6 +43,7 @@ namespace XplicityApp.Services.Validations
             }
 
             await ValidateHoliday(holiday);
+            await ValidateConfirmer(confirmerId);
         }
 
         public async Task ValidateNewHolidayConfirmationReadiness(NewHolidayDto holidayDto)
@@ -142,6 +143,21 @@ namespace XplicityApp.Services.Validations
             }
 
             return false;
+        }
+
+        private async Task ValidateConfirmer(int confirmerId)
+        {
+            var confirmer = await _employeeRepository.GetById(confirmerId);
+            var admins = await _employeeRepository.GetAllAdmins();
+
+            if (confirmer == null)
+            {
+                throw new InvalidOperationException("Confirmer not found.");
+            }
+            else if (!admins.Contains(confirmer))
+            {
+                throw new InvalidOperationException("Confirmer is not an admin.");
+            }
         }
     }
 }

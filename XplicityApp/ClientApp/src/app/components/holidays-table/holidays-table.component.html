@@ -24,6 +24,7 @@
                 <th *ngIf="isAdmin()">Overtime hours</th>
                 <th *ngIf="!isAdmin()">Overtime days</th>
                 <th>Status</th>
+                <th>Rejected/confirmed by</th>
                 <th>Request creation date</th>
             </tr>
         </thead>
@@ -36,6 +37,7 @@
                 <td>{{holiday.toInclusive | date}}</td>
                 <td>{{getOvertime(holiday)}}</td>
                 <td [style.color]="getStatusColor(holiday.status)">{{getStatusName(holiday.status)}}</td>
+                <td>{{holiday.confirmerFullName}}</td>
                 <td>{{holiday.requestCreatedDate | date}}</td>
             </tr>
         </tbody>

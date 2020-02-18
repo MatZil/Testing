@@ -14,22 +14,24 @@ namespace XplicityApp.Services
 {
     public class HolidaysService : IHolidaysService
     {
-        private readonly IHolidaysRepository _repository;
+        private readonly IHolidaysRepository _holidaysRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
         private readonly ITimeService _timeService;
         private readonly IOvertimeUtility _overtimeUtility;
 
-        public HolidaysService(IHolidaysRepository repository, IMapper mapper, ITimeService timeService, IOvertimeUtility overtimeUtility)
+        public HolidaysService(IHolidaysRepository holidaysRepository, IEmployeeRepository employeeRepository, IMapper mapper, ITimeService timeService, IOvertimeUtility overtimeUtility)
         {
-            _repository = repository;
+            _holidaysRepository = holidaysRepository;
             _mapper = mapper;
             _timeService = timeService;
             _overtimeUtility = overtimeUtility;
+            _employeeRepository = employeeRepository;
         }
 
         public async Task<GetHolidayDto> GetById(int id)
         {
-            var holiday = await _repository.GetById(id);
+            var holiday = await _holidaysRepository.GetById(id);
             var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
 
             return holidayDto;
@@ -37,7 +39,7 @@ namespace XplicityApp.Services
 
         public async Task<ICollection<GetHolidayDto>> GetAll()
         {
-            var holidays = await _repository.GetAll();
+            var holidays = await _holidaysRepository.GetAll();
             var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays).OrderByDescending(h => h.RequestCreatedDate).ToList();
 
             return holidaysDto;
@@ -53,21 +55,21 @@ namespace XplicityApp.Services
             var newHoliday = _mapper.Map<Holiday>(newHolidayDto);
             newHoliday.RequestCreatedDate = _timeService.GetCurrentTime();
             newHoliday.Status = HolidayStatus.Pending;
-            var holidayId = await _repository.Create(newHoliday);
+            var holidayId = await _holidaysRepository.Create(newHoliday);
 
             return holidayId;
         }
 
         public async Task<bool> Delete(int id)
         {
-            var item = await _repository.GetById(id);
+            var item = await _holidaysRepository.GetById(id);
 
             if (item == null)
             {
                 return false;
             }
 
-            var deleted = await _repository.Delete(item);
+            var deleted = await _holidaysRepository.Delete(item);
 
             return deleted;
         }
@@ -79,34 +81,37 @@ namespace XplicityApp.Services
                 throw new ArgumentNullException(nameof(updatedHoliday));
             }
 
-            var itemToUpdate = await _repository.GetById(id);
+            var itemToUpdate = await _holidaysRepository.GetById(id);
             if (itemToUpdate is null)
             {
                 return false;
             }
 
             _mapper.Map(updatedHoliday, itemToUpdate);
-            return await _repository.Update(itemToUpdate);
+            return await _holidaysRepository.Update(itemToUpdate);
         }
 
-        public async Task<bool> Decline(int id)
+        public async Task<bool> Decline(int holidayId, int confirmerId)
         {
-            var holiday = await _repository.GetById(id);
+            var getHolidayDto = await _holidaysRepository.GetById(holidayId);
+            var confirmer = await _employeeRepository.GetById(confirmerId);
 
-            if (holiday == null)
+            if (getHolidayDto == null || confirmer == null)
             {
                 return false;
             }
 
-            holiday.Status = HolidayStatus.Rejected;
-            var successful = await _repository.Update(holiday);
+            var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(getHolidayDto);
+            updateHolidayDto.Status = HolidayStatus.Rejected;
+            updateHolidayDto.ConfirmerFullName = $"{confirmer.Name} {confirmer.Surname}";
+            var successful = await Update(holidayId, updateHolidayDto);
 
             return successful;
         }
 
         public async Task<ICollection<GetHolidayDto>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus)
         {
-            var holidays = await _repository.GetByEmployeeStatus(employeeStatus);
+            var holidays = await _holidaysRepository.GetByEmployeeStatus(employeeStatus);
             var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays).OrderByDescending(h => h.RequestCreatedDate).ToList();
             holidaysDto.ForEach(holiday => AddOvertimeDetails(holiday));
 

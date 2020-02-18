@@ -15,5 +15,6 @@ namespace XplicityApp.Dtos.Holidays
         public HolidayStatus Status { get; set; }
         public bool Paid { get; set; }
         public DateTime RequestCreatedDate { get; set; }
+        public string ConfirmerFullName { get; set; }
     }
 }

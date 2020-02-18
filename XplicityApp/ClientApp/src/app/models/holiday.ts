@@ -6,4 +6,5 @@ export class Holiday extends NewHoliday {
     overtimeHours: number;
     status: HolidayStatus;
     requestCreatedDate: Date;
+    confirmerFullName: string;
 }

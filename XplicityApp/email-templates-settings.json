@@ -32,8 +32,8 @@
 
     "RequestNotification": {
       "Subject": "Your holiday request has been generated!",
-      "Template": "You can download your holiday request document by clicking this link: {download.link}",
-      "Instructions": "{download.link} - A link to download request document."
+      "Template": "Your holiday request has been confirmed by {confirmer}. You can download your holiday request document by clicking this link: {download.link}",
+      "Instructions": "{confirmer} - Full name of the administrator who confirmed the request.\n{download.link} - A link to download request document."
     },
 
     "OrderNotification": {

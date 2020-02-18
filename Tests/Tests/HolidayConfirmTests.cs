@@ -46,7 +46,7 @@ namespace Tests
             _mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
             _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _timeService, _mockOvertimeUtility);
 
-            var holidaysService = new HolidaysService(_holidaysRepository, _mapper, _timeService, _mockOvertimeUtility);
+            var holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, _mapper, _timeService, _mockOvertimeUtility);
             _holidayConfirmService = new HolidayConfirmService(mockEmailService.Object, _mapper, _holidaysRepository,
                                                                _employeesRepository, clientsRepository, holidaysService,
                                                                 mockDocxGeneratorService.Object, _mockOvertimeUtility, 
@@ -81,12 +81,28 @@ namespace Tests
         [InlineData(2)]
         public async void When_ConfirmingHoliday_Expect_True(int holidayId)
         {
-            await _holidayConfirmService.ConfirmHoliday(holidayId);
+            await _holidayConfirmService.ConfirmHoliday(holidayId, 1);
 
             var updatedHoliday = await _holidaysRepository.GetById(holidayId);
             var status = updatedHoliday.Status.ToString();
 
             Assert.True(status == "Confirmed", "Failed to confirm holiday.");
+        }
+
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        public async void When_ConfirmingHoliday_Expect_UpdatedConfirmerFullName(int holidayId, int confirmerId)
+        {
+            await _holidayConfirmService.ConfirmHoliday(holidayId, confirmerId);
+            var confirmer = await _employeesRepository.GetById(confirmerId);
+
+            var updatedHoliday = await _holidaysRepository.GetById(holidayId);
+
+            var fullNameExpected = $"{confirmer.Name} {confirmer.Surname}";
+            var fullNameActual = updatedHoliday.ConfirmerFullName;
+
+            Assert.True(fullNameExpected == fullNameActual, "Confirmer full name is incorrect.");
         }
 
         [Theory]
@@ -160,7 +176,7 @@ namespace Tests
         public async void When_ConfirmingInvalid_Expect_False(int holidayId)
         {
             await Assert.ThrowsAsync<InvalidOperationException>(
-                async () => await _holidayValidationService.ValidateHolidayConfirmationReadiness(holidayId));
+                async () => await _holidayValidationService.ValidateHolidayConfirmationReadiness(holidayId, 1));
         }
     }
 }

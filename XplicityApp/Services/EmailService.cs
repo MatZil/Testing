@@ -59,8 +59,8 @@ namespace XplicityApp.Services
                                             .Replace("{holiday.type}", holiday.Type.ToString())
                                             .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
                                             .Replace("{holiday.to}", holiday.ToInclusive.ToShortDateString())
-                                            .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm/{holiday.Id}")
-                                            .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={holiday.Id}")
+                                            .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm/confirm?holidayId={holiday.Id}&confirmerId={admin.Id}")
+                                            .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline/decline?holidayId={holiday.Id}&confirmerId={admin.Id}")
                                             .Replace("{client.status}", clientStatus)
                                             .Replace("{holiday.overtimeHours}", overtimeSentence);
 
@@ -155,7 +155,7 @@ namespace XplicityApp.Services
             _emailer.SendMail(receiver, template.Subject, messageString);
         }
 
-        public async Task<bool> SendRequestNotification(int fileId, string receiver)
+        public async Task<bool> SendRequestNotification(int fileId, string receiver, Holiday holiday)
         {
             var template = await _repository.GetByPurpose(EmailPurposes.REQUEST_NOTIFICATION);
 
@@ -164,7 +164,9 @@ namespace XplicityApp.Services
                 return false;
             }
 
-            var messageString = template.Template.Replace("{download.link}", _fileService.GetDownloadLink(fileId));
+            var messageString = template.Template
+                                        .Replace("{confirmer}", holiday.ConfirmerFullName)
+                                        .Replace("{download.link}", _fileService.GetDownloadLink(fileId));
 
             _emailer.SendMail(receiver, template.Subject, messageString);
 

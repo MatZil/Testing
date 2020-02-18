@@ -13,7 +13,7 @@ namespace XplicityApp.Services.Interfaces
         Task<int> Create(NewHolidayDto newClient);
         Task<bool> Update(int id, UpdateHolidayDto updatedHoliday);
         Task<bool> Delete(int id);
-        Task<bool> Decline(int id);
+        Task<bool> Decline(int holidayId, int confirmerId);
         Task<ICollection<GetHolidayDto>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus);
     }
 }
