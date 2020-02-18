@@ -114,6 +114,7 @@ export class InventoryTableComponent implements OnInit {
     this.isVisibleNewItemModal = false;
     this.isModifying = false;
     this.input.reset();
+    this.clearTagList();
   }
 
   saveInventoryItem() {
@@ -130,6 +131,7 @@ export class InventoryTableComponent implements OnInit {
     this.isVisibleNewItemModal = false;
     this.isModifying = false;
     this.input.reset();
+    this.clearTagList();
   }
 
   getCategoriesList() {
@@ -205,12 +207,14 @@ export class InventoryTableComponent implements OnInit {
     const input = event.input;
     const tagTitle = event.value;
 
-    if ((tagTitle || '').trim()) {
+    if ((tagTitle || '').trim() && this._validateTag(tagTitle)) {
       this.tagsService.createNewTag({ Title: tagTitle }).subscribe(id => {
         this.tagsSelected.push({ Id: Number(id), Title: tagTitle });
       }, error => {
-        this.showWarningMessage('Tag is invalid!');
+          console.log(error);
       });
+    } else {
+      this.showWarningMessage('Tag is invalid!');
     }
 
     if (input) {
@@ -246,6 +250,20 @@ export class InventoryTableComponent implements OnInit {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
     })
+  }
+
+  clearTagList() {
+    this.tagsSelected = [];
+  }
+
+  private _validateTag(tagTitle: string): boolean {
+    let regexp = new RegExp('^[a-zA-Z0-9#-]*$');
+
+    if (tagTitle.length > 10 && tagTitle.length < 3 && !regexp.test(tagTitle)) {
+      return false;
+    }
+
+    return true;
   }
 
 }
