@@ -148,13 +148,15 @@ namespace XplicityApp.Services.Validations
         private async Task ValidateConfirmer(int confirmerId)
         {
             var confirmer = await _employeeRepository.GetById(confirmerId);
-            var admins = await _employeeRepository.GetAllAdmins();
-
+            
             if (confirmer == null)
             {
                 throw new InvalidOperationException("Confirmer not found.");
             }
-            else if (!admins.Contains(confirmer))
+
+            var admins = await _employeeRepository.GetAllAdmins();
+
+            if (!admins.Contains(confirmer))
             {
                 throw new InvalidOperationException("Confirmer is not an admin.");
             }

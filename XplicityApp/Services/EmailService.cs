@@ -165,7 +165,7 @@ namespace XplicityApp.Services
             }
 
             var messageString = template.Template
-                                        .Replace("{confirmer}", holiday.ConfirmerFullName)
+                                        .Replace("{confirmer.fullName}", holiday.ConfirmerFullName)
                                         .Replace("{download.link}", _fileService.GetDownloadLink(fileId));
 
             _emailer.SendMail(receiver, template.Subject, messageString);

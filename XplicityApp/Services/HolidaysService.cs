@@ -93,18 +93,18 @@ namespace XplicityApp.Services
 
         public async Task<bool> Decline(int holidayId, int confirmerId)
         {
-            var getHolidayDto = await _holidaysRepository.GetById(holidayId);
+            var holiday = await _holidaysRepository.GetById(holidayId);
             var confirmer = await _employeeRepository.GetById(confirmerId);
 
-            if (getHolidayDto == null || confirmer == null)
+            if (holiday == null || confirmer == null)
             {
                 return false;
             }
 
-            var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(getHolidayDto);
-            updateHolidayDto.Status = HolidayStatus.Rejected;
-            updateHolidayDto.ConfirmerFullName = $"{confirmer.Name} {confirmer.Surname}";
-            var successful = await Update(holidayId, updateHolidayDto);
+            var updatedHolidayDto = _mapper.Map<UpdateHolidayDto>(holiday);
+            updatedHolidayDto.Status = HolidayStatus.Rejected;
+            updatedHolidayDto.ConfirmerFullName = $"{confirmer.Name} {confirmer.Surname}";
+            var successful = await Update(holidayId, updatedHolidayDto);
 
             return successful;
         }

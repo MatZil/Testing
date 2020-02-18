@@ -49,22 +49,20 @@ namespace XplicityApp.Controllers
         [HttpGet("confirm")]
         public async Task<IActionResult> ConfirmHoliday(int holidayId, int confirmerId)
         {
+            _logger.LogInformation($"Holiday confirm request received for holiday id:{holidayId}");
+            try
             {
-                _logger.LogInformation($"Holiday confirm request received for holiday id:{holidayId}");
-                try
-                {
-                    await _holidayValidationService.ValidateHolidayConfirmationReadiness(holidayId, confirmerId);
-                    await _confirmationService.ConfirmHoliday(holidayId, confirmerId);
-                    await _confirmationService.GenerateFilesAndNotify(holidayId);
-                }
-                catch (InvalidOperationException exception)
-                {
-                    _logger.LogError($"Holiday confirm request failed with: {exception.Message}");
-                    return Ok(exception.Message);
-                }
-
-                return Ok();
+                await _holidayValidationService.ValidateHolidayConfirmationReadiness(holidayId, confirmerId);
+                await _confirmationService.ConfirmHoliday(holidayId, confirmerId);
+                await _confirmationService.GenerateFilesAndNotify(holidayId);
             }
+            catch (InvalidOperationException exception)
+            {
+                _logger.LogError($"Holiday confirm request failed with: {exception.Message}");
+                return Ok(exception.Message);
+            }
+
+            return Ok();
         }
     }
 }

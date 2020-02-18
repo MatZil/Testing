@@ -10,7 +10,7 @@ using XplicityApp.Infrastructure.Database;
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20200218022149_Confirmer")]
+    [Migration("20200218121118_Confirmer")]
     partial class Confirmer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -339,10 +339,11 @@ Please use the first line for team's title, second line for individual employee'
                         new
                         {
                             Id = 6,
-                            Instructions = "{download.link} - A link to download request document.",
+                            Instructions = @"{confirmer.fullName} - Full name of the administrator who confirmed the request.
+{download.link} - A link to download request document.",
                             Purpose = "Request Notification",
                             Subject = "Your holiday request has been generated!",
-                            Template = "You can download your holiday request document by clicking this link: {download.link}"
+                            Template = "Your holiday request has been confirmed by {confirmer.fullName}. You can download your holiday request document by clicking this link: {download.link}"
                         });
                 });
 
