@@ -60,4 +60,8 @@ export class UserService {
         const tokenPayload = decode(token);
         return tokenPayload.role;
     }
+
+    isAdmin(): boolean {
+      return this.getRole() === 'Admin';
+    }
 }

@@ -32,7 +32,7 @@ namespace XplicityApp.Configurations
             CreateMap<Client, GetClientDto>(MemberList.None);
 
             CreateMap<GetHolidayDto, Holiday>(MemberList.None);
-            CreateMap<Holiday, GetHolidayDto>(MemberList.None);
+            CreateMap<Holiday, GetHolidayDto>(MemberList.None).ForMember(d => d.EmployeeFullName, opt => opt.MapFrom(h => $"{h.Employee.Name} {h.Employee.Surname}"));
 
             CreateMap<UpdateHolidayDto, Holiday>(MemberList.None);
             CreateMap<Holiday, UpdateHolidayDto>(MemberList.None);

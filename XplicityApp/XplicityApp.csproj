@@ -12,6 +12,7 @@
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
   </PropertyGroup>
 
+
   <ItemGroup>
     <PackageReference Include="Audit.EntityFramework.Core" Version="15.0.2" />
     <PackageReference Include="Audit.EntityFramework.Identity.Core" Version="15.0.2" />

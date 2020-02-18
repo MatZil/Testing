@@ -80,14 +80,6 @@ export class HolidaysTableComponent implements OnInit {
     }
   }
 
-  getFullNameById(id: number): string {
-    let fullName: string;
-    this.userService.getUser(id).subscribe(user => {
-      fullName = `${user.name} ${user.surname}`;
-    });
-    return fullName;
-  }
-
   getStatusName(status: HolidayStatus): string {
     return this.enumConverter.determineHolidayStatus(status);
   }
@@ -114,9 +106,6 @@ export class HolidaysTableComponent implements OnInit {
   }
 
   isAdmin(): boolean {
-    if (this.currentUser && this.currentUser.role === 'Admin') {
-      return true;
-    }
-    return false;
+    return this.userService.isAdmin();
   }
 }
