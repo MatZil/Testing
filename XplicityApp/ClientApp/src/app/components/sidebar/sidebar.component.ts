@@ -52,11 +52,7 @@ export class SidebarComponent implements OnInit {
     this.role = this.userService.getRole();
   }
 
-  isAdmin() {
-    if (this.role === 'Admin') {
-      return true;
-    } else {
-      return false;
-    }
+  isAdmin(): boolean {
+    return this.userService.isAdmin();
   }
 }

@@ -7,6 +7,7 @@ namespace XplicityApp.Dtos.Holidays
     {
         public int Id { get; set; }
         public int EmployeeId { get; set; }
+        public string EmployeeFullName { get; set; }
         public HolidayType Type { get; set; }
         public DateTime FromInclusive { get; set; }
         public DateTime ToInclusive { get; set; }

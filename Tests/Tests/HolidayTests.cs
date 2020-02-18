@@ -187,5 +187,19 @@ namespace Tests
 
             Assert.ThrowsAsync<InvalidOperationException>(async () => await _holidaysService.Update(id, updatedHoliday));
         }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async void When_GettingHolidayEmployeeFullName_Expect_ReturnedEmployeeFullNameIsCorrect(int id)
+        {
+            var retrievedHoliday = await _holidaysService.GetById(id);
+            var retrievedEmployee = await _employeesService.GetById(retrievedHoliday.EmployeeId);
+
+            var fullNameExpected = $"{retrievedEmployee.Name} {retrievedEmployee.Surname}";
+            var fullNameActual = retrievedHoliday.EmployeeFullName;
+
+            Assert.Equal(fullNameExpected, fullNameActual);
+        }
     }
 }
