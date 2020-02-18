@@ -9,7 +9,7 @@ using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
 using Moq;
 
-namespace Tests
+namespace Tests.Tests
 {
     [TestCaseOrderer("Tests.EmployeeTests.AlphabeticalOrderer", "Tests")]
     public class EmployeeTests

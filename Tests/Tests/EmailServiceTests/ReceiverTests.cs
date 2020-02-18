@@ -9,10 +9,10 @@ using XplicityApp.Services;
 using XplicityApp.Services.Interfaces;
 using Xunit;
 
-namespace Tests
+namespace Tests.Tests.EmailServiceTests
 {
     [TestCaseOrderer("Tests.HolidayTests.AlphabeticalOrderer", "Tests")]
-    public class EmailServiceReceiverTests
+    public class ReceiverTests
     {
         private readonly EmailService _emailService;
 
@@ -23,7 +23,7 @@ namespace Tests
 
         private List<string> _actualReceiverList;
 
-        public EmailServiceReceiverTests()
+        public ReceiverTests()
         {
             var setup = new SetUp();
             setup.Initialize();
@@ -43,10 +43,10 @@ namespace Tests
 
         private void InitializeEntities()
         {
-            _employee = EmailServiceSetup.GetInitializedEmployee();
-            _admins = EmailServiceSetup.GetInitializedAdmins();
-            _holiday = EmailServiceSetup.GetInitializedHoliday();
-            _client = EmailServiceSetup.GetInitializedClient();
+            _employee = Setup.GetInitializedEmployee();
+            _admins = Setup.GetInitializedAdmins();
+            _holiday = Setup.GetInitializedHoliday();
+            _client = Setup.GetInitializedClient();
         }
 
         [Fact]

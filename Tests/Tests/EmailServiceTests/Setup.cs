@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 
-namespace Tests
+namespace Tests.Tests.EmailServiceTests
 {
-    public static class EmailServiceSetup
+    public static class Setup
     {
         public static Employee GetInitializedEmployee()
         {
