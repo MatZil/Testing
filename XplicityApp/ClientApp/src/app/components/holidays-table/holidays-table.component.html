@@ -30,7 +30,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let holiday of basicTable.data">
-                <td *ngIf="isAdmin()">{{getFullNameById(holiday.employeeId)}}</td>
+                <td *ngIf="isAdmin()">{{holiday.employeeFullName}}</td>
                 <td>{{enumConverter.determineHolidayType(holiday.type)}}</td>
                 <td>{{paidToString(holiday.paid)}}</td>
                 <td>{{holiday.fromInclusive | date}}</td>

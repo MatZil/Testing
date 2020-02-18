@@ -97,12 +97,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  isAdmin() {
-    if (this.userService.getRole() === 'Admin') {
-      return true;
-    }
-    else {
-      return false;
-    }
+  isAdmin(): boolean {
+    return this.userService.isAdmin();
   }
 }

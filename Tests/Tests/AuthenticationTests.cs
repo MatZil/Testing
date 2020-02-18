@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
+using Moq;
 using XplicityApp.Configurations;
+using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Services;
 using Xunit;
 using Xunit.Abstractions;
@@ -24,8 +26,10 @@ namespace Tests
             var userManager = setup.InitializeUserManager();
             var roleManager = setup.InitializeRoleManager();
 
+            var mockTimeService = new Mock<TimeService>().Object;
+
             var opt = Options.Create(new AppSettings());
-            _authService = new AuthenticationService(opt, userManager, roleManager);
+            _authService = new AuthenticationService(opt, userManager, roleManager, mockTimeService);
         }
 
         //[Theory]

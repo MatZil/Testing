@@ -31,6 +31,13 @@ export class InventoryTableComponent implements OnInit {
   selectedEmployee;
   isModifying = false;
 
+  searchCategoryValue = '';
+  searchOwnerValue = '';
+  searchDateValue : Date;
+  sortName: string | null = null;
+  sortValue: string | null = null;
+  listOfData: InventoryItem[] = [];
+
   readonly separatorKeysCodes: number[] = [ENTER];
   tagsControl = new FormControl();
   tagsSelected: Tag[] = [];
@@ -89,10 +96,12 @@ export class InventoryTableComponent implements OnInit {
     if (id) {
       this.inventoryService.getEquipmentByEmployeeId(id).subscribe(inventoryItems => {
         this.equipment = inventoryItems;
+        this.listOfData = [...this.equipment];
       });
     } else {
       this.inventoryService.getAllInventoryItems().subscribe(inventoryItems => {
         this.equipment = inventoryItems;
+        this.listOfData = [...this.equipment];
       });
     }
   }
@@ -146,6 +155,51 @@ export class InventoryTableComponent implements OnInit {
     this.input.controls.archived.setValue(true);
     this.saveInventoryItem();
   }
+
+  resetCategory(): void {
+    this.searchCategoryValue = '';
+    this.search();
+  }
+  resetOwner(): void {
+    this.searchOwnerValue = '';
+    this.search();
+  }
+  search(): void {
+    const filterFunc = (item: InventoryItem) => {
+      if(!this.searchDateValue){
+        return (
+          item.category.name.toUpperCase().indexOf(this.searchCategoryValue.toUpperCase()) !== -1 &&
+          item.assignedTo.toUpperCase().indexOf(this.searchOwnerValue.toUpperCase()) !== -1
+        );
+      }
+      else {
+        if(!item.expiryDate)
+          return false;
+        else {
+          var targetDate = Date.parse(this.searchDateValue.toDateString());
+          var tempDate = new Date(item.expiryDate);
+          var itemDate = Date.parse(tempDate.toDateString());
+          return (
+            item.category.name.toUpperCase().indexOf(this.searchCategoryValue.toUpperCase()) !== -1 &&
+            item.assignedTo.toUpperCase().indexOf(this.searchOwnerValue.toUpperCase()) !== -1 &&
+            targetDate == itemDate
+          );
+        }
+      }
+
+    };
+    const data = this.listOfData.filter((item: InventoryItem) => filterFunc(item));
+    this.equipment = data.sort((a, b) =>
+      this.sortValue === 'ascend'
+        ? a[this.sortName!] > b[this.sortName!]
+          ? 1
+          : -1
+        : b[this.sortName!] > a[this.sortName!]
+          ? 1
+          : -1
+    );
+  }
+
 
   add(event: MatChipInputEvent): void {
     const input = event.input;

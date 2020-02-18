@@ -192,6 +192,20 @@ namespace Tests
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
+        public async void When_GettingHolidayEmployeeFullName_Expect_ReturnedEmployeeFullNameIsCorrect(int id)
+        {
+            var retrievedHoliday = await _holidaysService.GetById(id);
+            var retrievedEmployee = await _employeesService.GetById(retrievedHoliday.EmployeeId);
+
+            var fullNameExpected = $"{retrievedEmployee.Name} {retrievedEmployee.Surname}";
+            var fullNameActual = retrievedHoliday.EmployeeFullName;
+
+            Assert.True(fullNameExpected == fullNameActual, "Employee's full name is incorrect.");
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
         public async void When_DecliningHoliday_Expect_True(int holidayId)
         {
             await _holidaysService.Decline(holidayId, 1);
@@ -214,7 +228,7 @@ namespace Tests
             var fullNameExpected = $"{confirmer.Name} {confirmer.Surname}";
             var fullNameActual = updatedHoliday.ConfirmerFullName;
 
-            Assert.True(fullNameExpected == fullNameActual, "Confirmer full name is incorrect.");
+            Assert.True(fullNameExpected == fullNameActual, "Confirmer's full name is incorrect.");
         }
     }
 }
