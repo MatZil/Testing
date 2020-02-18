@@ -21,6 +21,7 @@ export class InventoryService {
   }
 
   createNewInventoryItem(newInventoryItem: FormGroup) {
+    console.log(newInventoryItem);
     return this.http.post(this.inventoryItemApi, newInventoryItem);
   }
 

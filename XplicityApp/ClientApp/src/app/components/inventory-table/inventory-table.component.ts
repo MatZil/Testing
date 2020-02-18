@@ -73,7 +73,8 @@ export class InventoryTableComponent implements OnInit {
       comment: [null],
       archived: [false],
       inventoryCategoryId: [null, [Validators.required]],
-      employeeId: [null]
+      employeeId: [null],
+      tags:[null]
     });
     this.getAllUsers();
     this.getCategoriesList();
@@ -118,6 +119,8 @@ export class InventoryTableComponent implements OnInit {
   }
 
   saveInventoryItem() {
+    this.input.value.tags = [1, 2, 3, 4];
+
     if (!this.isModifying) {
       this.inventoryService.createNewInventoryItem(this.input.value).subscribe(() => {
         this.refreshTable(this.employeeId);
@@ -131,6 +134,9 @@ export class InventoryTableComponent implements OnInit {
     this.isVisibleNewItemModal = false;
     this.isModifying = false;
     this.input.reset();
+
+    
+
     this.clearTagList();
   }
 
@@ -264,6 +270,10 @@ export class InventoryTableComponent implements OnInit {
     }
 
     return true;
+  }
+
+  saveTags() {
+    return this.tagsSelected.filter(x => x.Id);
   }
 
 }
