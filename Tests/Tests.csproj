@@ -21,10 +21,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Include="testSettings.json" CopyToOutputDirectory="Always" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <ProjectReference Include="..\XplicityApp\XplicityApp.csproj" />
   </ItemGroup>
 

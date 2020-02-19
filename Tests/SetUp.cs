@@ -70,7 +70,7 @@ namespace Tests
         {
             var config = new ConfigurationBuilder()
                           .SetBasePath(Directory.GetCurrentDirectory())
-                          .AddJsonFile("testSettings.json")
+                          .AddJsonFile("appsettings.json")
                           .AddJsonFile("email-templates-settings.json")
                           .Build();
             return config;
