@@ -10,7 +10,7 @@ using XplicityApp.Infrastructure.Database;
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20200218121118_Confirmer")]
+    [Migration("20200219214022_Confirmer")]
     partial class Confirmer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -472,8 +472,8 @@ Please use the first line for team's title, second line for individual employee'
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ConfirmerFullName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ConfirmerId")
+                        .HasColumnType("int");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");

@@ -470,8 +470,8 @@ Please use the first line for team's title, second line for individual employee'
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ConfirmerFullName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ConfirmerId")
+                        .HasColumnType("int");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");

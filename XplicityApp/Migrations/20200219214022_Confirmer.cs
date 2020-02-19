@@ -6,10 +6,11 @@ namespace XplicityApp.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ConfirmerFullName",
+            migrationBuilder.AddColumn<int>(
+                name: "ConfirmerId",
                 table: "Holidays",
-                nullable: true);
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.UpdateData(
                 table: "EmailTemplates",
@@ -23,7 +24,7 @@ namespace XplicityApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ConfirmerFullName",
+                name: "ConfirmerId",
                 table: "Holidays");
 
             migrationBuilder.UpdateData(

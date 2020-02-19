@@ -222,10 +222,9 @@ namespace Tests
         public async void When_DecliningHoliday_Expect_UpdatedConfirmerFullName(int holidayId, int confirmerId)
         {
             await _holidaysService.Decline(holidayId, confirmerId);
-            var confirmer = await _employeesRepository.GetById(confirmerId);
-            var updatedHoliday = await _holidaysRepository.GetById(holidayId);
+            var updatedHoliday = await _holidaysService.GetById(holidayId);
 
-            var fullNameExpected = $"{confirmer.Name} {confirmer.Surname}";
+            var fullNameExpected = await _holidaysService.GetConfirmerFullName(updatedHoliday.ConfirmerId);
             var fullNameActual = updatedHoliday.ConfirmerFullName;
 
             Assert.True(fullNameExpected == fullNameActual, "Confirmer's full name is incorrect.");

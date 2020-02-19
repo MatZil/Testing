@@ -21,14 +21,16 @@ namespace XplicityApp.Services
         private readonly IConfiguration _configuration;
         private readonly IFileService _fileService;
         private readonly IOvertimeUtility _overtimeUtility;
+        private readonly IHolidaysService _holidaysService;
 
-        public EmailService(IEmailer emailer, IEmailTemplatesRepository repository, IConfiguration configuration, IFileService fileService, IOvertimeUtility overtimeUtility)
+        public EmailService(IEmailer emailer, IEmailTemplatesRepository repository, IConfiguration configuration, IFileService fileService, IOvertimeUtility overtimeUtility, IHolidaysService holidaysService)
         {
             _emailer = emailer;
             _repository = repository;
             _configuration = configuration;
             _fileService = fileService;
             _overtimeUtility = overtimeUtility;
+            _holidaysService = holidaysService;
         }
 
         public async Task ConfirmHolidayWithClient(Client client, Employee employee, Holiday holiday)
@@ -155,7 +157,7 @@ namespace XplicityApp.Services
             _emailer.SendMail(receiver, template.Subject, messageString);
         }
 
-        public async Task<bool> SendRequestNotification(int fileId, string receiver, Holiday holiday)
+        public async Task<bool> SendRequestNotification(int fileId, string receiver, int confirmerId)
         {
             var template = await _repository.GetByPurpose(EmailPurposes.REQUEST_NOTIFICATION);
 
@@ -165,7 +167,7 @@ namespace XplicityApp.Services
             }
 
             var messageString = template.Template
-                                        .Replace("{confirmer.fullName}", holiday.ConfirmerFullName)
+                                        .Replace("{confirmer.fullName}", await _holidaysService.GetConfirmerFullName(confirmerId))
                                         .Replace("{download.link}", _fileService.GetDownloadLink(fileId));
 
             _emailer.SendMail(receiver, template.Subject, messageString);

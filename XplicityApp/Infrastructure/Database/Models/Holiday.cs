@@ -25,9 +25,11 @@ namespace XplicityApp.Infrastructure.Database.Models
         public bool Paid { get; set; }
         [Required]
         public DateTime RequestCreatedDate { get; set; }
+        public int ConfirmerId { get; set; }
 
         [NotMapped]
         public double OvertimeHours { get; set; }
+        [NotMapped]
         public string ConfirmerFullName { get; set; }
     }
 

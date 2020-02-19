@@ -34,6 +34,9 @@ namespace XplicityApp.Services
             var holiday = await _holidaysRepository.GetById(id);
             var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
 
+            if (holidayDto != null && holidayDto.ConfirmerId != 0)
+                holidayDto.ConfirmerFullName = await GetConfirmerFullName(holidayDto.ConfirmerId);
+
             return holidayDto;
         }
 
@@ -41,6 +44,12 @@ namespace XplicityApp.Services
         {
             var holidays = await _holidaysRepository.GetAll();
             var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays).OrderByDescending(h => h.RequestCreatedDate).ToList();
+
+            foreach (var holidayDto in holidaysDto)
+            {
+                if (holidayDto.ConfirmerId != 0)
+                    holidayDto.ConfirmerFullName = await GetConfirmerFullName(holidayDto.ConfirmerId);
+            }
 
             return holidaysDto;
         }
@@ -94,16 +103,15 @@ namespace XplicityApp.Services
         public async Task<bool> Decline(int holidayId, int confirmerId)
         {
             var holiday = await _holidaysRepository.GetById(holidayId);
-            var confirmer = await _employeeRepository.GetById(confirmerId);
 
-            if (holiday == null || confirmer == null)
+            if (holiday == null)
             {
                 return false;
             }
 
             var updatedHolidayDto = _mapper.Map<UpdateHolidayDto>(holiday);
             updatedHolidayDto.Status = HolidayStatus.Rejected;
-            updatedHolidayDto.ConfirmerFullName = $"{confirmer.Name} {confirmer.Surname}";
+            updatedHolidayDto.ConfirmerId = confirmerId;
             var successful = await Update(holidayId, updatedHolidayDto);
 
             return successful;
@@ -113,7 +121,13 @@ namespace XplicityApp.Services
         {
             var holidays = await _holidaysRepository.GetByEmployeeStatus(employeeStatus);
             var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays).OrderByDescending(h => h.RequestCreatedDate).ToList();
+
             holidaysDto.ForEach(holiday => AddOvertimeDetails(holiday));
+            foreach (var holidayDto in holidaysDto)
+            {
+                if (holidayDto.ConfirmerId != 0)
+                    holidayDto.ConfirmerFullName = await GetConfirmerFullName(holidayDto.ConfirmerId);
+            }
 
             return holidaysDto;
         }
@@ -121,6 +135,13 @@ namespace XplicityApp.Services
         private GetHolidayDto AddOvertimeDetails(GetHolidayDto holiday)
         {
             return _overtimeUtility.AddOvertimeDetailsToHoliday(holiday);
+        }
+
+        public async Task<string> GetConfirmerFullName(int confirmerId)
+        {
+            var confirmer = await _employeeRepository.GetById(confirmerId);
+            var confirmerFullName = $"{confirmer.Name} {confirmer.Surname}";
+            return confirmerFullName;
         }
     }
 }

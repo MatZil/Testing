@@ -15,5 +15,6 @@ namespace XplicityApp.Services.Interfaces
         Task<bool> Delete(int id);
         Task<bool> Decline(int holidayId, int confirmerId);
         Task<ICollection<GetHolidayDto>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus);
+        Task<string> GetConfirmerFullName(int confirmerId);
     }
 }

@@ -12,6 +12,6 @@ namespace XplicityApp.Services.Interfaces
         Task NotifyAllAboutUpcomingAbsences(ICollection<Employee> allEmployees, ICollection<Holiday> upcomingHolidays);
         Task SendBirthDayReminder(ICollection<Employee> employeesWithBirthdays, ICollection<Employee> employees);
         Task SendOrderNotification(int fileId, Employee employee, string receiver);
-        Task<bool> SendRequestNotification(int fileId, string receiver, Holiday holiday);
+        Task<bool> SendRequestNotification(int fileId, string receiver, int confirmerId);
     }
 }
