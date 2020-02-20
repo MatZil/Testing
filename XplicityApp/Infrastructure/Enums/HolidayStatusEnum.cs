@@ -4,6 +4,7 @@
     {
         Pending,
         Rejected,
-        Confirmed
+        Confirmed,
+        ClientConfirmed
     }
 }

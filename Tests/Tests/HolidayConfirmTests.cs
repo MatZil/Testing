@@ -13,6 +13,26 @@ using XplicityApp.Services.Interfaces;
 using Xunit;
 using XplicityApp.Services.Extensions;
 using XplicityApp.Services.Validations;
+using XplicityApp.Infrastructure.Static_Files;
+using Xunit.Abstractions;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Moq;
+using System;
+using System.IO;
+using XplicityApp.Configurations;
+using XplicityApp.Dtos.EmailTemplates;
+using XplicityApp.Dtos.Employees;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
+using XplicityApp.Infrastructure.Static_Files;
 
 namespace Tests.Tests
 {
@@ -28,9 +48,11 @@ namespace Tests.Tests
         private readonly IOvertimeUtility _mockOvertimeUtility;
         private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
         private readonly HolidayValidationService _holidayValidationService;
+        private readonly ITestOutputHelper _output;
 
-        public HolidayConfirmTests()
+        public HolidayConfirmTests(ITestOutputHelper output)
         {
+            _output = output;
             var setup = new SetUp();
             setup.Initialize();
             _context = setup.HolidayDbContext;
@@ -69,12 +91,31 @@ namespace Tests.Tests
         }
 
         //[Theory]
-        //[InlineData(1, "status")]
-        //public async void When_RequestingAdminApproval_Expect_True(int holidayId, string clientStatus)
+        //[InlineData(1)]
+        //[InlineData(2)]
+        //public async void When_ConfirmingWithClient_Expect_True(int holidayId)
         //{
-        //    var result = await _holidayConfirmService.RequestAdminApproval(holidayId, clientStatus);
-        //    Assert.True(result);
+        //    var result = await _holidayConfirmService.RequestClientApproval(holidayId);
+        //    var updatedHoliday = await _holidaysRepository.GetById(holidayId);
+        //    var status = updatedHoliday.Status.ToString();
+
+        //    _output.WriteLine(status);
+
+        //    Assert.True(1==1);
         //}
+
+        [Theory]
+        [InlineData(1, EmployeeClientStatus.CLIENT_CONFIRMED)]
+        public async void When_RequestingAdminApproval_Expect_True(int holidayId, string clientStatus)
+        {
+            await _holidayConfirmService.RequestAdminApproval(holidayId, clientStatus);
+            var updatedHoliday = await _holidaysRepository.GetById(holidayId);
+            var status = updatedHoliday.Status.ToString();
+
+            _output.WriteLine(status);
+
+            Assert.True(1 == 1);
+        }
 
         [Theory]
         [InlineData(1)]

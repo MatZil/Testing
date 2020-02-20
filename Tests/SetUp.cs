@@ -108,24 +108,50 @@ namespace Tests
             return roleManager;
         }
 
-        private void Seed(HolidayDbContext context)
+        private async void Seed(HolidayDbContext context)
         {
             var config = GetConfiguration();
 
-            _roles = new[]
+            //_roles = new[]
+            //{
+            //    new IdentityRole
+            //    {
+            //        Name = "Employee",
+            //        NormalizedName = "Employee",
+            //    },
+            //    new IdentityRole
+            //    {
+            //        Name = "Admin",
+            //        NormalizedName = "Admin",
+            //    },
+            //};
+            //context.Roles.AddRange(_roles);
+
+
+            var userStore = new UserStore<User>(context);
+            var userManager = InitializeUserManager();
+
+            var roleStore = new RoleStore<IdentityRole>(context);
+            var roleManager = InitializeRoleManager();
+
+            // Create Role
+            if (! await roleManager.RoleExistsAsync("Admin"))
             {
-                new IdentityRole
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+
+            if (!context.Users.AnyAsync(x => x.UserName == "marktest").Result)
+            {
+                // Create User
+                var user = new User { UserName = "marktest", Email = "marktest@gmail.com", EmployeeId = 1 };
+                await userManager.CreateAsync(user, "Pa$$W0rD!");
+
+                // Add User To Role
+                if (!userManager.IsInRoleAsync(user, "Admin").Result)
                 {
-                    Name = "Employee",
-                    NormalizedName = "Employee",
-                },
-                new IdentityRole
-                {
-                    Name = "Admin",
-                    NormalizedName = "Admin",
-                },
-            };
-            context.Roles.AddRange(_roles);
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
 
             _emailTemplates = new[]
             {
@@ -192,6 +218,7 @@ namespace Tests
             _employees = new[] {
                 new Employee
                 {
+                    Id = 1,
                     ClientId = 1,
                     Name = "EmployeeName1",
                     Surname = "EmployeeSurname1",
@@ -207,6 +234,7 @@ namespace Tests
                 },
                 new Employee
                 {
+                    Id = 2,
                     ClientId = 1,
                     Client = context.Clients.Find(1),
                     Name = "EmployeeName2",
@@ -246,6 +274,7 @@ namespace Tests
             _holidays = new[] {
                 new Holiday
                 {
+                    Id = 1,
                     Employee = context.Employees.Find(1),
                     EmployeeId = 1,
                     Type = HolidayType.Parental,
@@ -257,6 +286,7 @@ namespace Tests
                 },
                 new Holiday
                 {
+                    Id = 2,
                     Employee = context.Employees.Find(2),
                     EmployeeId = 2,
                     Type = HolidayType.Annual,
@@ -268,6 +298,7 @@ namespace Tests
                 },
                 new Holiday
                 {
+                    Id = 3,
                     Employee = context.Employees.Find(1),
                     EmployeeId = 1,
                     Type = HolidayType.Annual,

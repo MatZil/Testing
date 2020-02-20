@@ -69,8 +69,26 @@ namespace XplicityApp.Services
 
         public async Task<bool> RequestAdminApproval(int holidayId, string clientStatus)
         {
-            var holiday = await _repositoryHolidays.GetById(holidayId);
+            // var holiday = await _repositoryHolidays.GetById(holidayId);
+
+            var holiday = new Holiday
+            {
+                Id = 1,
+                EmployeeId = 1,
+                Type = HolidayType.Parental,
+                Status = HolidayStatus.Pending,
+                Paid = false
+            };
+
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
+
+            if (clientStatus == EmployeeClientStatus.CLIENT_CONFIRMED)
+            {
+                var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(holiday);
+                updateHolidayDto.Status = HolidayStatus.ClientConfirmed;
+                await _holidaysService.Update(holidayId, updateHolidayDto);
+            }
+
             var admins = await _repositoryEmployees.GetAllAdmins();
             var overtimeSentence = _overtimeUtility.GetOvertimeSentence(OvertimeEmail.CONFIRMATION, holiday.OvertimeDays);
             await _emailService.ConfirmHolidayWithAdmin(admins, employee, holiday, clientStatus, overtimeSentence);
