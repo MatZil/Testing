@@ -92,14 +92,16 @@ namespace XplicityApp.Services
 
             var newInventoryItem = _mapper.Map<InventoryItem>(newInventoryItemDto);
             var inventoryItemId = await _repository.Create(newInventoryItem);
-
-            foreach (var tagId in newInventoryItemDto.TagIds)
+            if (newInventoryItemDto.TagIds != null)
             {
-                await _inventoryItemTagsRepository.Create(new InventoryItemTag()
+                foreach (var tagId in newInventoryItemDto.TagIds)
                 {
-                    InventoryItemId = inventoryItemId,
-                    TagId = tagId
-                });
+                    await _inventoryItemTagsRepository.Create(new InventoryItemTag()
+                    {
+                        InventoryItemId = inventoryItemId,
+                        TagId = tagId
+                    });
+                }
             }
 
             return newInventoryItem;
@@ -117,16 +119,18 @@ namespace XplicityApp.Services
             _mapper.Map(updateInventoryItemDto, itemToUpdate);
 
             await _repository.Update(itemToUpdate);
-
-            foreach (var inventoryItemTag in updateInventoryItemDto.Tags)
+            if (updateInventoryItemDto.Tags != null)
             {
-                if (await _inventoryItemTagsRepository.FindByInventoryItemIdAndTagId(itemToUpdate.Id, inventoryItemTag.Id) is null)
+                foreach (var inventoryItemTag in updateInventoryItemDto.Tags)
                 {
-                    await _inventoryItemTagsRepository.Create(new InventoryItemTag()
+                    if (await _inventoryItemTagsRepository.FindByInventoryItemIdAndTagId(itemToUpdate.Id, inventoryItemTag.Id) is null)
                     {
-                        InventoryItemId = itemToUpdate.Id,
-                        TagId = inventoryItemTag.Id
-                    });
+                        await _inventoryItemTagsRepository.Create(new InventoryItemTag()
+                        {
+                            InventoryItemId = itemToUpdate.Id,
+                            TagId = inventoryItemTag.Id
+                        });
+                    }
                 }
             }
 

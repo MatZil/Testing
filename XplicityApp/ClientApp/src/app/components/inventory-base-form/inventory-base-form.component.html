@@ -1,0 +1,95 @@
+    <div [formGroup]="baseForm">
+      <div class="divider">
+        <mat-form-field>
+          <mat-label>Category</mat-label>
+          <mat-select formControlName="inventoryCategoryId" placeHolder="Select item category">
+            <mat-option *ngFor="let category of categories" [value]=category.id>
+              {{category.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+  <div class="divider">
+    <mat-form-field>
+      <mat-label>Employee</mat-label>
+      <mat-select formControlName="employeeId" placeHolder="Select employee">
+        <mat-option value="">Office</mat-option>
+        <mat-option *ngFor="let employee of employees" [value]=employee.id>
+          {{employee.name + ' ' + employee.surname}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="divider">
+    <mat-form-field>
+      <input matInput placeholder="Name" formControlName="name" required>
+      <mat-error *ngIf="baseForm.controls.name.invalid" class="error">
+        Please enter a valid name.
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="divider">
+    <mat-form-field class="example-chip-list">
+      <mat-label>Tags:</mat-label>
+      <mat-chip-list #chipList aria-label="Tag selection">
+        <mat-chip *ngFor="let tag of tagsSelected"
+                  [selectable]="true"
+                  [removable]="true"
+                  (removed)="remove(tag)">
+          {{tag.Title}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input #tagInput
+               [matChipInputFor]="chipList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               (matChipInputTokenEnd)="add($event)"
+               [matAutocomplete]="auto"
+               [formControl]="tagsControl"
+               placeholder="New tag...">
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let tag of tagSuggestions | async" [value]="tag.id">
+          {{tag.title}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div class="divider">
+    <mat-form-field>
+      <input matInput placeholder="Serial Number" formControlName="serialNumber" required>
+    </mat-form-field>
+    <mat-error *ngIf="baseForm.controls.serialNumber.invalid" class="error">
+      Please enter a valid serial number.
+    </mat-error>
+  </div>
+  <div class="divider">
+    <mat-form-field>
+      <input matInput type="number" placeholder="Price" formControlName="price" required>
+      <mat-error *ngIf="baseForm.controls.price.invalid" class="error">
+        Please enter a valid price.
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="divider">
+    <mat-form-field>
+      <input matInput [matDatepicker]="purchaseDate" (focus)="purchaseDate.open()" name="purchaseDate"
+             placeholder="Purchase Date" formControlName="purchaseDate" readonly required>
+      <mat-datepicker #purchaseDate></mat-datepicker>
+      <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+      <mat-error *ngIf="baseForm.controls.purchaseDate.invalid" class="error">
+        Please enter a valid purchase date.
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="divider">
+    <mat-form-field>
+      <input matInput [matDatepicker]="expiryDate" (focus)="expiryDate.open()" name="expiryDate"
+             placeholder="Expiration Date" formControlName="expiryDate" readonly>
+      <mat-datepicker #expiryDate></mat-datepicker>
+      <mat-datepicker-toggle matSuffix [for]="expiryDate"></mat-datepicker-toggle>
+    </mat-form-field>
+  </div>
+  <mat-form-field>
+    <input matInput type="text" placeholder="Comment" formControlName="comment">
+  </mat-form-field>
+</div>
