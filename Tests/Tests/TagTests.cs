@@ -67,7 +67,7 @@ namespace Tests.Tests
         }
 
         [Theory]
-        [InlineData(3)]
+        [InlineData(-1)]
         public async void When_GetById_Expect_TagNotExists(int id)
         {
             var tagDto = await _tagsService.GetById(id);

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using XplicityApp.Configurations;
 using XplicityApp.Dtos.EmailTemplates;
@@ -30,6 +31,7 @@ namespace Tests
         private InventoryItem[] _inventoryItems;
         private InventoryCategory[] _inventoryCategories;
         private Tag[] _tags;
+        private InventoryItemTag[] _inventoryItemTags;
         private FileRecord[] _fileRecords;
 
         private HolidayDbContext _context;
@@ -320,6 +322,7 @@ namespace Tests
                     Comment = null,
                     Category = context.InventoryCategories.Find(1),
                     InventoryCategoryId = 1
+
                 },
                 new InventoryItem
                 {
@@ -347,6 +350,16 @@ namespace Tests
                     Id = 2,
                     Title = "Tag2"
                 },
+                    new Tag
+                {
+                    Id = 3,
+                    Title = "No3"
+                },
+                    new Tag
+                    {
+                    Id = 4,
+                    Title = "No4"
+                },
             };
             context.Tags.AddRange(_tags);
 
@@ -369,6 +382,22 @@ namespace Tests
             };
             context.FileRecords.AddRange(_fileRecords);
 
+            _inventoryItemTags = new[]
+                {
+                new InventoryItemTag
+                {
+                    Id = 1,
+                    InventoryItemId = 2,
+                    TagId = 1
+                },
+                new InventoryItemTag
+                {
+                     Id = 1,
+                    InventoryItemId = 2,
+                    TagId = 4
+                },
+            };
+            context.InventoryItemsTags.AddRange(_inventoryItemTags);
             context.SaveChanges();
         }
 

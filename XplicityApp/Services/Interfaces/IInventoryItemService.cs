@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using XplicityApp.Dtos.Inventory;
+using XplicityApp.Dtos.Tags;
 using XplicityApp.Infrastructure.Database.Models;
 
 namespace XplicityApp.Services.Interfaces
