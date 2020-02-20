@@ -9,6 +9,7 @@ using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services;
 using XplicityApp.Services.Interfaces;
 using Xunit;
+using XplicityApp.Infrastructure.Utils;
 
 namespace Tests.Tests.EmailServiceTests
 {
@@ -104,7 +105,7 @@ namespace Tests.Tests.EmailServiceTests
         [Fact]
         public async void When_SendingRequestNotification_Expect_CorrectSubject()
         {
-            await _emailService.SendRequestNotification(2, _employee.Email);
+            await _emailService.SendRequestNotification(2, _employee.Email, "ConfirmerName ConfirmerSurname");
             var expectedSubject = (await _emailTemplatesRepository.GetByPurpose(EmailPurposes.REQUEST_NOTIFICATION)).Subject;
             Assert.Equal(expectedSubject, _actualSubject);
         }

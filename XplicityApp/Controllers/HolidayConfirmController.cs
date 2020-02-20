@@ -46,14 +46,14 @@ namespace XplicityApp.Controllers
             return Ok();
         }
 
-        [HttpGet("{holidayId}")]
-        public async Task<IActionResult> ConfirmHoliday(int holidayId)
+        [HttpGet]
+        public async Task<IActionResult> ConfirmHoliday(int holidayId, int confirmerId)
         {
             _logger.LogInformation($"Holiday confirm request received for holiday id:{holidayId}");
             try
             {
-                await _holidayValidationService.ValidateHolidayConfirmationReadiness(holidayId);
-                await _confirmationService.ConfirmHoliday(holidayId);
+                await _holidayValidationService.ValidateHolidayConfirmationReadiness(holidayId, confirmerId);
+                await _confirmationService.ConfirmHoliday(holidayId, confirmerId);
                 await _confirmationService.GenerateFilesAndNotify(holidayId);
             }
             catch (InvalidOperationException exception)
