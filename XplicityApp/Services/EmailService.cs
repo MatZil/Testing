@@ -61,8 +61,8 @@ namespace XplicityApp.Services
                                             .Replace("{holiday.type}", holiday.Type.ToString())
                                             .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
                                             .Replace("{holiday.to}", holiday.ToInclusive.ToShortDateString())
-                                            .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm/confirm?holidayId={holiday.Id}&confirmerId={admin.Id}")
-                                            .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline/decline?holidayId={holiday.Id}&confirmerId={admin.Id}")
+                                            .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm?holidayId={holiday.Id}&confirmerId={admin.Id}")
+                                            .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={holiday.Id}&confirmerId={admin.Id}")
                                             .Replace("{client.status}", clientStatus)
                                             .Replace("{holiday.overtimeHours}", overtimeSentence);
 
