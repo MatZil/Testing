@@ -1,0 +1,14 @@
+<form [formGroup]="addInventoryItemForm">
+  <h1 mat-dialog-title>Add new Iventory Item</h1>
+  <mat-card>
+    <app-base-inventory-form #baseComponent="baseInventoryFormComponent" formControlName="baseForm" [categories]="data.categories" [employees]="data.employees"></app-base-inventory-form>
+  </mat-card>
+  <mat-card>
+    <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="isFormInvalid(baseComponent.baseForm)">
+      Add Item
+    </button>
+    <button mat-flat-button color="warn" class="floatRight" [mat-dialog-close]>
+    Cancel
+    </button>
+  </mat-card>
+</form>
