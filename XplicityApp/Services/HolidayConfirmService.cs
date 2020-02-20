@@ -103,12 +103,13 @@ namespace XplicityApp.Services
         {
             var holiday = await _holidaysService.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
+            var confirmerFullName = await _holidaysService.GetConfirmerFullName(holiday.ConfirmerId);
 
             switch (receiver)
             {
                 case EmployeeRoleEnum.Regular:
                     _logger.LogInformation($"About to send request notification to {employee.Email}");
-                    await _emailService.SendRequestNotification(fileId, employee.Email, holiday.ConfirmerId);
+                    await _emailService.SendRequestNotification(fileId, employee.Email, confirmerFullName);
                     break;
 
                 case EmployeeRoleEnum.Administrator:

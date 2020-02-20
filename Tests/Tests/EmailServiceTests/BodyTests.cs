@@ -19,7 +19,6 @@ namespace Tests.Tests.EmailServiceTests
         private readonly EmailService _emailService;
         private readonly FileService _fileService;
         private readonly IConfiguration _configuration;
-        private readonly HolidaysService _holidaysService;
 
         private Employee _employee;
         private ICollection<Employee> _admins;
@@ -44,15 +43,8 @@ namespace Tests.Tests.EmailServiceTests
                 .Setup(emailer => emailer.SendMail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Callback<string, string, string>((receiver, subject, body) => _actualBodyList.Add(body));
 
-            var context = setup.HolidayDbContext;
-            var mapper = setup.Mapper;
-            var holidaysRepository = new HolidaysRepository(context);
-            var userManager = setup.InitializeUserManager();
-            var employeesRepository = new EmployeesRepository(context, userManager);
-            _holidaysService = new HolidaysService(holidaysRepository, employeesRepository, mapper, timeService, mockOvertimeUtility.Object);
-
             InitializeEntities();
-            _emailService = new EmailService(mockEmailer.Object, emailTemplatesRepository, _configuration, _fileService, mockOvertimeUtility.Object, _holidaysService);
+            _emailService = new EmailService(mockEmailer.Object, emailTemplatesRepository, _configuration, _fileService, mockOvertimeUtility.Object);
         }
 
         private string GetPaidString(bool paid)
@@ -154,14 +146,12 @@ namespace Tests.Tests.EmailServiceTests
             Assert.Equal(expectedBody, _actualBodyList.FirstOrDefault());
         }
 
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async void When_SendingRequestNotification_Expect_CorrectBody(int confirmerId)
+        [Fact]
+        public async void When_SendingRequestNotification_Expect_CorrectBody()
         {
-            var confirmerFullName = await _holidaysService.GetConfirmerFullName(confirmerId);
+            var confirmerFullName = "ConfirmerName ConfirmerSurname";
             _actualBodyList = new List<string>();
-            await _emailService.SendRequestNotification(2, _employee.Email, confirmerId);
+            await _emailService.SendRequestNotification(2, _employee.Email, confirmerFullName);
             var expectedBody = $"Your holiday request has been confirmed by {confirmerFullName}. You can download your holiday request document by clicking this link: {_fileService.GetDownloadLink(2)}";
             Assert.Equal(expectedBody, _actualBodyList.FirstOrDefault());
         }

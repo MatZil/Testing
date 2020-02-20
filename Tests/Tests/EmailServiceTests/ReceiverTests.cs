@@ -38,16 +38,8 @@ namespace Tests.Tests.EmailServiceTests
                 .Setup(emailer => emailer.SendMail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Callback<string, string, string>((receiver, subject, body) => _actualReceiverList.Add(receiver));
 
-            var context = setup.HolidayDbContext;
-            var mapper = setup.Mapper;
-            var holidaysRepository = new HolidaysRepository(context);
-            var userManager = setup.InitializeUserManager();
-            var employeesRepository = new EmployeesRepository(context, userManager);
-            var timeService = new TimeService();
-            var holidaysService = new HolidaysService(holidaysRepository, employeesRepository, mapper, timeService, mockOvertimeUtility.Object);
-
             InitializeEntities();
-            _emailService = new EmailService(mockEmailer.Object, emailTemplatesRepository, config, mockFileService.Object, mockOvertimeUtility.Object, holidaysService);
+            _emailService = new EmailService(mockEmailer.Object, emailTemplatesRepository, config, mockFileService.Object, mockOvertimeUtility.Object);
         }
 
         private void InitializeEntities()
@@ -137,7 +129,7 @@ namespace Tests.Tests.EmailServiceTests
         public async void When_SendingRequestNotification_Expect_CorrectReceiver()
         {
             _actualReceiverList = new List<string>();
-            await _emailService.SendRequestNotification(2, _employee.Email, 1);
+            await _emailService.SendRequestNotification(2, _employee.Email, "ConfirmerName ConfirmerSurname");
             Assert.Equal(_employee.Email, _actualReceiverList.FirstOrDefault());
         }
     }

@@ -40,16 +40,8 @@ namespace Tests.Tests.EmailServiceTests
                 .Setup(emailer => emailer.SendMail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Callback<string, string, string>((receiver, subject, body) => _actualSubject = subject);
 
-            var context = setup.HolidayDbContext;
-            var mapper = setup.Mapper;
-            var holidaysRepository = new HolidaysRepository(context);
-            var userManager = setup.InitializeUserManager();
-            var employeesRepository = new EmployeesRepository(context, userManager);
-            var timeService = new TimeService();
-            var holidaysService = new HolidaysService(holidaysRepository, employeesRepository, mapper, timeService, mockOvertimeUtility.Object);
-
             InitializeEntities();
-            _emailService = new EmailService(mockEmailer.Object, _emailTemplatesRepository, config, mockFileService.Object, mockOvertimeUtility.Object, holidaysService);
+            _emailService = new EmailService(mockEmailer.Object, _emailTemplatesRepository, config, mockFileService.Object, mockOvertimeUtility.Object);
         }
 
         private void InitializeEntities()
@@ -113,7 +105,7 @@ namespace Tests.Tests.EmailServiceTests
         [Fact]
         public async void When_SendingRequestNotification_Expect_CorrectSubject()
         {
-            await _emailService.SendRequestNotification(2, _employee.Email, 1);
+            await _emailService.SendRequestNotification(2, _employee.Email, "ConfirmerName ConfirmerSurname");
             var expectedSubject = (await _emailTemplatesRepository.GetByPurpose(EmailPurposes.REQUEST_NOTIFICATION)).Subject;
             Assert.Equal(expectedSubject, _actualSubject);
         }
