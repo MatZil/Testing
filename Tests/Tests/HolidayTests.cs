@@ -11,7 +11,7 @@ using Moq;
 using XplicityApp.Services.Interfaces;
 using XplicityApp.Infrastructure.Utils;
 
-namespace Tests
+namespace Tests.Tests
 {
     [TestCaseOrderer("Tests.HolidayTests.AlphabeticalOrderer", "Tests")]
     public class HolidayTests

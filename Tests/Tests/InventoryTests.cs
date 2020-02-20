@@ -6,7 +6,7 @@ using XplicityApp.Services;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Tests
+namespace Tests.Tests
 {
     [TestCaseOrderer("Tests.InventoryTests.AlphabeticalOrderer", "Tests")]
     public class InventoryTests

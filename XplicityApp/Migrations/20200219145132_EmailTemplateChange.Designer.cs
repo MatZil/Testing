@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XplicityApp.Infrastructure.Database;
 
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    partial class HolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200219145132_EmailTemplateChange")]
+    partial class EmailTemplateChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -337,11 +339,10 @@ Please use the first line for team's title, second line for individual employee'
                         new
                         {
                             Id = 6,
-                            Instructions = @"{confirmer.fullName} - Full name of the administrator who confirmed the request.
-{download.link} - A link to download request document.",
+                            Instructions = "{download.link} - A link to download request document.",
                             Purpose = "Request Notification",
                             Subject = "Your holiday request has been generated!",
-                            Template = "Your holiday request has been confirmed by {confirmer.fullName}. You can download your holiday request document by clicking this link: {download.link}"
+                            Template = "You can download your holiday request document by clicking this link: {download.link}"
                         });
                 });
 
@@ -469,9 +470,6 @@ Please use the first line for team's title, second line for individual employee'
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ConfirmerId")
-                        .HasColumnType("int");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");

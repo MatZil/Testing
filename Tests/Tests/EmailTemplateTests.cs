@@ -5,7 +5,7 @@ using XplicityApp.Services;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Tests
+namespace Tests.Tests
 {
     [TestCaseOrderer("Tests.EmailTemplateTests.AlphabeticalOrderer", "Tests")]
     public class EmailTemplateTests
@@ -39,7 +39,7 @@ namespace Tests
         }
 
         [Theory]
-        [InlineData(3)]
+        [InlineData(-1)]
         public async void When_GettingNonexistentTemplateById_Expect_ReturnsNull(int id)
         {
             var retrievedTemplate = await _templatesService.GetById(id);
@@ -86,7 +86,7 @@ namespace Tests
         }
 
         [Theory]
-        [InlineData(3)]
+        [InlineData(-1)]
         public async void When_DeletingNonexistentTemplate_Expect_False(int id)
         {
             _output.WriteLine("Couldn't find template to delete");

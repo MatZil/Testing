@@ -14,7 +14,7 @@ using Xunit;
 using XplicityApp.Services.Extensions;
 using XplicityApp.Services.Validations;
 
-namespace Tests
+namespace Tests.Tests
 {
     [TestCaseOrderer("Tests.HolidayConfirmTests.AlphabeticalOrderer", "Tests")]
     public class HolidayConfirmTests

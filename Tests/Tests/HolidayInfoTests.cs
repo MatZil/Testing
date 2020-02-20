@@ -4,7 +4,7 @@ using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services;
 using Xunit;
 
-namespace Tests
+namespace Tests.Tests
 {
     [TestCaseOrderer("Tests.HolidayInfoTests.AlphabeticalOrderer", "Tests")]
     public class HolidayInfoTests
