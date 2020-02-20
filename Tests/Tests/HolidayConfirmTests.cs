@@ -28,6 +28,7 @@ namespace Tests
         private readonly IOvertimeUtility _mockOvertimeUtility;
         private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
         private readonly HolidayValidationService _holidayValidationService;
+        private readonly HolidaysService _holidaysService;
 
         public HolidayConfirmTests()
         {
@@ -46,9 +47,9 @@ namespace Tests
             _mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
             _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _timeService, _mockOvertimeUtility);
 
-            var holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, _mapper, _timeService, _mockOvertimeUtility);
+            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, _mapper, _timeService, _mockOvertimeUtility);
             _holidayConfirmService = new HolidayConfirmService(mockEmailService.Object, _mapper, _holidaysRepository,
-                                                               _employeesRepository, clientsRepository, holidaysService,
+                                                               _employeesRepository, clientsRepository, _holidaysService,
                                                                 mockDocxGeneratorService.Object, _mockOvertimeUtility, 
                                                                _employeeHolidaysConfirmationUpdater, new Mock<ILogger<HolidayConfirmService>>().Object);
             _holidayValidationService = new HolidayValidationService(
@@ -95,11 +96,9 @@ namespace Tests
         public async void When_ConfirmingHoliday_Expect_UpdatedConfirmerFullName(int holidayId, int confirmerId)
         {
             await _holidayConfirmService.ConfirmHoliday(holidayId, confirmerId);
-            var confirmer = await _employeesRepository.GetById(confirmerId);
+            var updatedHoliday = await _holidaysService.GetById(holidayId);
 
-            var updatedHoliday = await _holidaysRepository.GetById(holidayId);
-
-            var fullNameExpected = $"{confirmer.Name} {confirmer.Surname}";
+            var fullNameExpected = await _holidaysService.GetConfirmerFullName(updatedHoliday.ConfirmerId);
             var fullNameActual = updatedHoliday.ConfirmerFullName;
 
             Assert.True(fullNameExpected == fullNameActual, "Confirmer full name is incorrect.");

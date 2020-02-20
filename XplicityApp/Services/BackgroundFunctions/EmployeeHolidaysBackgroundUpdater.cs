@@ -37,7 +37,7 @@ namespace XplicityApp.Services.BackgroundFunctions
                     var workDaysPerYear = _timeService.GetCurrentYearWorkDays();
                     foreach (var employee in employees)
                     {
-                        if (!await _employeesService.HasActiveUnpaidHoliday(employee.Id))
+                        if (!_employeesService.HasActiveUnpaidHoliday(employee.Id))
                         {
                             employee.FreeWorkDays += Math.Round((double)employee.DaysOfVacation / workDaysPerYear, 2);
                             await _employeeRepository.Update(employee);

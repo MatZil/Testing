@@ -66,9 +66,9 @@ namespace Tests
         [Theory]
         [InlineData(2, true)]
         [InlineData(1, false)]
-        public async void When_PublicHolidaysIsUnpaid_Expect_ThisDayIsUnpaid(int id, bool expected)
+        public void When_PublicHolidaysIsUnpaid_Expect_ThisDayIsUnpaid(int id, bool expected)
         {
-            var result = await _employeesService.HasActiveUnpaidHoliday(id);
+            var result = _employeesService.HasActiveUnpaidHoliday(id);
 
             Assert.Equal(expected, result);
         }
