@@ -37,11 +37,11 @@ export class AddInventoryFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const newInventoryItem = this.getFormUser();
+    const newInventoryItem = this.getFormInventoryItem();
     this.dialogRef.close(newInventoryItem);
   }
 
-  getFormUser(): NewInventoryItem {
+  getFormInventoryItem(): NewInventoryItem {
     const formInventoryItem = Object.assign({}, this.addInventoryItemForm.value, this.addInventoryItemForm.controls.baseForm.value);
     return formInventoryItem;
   }
