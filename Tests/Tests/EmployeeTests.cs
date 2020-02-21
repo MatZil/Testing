@@ -48,7 +48,7 @@ namespace Tests.Tests
         }
 
         [Theory]
-        [InlineData(3)]
+        [InlineData(-1)]
         public async void When_GettingNonexistentEmployeeById_Expect_ReturnsNull(int id)
         {
             var retrievedEmployee = await _employeesService.GetById(id);
@@ -198,7 +198,7 @@ namespace Tests.Tests
         }
 
         [Theory]
-        [InlineData(3)]
+        [InlineData(-1)]
         public async void When_DeletingNonexistentEmployee_Expect_False(int id)
         {
             _output.WriteLine("Couldn't find employee to delete");

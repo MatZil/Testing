@@ -13,6 +13,7 @@ using XplicityApp.Services.Interfaces;
 using Xunit;
 using XplicityApp.Services.Extensions;
 using XplicityApp.Services.Validations;
+using XplicityApp.Infrastructure.Static_Files;
 
 namespace Tests.Tests
 {
@@ -69,18 +70,21 @@ namespace Tests.Tests
             Assert.True(result, "Request for client's approval was successfully submitted.");
         }
 
-        //[Theory]
-        //[InlineData(1, "status")]
-        //public async void When_RequestingAdminApproval_Expect_True(int holidayId, string clientStatus)
-        //{
-        //    var result = await _holidayConfirmService.RequestAdminApproval(holidayId, clientStatus);
-        //    Assert.True(result);
-        //}
+        [Theory]
+        [InlineData(1, EmployeeClientStatus.CLIENT_CONFIRMED)]
+        public async void When_ConfirmingWithClient_Expect_StatusChangedToClientConfirmed(int holidayId, string clientStatus)
+        {
+            await _holidayConfirmService.RequestAdminApproval(holidayId, clientStatus);
+            var updatedHoliday = await _holidaysRepository.GetById(holidayId);
+            var status = updatedHoliday.Status.ToString();
+
+            Assert.True(status == "ClientConfirmed", "Client failed to confirm holiday.");
+        }
 
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
-        public async void When_ConfirmingHoliday_Expect_True(int holidayId)
+        public async void When_ConfirmingHoliday_Expect_StatusChangedToConfirmed(int holidayId)
         {
             await _holidayConfirmService.ConfirmHoliday(holidayId, 1);
 
@@ -125,27 +129,6 @@ namespace Tests.Tests
             var actual = employee.FreeWorkDays;
 
             Assert.True(expected == actual, "Failed to update employee's free workdays.");
-        }
-
-        [Theory]
-        [InlineData(1)]
-        [InlineData(3)]
-        public async void When_UpdatingEmployeesOvertime_Expect_UpdatesOvertime(int holidayId)
-        {
-            var index = _context.Holidays.Find(holidayId).EmployeeId;
-            var employee = await _employeesRepository.GetById(index);
-            var initial = employee.OvertimeHours;
-            var holiday = await _holidaysRepository.GetById(holidayId);
-            var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
-
-            var expected = initial - _mockOvertimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
-
-            await _employeeHolidaysConfirmationUpdater.UpdateEmployeesOvertime(holidayDto);
-
-            employee = await _employeesRepository.GetById(index);
-            var actual = employee.OvertimeHours;
-
-            Assert.True(expected == actual, "Failed to update employee's overtime hours.");
         }
 
         [Theory]

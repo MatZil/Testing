@@ -71,6 +71,14 @@ namespace XplicityApp.Services
         {
             var holiday = await _repositoryHolidays.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
+
+            if (clientStatus == EmployeeClientStatus.CLIENT_CONFIRMED)
+            {
+                var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(holiday);
+                updateHolidayDto.Status = HolidayStatus.ClientConfirmed;
+                await _holidaysService.Update(holidayId, updateHolidayDto);
+            }
+
             var admins = await _repositoryEmployees.GetAllAdmins();
             var overtimeSentence = _overtimeUtility.GetOvertimeSentence(OvertimeEmail.CONFIRMATION, holiday.OvertimeDays);
             await _emailService.ConfirmHolidayWithAdmin(admins, employee, holiday, clientStatus, overtimeSentence);
