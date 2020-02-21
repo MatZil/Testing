@@ -74,7 +74,7 @@ namespace Tests.Tests
         }
 
         [Theory]
-        [InlineData(4)]
+        [InlineData(-1)]
         public async void When_GettingNonexistentHolidayById_Expect_ReturnsNull(int id)
         {
             var retrievedHoliday = await _holidaysService.GetById(id);
@@ -148,7 +148,7 @@ namespace Tests.Tests
         }
 
         [Theory]
-        [InlineData(4)]
+        [InlineData(-1)]
         public async void When_DeletingNonexistentHoliday_Expect_False(int id)
         {
             _output.WriteLine("Couldn't find holiday to delete");

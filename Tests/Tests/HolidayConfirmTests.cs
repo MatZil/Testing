@@ -133,27 +133,6 @@ namespace Tests.Tests
 
         [Theory]
         [InlineData(1)]
-        [InlineData(3)]
-        public async void When_UpdatingEmployeesOvertime_Expect_UpdatesOvertime(int holidayId)
-        {
-            var index = _context.Holidays.Find(holidayId).EmployeeId;
-            var employee = await _employeesRepository.GetById(index);
-            var initial = employee.OvertimeHours;
-            var holiday = await _holidaysRepository.GetById(holidayId);
-            var holidayDto = _mapper.Map<GetHolidayDto>(holiday);
-
-            var expected = initial - _mockOvertimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
-
-            await _employeeHolidaysConfirmationUpdater.UpdateEmployeesOvertime(holidayDto);
-
-            employee = await _employeesRepository.GetById(index);
-            var actual = employee.OvertimeHours;
-
-            Assert.True(expected == actual, "Failed to update employee's overtime hours.");
-        }
-
-        [Theory]
-        [InlineData(1)]
         [InlineData(2)]
         public async void When_UpdatingParentalLeaves_Expect_UpdatesParentalLeaves(int holidayId)
         {

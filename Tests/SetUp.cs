@@ -236,6 +236,22 @@ namespace Tests
                     CurrentAvailableLeaves = 2,
                     NextMonthAvailableLeaves = 1,
                 },
+                new Employee
+                {
+                    ClientId = 1,
+                    Client = context.Clients.Find(1),
+                    Name = "EmployeeName3",
+                    Surname = "EmployeeSurname3",
+                    Email = "taken3@email",
+                    WorksFromDate = new DateTime(2019,01,06),
+                    DaysOfVacation = 20,
+                    BirthdayDate = new DateTime(1987,07,06),
+                    FreeWorkDays = 15,
+                    OvertimeHours = 24,
+                    ParentalLeaveLimit = 4,
+                    CurrentAvailableLeaves = 2,
+                    NextMonthAvailableLeaves = 1,
+                },
             };
             context.Employees.AddRange(_employees);
 
@@ -292,6 +308,78 @@ namespace Tests
                     Status = HolidayStatus.Confirmed,
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 10, 14),
+                    Paid = true
+                },
+                new Holiday //4
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(2020, 02, 13),
+                    ToInclusive = new DateTime(2020, 02, 18),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 4,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
+                    Paid = true
+                },
+                new Holiday //5
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(2020, 02, 17),
+                    ToInclusive = new DateTime(2020, 02, 19),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 3,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
+                    Paid = true
+                },
+                new Holiday //6
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(2020, 02, 24),
+                    ToInclusive = new DateTime(2020, 02, 28),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 2,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
+                    Paid = true
+                },
+                new Holiday //7
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(2020, 02, 13),
+                    ToInclusive = new DateTime(2020, 02, 20),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 2,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
+                    Paid = true
+                },
+                new Holiday //8
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(2020, 02, 13),
+                    ToInclusive = new DateTime(2020, 02, 20),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 0,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
+                    Paid = true
+                },
+                new Holiday //9
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(2020, 02, 19),
+                    ToInclusive = new DateTime(2020, 02, 25),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 0,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
                     Paid = true
                 },
             };
