@@ -44,6 +44,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<IEmployeeHolidaysConfirmationUpdater, EmployeeHolidaysConfirmationUpdater>()
                 .AddScoped<IOvertimeUtility, OvertimeUtility>()
                 .AddScoped<ITagsRepository, TagsRepository>()
+                .AddScoped<IInventoryItemTagsRepository, InventoryItemTagsRepository>()
                 .AddSingleton<ITimeService, TimeService>()
                 .AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }

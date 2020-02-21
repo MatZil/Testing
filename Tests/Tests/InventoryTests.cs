@@ -1,6 +1,11 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using XplicityApp.Dtos.Inventory;
+using XplicityApp.Dtos.Tags;
 using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services;
 using Xunit;
@@ -15,6 +20,7 @@ namespace Tests.Tests
         private readonly ITestOutputHelper _output;
         private readonly InventoryItemService _inventoryItemService;
         private readonly int _actualNumberOfItemsInInventory;
+        private readonly IMapper _mapper;
 
         public InventoryTests(ITestOutputHelper output)
         {
@@ -22,10 +28,12 @@ namespace Tests.Tests
             var setup = new SetUp();
             setup.Initialize();
             _context = setup.HolidayDbContext;
-            var mapper = setup.Mapper;
+            _mapper = setup.Mapper;
             _actualNumberOfItemsInInventory = setup.GetCount("inventoryItems");
             var inventoryItemsRepository = new InventoryItemsRepository(_context);
-            _inventoryItemService = new InventoryItemService(inventoryItemsRepository,mapper);
+            var inventoryItemTagsRepository = new InventoryItemTagsRepository(_context);
+            var tagsRepository = new TagsRepository(_context);
+            _inventoryItemService = new InventoryItemService(inventoryItemsRepository, inventoryItemTagsRepository, tagsRepository, _mapper);
         }
 
         [Theory]
@@ -67,7 +75,8 @@ namespace Tests.Tests
                 Comment = "new comment",
                 Price = 100,
                 InventoryCategoryId = 1,
-                EmployeeId = 1
+                EmployeeId = 1,
+                TagIds = new List<int>()
             };
 
             var createdInventoryItem = await _inventoryItemService.Create(newInventoryItem);
@@ -85,6 +94,7 @@ namespace Tests.Tests
             UpdateInventoryItemDto updatedInventoryItem = new UpdateInventoryItemDto()
             {
                 Name = "UpdatedInventoryItemName",
+                Tags = new List<TagDto>()
             };
             var updatedInventoryItemName = updatedInventoryItem.Name;
 
@@ -94,5 +104,31 @@ namespace Tests.Tests
 
             Assert.Equal(updatedInventoryItemName, inventoryItemNameInDatabase);
         }
+
+
+        [Theory]
+        [InlineData(2, 2)]
+        [InlineData(2, 1)]
+        [InlineData(2, 0)]
+        public async void When_UpdatingInventoryItem_Expect_ReturnsUpdatedInventoryItemWithTags(int itemId, int tagsCount)
+        {
+            var tagIds = new List<TagDto>();
+           
+            for (int i = 1; i <= tagsCount; i++)
+            {
+                tagIds.Add(_mapper.Map<TagDto>(_context.Tags.Find(i)));
+            }
+
+            UpdateInventoryItemDto updatedInventoryItem = new UpdateInventoryItemDto()
+            {
+                Tags = tagIds
+            };
+
+            await _inventoryItemService.Update(itemId, updatedInventoryItem);
+            var inventoryItem = _context.InventoryItems.Find(itemId);
+
+            Assert.Equal(tagsCount, inventoryItem.InventoryItemsTags.Count);
+        }
+
     }
 }

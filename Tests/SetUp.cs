@@ -30,6 +30,7 @@ namespace Tests
         private InventoryItem[] _inventoryItems;
         private InventoryCategory[] _inventoryCategories;
         private Tag[] _tags;
+        private InventoryItemTag[] _inventoryItemTags;
         private FileRecord[] _fileRecords;
 
         private HolidayDbContext _context;
@@ -40,6 +41,16 @@ namespace Tests
         private IMapper _mapper;
         public IMapper Mapper =>
             _mapper ??
+            throw new InvalidOperationException("Run initialize method before accessing this property.");
+
+        private UserManager<User> _userManager;
+        public UserManager<User> UserManager =>
+            _userManager ??
+            throw new InvalidOperationException("Run initialize method before accessing this property.");
+
+        private RoleManager<IdentityRole> _roleManager;
+        public RoleManager<IdentityRole> RoleManager =>
+            _roleManager ??
             throw new InvalidOperationException("Run initialize method before accessing this property.");
 
         public void Initialize()
@@ -62,8 +73,6 @@ namespace Tests
                 cfg.AddProfile(new AutoMapperConfiguration());
             });
             _mapper = config.CreateMapper();
-
-            //return new Tuple<HolidayDbContext, IMapper>(_context, _mapper);
         }
 
         public IConfiguration GetConfiguration()
@@ -86,7 +95,7 @@ namespace Tests
                 new Mock<IPasswordHasher<User>>().Object,
                 new IUserValidator<User>[0],
                 new IPasswordValidator<User>[0],
-                new Mock<ILookupNormalizer>().Object,
+                null,
                 new Mock<IdentityErrorDescriber>().Object,
                 new Mock<IServiceProvider>().Object,
                 new Mock<ILogger<UserManager<User>>>().Object);
@@ -101,7 +110,7 @@ namespace Tests
             var roleManager = new RoleManager<IdentityRole>(
                 roleStore,
                 new IRoleValidator<IdentityRole>[0],
-                new Mock<ILookupNormalizer>().Object,
+                null,
                 new Mock<IdentityErrorDescriber>().Object,
                 new Mock<ILogger<RoleManager<IdentityRole>>>().Object);
 
@@ -112,44 +121,25 @@ namespace Tests
         {
             var config = GetConfiguration();
 
-            //_roles = new[]
-            //{
-            //    new IdentityRole
-            //    {
-            //        Name = "Employee",
-            //        NormalizedName = "Employee",
-            //    },
-            //    new IdentityRole
-            //    {
-            //        Name = "Admin",
-            //        NormalizedName = "Admin",
-            //    },
-            //};
-            //context.Roles.AddRange(_roles);
-
-
             var userStore = new UserStore<User>(context);
-            var userManager = InitializeUserManager();
+            _userManager = InitializeUserManager();
 
             var roleStore = new RoleStore<IdentityRole>(context);
-            var roleManager = InitializeRoleManager();
+            _roleManager = InitializeRoleManager();
 
-            // Create Role
-            if (! await roleManager.RoleExistsAsync("Admin"))
+            if (! await _roleManager.RoleExistsAsync("Admin"))
             {
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
             }
 
-            if (!context.Users.AnyAsync(x => x.UserName == "marktest").Result)
+            if (!context.Users.AnyAsync(x => x.UserName == "user1").Result)
             {
-                // Create User
-                var user = new User { UserName = "marktest", Email = "marktest@gmail.com", EmployeeId = 1 };
-                await userManager.CreateAsync(user, "Pa$$W0rD!");
+                var user = new User { UserName = "user1", Email = "user1@gmail.com", EmployeeId = 1 };
+                await _userManager.CreateAsync(user, "Pa$$W0rD!");
 
-                // Add User To Role
-                if (!userManager.IsInRoleAsync(user, "Admin").Result)
+                if (!_userManager.IsInRoleAsync(user, "Admin").Result)
                 {
-                    await userManager.AddToRoleAsync(user, "Admin");
+                    await _userManager.AddToRoleAsync(user, "Admin");
                 }
             }
 
@@ -218,7 +208,6 @@ namespace Tests
             _employees = new[] {
                 new Employee
                 {
-                    Id = 1,
                     ClientId = 1,
                     Name = "EmployeeName1",
                     Surname = "EmployeeSurname1",
@@ -234,7 +223,6 @@ namespace Tests
                 },
                 new Employee
                 {
-                    Id = 2,
                     ClientId = 1,
                     Client = context.Clients.Find(1),
                     Name = "EmployeeName2",
@@ -274,7 +262,6 @@ namespace Tests
             _holidays = new[] {
                 new Holiday
                 {
-                    Id = 1,
                     Employee = context.Employees.Find(1),
                     EmployeeId = 1,
                     Type = HolidayType.Parental,
@@ -286,7 +273,6 @@ namespace Tests
                 },
                 new Holiday
                 {
-                    Id = 2,
                     Employee = context.Employees.Find(2),
                     EmployeeId = 2,
                     Type = HolidayType.Annual,
@@ -298,7 +284,6 @@ namespace Tests
                 },
                 new Holiday
                 {
-                    Id = 3,
                     Employee = context.Employees.Find(1),
                     EmployeeId = 1,
                     Type = HolidayType.Annual,
@@ -351,6 +336,7 @@ namespace Tests
                     Comment = null,
                     Category = context.InventoryCategories.Find(1),
                     InventoryCategoryId = 1
+
                 },
                 new InventoryItem
                 {
@@ -378,6 +364,16 @@ namespace Tests
                     Id = 2,
                     Title = "Tag2"
                 },
+                    new Tag
+                {
+                    Id = 3,
+                    Title = "No3"
+                },
+                    new Tag
+                    {
+                    Id = 4,
+                    Title = "No4"
+                },
             };
             context.Tags.AddRange(_tags);
 
@@ -400,6 +396,22 @@ namespace Tests
             };
             context.FileRecords.AddRange(_fileRecords);
 
+            _inventoryItemTags = new[]
+                {
+                new InventoryItemTag
+                {
+                    Id = 1,
+                    InventoryItemId = 2,
+                    TagId = 1
+                },
+                new InventoryItemTag
+                {
+                     Id = 1,
+                    InventoryItemId = 2,
+                    TagId = 4
+                },
+            };
+            context.InventoryItemsTags.AddRange(_inventoryItemTags);
             context.SaveChanges();
         }
 
@@ -418,7 +430,7 @@ namespace Tests
                 case "emailTemplates":
                     return _emailTemplates.Length;
                 case "roles":
-                    return _roles.Length;
+                    return _roleManager.Roles.ToListAsync().Result.Count;
                 case "inventoryItems":
                     return _inventoryItems.Length;
                 case "inventoryCategories":

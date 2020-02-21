@@ -50,6 +50,9 @@ import { OvertimeDisplayComponent } from './components/overtime-display/overtime
 import { AddEmployeeFormComponent } from './components/add-employee-form/add-employee-form.component';
 import { EditEmployeeFormComponent } from './components/edit-employee-form/edit-employee-form.component';
 import { BaseEmployeeFormComponent } from './components/base-employee-form/base-employee-form.component';
+import { AddInventoryFormComponent } from './components/inventory-add-form/inventory-add-form.component';
+import { EditInventoryFormComponent } from './components/inventory-edit-form/inventory-edit-form.component';
+import { BaseInventoryFormComponent } from './components/inventory-base-form/inventory-base-form.component';
 import { ClientFormComponent } from './components/client-form/client-form.component';
 import { HolidayRequestFormComponent } from './components/holiday-request-form/holiday-request-form.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -78,6 +81,9 @@ export function tokenGetter() {
     AddEmployeeFormComponent,
     EditEmployeeFormComponent,
     BaseEmployeeFormComponent,
+    AddInventoryFormComponent,
+    EditInventoryFormComponent,
+    BaseInventoryFormComponent,
     ClientFormComponent,
     HolidayRequestFormComponent
   ],
@@ -119,6 +125,8 @@ export function tokenGetter() {
   entryComponents: [
     AddEmployeeFormComponent,
     EditEmployeeFormComponent,
+    AddInventoryFormComponent,
+    EditInventoryFormComponent,
     ClientFormComponent,
     HolidayRequestFormComponent
   ],

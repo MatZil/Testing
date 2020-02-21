@@ -5,7 +5,7 @@ namespace XplicityApp.Services.Validations.Interfaces
 {
     public interface IHolidayValidationService
     {
-        Task ValidateHolidayConfirmationReadiness(int id);
+        Task ValidateHolidayConfirmationReadiness(int holidayId, int confirmerId);
         Task ValidateNewHolidayConfirmationReadiness(NewHolidayDto holidayDto);
     }
 }
