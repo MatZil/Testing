@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using XplicityApp.Configurations;
 using XplicityApp.Dtos.EmailTemplates;
@@ -44,6 +43,16 @@ namespace Tests
             _mapper ??
             throw new InvalidOperationException("Run initialize method before accessing this property.");
 
+        private UserManager<User> _userManager;
+        public UserManager<User> UserManager =>
+            _userManager ??
+            throw new InvalidOperationException("Run initialize method before accessing this property.");
+
+        private RoleManager<IdentityRole> _roleManager;
+        public RoleManager<IdentityRole> RoleManager =>
+            _roleManager ??
+            throw new InvalidOperationException("Run initialize method before accessing this property.");
+
         public void Initialize()
         {
             var serviceProvider = new ServiceCollection()
@@ -64,8 +73,6 @@ namespace Tests
                 cfg.AddProfile(new AutoMapperConfiguration());
             });
             _mapper = config.CreateMapper();
-
-            //return new Tuple<HolidayDbContext, IMapper>(_context, _mapper);
         }
 
         public IConfiguration GetConfiguration()
@@ -88,7 +95,7 @@ namespace Tests
                 new Mock<IPasswordHasher<User>>().Object,
                 new IUserValidator<User>[0],
                 new IPasswordValidator<User>[0],
-                new Mock<ILookupNormalizer>().Object,
+                null,
                 new Mock<IdentityErrorDescriber>().Object,
                 new Mock<IServiceProvider>().Object,
                 new Mock<ILogger<UserManager<User>>>().Object);
@@ -103,31 +110,38 @@ namespace Tests
             var roleManager = new RoleManager<IdentityRole>(
                 roleStore,
                 new IRoleValidator<IdentityRole>[0],
-                new Mock<ILookupNormalizer>().Object,
+                null,
                 new Mock<IdentityErrorDescriber>().Object,
                 new Mock<ILogger<RoleManager<IdentityRole>>>().Object);
 
             return roleManager;
         }
 
-        private void Seed(HolidayDbContext context)
+        private async void Seed(HolidayDbContext context)
         {
             var config = GetConfiguration();
 
-            _roles = new[]
+            var userStore = new UserStore<User>(context);
+            _userManager = InitializeUserManager();
+
+            var roleStore = new RoleStore<IdentityRole>(context);
+            _roleManager = InitializeRoleManager();
+
+            if (! await _roleManager.RoleExistsAsync("Admin"))
             {
-                new IdentityRole
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+
+            if (!context.Users.AnyAsync(x => x.UserName == "user1").Result)
+            {
+                var user = new User { UserName = "user1", Email = "user1@gmail.com", EmployeeId = 1 };
+                await _userManager.CreateAsync(user, "Pa$$W0rD!");
+
+                if (!_userManager.IsInRoleAsync(user, "Admin").Result)
                 {
-                    Name = "Employee",
-                    NormalizedName = "Employee",
-                },
-                new IdentityRole
-                {
-                    Name = "Admin",
-                    NormalizedName = "Admin",
-                },
-            };
-            context.Roles.AddRange(_roles);
+                    await _userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
 
             _emailTemplates = new[]
             {
@@ -416,7 +430,7 @@ namespace Tests
                 case "emailTemplates":
                     return _emailTemplates.Length;
                 case "roles":
-                    return _roles.Length;
+                    return _roleManager.Roles.ToListAsync().Result.Count;
                 case "inventoryItems":
                     return _inventoryItems.Length;
                 case "inventoryCategories":
