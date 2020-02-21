@@ -70,23 +70,9 @@ namespace Tests.Tests
             Assert.True(result, "Request for client's approval was successfully submitted.");
         }
 
-        //[Theory]
-        //[InlineData(1)]
-        //[InlineData(2)]
-        //public async void When_ConfirmingWithClient_Expect_True(int holidayId)
-        //{
-        //    var result = await _holidayConfirmService.RequestClientApproval(holidayId);
-        //    var updatedHoliday = await _holidaysRepository.GetById(holidayId);
-        //    var status = updatedHoliday.Status.ToString();
-
-        //    _output.WriteLine(status);
-
-        //    Assert.True(1==1);
-        //}
-
         [Theory]
         [InlineData(1, EmployeeClientStatus.CLIENT_CONFIRMED)]
-        public async void When_RequestingAdminApproval_Expect_True(int holidayId, string clientStatus)
+        public async void When_ConfirmingWithClient_Expect_StatusChangedToClientConfirmed(int holidayId, string clientStatus)
         {
             await _holidayConfirmService.RequestAdminApproval(holidayId, clientStatus);
             var updatedHoliday = await _holidaysRepository.GetById(holidayId);
@@ -98,7 +84,7 @@ namespace Tests.Tests
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
-        public async void When_ConfirmingHoliday_Expect_True(int holidayId)
+        public async void When_ConfirmingHoliday_Expect_StatusChangedToConfirmed(int holidayId)
         {
             await _holidayConfirmService.ConfirmHoliday(holidayId, 1);
 
