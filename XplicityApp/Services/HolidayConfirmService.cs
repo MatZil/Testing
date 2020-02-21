@@ -78,11 +78,14 @@ namespace XplicityApp.Services
             return true;
         }
 
-        public async Task ConfirmHoliday(int holidayId)
+        public async Task ConfirmHoliday(int holidayId, int confirmerId)
         {
             var getHolidayDto = await _holidaysService.GetById(holidayId);
+            var confirmer = await _repositoryEmployees.GetById(confirmerId);
+
             var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(getHolidayDto);
             updateHolidayDto.Status = HolidayStatus.Confirmed;
+            updateHolidayDto.ConfirmerId = confirmerId;
             await _holidaysService.Update(holidayId, updateHolidayDto);
 
             if (getHolidayDto.Type == HolidayType.Parental)
@@ -98,14 +101,15 @@ namespace XplicityApp.Services
 
         private async Task Notify(int fileId, int holidayId, EmployeeRoleEnum receiver)
         {
-            var holiday = await _repositoryHolidays.GetById(holidayId);
+            var holiday = await _holidaysService.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
+            var confirmerFullName = await _holidaysService.GetConfirmerFullName(holiday.ConfirmerId);
 
             switch (receiver)
             {
                 case EmployeeRoleEnum.Regular:
                     _logger.LogInformation($"About to send request notification to {employee.Email}");
-                    await _emailService.SendRequestNotification(fileId, employee.Email);
+                    await _emailService.SendRequestNotification(fileId, employee.Email, confirmerFullName);
                     break;
 
                 case EmployeeRoleEnum.Administrator:

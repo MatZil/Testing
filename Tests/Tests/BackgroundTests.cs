@@ -10,7 +10,7 @@ using XplicityApp.Services.BackgroundFunctions;
 using Microsoft.Extensions.Logging;
 using XplicityApp.Services.Interfaces;
 
-namespace Tests
+namespace Tests.Tests
 {
     [TestCaseOrderer("Tests.BackgroundTests.AlphabeticalOrderer", "Tests")]
     public class BackgroundTests

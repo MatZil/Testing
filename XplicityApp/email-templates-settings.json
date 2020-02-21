@@ -14,7 +14,7 @@
 
     "MonthlyReport": {
       "Subject": "Monthly Holidays' Report Grouped By Teams",
-      "Template": "{client.name} team's employees:\n\n{employee.fullName} went on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {holiday.overtimeHours}.",
+      "Template": "{client.name} team's employees:\n\n{employee.fullName} went on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {holiday.overtimeHours}",
       "Instructions": "{client.name} - Individual team's client's name.\n{employee.fullName} - Individual employee's full name.\n{holiday.paid} - Whether or not the holiday is paid.\n{holiday.type} - Holiday's type.\n{holiday.from} - Holiday's starting date.\n{holiday.to} - Holiday's beginning date.\n{holiday.overtimeHours} - Message about individual employee's overtime hours.\n\nPlease use the first line for team's title, second line for individual employee's info."
     },
 
@@ -32,8 +32,8 @@
 
     "RequestNotification": {
       "Subject": "Your holiday request has been generated!",
-      "Template": "You can download your holiday request document by clicking this link: {download.link}",
-      "Instructions": "{download.link} - A link to download request document."
+      "Template": "Your holiday request has been confirmed by {confirmer.fullName}. You can download your holiday request document by clicking this link: {download.link}",
+      "Instructions": "{confirmer.fullName} - Full name of the administrator who confirmed the request.\n{download.link} - A link to download request document."
     },
 
     "OrderNotification": {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using XplicityApp.Dtos.Tags;
 using XplicityApp.Infrastructure.Database.Models;
 
 namespace XplicityApp.Dtos.Inventory
@@ -28,5 +30,7 @@ namespace XplicityApp.Dtos.Inventory
         public string AssignedTo { get; set; }
 
         public bool Archived { get; set; }
+
+        public ICollection<TagDto> Tags { get; set; }
     }
 }

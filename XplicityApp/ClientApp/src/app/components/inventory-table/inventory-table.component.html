@@ -1,44 +1,45 @@
-<button nz-button nzType="primary" (click)="showNewItemModal()">Add item</button>
+<button mat-flat-button nzType="primary" (click)="openAddForm()">Add item</button>
 <nz-table #basicTable [nzData]="equipment">
-    <thead>
-      <tr>
-        <th nzCustomFilter>
-            Category
-            <i class="ant-table-filter-icon" id="byCategory" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="category" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
-        </th>
-        <th>Name</th>
-        <th>Serial number</th>
-        <th>Purchase Date</th>
-        <th>Price</th>
-        <th nzCustomFilter>
-            Assigned To
-            <i class="ant-table-filter-icon" id="byOwner" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="owner" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
-        </th>
-        <th>
-            Expiration Date
-            <nz-date-picker [(ngModel)]="searchDateValue" (ngModelChange)="search()"></nz-date-picker>
-        </th>
-        <th>Comment</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of basicTable.data">
-        <td>{{data.category.name}}</td>
-        <td>{{data.name}}</td>
-        <td>{{data.serialNumber}}</td>
-        <td>{{data.purchaseDate | date}}</td>
-        <td>{{data.price}}</td>
-        <td>{{data.assignedTo}}</td>
-        <td>{{data.expiryDate | date}}</td>
-        <td nzBreakWork>{{data.comment}}</td>
-        <td>
-          <button nz-button nzType="default" (click)="modify(data)">
-            <i nz-icon nzType="edit" nzTheme="outline"></i>
-          </button>
-        </td>
-      </tr>
-    </tbody>
+  <thead>
+    <tr>
+    <tr>
+      <th nzCustomFilter>
+        Category
+        <i class="ant-table-filter-icon" id="byCategory" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="category" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+      </th>
+      <th>Name</th>
+      <th>Serial number</th>
+      <th>Purchase Date</th>
+      <th>Price</th>
+      <th nzCustomFilter>
+        Assigned To
+        <i class="ant-table-filter-icon" id="byOwner" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="owner" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+      </th>
+      <th>
+        Expiration Date
+        <nz-date-picker [(ngModel)]="searchDateValue" (ngModelChange)="search()"></nz-date-picker>
+      </th>
+      <th>Comment</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{data.category.name}}</td>
+      <td>{{data.name}}</td>
+      <td>{{data.serialNumber}}</td>
+      <td>{{data.purchaseDate | date}}</td>
+      <td>{{data.price}}</td>
+      <td>{{data.assignedTo}}</td>
+      <td>{{data.expiryDate | date}}</td>
+      <td nzBreakWork>{{data.comment}}</td>
+      <td>
+        <button mat-flat-button (click)="openEditForm(data)">
+          <i nz-icon nzType="edit" nzTheme="outline"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
 </nz-table>
 <nz-dropdown-menu #category="nzDropdownMenu" id="byCategory">
     <div class="search-box">
@@ -58,130 +59,3 @@
         <button nz-button nzSize="small" (click)="resetOwner()">Reset</button>
     </div>
 </nz-dropdown-menu>
-<nz-modal [(nzVisible)]="isVisibleNewItemModal" (nzOnCancel)="closeNewItemModal()"
-          [nzTitle]="isModifying ? 'Edit equipment' : 'Add new equipment'" nzWidth="600" [nzContent]="newItemModalContent"
-          [nzFooter]="newItemModalFooter">
-  <ng-template #newItemModalContent>
-    <form nz-form [formGroup]="input" (onsubmit)="saveInventoryItem()" nzLayout="horizontal">
-      <nz-form-item>
-        <nz-form-label [nzSpan]="5" nzFor="inventoryCategoryId" nzRequired>Category</nz-form-label>
-        <nz-form-control [nzSpan]="10" [nzErrorTip]="categoryErrorTip">
-          <nz-select formControlName="inventoryCategoryId" nzPlaceHolder="Select item category">
-            <nz-option *ngFor="let category of categories" [nzValue]=category.id [nzLabel]="category.name">
-            </nz-option>
-          </nz-select>
-          <ng-template #categoryErrorTip let-control>
-            <ng-container *ngIf="control.hasError('required')">
-              Category is required!
-            </ng-container>
-          </ng-template>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSpan]="5" nzFor="employeeId">Employee</nz-form-label>
-        <nz-form-control [nzSpan]="10">
-          <nz-select formControlName="employeeId" nzPlaceHolder="Select employee"
-                     [(ngModel)]="selectedEmployee" nzShowSearch nzAllowClear>
-            <nz-option nzLabel="Office" nzValue=""></nz-option>
-            <nz-option *ngFor="let employee of employees" [nzValue]="employee.id"
-                       [nzLabel]="employee.name + ' ' + employee.surname">
-            </nz-option>
-          </nz-select>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSpan]="5" nzFor="name" nzRequired>Name</nz-form-label>
-        <nz-form-control [nzErrorTip]="nameErrorTip" [nzSpan]="10">
-          <input nz-input autocomplete="off" formControlName="name" placeholder="Name" />
-          <ng-template #nameErrorTip let-control>
-            <ng-container *ngIf="control.hasError('required')">
-              Name is required!
-            </ng-container>
-          </ng-template>
-        </nz-form-control>
-      </nz-form-item>
-
-      <mat-form-field class="example-chip-list">
-        <mat-label>Tags:</mat-label>
-        <mat-chip-list #chipList aria-label="Tag selection">
-          <mat-chip *ngFor="let tag of tagsSelected"
-                    [selectable]="true"
-                    [removable]="true"
-                    (removed)="remove(tag)">
-            {{tag.Title}}
-            <mat-icon matChipRemove>cancel</mat-icon>
-          </mat-chip>
-          <input #tagInput
-                 [matChipInputFor]="chipList"
-                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                 (matChipInputTokenEnd)="add($event)"
-                 [matAutocomplete]="auto"
-                 [formControl]="tagsControl"
-                 placeholder="New tag...">
-        </mat-chip-list>
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-          <mat-option *ngFor="let tag of tagSuggestions | async" [value]="tag.id">
-            {{tag.title}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-
-      <nz-form-item>
-        <nz-form-label [nzSpan]="5" nzFor="serialNumber" nzRequired>Serial number</nz-form-label>
-        <nz-form-control [nzSpan]="10" [nzErrorTip]="serialNumberErrorTip">
-          <input nz-input autocomplete="off" formControlName="serialNumber" placeholder="Serial number" />
-          <ng-template #serialNumberErrorTip let-control>
-            <ng-container *ngIf="control.hasError('required')">
-              Serial number is required!
-            </ng-container>
-          </ng-template>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSpan]="5" nzFor="price" nzRequired>Price</nz-form-label>
-        <nz-form-control [nzSpan]="10" [nzErrorTip]="priceErrorTip">
-          <input type="number" autocomplete="off" nz-input formControlName="price" placeholder="Price" />
-          <ng-template #priceErrorTip let-control>
-            <ng-container *ngIf="control.hasError('required')">
-              Price is required!
-            </ng-container>
-          </ng-template>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSpan]="5" nzFor="purchaseDate" nzRequired>Purchase date</nz-form-label>
-        <nz-form-control [nzSpan]="10" [nzErrorTip]="purchaseDateErrorTip">
-          <nz-date-picker formControlName="purchaseDate"></nz-date-picker>
-          <ng-template #purchaseDateErrorTip let-control>
-            <ng-container *ngIf="control.hasError('required')">
-              Date of purchase is required!
-            </ng-container>
-          </ng-template>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSpan]="5" nzFor="expirationDate" nzRequired>Expiration date</nz-form-label>
-        <nz-form-control [nzSpan]="10" [nzErrorTip]="expiryDateErrorTip">
-          <nz-date-picker formControlName="expiryDate"></nz-date-picker>
-          <ng-template #expiryDateErrorTip let-control>
-            <ng-container *ngIf="control.hasError('required')">
-              Expiration date is required!
-            </ng-container>
-          </ng-template>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSpan]="5" nzFor="comment">Comment</nz-form-label>
-        <nz-form-control [nzSpan]="10">
-          <textarea type="text" autocomplete="off" nz-input formControlName="comment" placeholder="Comment">
-                        </textarea>
-        </nz-form-control>
-      </nz-form-item>
-    </form>
-  </ng-template>
-  <ng-template #newItemModalFooter>
-    <button *ngIf="isModifying" nzJustify="start" nz-button nzType="default" (click)="archiveItem()">Archive</button>
-    <button nz-button nzType="default" (click)="closeNewItemModal()">Cancel</button>
-    <button nz-button nzType="default" (click)="saveInventoryItem()" [disabled]="this.input.invalid">Save</button>
-  </ng-template>
-</nz-modal>

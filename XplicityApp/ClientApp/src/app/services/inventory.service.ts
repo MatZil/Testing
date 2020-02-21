@@ -3,6 +3,7 @@ import { InventoryItem } from '../models/inventory-item';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
+import { NewInventoryItem } from '../models/new-inventory-item';
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +21,12 @@ export class InventoryService {
     return this.http.get<InventoryItem[]>(this.inventoryItemApi);
   }
 
-  createNewInventoryItem(newInventoryItem: FormGroup) {
+  createNewInventoryItem(newInventoryItem: NewInventoryItem) {
     console.log(newInventoryItem);
     return this.http.post(this.inventoryItemApi, newInventoryItem);
   }
 
-  updateInventoryItem(id: number, inventoryItem: FormGroup) {
+  updateInventoryItem(id: number, inventoryItem: InventoryItem) {
     return this.http.put(`${this.inventoryItemApi}/${id}`, inventoryItem);
   }
 }

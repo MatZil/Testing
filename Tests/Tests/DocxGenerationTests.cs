@@ -9,7 +9,7 @@ using XplicityApp.Services;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using Xunit;
 
-namespace Tests
+namespace Tests.Tests
 {
     public class DocxGenerationTests
     {

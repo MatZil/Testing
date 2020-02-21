@@ -1,4 +1,4 @@
-export class NewIventoryItem {
+export class NewInventoryItem {
     name: string;
     serialNumber: string;
     purchaseDate: Date;

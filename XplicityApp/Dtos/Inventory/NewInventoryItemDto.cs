@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace XplicityApp.Dtos.Inventory
 {
@@ -19,5 +20,7 @@ namespace XplicityApp.Dtos.Inventory
         public decimal Price { get; set; }
 
         public int? EmployeeId { get; set; }
+
+        public ICollection<int> TagIds { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using XplicityApp.Configurations;
 using XplicityApp.Dtos.EmailTemplates;
@@ -15,7 +16,7 @@ using XplicityApp.Dtos.Employees;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
-
+using XplicityApp.Infrastructure.Static_Files;
 
 namespace Tests
 {
@@ -30,6 +31,8 @@ namespace Tests
         private InventoryItem[] _inventoryItems;
         private InventoryCategory[] _inventoryCategories;
         private Tag[] _tags;
+        private InventoryItemTag[] _inventoryItemTags;
+        private FileRecord[] _fileRecords;
 
         private HolidayDbContext _context;
         public HolidayDbContext HolidayDbContext =>
@@ -69,7 +72,8 @@ namespace Tests
         {
             var config = new ConfigurationBuilder()
                           .SetBasePath(Directory.GetCurrentDirectory())
-                          .AddJsonFile("testSettings.json")
+                          .AddJsonFile("appsettings.json")
+                          .AddJsonFile("email-templates-settings.json")
                           .Build();
             return config;
         }
@@ -108,6 +112,8 @@ namespace Tests
 
         private void Seed(HolidayDbContext context)
         {
+            var config = GetConfiguration();
+
             _roles = new[]
             {
                 new IdentityRole
@@ -126,19 +132,62 @@ namespace Tests
             _emailTemplates = new[]
             {
                 new EmailTemplate
-                {
-                    Purpose = "purpose1",
-                    Subject = "subject1",
-                    Template = "template1",
-                    Instructions = "instructions1"
-                },
-                new EmailTemplate
-                {
-                    Purpose = "purpose2",
-                    Subject = "subject2",
-                    Template = "template2",
-                    Instructions = "instructions2"
-                },
+                    {
+                        Id = 1,
+                        Purpose = EmailPurposes.ADMIN_CONFIRMATION,
+                        Subject = config["EmailTemplates:AdminConfirmation:Subject"],
+                        Template = config["EmailTemplates:AdminConfirmation:Template"],
+                        Instructions = config["EmailTemplates:AdminConfirmation:Instructions"]
+                    },
+                    new EmailTemplate
+                    {
+                        Id = 2,
+                        Purpose = EmailPurposes.CLIENT_CONFIRMATION,
+                        Subject = config["EmailTemplates:ClientConfirmation:Subject"],
+                        Template = config["EmailTemplates:ClientConfirmation:Template"],
+                        Instructions = config["EmailTemplates:ClientConfirmation:Instructions"]
+                    },
+
+                    new EmailTemplate
+                    {
+                        Id = 3,
+                        Purpose = EmailPurposes.MONTHLY_HOLIDAYS_REPORT,
+                        Subject = config["EmailTemplates:MonthlyReport:Subject"],
+                        Template = config["EmailTemplates:MonthlyReport:Template"],
+                        Instructions = config["EmailTemplates:MonthlyReport:Instructions"]
+                    },
+                    new EmailTemplate
+                    {
+                        Id = 4,
+                        Purpose = EmailPurposes.HOLIDAY_REMINDER,
+                        Subject = config["EmailTemplates:HolidayNotification:Subject"],
+                        Template = config["EmailTemplates:HolidayNotification:Template"],
+                        Instructions = config["EmailTemplates:HolidayNotification:Instructions"]
+                    },
+                    new EmailTemplate
+                    {
+                        Id = 5,
+                        Purpose = EmailPurposes.BIRTHDAY_REMINDER,
+                        Subject = config["EmailTemplates:BirthdayReminder:Subject"],
+                        Template = config["EmailTemplates:BirthdayReminder:Template"],
+                        Instructions = config["EmailTemplates:BirthdayReminder:Instructions"]
+                    },
+                    new EmailTemplate
+                    {
+                        Id = 6,
+                        Purpose = EmailPurposes.REQUEST_NOTIFICATION,
+                        Subject = config["EmailTemplates:RequestNotification:Subject"],
+                        Template = config["EmailTemplates:RequestNotification:Template"],
+                        Instructions = config["EmailTemplates:RequestNotification:Instructions"]
+                    },
+                    new EmailTemplate
+                    {
+                        Id = 7,
+                        Purpose = EmailPurposes.ORDER_NOTIFICATION,
+                        Subject = config["EmailTemplates:OrderNotification:Subject"],
+                        Template = config["EmailTemplates:OrderNotification:Template"],
+                        Instructions = config["EmailTemplates:OrderNotification:Instructions"]
+                    }
             };
             context.EmailTemplates.AddRange(_emailTemplates);
 
@@ -273,6 +322,7 @@ namespace Tests
                     Comment = null,
                     Category = context.InventoryCategories.Find(1),
                     InventoryCategoryId = 1
+
                 },
                 new InventoryItem
                 {
@@ -300,9 +350,54 @@ namespace Tests
                     Id = 2,
                     Title = "Tag2"
                 },
+                    new Tag
+                {
+                    Id = 3,
+                    Title = "No3"
+                },
+                    new Tag
+                    {
+                    Id = 4,
+                    Title = "No4"
+                },
             };
             context.Tags.AddRange(_tags);
 
+            _fileRecords = new[]
+            {
+                new FileRecord
+                {
+                    Id = 1,
+                    Name = "Order",
+                    Type = FileTypeEnum.Order,
+                    CreatedAt = DateTime.Today
+                },
+                new FileRecord
+                {
+                    Id = 2,
+                    Name = "Request",
+                    Type = FileTypeEnum.Request,
+                    CreatedAt = DateTime.Today
+                }
+            };
+            context.FileRecords.AddRange(_fileRecords);
+
+            _inventoryItemTags = new[]
+                {
+                new InventoryItemTag
+                {
+                    Id = 1,
+                    InventoryItemId = 2,
+                    TagId = 1
+                },
+                new InventoryItemTag
+                {
+                     Id = 1,
+                    InventoryItemId = 2,
+                    TagId = 4
+                },
+            };
+            context.InventoryItemsTags.AddRange(_inventoryItemTags);
             context.SaveChanges();
         }
 

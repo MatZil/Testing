@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using XplicityApp.Dtos.Tags;
 
 namespace XplicityApp.Dtos.Inventory
 {
@@ -21,5 +23,7 @@ namespace XplicityApp.Dtos.Inventory
         public int? EmployeeId { get; set; }
 
         public bool Archived { get; set; }
+
+        public ICollection<TagDto> Tags { get; set; }
     }
 }
