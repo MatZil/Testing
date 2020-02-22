@@ -42,10 +42,6 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
   tagsAfterFiltration: Tag[] = [];
   tagSuggestions: Observable<Tag[]>;
 
-  tagsForm: FormArray;
-
-  items: FormArray;
-
   @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
@@ -85,8 +81,10 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
       employeeId: [''],
       tagIds: this.formBuilder.array([])
     });
+
     this.onCategoryChange();
     this.stripTimeFromDates();
+    this.addTagsForm();
 
   }
 
@@ -142,7 +140,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     if (this._validateTag(tagTitle)) {
       this.tagsService.createNewTag({ Title: tagTitle }).subscribe(id => {
         this.tagsSelected.push({ Id: Number(id), Title: tagTitle });
-        this.addTagsForm({ Id: Number(id), Title: tagTitle });
+        this.addTagsForm();
       }, error => {
         console.log(error);
       });
@@ -164,13 +162,16 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     if (index >= 0) {
       this.tagsSelected.splice(index, 1);
     }
+
+    this.addTagsForm();
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.tagsSelected.push({ Id: event.option.value, Title: event.option.viewValue });
-    this.addTagsForm({ Id: event.option.value, Title: event.option.viewValue});
     this.tagInput.nativeElement.value = '';
     this.tagsControl.setValue(null);
+
+    this.addTagsForm();
   }
 
   private _tagsFilter(value: string): Tag[] {
@@ -199,8 +200,16 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     return this.baseForm.get('tagIds') as FormArray;
   }
 
-  addTagsForm(tag: Tag) {
-    this.tags.push(this.formBuilder.control(tag.Id));
+  addTagsForm() {
+    this.removeTags();
+
+    this.tagsSelected.forEach(tag => {
+      this.tags.push(this.formBuilder.control(tag.Id));
+    });
+  }
+
+  removeTags() {
+    this.tags.clear();
   }
 }
 
