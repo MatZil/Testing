@@ -96,6 +96,7 @@ export class InventoryTableComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(inventoryItemToUpdate => {
       if (inventoryItemToUpdate) {
+        console.log(inventoryItemToUpdate);
         this.saveInventoryItem(inventoryItemToUpdate, inventoryItem.id);
       }
     });

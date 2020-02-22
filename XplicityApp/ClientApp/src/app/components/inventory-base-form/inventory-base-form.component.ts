@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, forwardRef, ViewChild, ElementRef } from '@angular/core';
 import { InventoryItem } from 'src/app/models/inventory-item';
 import { FormGroup, FormBuilder, Validators, NG_VALUE_ACCESSOR, ControlValueAccessor, FormArray } from '@angular/forms';
-import { InventoryService } from 'src/app/services/inventory.service';
 import { InventoryCategory } from 'src/app/models/inventory-category';
 import { InventoryCategoryService } from 'src/app/services/inventory-category.service';
 import { UserService } from 'src/app/services/user.service';
@@ -15,6 +14,7 @@ import { Tag } from '../../models/tag';
 import { FormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-base-inventory-form',
@@ -42,6 +42,8 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
   tagsAfterFiltration: Tag[] = [];
   tagSuggestions: Observable<Tag[]>;
 
+  tagsForm: FormArray;
+
   items: FormArray;
 
   @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
@@ -53,7 +55,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     private userService: UserService,
     private datePipe: DatePipe,
     private tagsService: TagService,
-    private snackBar: MatSnackBar
+    private alterService: AlertService
   ) {
     this.tagSuggestions = this.tagsControl.valueChanges.pipe(
       startWith(null),
@@ -80,8 +82,8 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
       assignedTo: [''],
       comment: [''],
       archived: [false],
-      tags: this.formBuilder.array([this.createItem(null)]),
-      employeeId: ['']
+      employeeId: [''],
+      tagIds: this.formBuilder.array([])
     });
     this.onCategoryChange();
     this.stripTimeFromDates();
@@ -140,12 +142,12 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     if (this._validateTag(tagTitle)) {
       this.tagsService.createNewTag({ Title: tagTitle }).subscribe(id => {
         this.tagsSelected.push({ Id: Number(id), Title: tagTitle });
-        this.saveTags({ Id: Number(id), Title: tagTitle });
+        this.addTagsForm({ Id: Number(id), Title: tagTitle });
       }, error => {
         console.log(error);
       });
     } else {
-      this.showWarningMessage('Tag is invalid!');
+      this.alterService.displayMessage("Tag is invalid!");
     }
 
     if (input) {
@@ -162,11 +164,11 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     if (index >= 0) {
       this.tagsSelected.splice(index, 1);
     }
-
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.tagsSelected.push({ Id: event.option.value, Title: event.option.viewValue });
+    this.addTagsForm({ Id: event.option.value, Title: event.option.viewValue});
     this.tagInput.nativeElement.value = '';
     this.tagsControl.setValue(null);
   }
@@ -177,12 +179,6 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     });
 
     return this.tagsAfterFiltration;
-  }
-
-  showWarningMessage(message: string) {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
-    })
   }
 
   clearTagList() {
@@ -199,16 +195,12 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     return true;
   }
 
-  saveTags(tag : Tag) {
-    this.items = this.baseForm.get('tags') as FormArray;
-    this.items.push(this.createItem(tag));
+  get tags() {
+    return this.baseForm.get('tagIds') as FormArray;
   }
 
-  createItem(tag : Tag): FormGroup {
-    return this.formBuilder.group({
-      id: tag.Id,
-      title: tag.Title,
-    });
+  addTagsForm(tag: Tag) {
+    this.tags.push(this.formBuilder.control(tag.Id));
   }
 }
 

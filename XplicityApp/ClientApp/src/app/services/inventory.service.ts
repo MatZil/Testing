@@ -2,7 +2,6 @@ import { Injectable, Inject } from '@angular/core';
 import { InventoryItem } from '../models/inventory-item';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { FormGroup } from '@angular/forms';
 import { NewInventoryItem } from '../models/new-inventory-item';
 
 @Injectable({
@@ -22,7 +21,6 @@ export class InventoryService {
   }
 
   createNewInventoryItem(newInventoryItem: NewInventoryItem) {
-    console.log(newInventoryItem);
     return this.http.post(this.inventoryItemApi, newInventoryItem);
   }
 
