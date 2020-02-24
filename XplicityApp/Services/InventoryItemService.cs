@@ -83,15 +83,10 @@ namespace XplicityApp.Services
 
             return inventoryItemsDto;
         }
-        public async Task<ICollection<GetInventoryItemDto>> GetByInventoryItemStatus(InventoryItemEnum inventoryItemStatus)
+        public async Task<ICollection<GetInventoryItemDto>> GetByInventoryItemStatus(bool inventoryItemStatus)
         {
             var inventoryItems = await _repository.GetByInventoryItemStatus(inventoryItemStatus);
             var inventoryItemsDto = _mapper.Map<GetInventoryItemDto[]>(inventoryItems);
-
-            foreach (var inventoryItemDto in inventoryItemsDto)
-            {
-                inventoryItemDto.Tags = await GetTagsListByItemId(inventoryItemDto.Id);
-            }
 
             return inventoryItemsDto;
         }

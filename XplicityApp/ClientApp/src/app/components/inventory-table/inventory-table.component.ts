@@ -27,7 +27,9 @@ export class InventoryTableComponent implements OnInit {
   @Input()
   employeeId: number;
 
-  selectedInventoryStatus: InventoryStatus = InventoryStatus.Former;
+  //selectedInventoryStatus: InventoryStatus = InventoryStatus.Former;
+
+  selectedInventoryStatus: boolean = false;
 
   inventoryItemToUpdate: InventoryItem
 
@@ -58,17 +60,14 @@ export class InventoryTableComponent implements OnInit {
     private userService: UserService ) { }
 
   ngOnInit() {
-    this.userService.getCurrentUser().subscribe(user => {
-      this.currentUser = user;
-    });
-    this.getAllUsers();
     this.getCategoriesList();
     this.refreshTable(this.selectedInventoryStatus);
   }
 
-  refreshTable(status: InventoryStatus) {
+  refreshTable(status: boolean) {
     this.inventoryService.getIventoryByStatus(status).subscribe(inventoryItems => {
       this.equipment = inventoryItems;
+      this.listOfData = [...this.equipment];
     });
   }
 

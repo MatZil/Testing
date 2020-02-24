@@ -9,6 +9,6 @@ namespace XplicityApp.Infrastructure.Repositories
     {
         Task<ICollection<InventoryItem>> GetByEmployeeId(int employeeId);
 
-        Task<ICollection<InventoryItem>> GetByInventoryItemStatus(InventoryItemEnum inventoryItemStatus);
+        Task<ICollection<InventoryItem>> GetByInventoryItemStatus(bool inventoryItemStatus);
     }
 }
