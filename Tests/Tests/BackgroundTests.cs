@@ -9,6 +9,7 @@ using Nager.Date;
 using XplicityApp.Services.BackgroundFunctions;
 using Microsoft.Extensions.Logging;
 using XplicityApp.Services.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Tests.Tests
 {
@@ -18,6 +19,7 @@ namespace Tests.Tests
         private readonly EmployeesRepository _employeesRepository;
         private readonly ITimeService _mockTimeService;
         private readonly EmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
+        private readonly BackgroundEmailSender _backgroundEmailSender;
 
         public BackgroundTests()
         {
@@ -28,9 +30,18 @@ namespace Tests.Tests
 
             _employeesRepository = new EmployeesRepository(context, userManager);
             _mockTimeService = new Mock<ITimeService>().Object;
-            var mockLogger = new Mock<ILogger<EmployeeHolidaysBackgroundUpdater>>().Object;
+            var mockLoggerUpdater = new Mock<ILogger<EmployeeHolidaysBackgroundUpdater>>().Object;
             var mockEmployeesService = new Mock<IEmployeesService>().Object;
-            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater(_mockTimeService, _employeesRepository, mockLogger, mockEmployeesService);
+            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater(_mockTimeService, _employeesRepository, mockLoggerUpdater, mockEmployeesService);
+
+
+            var holidaysRepository = new HolidaysRepository(context);
+            var mockEmailService = new Mock<IEmailService>().Object;
+            var holidayInfoService = new Mock<IHolidayInfoService>().Object;
+            var webHostEnvironment = new Mock<IWebHostEnvironment>().Object;
+            var mockLoggerEmailSender = new Mock<ILogger<BackgroundEmailSender>>().Object;
+            _backgroundEmailSender = new BackgroundEmailSender(_mockTimeService, _employeesRepository, holidaysRepository, 
+                                                                mockEmailService, holidayInfoService, webHostEnvironment, mockLoggerEmailSender);
         }
 
         [Fact]

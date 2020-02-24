@@ -1,6 +1,8 @@
 ﻿using Nager.Date;
 using System;
 using XplicityApp.Infrastructure.Utils.Interfaces;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace XplicityApp.Infrastructure.Utils
 {
@@ -9,6 +11,22 @@ namespace XplicityApp.Infrastructure.Utils
         public DateTime GetCurrentTime()
         {
             return DateTime.Now;
+        }
+
+        public DateTime GetCurrentTimeForBackgroundTasks(IWebHostEnvironment webHostEnvironment)
+        {
+            DateTime currentTime;
+
+            if (webHostEnvironment.IsProduction())
+            {
+                currentTime = GetCurrentTime();
+            }
+            else
+            {
+                currentTime = DateTime.MinValue; //makes sure background tasks are not triggered.
+            }
+
+            return currentTime;
         }
 
         public bool IsFreeWorkDay(DateTime workDay)
