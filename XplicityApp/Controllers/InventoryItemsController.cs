@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using XplicityApp.Dtos.Inventory;
+using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services.Interfaces;
 
@@ -28,6 +29,15 @@ namespace XplicityApp.Controllers
         public async Task<IActionResult> Get(int employeeId)
         {
             var items = await _inventoryItemService.GetByEmployeeId(employeeId);
+            return Ok(items);
+        }
+
+        [HttpGet]
+        [Produces(typeof(GetInventoryItemDto[]))]
+        [Route("GetByStatus")]
+        public async Task<IActionResult> GetByInventoryItemStatus(InventoryItemEnum inventoryItemStatus)
+        {
+            var items = await _inventoryItemService.GetByInventoryItemStatus(inventoryItemStatus);
             return Ok(items);
         }
 

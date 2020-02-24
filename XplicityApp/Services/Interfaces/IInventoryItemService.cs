@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using XplicityApp.Dtos.Inventory;
 using XplicityApp.Dtos.Tags;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 
 namespace XplicityApp.Services.Interfaces
 {
@@ -13,5 +14,7 @@ namespace XplicityApp.Services.Interfaces
         Task<ICollection<GetInventoryItemDto>> GetByEmployeeId(int employeeId);
         Task<InventoryItem> Create(NewInventoryItemDto newInventoryItem);
         Task Update(int id, UpdateInventoryItemDto updateInventoryItemDto);
+
+        Task<ICollection<GetInventoryItemDto>> GetByInventoryItemStatus(InventoryItemEnum inventoryItemStatus);
     }
 }

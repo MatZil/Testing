@@ -6,6 +6,7 @@ using AutoMapper;
 using XplicityApp.Dtos.Inventory;
 using XplicityApp.Dtos.Tags;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services.Interfaces;
 
@@ -73,6 +74,18 @@ namespace XplicityApp.Services
         public async Task<ICollection<GetInventoryItemDto>> GetByEmployeeId(int employeeId)
         {
             var inventoryItems = await _repository.GetByEmployeeId(employeeId);
+            var inventoryItemsDto = _mapper.Map<GetInventoryItemDto[]>(inventoryItems);
+
+            foreach (var inventoryItemDto in inventoryItemsDto)
+            {
+                inventoryItemDto.Tags = await GetTagsListByItemId(inventoryItemDto.Id);
+            }
+
+            return inventoryItemsDto;
+        }
+        public async Task<ICollection<GetInventoryItemDto>> GetByInventoryItemStatus(InventoryItemEnum inventoryItemStatus)
+        {
+            var inventoryItems = await _repository.GetByInventoryItemStatus(inventoryItemStatus);
             var inventoryItemsDto = _mapper.Map<GetInventoryItemDto[]>(inventoryItems);
 
             foreach (var inventoryItemDto in inventoryItemsDto)

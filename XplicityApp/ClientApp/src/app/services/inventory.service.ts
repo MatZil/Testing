@@ -1,9 +1,10 @@
 import { Injectable, Inject } from '@angular/core';
 import { InventoryItem } from '../models/inventory-item';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
 import { NewInventoryItem } from '../models/new-inventory-item';
+import { InventoryStatus } from '../models/inventory-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,12 @@ export class InventoryService {
 
   getAllInventoryItems(): Observable<InventoryItem[]> {
     return this.http.get<InventoryItem[]>(this.inventoryItemApi);
+  }
+
+  getIventoryByStatus(status: InventoryStatus): Observable<InventoryItem[]> {
+    let parameters = new HttpParams();
+    parameters = parameters.append('inventoryItemStatus', status.toString());
+    return this.http.get<InventoryItem[]>(`${this.inventoryItemApi}/GetByStatus`, { params: parameters });
   }
 
   createNewInventoryItem(newInventoryItem: NewInventoryItem) {

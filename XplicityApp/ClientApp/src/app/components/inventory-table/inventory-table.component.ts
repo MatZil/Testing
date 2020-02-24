@@ -15,6 +15,7 @@ import { Tag } from '../../models/tag';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { NewInventoryItem } from '../../models/new-inventory-item';
+import { InventoryStatus } from '../../models/inventory-status.enum';
 
 @Component({
   selector: 'app-inventory-table',
@@ -26,10 +27,13 @@ export class InventoryTableComponent implements OnInit {
   @Input()
   employeeId: number;
 
+  selectedInventoryStatus: InventoryStatus = InventoryStatus.Former;
+
   inventoryItemToUpdate: InventoryItem
 
   categories: InventoryCategory[] = [];
   employees: TableRowUserModel[] = [];
+  currentUser: TableRowUserModel;
 
   searchCategoryValue = '';
   searchOwnerValue = '';
@@ -51,20 +55,20 @@ export class InventoryTableComponent implements OnInit {
     private inventoryService: InventoryService,
     private categoryService: InventoryCategoryService,
     public dialog: MatDialog,
-    private userService: UserService
-  ) {
-  }
+    private userService: UserService ) { }
 
   ngOnInit() {
+    this.userService.getCurrentUser().subscribe(user => {
+      this.currentUser = user;
+    });
     this.getAllUsers();
     this.getCategoriesList();
-    this.refreshTable();
+    this.refreshTable(this.selectedInventoryStatus);
   }
 
-  refreshTable() {
-    this.inventoryService.getAllInventoryItems().subscribe(inventoryItems => {
+  refreshTable(status: InventoryStatus) {
+    this.inventoryService.getIventoryByStatus(status).subscribe(inventoryItems => {
       this.equipment = inventoryItems;
-      this.listOfData = [...this.equipment];
     });
   }
 
@@ -103,13 +107,13 @@ export class InventoryTableComponent implements OnInit {
 
   saveInventoryItem(updateInventoryItem: InventoryItem, id: number) {
     this.inventoryService.updateInventoryItem(id, updateInventoryItem).subscribe(() => {
-      this.refreshTable();
+      this.refreshTable(this.selectedInventoryStatus);
     });
   }
 
   addInventoryItem(newInventoryItem: NewInventoryItem) {
     this.inventoryService.createNewInventoryItem(newInventoryItem).subscribe(() => {
-      this.refreshTable();
+      this.refreshTable(this.selectedInventoryStatus);
 
     });
   }
@@ -168,5 +172,8 @@ export class InventoryTableComponent implements OnInit {
           : -1
     );
   }
-  
+
+  isAdmin(): boolean {
+    return this.userService.isAdmin();
+  }
 }

@@ -1,61 +1,75 @@
-<button mat-flat-button nzType="primary" (click)="openAddForm()">Add item</button>
-<nz-table #basicTable [nzData]="equipment">
-  <thead>
-    <tr>
-    <tr>
-      <th nzCustomFilter>
-        Category
-        <i class="ant-table-filter-icon" id="byCategory" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="category" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
-      </th>
-      <th>Name</th>
-      <th>Serial number</th>
-      <th>Purchase Date</th>
-      <th>Price</th>
-      <th nzCustomFilter>
-        Assigned To
-        <i class="ant-table-filter-icon" id="byOwner" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="owner" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
-      </th>
-      <th>
-        Expiration Date
-        <nz-date-picker [(ngModel)]="searchDateValue" (ngModelChange)="search()"></nz-date-picker>
-      </th>
-      <th>Comment</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let data of basicTable.data">
-      <td>{{data.category.name}}</td>
-      <td>{{data.name}}</td>
-      <td>{{data.serialNumber}}</td>
-      <td>{{data.purchaseDate | date}}</td>
-      <td>{{data.price}}</td>
-      <td>{{data.assignedTo}}</td>
-      <td>{{data.expiryDate | date}}</td>
-      <td nzBreakWork>{{data.comment}}</td>
-      <td>
-        <button mat-flat-button (click)="openEditForm(data)">
-          <i nz-icon nzType="edit" nzTheme="outline"></i>
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
-<nz-dropdown-menu #category="nzDropdownMenu" id="byCategory">
+<div>
+  <div class="divider">
+    <button mat-flat-button nzType="primary" (click)="openAddForm()">Add item</button>
+    <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Inventory status" (selectionChange)="refreshTable(selectedInventoryStatus)" [(value)]="selectedInventoryStatus">
+      <mat-option [value]="0">
+        Current inventory
+      </mat-option>
+      <mat-option [value]="1">
+        Archived inventory
+      </mat-option>
+    </mat-select>
+  </div>
+</div>
+<div *ngIf="equipment">
+  <nz-table #basicTable [nzData]="equipment">
+    <thead>
+      <tr>
+      <tr>
+        <th nzCustomFilter>
+          Category
+          <i class="ant-table-filter-icon" id="byCategory" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="category" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+        </th>
+        <th>Name</th>
+        <th>Serial number</th>
+        <th>Purchase Date</th>
+        <th>Price</th>
+        <th nzCustomFilter>
+          Assigned To
+          <i class="ant-table-filter-icon" id="byOwner" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="owner" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+        </th>
+        <th>
+          Expiration Date
+          <nz-date-picker [(ngModel)]="searchDateValue" (ngModelChange)="search()"></nz-date-picker>
+        </th>
+        <th>Comment</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>{{data.category.name}}</td>
+        <td>{{data.name}}</td>
+        <td>{{data.serialNumber}}</td>
+        <td>{{data.purchaseDate | date}}</td>
+        <td>{{data.price}}</td>
+        <td>{{data.assignedTo}}</td>
+        <td>{{data.expiryDate | date}}</td>
+        <td nzBreakWork>{{data.comment}}</td>
+        <td>
+          <button mat-flat-button (click)="openEditForm(data)">
+            <i nz-icon nzType="edit" nzTheme="outline"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <nz-dropdown-menu #category="nzDropdownMenu" id="byCategory">
     <div class="search-box">
-        <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchCategoryValue" />
-        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
-      Search
-    </button>
-        <button nz-button nzSize="small" (click)="resetCategory()">Reset</button>
+      <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchCategoryValue" />
+      <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+        Search
+      </button>
+      <button nz-button nzSize="small" (click)="resetCategory()">Reset</button>
     </div>
-</nz-dropdown-menu>
-<nz-dropdown-menu #owner="nzDropdownMenu" id="byOwner">
+  </nz-dropdown-menu>
+  <nz-dropdown-menu #owner="nzDropdownMenu" id="byOwner">
     <div class="search-box">
-        <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchOwnerValue" />
-        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
-      Search
-    </button>
-        <button nz-button nzSize="small" (click)="resetOwner()">Reset</button>
+      <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchOwnerValue" />
+      <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+        Search
+      </button>
+      <button nz-button nzSize="small" (click)="resetOwner()">Reset</button>
     </div>
-</nz-dropdown-menu>
+  </nz-dropdown-menu>
+</div>
