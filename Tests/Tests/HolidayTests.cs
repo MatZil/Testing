@@ -23,6 +23,7 @@ namespace Tests.Tests
         private readonly ITimeService mockTimeService;
         private readonly EmployeesService _employeesService;
         private readonly EmployeesRepository _employeesRepository;
+        private readonly HolidaysRepository _holidaysRepository;
 
         public HolidayTests(ITestOutputHelper output)
         {
@@ -38,9 +39,9 @@ namespace Tests.Tests
             mockTimeService = new Mock<ITimeService>().Object;
             var mockUserService = new Mock<IUserService>().Object;
             var mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
-            var holidaysRepository = new HolidaysRepository(_context);
+            _holidaysRepository = new HolidaysRepository(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
-            _holidaysService = new HolidaysService(holidaysRepository, mapper, mockTimeService, mockOvertimeUtility);
+            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, mockTimeService, mockOvertimeUtility);
             _employeesService = new EmployeesService(_employeesRepository, mapper, mockOvertimeUtility, timeService, mockUserService);
         }
 
@@ -65,15 +66,15 @@ namespace Tests.Tests
         [Theory]
         [InlineData(2, true)]
         [InlineData(1, false)]
-        public async void When_PublicHolidaysIsUnpaid_Expect_ThisDayIsUnpaid(int id, bool expected)
+        public void When_PublicHolidaysIsUnpaid_Expect_ThisDayIsUnpaid(int id, bool expected)
         {
-            var result = await _employeesService.HasActiveUnpaidHoliday(id);
+            var result = _employeesService.HasActiveUnpaidHoliday(id);
 
             Assert.Equal(expected, result);
         }
 
         [Theory]
-        [InlineData(4)]
+        [InlineData(-1)]
         public async void When_GettingNonexistentHolidayById_Expect_ReturnsNull(int id)
         {
             var retrievedHoliday = await _holidaysService.GetById(id);
@@ -147,7 +148,7 @@ namespace Tests.Tests
         }
 
         [Theory]
-        [InlineData(4)]
+        [InlineData(-1)]
         public async void When_DeletingNonexistentHoliday_Expect_False(int id)
         {
             _output.WriteLine("Couldn't find holiday to delete");
@@ -199,7 +200,34 @@ namespace Tests.Tests
             var fullNameExpected = $"{retrievedEmployee.Name} {retrievedEmployee.Surname}";
             var fullNameActual = retrievedHoliday.EmployeeFullName;
 
-            Assert.Equal(fullNameExpected, fullNameActual);
+            Assert.True(fullNameExpected == fullNameActual, "Employee's full name is incorrect.");
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async void When_DecliningHoliday_Expect_True(int holidayId)
+        {
+            await _holidaysService.Decline(holidayId, 1);
+
+            var updatedHoliday = await _holidaysService.GetById(holidayId);
+            var status = updatedHoliday.Status.ToString();
+
+            Assert.True(status == "Rejected", "Failed to confirm holiday.");
+        }
+
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        public async void When_DecliningHoliday_Expect_UpdatedConfirmerFullName(int holidayId, int confirmerId)
+        {
+            await _holidaysService.Decline(holidayId, confirmerId);
+            var updatedHoliday = await _holidaysService.GetById(holidayId);
+
+            var fullNameExpected = await _holidaysService.GetConfirmerFullName(updatedHoliday.ConfirmerId);
+            var fullNameActual = updatedHoliday.ConfirmerFullName;
+
+            Assert.True(fullNameExpected == fullNameActual, "Confirmer's full name is incorrect.");
         }
     }
 }

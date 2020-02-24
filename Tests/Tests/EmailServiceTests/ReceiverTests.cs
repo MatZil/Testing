@@ -8,6 +8,7 @@ using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services;
 using XplicityApp.Services.Interfaces;
 using Xunit;
+using XplicityApp.Infrastructure.Utils;
 
 namespace Tests.Tests.EmailServiceTests
 {
@@ -128,7 +129,7 @@ namespace Tests.Tests.EmailServiceTests
         public async void When_SendingRequestNotification_Expect_CorrectReceiver()
         {
             _actualReceiverList = new List<string>();
-            await _emailService.SendRequestNotification(2, _employee.Email);
+            await _emailService.SendRequestNotification(2, _employee.Email, "ConfirmerName ConfirmerSurname");
             Assert.Equal(_employee.Email, _actualReceiverList.FirstOrDefault());
         }
     }

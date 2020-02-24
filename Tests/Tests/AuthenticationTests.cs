@@ -20,16 +20,14 @@ namespace Tests.Tests
             _output = output;
             var setup = new SetUp();
             setup.Initialize();
-
+            var userManager = setup.UserManager;
+            var roleManager = setup.RoleManager;
             _rolesCount = setup.GetCount("roles");
 
-            var userManager = setup.InitializeUserManager();
-            var roleManager = setup.InitializeRoleManager();
-
             var mockTimeService = new Mock<TimeService>().Object;
-
             var opt = Options.Create(new AppSettings());
             _authService = new AuthenticationService(opt, userManager, roleManager, mockTimeService);
+
         }
 
         //[Theory]
@@ -61,12 +59,9 @@ namespace Tests.Tests
         //}
 
         [Fact]
-        public async void When_GettingAllRoles_Expect_ReturnsListOfRoles()
+        public async void When_GettingAllRoles_Expect_ReturnsListOfAllRoles()
         {
             var roles = await _authService.GetAllRoles();
-
-            foreach (var role in roles)
-                _output.WriteLine(role.Name);
 
             var expected = _rolesCount;
             var actual = roles.Count;

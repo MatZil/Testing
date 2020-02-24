@@ -148,7 +148,7 @@ namespace XplicityApp.Services
             return _overtimeUtility.AddOvertimeDetailsToEmployee(employee);
         }
 
-        public async Task<bool> HasActiveUnpaidHoliday(int employeeId)
+        public bool HasActiveUnpaidHoliday(int employeeId)
         {
             var currentTime = _timeService.GetCurrentTime();
             var employeeHolidays = _repository.GetConfirmedHolidays(employeeId);
