@@ -54,6 +54,8 @@ import { AddInventoryFormComponent } from './components/inventory-add-form/inven
 import { EditInventoryFormComponent } from './components/inventory-edit-form/inventory-edit-form.component';
 import { BaseInventoryFormComponent } from './components/inventory-base-form/inventory-base-form.component';
 import { ClientFormComponent } from './components/client-form/client-form.component';
+import { UserInformation } from './components/user-information/user-information.component';
+import { UserSettings } from './components/user-settings/user-settings.component';
 import { HolidayRequestFormComponent } from './components/holiday-request-form/holiday-request-form.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 registerLocaleData(en);
@@ -85,6 +87,8 @@ export function tokenGetter() {
     EditInventoryFormComponent,
     BaseInventoryFormComponent,
     ClientFormComponent,
+    UserInformation,
+    UserSettings,
     HolidayRequestFormComponent
   ],
   imports: [
