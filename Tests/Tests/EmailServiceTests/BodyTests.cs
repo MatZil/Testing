@@ -9,7 +9,6 @@ using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services;
-using XplicityApp.Services.Interfaces;
 using Xunit;
 
 namespace Tests.Tests.EmailServiceTests
@@ -89,8 +88,8 @@ namespace Tests.Tests.EmailServiceTests
                 var expectedBody =
                     $"Hello, {admin.Name},\n\nAn employee {_employee.Name} {_employee.Surname} is intending to go on {GetPaidString(_holiday.Paid)} " +
                     $"{_holiday.Type} holidays from {_holiday.FromInclusive.ToShortDateString()} to {_holiday.ToInclusive.ToShortDateString()} (inclusive). " +
-                    $"{clientStatus} \n\nClick this link to confirm: {$"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm/{_holiday.Id}"}\n" +
-                    $"Click this link to decline: {$"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={_holiday.Id}"}";
+                    $"{clientStatus} \n\nClick this link to confirm: {$"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm?holidayId={_holiday.Id}&confirmerId={admin.Id}"}\n" +
+                    $"Click this link to decline: {$"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={_holiday.Id}&confirmerId={admin.Id}"}";
 
                 expectedBodies.Add(expectedBody);
             }
@@ -150,9 +149,10 @@ namespace Tests.Tests.EmailServiceTests
         [Fact]
         public async void When_SendingRequestNotification_Expect_CorrectBody()
         {
+            var confirmerFullName = "ConfirmerName ConfirmerSurname";
             _actualBodyList = new List<string>();
-            await _emailService.SendRequestNotification(2, _employee.Email);
-            var expectedBody = $"You can download your holiday request document by clicking this link: {_fileService.GetDownloadLink(2)}";
+            await _emailService.SendRequestNotification(2, _employee.Email, confirmerFullName);
+            var expectedBody = $"Your holiday request has been confirmed by {confirmerFullName}. You can download your holiday request document by clicking this link: {_fileService.GetDownloadLink(2)}";
             Assert.Equal(expectedBody, _actualBodyList.FirstOrDefault());
         }
     }

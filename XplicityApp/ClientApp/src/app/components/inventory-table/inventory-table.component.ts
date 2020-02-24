@@ -64,6 +64,7 @@ export class InventoryTableComponent implements OnInit {
   refreshTable() {
     this.inventoryService.getAllInventoryItems().subscribe(inventoryItems => {
       this.equipment = inventoryItems;
+      this.listOfData = [...this.equipment];
     });
   }
 
@@ -156,5 +157,16 @@ export class InventoryTableComponent implements OnInit {
         }
       }
     }
+    const data = this.listOfData.filter((item: InventoryItem) => filterFunc(item));
+    this.equipment = data.sort((a, b) =>
+      this.sortValue === 'ascend'
+        ? a[this.sortName!] > b[this.sortName!]
+          ? 1
+          : -1
+        : b[this.sortName!] > a[this.sortName!]
+          ? 1
+          : -1
+    );
   }
+  
 }
