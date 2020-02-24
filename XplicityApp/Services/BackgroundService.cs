@@ -15,14 +15,15 @@ namespace XplicityApp.Services
         private readonly IEmployeeRepository _employeeRepository;
         private readonly ILogger<BackgroundService> _logger;
 
-        public BackgroundService(ITimeService timeService, IEmployeeHolidaysBackgroundUpdater employeeHolidaysBackgroundUpdater,
-                                 IBackgroundEmailSender backgroundEmailSender, ILogger<BackgroundService> logger)
+        public BackgroundService(ITimeService timeService, IEmployeeHolidaysBackgroundUpdater employeeHolidaysBackgroundUpdater, 
+                                 IEmployeeRepository employeeRepository, IBackgroundEmailSender backgroundEmailSender, 
+                                 ILogger<BackgroundService> logger)
         {
             _timeService = timeService;
             _employeeHolidaysBackgroundUpdater = employeeHolidaysBackgroundUpdater;
+            _employeeRepository = employeeRepository;
             _backgroundEmailSender = backgroundEmailSender;
             _logger = logger;
-
         }
         public async Task DoBackgroundTasks()
         {

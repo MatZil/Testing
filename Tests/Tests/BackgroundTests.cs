@@ -20,6 +20,7 @@ namespace Tests.Tests
         private readonly ITimeService _mockTimeService;
         private readonly EmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
         private readonly BackgroundEmailSender _backgroundEmailSender;
+        private readonly Mock<ILoggerAdapter<BackgroundEmailSender>> _mockLoggerEmailSender;
 
         public BackgroundTests()
         {
@@ -34,14 +35,14 @@ namespace Tests.Tests
             var mockEmployeesService = new Mock<IEmployeesService>().Object;
             _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater(_mockTimeService, _employeesRepository, mockLoggerUpdater, mockEmployeesService);
 
-
             var holidaysRepository = new HolidaysRepository(context);
             var mockEmailService = new Mock<IEmailService>().Object;
             var holidayInfoService = new Mock<IHolidayInfoService>().Object;
             var webHostEnvironment = new Mock<IWebHostEnvironment>().Object;
-            var mockLoggerEmailSender = new Mock<ILogger<BackgroundEmailSender>>().Object;
+            _mockLoggerEmailSender = new Mock<ILoggerAdapter<BackgroundEmailSender>>();
+
             _backgroundEmailSender = new BackgroundEmailSender(_mockTimeService, _employeesRepository, holidaysRepository, 
-                                                                mockEmailService, holidayInfoService, webHostEnvironment, mockLoggerEmailSender);
+                                                                mockEmailService, holidayInfoService, webHostEnvironment, _mockLoggerEmailSender.Object);
         }
 
         [Fact]
@@ -114,6 +115,33 @@ namespace Tests.Tests
             }
 
             Assert.Equal(employees.Count, countTrue);
+        }
+
+        [Fact]
+        public async void When_SendingHolidayReports_Expect_HolidayReportsWereSent()
+        {
+            await _backgroundEmailSender.SendHolidayReports();
+
+            var currentTime = _mockTimeService.GetCurrentTime();
+            _mockLoggerEmailSender.Verify(l => l.LogInformation("SendHolidayReports() ended at "+ currentTime));
+        }
+
+        [Fact]
+        public async void When_BroadcastingCoworkersAbsences_Expect_AbsencesWereBroadcasted()
+        {
+            await _backgroundEmailSender.BroadcastCoworkersAbsences();
+
+            var currentTime = _mockTimeService.GetCurrentTime();
+            _mockLoggerEmailSender.Verify(l => l.LogInformation("BroadcastCoworkersAbsences() ended at " + currentTime));
+        }
+
+        [Fact]
+        public async void When_BroadcastingCoworkersBirthdays_Expect_BirthdaysWereBroadcasted()
+        {
+            await _backgroundEmailSender.BroadcastCoworkersBirthdays();
+
+            var currentTime = _mockTimeService.GetCurrentTime();
+            _mockLoggerEmailSender.Verify(l => l.LogInformation("BroadcastCoworkersBirthdays() ended at " + currentTime));
         }
     }
 }

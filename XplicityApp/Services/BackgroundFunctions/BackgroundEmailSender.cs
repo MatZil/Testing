@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
@@ -19,11 +18,11 @@ namespace XplicityApp.Services.BackgroundFunctions
         private readonly IEmailService _emailService;
         private readonly IHolidayInfoService _holidayInfoService;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly ILogger<BackgroundEmailSender> _logger;
+        private readonly ILoggerAdapter<BackgroundEmailSender> _logger;
 
         public BackgroundEmailSender(ITimeService timeService, IEmployeeRepository employeeRepository, IHolidaysRepository holidaysRepository,
-                                     IEmailService emailService, IHolidayInfoService holidayInfoService, IWebHostEnvironment webHostEnvironment, 
-                                     ILogger<BackgroundEmailSender> logger)
+                                     IEmailService emailService, IHolidayInfoService holidayInfoService, IWebHostEnvironment webHostEnvironment,
+                                     ILoggerAdapter<BackgroundEmailSender> logger)
         {
             _timeService = timeService;
             _employeeRepository = employeeRepository;
