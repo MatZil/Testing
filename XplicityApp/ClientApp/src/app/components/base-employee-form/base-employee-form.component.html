@@ -102,7 +102,7 @@
     </div>
     <div style="float: left;">
         <mat-form-field>
-            <input matInput placeholder="E-mail" formControlName="email">
+            <input matInput placeholder="E-mail" formControlName="email" autocomplete="new-email">
             <mat-error *ngIf="baseForm.controls.email.errors?.emailExists">
                 This email already exists!
             </mat-error>
