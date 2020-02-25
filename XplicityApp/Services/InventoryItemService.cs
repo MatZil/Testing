@@ -92,14 +92,14 @@ namespace XplicityApp.Services
 
             var newInventoryItem = _mapper.Map<InventoryItem>(newInventoryItemDto);
             var inventoryItemId = await _repository.Create(newInventoryItem);
-            if (newInventoryItemDto.TagIds != null)
+            if (newInventoryItemDto.Tags != null)
             {
-                foreach (var tagId in newInventoryItemDto.TagIds)
+                foreach (var tagId in newInventoryItemDto.Tags)
                 {
                     await _inventoryItemTagsRepository.Create(new InventoryItemTag()
                     {
                         InventoryItemId = inventoryItemId,
-                        TagId = tagId
+                        TagId = tagId.Id
                     });
                 }
             }
@@ -147,10 +147,9 @@ namespace XplicityApp.Services
             }
         }
 
-        private async Task<List<TagDto>> GetTagsListByItemId(int itemId)
+        public async Task<List<TagDto>> GetTagsListByItemId(int itemId)
         {
             var tags = new List<TagDto>();
-
             var InventoryItemTags = await _inventoryItemTagsRepository.FindAllByInventoryItemId(itemId);
 
             foreach (var inventoryItemTag in InventoryItemTags)

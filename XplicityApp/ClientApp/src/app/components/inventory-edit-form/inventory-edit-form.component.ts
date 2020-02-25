@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { InventoryItem } from 'src/app/models/inventory-item';
-import { FormGroup, FormBuilder, FormControl} from '@angular/forms';
+import { FormGroup, FormBuilder} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { EditModalData } from './edit-modal-data';
 

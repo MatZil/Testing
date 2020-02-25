@@ -23,7 +23,6 @@ export class AddInventoryFormComponent implements OnInit {
 
   ngOnInit() {
     this.initializeFormGroup();
-    
   }
 
   initializeFormGroup() {

@@ -13,7 +13,6 @@ import { ENTER } from '@angular/cdk/keycodes';
 import { MatAutocomplete } from '@angular/material';
 import { Tag } from '../../models/tag';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { NewInventoryItem } from '../../models/new-inventory-item';
 
 @Component({
@@ -23,8 +22,7 @@ import { NewInventoryItem } from '../../models/new-inventory-item';
 })
 export class InventoryTableComponent implements OnInit {
   equipment: InventoryItem[] = [];
-  @Input()
-  employeeId: number;
+  @Input() employeeId: number;
 
   inventoryItemToUpdate: InventoryItem
 
@@ -37,15 +35,6 @@ export class InventoryTableComponent implements OnInit {
   sortName: string | null = null;
   sortValue: string | null = null;
   listOfData: InventoryItem[] = [];
-
-  readonly separatorKeysCodes: number[] = [ENTER];
-  tagsControl = new FormControl();
-  tagsSelected: Tag[] = [];
-  tagsAfterFiltration: Tag[] = [];
-  tagSuggestions: Observable<Tag[]>;
-
-  @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
   constructor(
     private inventoryService: InventoryService,
@@ -60,6 +49,12 @@ export class InventoryTableComponent implements OnInit {
     this.getCategoriesList();
     this.refreshTable();
   }
+    getAllEqupment() {
+      this.inventoryService.getAllInventoryItems().subscribe(equipment => {
+        console.log(equipment);
+        this.equipment = equipment;
+      });
+    }
 
   refreshTable() {
     this.inventoryService.getAllInventoryItems().subscribe(inventoryItems => {
@@ -91,7 +86,8 @@ export class InventoryTableComponent implements OnInit {
       data: {
         inventoryItemToUpdate: this.inventoryItemToUpdate,
         employees: this.employees,
-        categories: this.categories
+        categories: this.categories,
+        tagsInput: this.inventoryItemToUpdate.tags
       }
     });
     dialogRef.afterClosed().subscribe(inventoryItemToUpdate => {
