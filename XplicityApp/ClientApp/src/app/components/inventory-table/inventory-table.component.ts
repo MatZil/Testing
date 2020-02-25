@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import { InventoryItem } from 'src/app/models/inventory-item';
 import { InventoryService } from 'src/app/services/inventory.service';
 import { InventoryCategory } from 'src/app/models/inventory-category';
@@ -44,12 +44,6 @@ export class InventoryTableComponent implements OnInit {
     this.getCategoriesList();
     this.refreshTable();
   }
-    getAllEqupment() {
-      this.inventoryService.getAllInventoryItems().subscribe(equipment => {
-        console.log(equipment);
-        this.equipment = equipment;
-      });
-    }
 
   refreshTable() {
     this.inventoryService.getAllInventoryItems().subscribe(inventoryItems => {
@@ -82,7 +76,7 @@ export class InventoryTableComponent implements OnInit {
         inventoryItemToUpdate: this.inventoryItemToUpdate,
         employees: this.employees,
         categories: this.categories,
-        tagsInput: this.inventoryItemToUpdate.tags
+        tags: this.inventoryItemToUpdate.tags
       }
     });
     dialogRef.afterClosed().subscribe(inventoryItemToUpdate => {

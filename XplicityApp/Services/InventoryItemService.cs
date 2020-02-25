@@ -147,7 +147,7 @@ namespace XplicityApp.Services
             }
         }
 
-        public async Task<List<TagDto>> GetTagsListByItemId(int itemId)
+        private async Task<List<TagDto>> GetTagsListByItemId(int itemId)
         {
             var tags = new List<TagDto>();
             var InventoryItemTags = await _inventoryItemTagsRepository.FindAllByInventoryItemId(itemId);

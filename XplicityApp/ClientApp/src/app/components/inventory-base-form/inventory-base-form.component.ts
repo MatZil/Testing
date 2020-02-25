@@ -135,7 +135,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     const input = event.input;
     const tagTitle = event.value;
 
-    if (this.tagsService.validateTagTitle(tagTitle)) {
+    if (this._validateTagTitle(tagTitle)) {
       this.tagsService.createNewTag({ title: tagTitle }).subscribe(id => {
         this.tagsSelected.push({ id: Number(id),title: tagTitle });
         this.removeTags();
@@ -194,6 +194,16 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
 
   removeTags() {
     this.tags.clear();
+  }
+
+  private _validateTagTitle(tagTitle: string) {
+    let regexp = new RegExp('^[a-zA-Z0-9#-]*$');
+
+    if (tagTitle.length > 10 || tagTitle.length < 3 || !regexp.test(tagTitle)) {
+      return false;
+    }
+
+    return true;
   }
 }
 
