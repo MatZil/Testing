@@ -1,4 +1,5 @@
 import { InventoryCategory } from './inventory-category';
+import { Tag } from './tag';
 
 export class InventoryItem {
     id: number;
@@ -11,4 +12,5 @@ export class InventoryItem {
     category: InventoryCategory;
     assignedTo: string;
     archived: boolean;
+    tags:Tag[];
 }
