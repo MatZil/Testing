@@ -140,8 +140,6 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
         this.tagsSelected.push({ id: Number(id),title: tagTitle });
         this.removeTags();
         this.addTagsForm();
-      }, error => {
-        console.log(error);
       });
     } else {
       this.alterService.displayMessage("Tag is invalid!");
