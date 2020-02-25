@@ -14,7 +14,6 @@ import { FileType } from '../../enums/fileType';
   styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettings implements OnInit {
-  currentUser: TableRowUserModel;
   hideOldPassword = true;
   hideFirstPassword = true;
   hideSecondPassword = true;
