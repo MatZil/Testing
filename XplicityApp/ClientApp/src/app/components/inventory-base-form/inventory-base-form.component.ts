@@ -54,7 +54,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
   ) {
     this.tagSuggestions = this.tagsControl.valueChanges.pipe(
       startWith(null),
-      map((tagTitle: string | null) => tagTitle ? this._tagsFilter(tagTitle) : this.tagsAfterFiltration.slice()));
+      map((tagTitle: string | null) => tagTitle ? this.tagsFilter(tagTitle) : this.tagsAfterFiltration.slice()));
   }
 
   ngOnInit() {
@@ -83,7 +83,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
 
     this.onCategoryChange();
     this.stripTimeFromDates();
-    this.addTagsForm();
+    this.syncTagsToForm();
   }
 
   stripTimeFromDates() {
@@ -135,14 +135,13 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     const input = event.input;
     const tagTitle = event.value;
 
-    if (this._validateTagTitle(tagTitle)) {
+    if (this.tagsService.isTagNameValid(tagTitle)) {
       this.tagsService.createNewTag({ title: tagTitle }).subscribe(id => {
         this.tagsSelected.push({ id: Number(id),title: tagTitle });
-        this.removeTags();
-        this.addTagsForm();
+        this.updateSelectedTags();
       });
     } else {
-      this.alertService.displayMessage("Tag is invalid!");
+      this.alertService.displayMessage('Tag is invalid!');
     }
 
     if (input) {
@@ -160,19 +159,17 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
       this.tagsSelected.splice(index, 1);
     }
 
-    this.removeTags();
-    this.addTagsForm();
+    this.updateSelectedTags();
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.tagsSelected.push({ id: event.option.value, title: event.option.viewValue });
     this.tagInput.nativeElement.value = '';
     this.tagsControl.setValue(null);
-    this.removeTags();
-    this.addTagsForm();
+    this.updateSelectedTags();
   }
 
-  private _tagsFilter(value: string): Tag[] {
+  tagsFilter(value: string): Tag[] {
     this.tagsService.getAllByTitle(value).subscribe(data => {
       this.tagsAfterFiltration = data;
     });
@@ -184,7 +181,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     return this.baseForm.get('tags') as FormArray;
   }
 
-  addTagsForm() {
+  syncTagsToForm() {
     this.tagsSelected.forEach(tag => {
       this.tags.push(this.formBuilder.control({ id: tag.id, title: tag.title }));
     });
@@ -194,14 +191,9 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     this.tags.clear();
   }
 
-  private _validateTagTitle(tagTitle: string) {
-    let regexp = new RegExp('^[a-zA-Z0-9#-]*$');
-
-    if (tagTitle.length > 10 || tagTitle.length < 3 || !regexp.test(tagTitle)) {
-      return false;
-    }
-
-    return true;
+  updateSelectedTags() {
+    this.removeTags();
+    this.syncTagsToForm();
   }
 }
 
