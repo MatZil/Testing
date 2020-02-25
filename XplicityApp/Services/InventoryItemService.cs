@@ -94,12 +94,12 @@ namespace XplicityApp.Services
             var inventoryItemId = await _repository.Create(newInventoryItem);
             if (newInventoryItemDto.Tags != null)
             {
-                foreach (var tagId in newInventoryItemDto.Tags)
+                foreach (var tag in newInventoryItemDto.Tags)
                 {
                     await _inventoryItemTagsRepository.Create(new InventoryItemTag()
                     {
                         InventoryItemId = inventoryItemId,
-                        TagId = tagId.Id
+                        TagId = tag.Id
                     });
                 }
             }

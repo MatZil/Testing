@@ -50,7 +50,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     private userService: UserService,
     private datePipe: DatePipe,
     private tagsService: TagService,
-    private alterService: AlertService
+    private alertService: AlertService
   ) {
     this.tagSuggestions = this.tagsControl.valueChanges.pipe(
       startWith(null),
@@ -142,7 +142,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
         this.addTagsForm();
       });
     } else {
-      this.alterService.displayMessage("Tag is invalid!");
+      this.alertService.displayMessage("Tag is invalid!");
     }
 
     if (input) {
