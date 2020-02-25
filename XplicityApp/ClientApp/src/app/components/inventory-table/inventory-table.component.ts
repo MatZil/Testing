@@ -8,11 +8,6 @@ import { UserService } from 'src/app/services/user.service';
 import { MatDialog } from '@angular/material';
 import { AddInventoryFormComponent } from '../inventory-add-form/inventory-add-form.component';
 import { EditInventoryFormComponent } from '../inventory-edit-form/inventory-edit-form.component';
-
-import { ENTER } from '@angular/cdk/keycodes';
-import { MatAutocomplete } from '@angular/material';
-import { Tag } from '../../models/tag';
-import { FormControl } from '@angular/forms';
 import { NewInventoryItem } from '../../models/new-inventory-item';
 
 @Component({
@@ -92,7 +87,6 @@ export class InventoryTableComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(inventoryItemToUpdate => {
       if (inventoryItemToUpdate) {
-        console.log(inventoryItemToUpdate);
         this.saveInventoryItem(inventoryItemToUpdate, inventoryItem.id);
       }
     });

@@ -136,8 +136,8 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     const tagTitle = event.value;
 
     if (this.tagsService.validateTagTitle(tagTitle)) {
-      this.tagsService.createNewTag({ Title: tagTitle }).subscribe(id => {
-        this.tagsSelected.push({ Id: Number(id), Title: tagTitle });
+      this.tagsService.createNewTag({ title: tagTitle }).subscribe(id => {
+        this.tagsSelected.push({ id: Number(id),title: tagTitle });
         this.removeTags();
         this.addTagsForm();
       }, error => {
@@ -160,14 +160,14 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
 
     if (index >= 0) {
       this.tagsSelected.splice(index, 1);
-    } 
+    }
 
     this.removeTags();
     this.addTagsForm();
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.tagsSelected.push({ Id: event.option.value, Title: event.option.viewValue });
+    this.tagsSelected.push({ id: event.option.value, title: event.option.viewValue });
     this.tagInput.nativeElement.value = '';
     this.tagsControl.setValue(null);
     this.removeTags();
@@ -188,7 +188,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
 
   addTagsForm() {
     this.tagsSelected.forEach(tag => {
-      this.tags.push(this.formBuilder.control(tag));
+      this.tags.push(this.formBuilder.control({ id: tag.id, title: tag.title }));
     });
   }
 

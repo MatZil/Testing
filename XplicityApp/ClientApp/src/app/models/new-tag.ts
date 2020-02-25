@@ -1,3 +1,3 @@
 export class NewTag {
-  Title : string;
+  title : string;
 }
