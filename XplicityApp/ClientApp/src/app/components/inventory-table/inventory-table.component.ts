@@ -15,7 +15,6 @@ import { Tag } from '../../models/tag';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { NewInventoryItem } from '../../models/new-inventory-item';
-import { InventoryStatus } from '../../models/inventory-status.enum';
 
 @Component({
   selector: 'app-inventory-table',
@@ -27,9 +26,7 @@ export class InventoryTableComponent implements OnInit {
   @Input()
   employeeId: number;
 
-  //selectedInventoryStatus: InventoryStatus = InventoryStatus.Former;
-
-  selectedInventoryStatus: boolean = false;
+  showArchivedInventory: boolean = false;
 
   inventoryItemToUpdate: InventoryItem
 
@@ -61,11 +58,11 @@ export class InventoryTableComponent implements OnInit {
 
   ngOnInit() {
     this.getCategoriesList();
-    this.refreshTable(this.selectedInventoryStatus);
+    this.refreshTable(this.showArchivedInventory);
   }
 
-  refreshTable(status: boolean) {
-    this.inventoryService.getIventoryByStatus(status).subscribe(inventoryItems => {
+  refreshTable(showArchivedInventory: boolean) {
+    this.inventoryService.getInventoryByStatus(showArchivedInventory).subscribe(inventoryItems => {
       this.equipment = inventoryItems;
       this.listOfData = [...this.equipment];
     });
@@ -106,13 +103,13 @@ export class InventoryTableComponent implements OnInit {
 
   saveInventoryItem(updateInventoryItem: InventoryItem, id: number) {
     this.inventoryService.updateInventoryItem(id, updateInventoryItem).subscribe(() => {
-      this.refreshTable(this.selectedInventoryStatus);
+      this.refreshTable(this.showArchivedInventory);
     });
   }
 
   addInventoryItem(newInventoryItem: NewInventoryItem) {
     this.inventoryService.createNewInventoryItem(newInventoryItem).subscribe(() => {
-      this.refreshTable(this.selectedInventoryStatus);
+      this.refreshTable(this.showArchivedInventory);
 
     });
   }

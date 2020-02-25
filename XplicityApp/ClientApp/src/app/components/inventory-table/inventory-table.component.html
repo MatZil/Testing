@@ -1,7 +1,7 @@
 <div>
   <div class="divider">
     <button mat-flat-button nzType="primary" (click)="openAddForm()">Add item</button>
-    <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Inventory status" (selectionChange)="refreshTable(selectedInventoryStatus)" [(value)]="selectedInventoryStatus">
+    <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Current inventory" (selectionChange)="refreshTable(showArchivedInventory)" [(value)]="showArchivedInventory">
       <mat-option [value]="false">
         Current inventory
       </mat-option>

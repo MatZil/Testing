@@ -83,9 +83,9 @@ namespace XplicityApp.Services
 
             return inventoryItemsDto;
         }
-        public async Task<ICollection<GetInventoryItemDto>> GetByInventoryItemStatus(bool inventoryItemStatus)
+        public async Task<ICollection<GetInventoryItemDto>> GetByInventoryItemStatus(bool showArchivedInventory)
         {
-            var inventoryItems = await _repository.GetByInventoryItemStatus(inventoryItemStatus);
+            var inventoryItems = await _repository.GetByInventoryItemStatus(showArchivedInventory);
             var inventoryItemsDto = _mapper.Map<GetInventoryItemDto[]>(inventoryItems);
 
             return inventoryItemsDto;

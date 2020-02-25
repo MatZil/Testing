@@ -35,16 +35,9 @@ namespace XplicityApp.Controllers
         [HttpGet]
         [Produces(typeof(GetInventoryItemDto[]))]
         [Route("GetByStatus")]
-        public async Task<IActionResult> GetByInventoryItemStatus(bool inventoryItemStatus)
+        public async Task<IActionResult> GetByInventoryItemStatus(bool showArchivedInventory)
         {
-            var items = await _inventoryItemService.GetByInventoryItemStatus(inventoryItemStatus);
-            return Ok(items);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var items = await _inventoryItemService.GetAll();
+            var items = await _inventoryItemService.GetByInventoryItemStatus(showArchivedInventory);
             return Ok(items);
         }
 

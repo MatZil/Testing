@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
 import { NewInventoryItem } from '../models/new-inventory-item';
-import { InventoryStatus } from '../models/inventory-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +17,9 @@ export class InventoryService {
     return this.http.get<InventoryItem[]>(`${this.inventoryItemApi}/employee/${employeeId}`);
   }
 
-  getAllInventoryItems(): Observable<InventoryItem[]> {
-    return this.http.get<InventoryItem[]>(this.inventoryItemApi);
-  }
-
-  getIventoryByStatus(status: boolean): Observable<InventoryItem[]> {
+  getInventoryByStatus(showArchivedInventory: boolean): Observable<InventoryItem[]> {
     let parameters = new HttpParams();
-    parameters = parameters.append('inventoryItemStatus', status.toString());
+    parameters = parameters.append('showArchivedInventory', showArchivedInventory.toString());
     return this.http.get<InventoryItem[]>(`${this.inventoryItemApi}/GetByStatus`, { params: parameters });
   }
 

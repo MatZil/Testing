@@ -18,9 +18,9 @@ namespace XplicityApp.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<ICollection<InventoryItem>> GetByInventoryItemStatus(bool inventoryItemStatus)
+        public async Task<ICollection<InventoryItem>> GetByInventoryItemStatus(bool showArchivedInventory)
         {
-            var inventoryItems = await _context.InventoryItems.Include(x => x.Category).Where(x => x.Archived == inventoryItemStatus)
+            var inventoryItems = await _context.InventoryItems.Include(x => x.Category).Where(x => x.Archived == showArchivedInventory)
                 .ToArrayAsync();
             return inventoryItems;
         }
