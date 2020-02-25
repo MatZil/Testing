@@ -138,7 +138,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     if (this.tagsService.isTagNameValid(tagTitle)) {
       this.tagsService.createNewTag({ title: tagTitle }).subscribe(id => {
         this.tagsSelected.push({ id: Number(id),title: tagTitle });
-        this.updateSelectedTags();
+        this.updateBaseFromTags();
       });
     } else {
       this.alertService.displayMessage('Tag is invalid!');
@@ -159,14 +159,14 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
       this.tagsSelected.splice(index, 1);
     }
 
-    this.updateSelectedTags();
+    this.updateBaseFromTags();
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.tagsSelected.push({ id: event.option.value, title: event.option.viewValue });
     this.tagInput.nativeElement.value = '';
     this.tagsControl.setValue(null);
-    this.updateSelectedTags();
+    this.updateBaseFromTags();
   }
 
   tagsFilter(value: string): Tag[] {
@@ -191,7 +191,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     this.tags.clear();
   }
 
-  updateSelectedTags() {
+  updateBaseFromTags() {
     this.removeTags();
     this.syncTagsToForm();
   }
