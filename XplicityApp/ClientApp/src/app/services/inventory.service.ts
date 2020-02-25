@@ -20,7 +20,7 @@ export class InventoryService {
   getInventoryByStatus(showArchivedInventory: boolean): Observable<InventoryItem[]> {
     let parameters = new HttpParams();
     parameters = parameters.append('showArchivedInventory', showArchivedInventory.toString());
-    return this.http.get<InventoryItem[]>(`${this.inventoryItemApi}/GetByStatus`, { params: parameters });
+    return this.http.get<InventoryItem[]>(`${this.inventoryItemApi}`, { params: parameters });
   }
 
   createNewInventoryItem(newInventoryItem: NewInventoryItem) {
