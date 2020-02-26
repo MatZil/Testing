@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import { InventoryItem } from 'src/app/models/inventory-item';
 import { InventoryService } from 'src/app/services/inventory.service';
 import { InventoryCategory } from 'src/app/models/inventory-category';
@@ -8,12 +8,6 @@ import { UserService } from 'src/app/services/user.service';
 import { MatDialog } from '@angular/material';
 import { AddInventoryFormComponent } from '../inventory-add-form/inventory-add-form.component';
 import { EditInventoryFormComponent } from '../inventory-edit-form/inventory-edit-form.component';
-
-import { ENTER } from '@angular/cdk/keycodes';
-import {MatAutocomplete } from '@angular/material';
-import { Tag } from '../../models/tag';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { NewInventoryItem } from '../../models/new-inventory-item';
 
 @Component({
@@ -23,8 +17,7 @@ import { NewInventoryItem } from '../../models/new-inventory-item';
 })
 export class InventoryTableComponent implements OnInit {
   equipment: InventoryItem[] = [];
-  @Input()
-  employeeId: number;
+  @Input() employeeId: number;
 
   inventoryItemToUpdate: InventoryItem
 
@@ -37,15 +30,6 @@ export class InventoryTableComponent implements OnInit {
   sortName: string | null = null;
   sortValue: string | null = null;
   listOfData: InventoryItem[] = [];
-
-  readonly separatorKeysCodes: number[] = [ENTER];
-  tagsControl = new FormControl();
-  tagsSelected: Tag[] = [];
-  tagsAfterFiltration: Tag[] = [];
-  tagSuggestions: Observable<Tag[]>;
-
-  @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
   constructor(
     private inventoryService: InventoryService,
@@ -91,7 +75,8 @@ export class InventoryTableComponent implements OnInit {
       data: {
         inventoryItemToUpdate: this.inventoryItemToUpdate,
         employees: this.employees,
-        categories: this.categories
+        categories: this.categories,
+        tags: this.inventoryItemToUpdate.tags
       }
     });
     dialogRef.afterClosed().subscribe(inventoryItemToUpdate => {
@@ -170,3 +155,4 @@ export class InventoryTableComponent implements OnInit {
   }
   
 }
+
