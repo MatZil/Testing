@@ -1,8 +1,6 @@
 ﻿using Nager.Date;
 using System;
 using XplicityApp.Infrastructure.Utils.Interfaces;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 
 namespace XplicityApp.Infrastructure.Utils
 {
@@ -13,13 +11,19 @@ namespace XplicityApp.Infrastructure.Utils
             return DateTime.Now;
         }
 
-        public DateTime GetCurrentTimeForBackgroundTasks(IWebHostEnvironment webHostEnvironment)
+        public DateTime GetCurrentTimeForBackgroundTasks()
         {
             DateTime currentTime;
 
-            if (webHostEnvironment.IsProduction())
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
             {
                 currentTime = GetCurrentTime();
+            }
+            else if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "TestSendingHolidayReports")
+            {
+                var currentDateTime = GetCurrentTime();
+                var daysInCurrentMonth = DateTime.DaysInMonth(currentDateTime.Year, currentDateTime.Month);
+                currentTime = new DateTime(currentDateTime.Year, currentDateTime.Month, daysInCurrentMonth);
             }
             else
             {
@@ -34,9 +38,9 @@ namespace XplicityApp.Infrastructure.Utils
             if (workDay.DayOfWeek == DayOfWeek.Saturday || workDay.DayOfWeek == DayOfWeek.Sunday
                                                 || DateSystem.IsPublicHoliday(workDay, CountryCode.LT))
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         public int GetWorkDays(DateTime fromInclusive, DateTime toInclusive)
@@ -45,7 +49,7 @@ namespace XplicityApp.Infrastructure.Utils
 
             while (fromInclusive <= toInclusive)
             {
-                if (IsFreeWorkDay(fromInclusive))
+                if (!IsFreeWorkDay(fromInclusive))
                 {
                     fromInclusive = fromInclusive.AddDays(1);
                     continue;
@@ -75,7 +79,7 @@ namespace XplicityApp.Infrastructure.Utils
         {
             var nextWorkDay = currentTime.AddDays(1);
 
-            while (IsFreeWorkDay(nextWorkDay))
+            while (!IsFreeWorkDay(nextWorkDay))
             {
                 nextWorkDay = nextWorkDay.AddDays(1);
             }

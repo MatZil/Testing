@@ -47,7 +47,6 @@ namespace XplicityApp.Configurations
                 .AddScoped<ITagsRepository, TagsRepository>()
                 .AddScoped<IInventoryItemTagsRepository, InventoryItemTagsRepository>()
                 .AddSingleton<ITimeService, TimeService>()
-                .AddScoped(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>))
                 .AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }
 

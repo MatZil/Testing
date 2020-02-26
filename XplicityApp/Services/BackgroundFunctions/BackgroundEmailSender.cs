@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
 using XplicityApp.Services.BackgroundFunctions.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace XplicityApp.Services.BackgroundFunctions
 {
@@ -17,25 +17,22 @@ namespace XplicityApp.Services.BackgroundFunctions
         private readonly IHolidaysRepository _holidaysRepository;
         private readonly IEmailService _emailService;
         private readonly IHolidayInfoService _holidayInfoService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly ILoggerAdapter<BackgroundEmailSender> _logger;
+        private readonly ILogger<BackgroundEmailSender> _logger;
 
         public BackgroundEmailSender(ITimeService timeService, IEmployeeRepository employeeRepository, IHolidaysRepository holidaysRepository,
-                                     IEmailService emailService, IHolidayInfoService holidayInfoService, IWebHostEnvironment webHostEnvironment,
-                                     ILoggerAdapter<BackgroundEmailSender> logger)
+                                     IEmailService emailService, IHolidayInfoService holidayInfoService, ILogger<BackgroundEmailSender> logger)
         {
             _timeService = timeService;
             _employeeRepository = employeeRepository;
             _holidaysRepository = holidaysRepository;
             _emailService = emailService;
             _holidayInfoService = holidayInfoService;
-            _webHostEnvironment = webHostEnvironment;
             _logger = logger;
         }
 
         public async Task SendHolidayReports()
         {
-            var currentTime = _timeService.GetCurrentTimeForBackgroundTasks(_webHostEnvironment);
+            var currentTime = _timeService.GetCurrentTimeForBackgroundTasks();
             _logger.LogInformation("SendHolidayReports() was initiated at " + currentTime);
 
             if (currentTime.Month != currentTime.AddDays(1).Month)
@@ -65,11 +62,10 @@ namespace XplicityApp.Services.BackgroundFunctions
 
         public async Task BroadcastCoworkersAbsences()
         {
-            var currentTime = _timeService.GetCurrentTimeForBackgroundTasks(_webHostEnvironment);
+            var currentTime = _timeService.GetCurrentTimeForBackgroundTasks();
             _logger.LogInformation("BroadcastCoworkersAbsences() was initiated at " + currentTime);
             try
             {
-
                 if (_timeService.IsFreeWorkDay(currentTime))
                 {
                     var nextWorkDay = _timeService.GetNextWorkDay(currentTime);
@@ -97,7 +93,7 @@ namespace XplicityApp.Services.BackgroundFunctions
 
         public async Task BroadcastCoworkersBirthdays()
         {
-            var currentTime = _timeService.GetCurrentTimeForBackgroundTasks(_webHostEnvironment);
+            var currentTime = _timeService.GetCurrentTimeForBackgroundTasks();
             _logger.LogInformation("BroadcastCoworkersBirthdays() was initiated at " + currentTime);
             try
             {
