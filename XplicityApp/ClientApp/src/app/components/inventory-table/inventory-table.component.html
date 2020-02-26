@@ -20,6 +20,7 @@
         <nz-date-picker [(ngModel)]="searchDateValue" (ngModelChange)="search()"></nz-date-picker>
       </th>
       <th>Comment</th>
+      <th>Tags</th>
       <th></th>
     </tr>
   </thead>
@@ -33,6 +34,12 @@
       <td>{{data.assignedTo}}</td>
       <td>{{data.expiryDate | date}}</td>
       <td nzBreakWork>{{data.comment}}</td>
+      <td>
+        <mat-chip-list *ngFor="let tag of data.tags|slice:0:2">
+          <mat-chip>{{ tag.title }}</mat-chip>
+        </mat-chip-list>
+        <div *ngIf="data.tags.length > 2">...</div>
+      </td>
       <td>
         <button mat-flat-button (click)="openEditForm(data)">
           <i nz-icon nzType="edit" nzTheme="outline"></i>

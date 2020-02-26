@@ -61,7 +61,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     this.initializeFormGroup();
   }
 
-  initializeFormGroup() {
+  initializeFormGroup(): void {
     this.baseForm = this.formBuilder.group({
       name: ['',
         [Validators.required]],
@@ -86,7 +86,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     this.syncTagsToForm();
   }
 
-  stripTimeFromDates() {
+  stripTimeFromDates(): void {
     this.baseForm.controls.purchaseDate.valueChanges.subscribe(value => {
       this.baseForm.controls.purchaseDate.setValue(this.datePipe.transform(value, 'yyyy-MM-dd'), { emitEvent: false });
     });
@@ -95,19 +95,19 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     });
   }
 
-  writeValue(value: any) {
+  writeValue(value: any): void {
     if (value) {
       this.baseForm.patchValue(value);
     }
   }
 
-  registerOnChange(fn: any) {
+  registerOnChange(fn: any): void {
     this.baseForm.valueChanges.subscribe(fn);
   }
 
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any): void { }
 
-  onCategoryChange() {
+  onCategoryChange(): void {
     this.baseForm.get('inventoryCategoryId').valueChanges.subscribe(selectedCategoryId => {
       const licenseCategoryId = 4;
       if (selectedCategoryId !== licenseCategoryId) {
@@ -119,13 +119,13 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     });
   }
 
-  getCategoriesList() {
+  getCategoriesList(): void {
     this.categoryService.getAllCategories().subscribe(categories => {
       this.categories = categories;
     });
   }
 
-  getAllUsers() {
+  getAllUsers(): void {
     this.userService.getAllUsers().subscribe(users => {
       this.employees = users;
     });
@@ -137,7 +137,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
 
     if (this.tagsService.isTagNameValid(tagTitle)) {
       this.tagsService.createNewTag({ title: tagTitle }).subscribe(id => {
-        this.tagsSelected.push({ id: Number(id),title: tagTitle });
+        this.tagsSelected.push({ id: Number(id), title: tagTitle });
         this.updateBaseFromTags();
       });
     } else {
@@ -181,17 +181,17 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
     return this.baseForm.get('tags') as FormArray;
   }
 
-  syncTagsToForm() {
+  syncTagsToForm(): void {
     this.tagsSelected.forEach(tag => {
       this.tags.push(this.formBuilder.control({ id: tag.id, title: tag.title }));
     });
   }
 
-  removeTags() {
+  removeTags(): void {
     this.tags.clear();
   }
 
-  updateBaseFromTags() {
+  updateBaseFromTags(): void {
     this.removeTags();
     this.syncTagsToForm();
   }

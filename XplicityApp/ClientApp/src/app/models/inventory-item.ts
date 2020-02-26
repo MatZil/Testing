@@ -12,5 +12,5 @@ export class InventoryItem {
   category: InventoryCategory;
   assignedTo: string;
   archived: boolean;
-  tags: Tag[];
+    tags:Tag[];
 }
