@@ -84,7 +84,7 @@ namespace XplicityApp.Services.Validations
         [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
         private static void ValidateDateInterval(in Holiday holiday, in DateTime currentTime)
         {
-            if (holiday.FromInclusive.Date <= currentTime.Date || holiday.ToInclusive.Date < holiday.FromInclusive.Date)
+            if (holiday.FromInclusive.Date < currentTime.Date || holiday.ToInclusive.Date < holiday.FromInclusive.Date)
             {
                 throw new InvalidOperationException("Requested dates for holiday are invalid.");
             }

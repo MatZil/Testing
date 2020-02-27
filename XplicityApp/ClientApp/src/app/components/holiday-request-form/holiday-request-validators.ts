@@ -3,10 +3,17 @@ import { WeekDay } from '@angular/common';
 
 export function fromInclusiveValidator(): ValidatorFn {
   return (fromInclusiveControl: AbstractControl): ValidationErrors | null => {
-    const isTodayOrEarlier = fromInclusiveControl.value && fromInclusiveControl.value <= new Date();
-    return isTodayOrEarlier ? { 'isTodayOrEarlier': true } : null;
+    var today = new Date();
+    var yesterday = addDays(today, -1);
+    const isEarlierThanToday = fromInclusiveControl.value && fromInclusiveControl.value <= yesterday;
+    return isEarlierThanToday ? { 'isEarlierThanToday': true } : null;
   };
 }
+
+var addDays = function (date, days) {
+  var daysInMilliseconds = days * 24 * 60 * 60 * 1000;
+  return new Date(date.getTime() + daysInMilliseconds);
+};
 
 export function dateRangeValidator(): ValidatorFn {
   return (holidayFormGroup: FormGroup): ValidationErrors | null => {
