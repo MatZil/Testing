@@ -20,8 +20,8 @@
                 <mat-error *ngIf="requestHolidayForm.controls.fromInclusive.errors?.required" class="error">
                     Date cannot be empty.
                 </mat-error>
-                <mat-error *ngIf="requestHolidayForm.controls.fromInclusive.errors?.isTodayOrEarlier" class="error">
-                    From date can not be today or earlier.
+                <mat-error *ngIf="requestHolidayForm.controls.fromInclusive.errors?.isEarlierThanToday" class="error">
+                    From date cannot be earlier than today.
                 </mat-error>
                 <mat-error *ngIf="requestHolidayForm.controls.fromInclusive.errors?.isWeekend" class="error">
                     From date can not be a weekend.
