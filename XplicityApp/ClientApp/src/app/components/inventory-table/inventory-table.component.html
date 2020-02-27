@@ -20,7 +20,10 @@
         <nz-date-picker [(ngModel)]="searchDateValue" (ngModelChange)="search()"></nz-date-picker>
       </th>
       <th>Comment</th>
-      <th>Tags</th>
+      <th nzCustomFilter>
+        Tags
+        <i class="ant-table-filter-icon" id="byTag" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="tag" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+      </th>
       <th></th>
     </tr>
   </thead>
@@ -54,7 +57,7 @@
         <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
       Search
     </button>
-        <button nz-button nzSize="small" (click)="resetCategory()">Reset</button>
+        <button nz-button nzSize="small" (click)="resetSearchCategory()">Reset</button>
     </div>
 </nz-dropdown-menu>
 <nz-dropdown-menu #owner="nzDropdownMenu" id="byOwner">
@@ -63,6 +66,15 @@
         <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
       Search
     </button>
-        <button nz-button nzSize="small" (click)="resetOwner()">Reset</button>
+        <button nz-button nzSize="small" (click)="resetSearchOwner()">Reset</button>
     </div>
+</nz-dropdown-menu>
+<nz-dropdown-menu #tag="nzDropdownMenu" id="byTag">
+  <div class="search-box">
+      <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchTagValue" />
+      <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+    Search
+  </button>
+      <button nz-button nzSize="small" (click)="resetSearchTag()">Reset</button>
+  </div>
 </nz-dropdown-menu>

@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material';
 import { AddInventoryFormComponent } from '../inventory-add-form/inventory-add-form.component';
 import { EditInventoryFormComponent } from '../inventory-edit-form/inventory-edit-form.component';
 import { NewInventoryItem } from '../../models/new-inventory-item';
+import { Tag } from 'src/app/models/tag';
 
 @Component({
   selector: 'app-inventory-table',
@@ -26,6 +27,7 @@ export class InventoryTableComponent implements OnInit {
 
   searchCategoryValue = '';
   searchOwnerValue = '';
+  searchTagValue = '';
   searchDateValue: Date;
   sortName: string | null = null;
   sortValue: string | null = null;
@@ -111,20 +113,36 @@ export class InventoryTableComponent implements OnInit {
     });
   }
 
-  resetCategory(): void {
+  resetSearchCategory(): void {
     this.searchCategoryValue = '';
     this.search();
   }
-  resetOwner(): void {
+  resetSearchOwner(): void {
     this.searchOwnerValue = '';
     this.search();
+  }
+  resetSearchTag(): void {
+    this.searchTagValue = '';
+    this.search();
+  }
+  itemHasSearchTag(Tags: Tag[]): Boolean{
+    if(!this.searchTagValue) return true;
+    var contains : boolean = false;
+    Tags.forEach(tag => {
+      if(tag.title.toLocaleUpperCase().indexOf(this.searchTagValue.toLocaleUpperCase()) !== -1)
+      {
+        contains = true;
+      }
+    });
+    return contains;
   }
   search(): void {
     const filterFunc = (item: InventoryItem) => {
       if (!this.searchDateValue) {
         return (
           item.category.name.toUpperCase().indexOf(this.searchCategoryValue.toUpperCase()) !== -1 &&
-          item.assignedTo.toUpperCase().indexOf(this.searchOwnerValue.toUpperCase()) !== -1
+          item.assignedTo.toUpperCase().indexOf(this.searchOwnerValue.toUpperCase()) !== -1 &&
+          this.itemHasSearchTag(item.tags)
         );
       }
       else {
@@ -137,7 +155,8 @@ export class InventoryTableComponent implements OnInit {
           return (
             item.category.name.toUpperCase().indexOf(this.searchCategoryValue.toUpperCase()) !== -1 &&
             item.assignedTo.toUpperCase().indexOf(this.searchOwnerValue.toUpperCase()) !== -1 &&
-            targetDate == itemDate
+            targetDate == itemDate && 
+            this.itemHasSearchTag(item.tags)
           );
         }
       }
