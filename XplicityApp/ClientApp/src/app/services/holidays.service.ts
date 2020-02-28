@@ -32,4 +32,9 @@ export class HolidaysService {
   addHoliday(holiday: NewHoliday): Observable<any> {
     return this.http.post(this.holidaysApiRequest, holiday);
   }
+
+  isFreeWorkday(date: Date): Observable<boolean> {
+    const dateString = date.toLocaleDateString('lt-LT');
+    return this.http.get<boolean>(`${this.holidaysApiBase}/is-free-workday?date=${dateString}`);
+  }
 }

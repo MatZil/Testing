@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using XplicityApp.Dtos.Holidays;
 using XplicityApp.Infrastructure.Enums;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Controllers
@@ -13,10 +15,12 @@ namespace XplicityApp.Controllers
     public class HolidaysController : ControllerBase
     {
         private readonly IHolidaysService _holidaysService;
+        private readonly ITimeService _timeService;
 
-        public HolidaysController(IHolidaysService holidaysService)
+        public HolidaysController(IHolidaysService holidaysService, ITimeService timeService)
         {
             _holidaysService = holidaysService;
+            _timeService = timeService;
         }
 
         // GET: api/holidays
@@ -64,6 +68,13 @@ namespace XplicityApp.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet("is-free-workday")]
+        [Produces(typeof(bool))]
+        public IActionResult IsFreeWorkday(DateTime date)
+        {
+            return Ok(_timeService.IsFreeWorkDay(date));
         }
     }
 }

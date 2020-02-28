@@ -76,7 +76,7 @@ namespace Tests.Tests
                 Price = 100,
                 InventoryCategoryId = 1,
                 EmployeeId = 1,
-                TagIds = new List<int>()
+                Tags = new List<TagDto>()
             };
 
             var createdInventoryItem = await _inventoryItemService.Create(newInventoryItem);
