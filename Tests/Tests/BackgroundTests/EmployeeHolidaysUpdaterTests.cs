@@ -16,7 +16,7 @@ namespace Tests.Tests.BackgroundTests
     public class EmployeeHolidaysUpdaterTests
     {
         private readonly EmployeesRepository _employeesRepository;
-        private readonly ITimeService _timeService;
+        private readonly Mock<ITimeService> _mockTimeService;
         private readonly EmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
 
         public EmployeeHolidaysUpdaterTests()
@@ -27,10 +27,10 @@ namespace Tests.Tests.BackgroundTests
             var userManager = setup.InitializeUserManager();
 
             _employeesRepository = new EmployeesRepository(context, userManager);
-            _timeService = new Mock<ITimeService>().Object;
+            _mockTimeService = new Mock<ITimeService>();
             var mockLoggerUpdater = new Mock<ILogger<EmployeeHolidaysBackgroundUpdater>>().Object;
             var mockEmployeesService = new Mock<IEmployeesService>().Object;
-            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater(_timeService, _employeesRepository, mockLoggerUpdater, mockEmployeesService);
+            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater(_mockTimeService.Object, _employeesRepository, mockLoggerUpdater, mockEmployeesService);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Tests.Tests.BackgroundTests
             await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(employees);
             var countTrue = 0;
 
-            var currentTime = _timeService.GetCurrentTime();
+            var currentTime = _mockTimeService.Object.GetCurrentTime();
             if (currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.DayOfWeek != DayOfWeek.Sunday && !DateSystem.IsPublicHoliday(currentTime, CountryCode.LT))
             {
                 var final = new double[employees.Count];
@@ -76,8 +76,7 @@ namespace Tests.Tests.BackgroundTests
         {
             var employees = await _employeesRepository.GetAll();
 
-            var mockTimeService = new Mock<ITimeService>();
-            mockTimeService.Setup(m => m.GetCurrentTime()).Returns(new DateTime(2019, 01, 01));
+            _mockTimeService.Setup(m => m.GetCurrentTime()).Returns(new DateTime(2019, 01, 01));
 
             var expected = new int[employees.Count, 2];
             var index = 0;

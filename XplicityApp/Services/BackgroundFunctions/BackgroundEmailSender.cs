@@ -19,8 +19,13 @@ namespace XplicityApp.Services.BackgroundFunctions
         private readonly IHolidayInfoService _holidayInfoService;
         private readonly ILogger<BackgroundEmailSender> _logger;
 
-        public BackgroundEmailSender(ITimeService timeService, IEmployeeRepository employeeRepository, IHolidaysRepository holidaysRepository,
-                                     IEmailService emailService, IHolidayInfoService holidayInfoService, ILogger<BackgroundEmailSender> logger)
+        public BackgroundEmailSender(
+            ITimeService timeService, 
+            IEmployeeRepository employeeRepository, 
+            IHolidaysRepository holidaysRepository,
+            IEmailService emailService, 
+            IHolidayInfoService holidayInfoService, 
+            ILogger<BackgroundEmailSender> logger)
         {
             _timeService = timeService;
             _employeeRepository = employeeRepository;
@@ -66,7 +71,7 @@ namespace XplicityApp.Services.BackgroundFunctions
             _logger.LogInformation("BroadcastCoworkersAbsences() was initiated at " + currentTime);
             try
             {
-                if (_timeService.IsFreeWorkDay(currentTime))
+                if (_timeService.IsWorkDay(currentTime))
                 {
                     var nextWorkDay = _timeService.GetNextWorkDay(currentTime);
 

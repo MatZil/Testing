@@ -33,7 +33,7 @@ namespace Tests.Tests.BackgroundTests
 
             _employeesRepository = new EmployeesRepository(context, userManager);
             _holidaysRepository = new HolidaysRepository(context);
-            var holidayInfoService = new Mock<IHolidayInfoService>().Object;
+            var mockHolidayInfoService = new Mock<IHolidayInfoService>().Object;
             _mockLoggerEmailSender = new Mock<ILogger<BackgroundEmailSender>>();
             _mockEmailService = new Mock<IEmailService>();
 
@@ -41,9 +41,9 @@ namespace Tests.Tests.BackgroundTests
             _mockTimeService = new Mock<ITimeService>();
 
             _backgroundEmailSenderWithMockedTimeService = new BackgroundEmailSender(_mockTimeService.Object, _employeesRepository, _holidaysRepository,
-                                                                                    _mockEmailService.Object, holidayInfoService, _mockLoggerEmailSender.Object);
+                                                                                    _mockEmailService.Object, mockHolidayInfoService, _mockLoggerEmailSender.Object);
             _backgroundEmailSender = new BackgroundEmailSender(_timeService, _employeesRepository, _holidaysRepository,
-                                                               _mockEmailService.Object, holidayInfoService, _mockLoggerEmailSender.Object);
+                                                               _mockEmailService.Object, mockHolidayInfoService, _mockLoggerEmailSender.Object);
         }
 
         [Fact]
@@ -65,11 +65,14 @@ namespace Tests.Tests.BackgroundTests
         {
             await _backgroundEmailSender.BroadcastCoworkersAbsences();
 
-            if (_timeService.IsFreeWorkDay(_timeService.GetCurrentTime()))
+            if (_timeService.IsWorkDay(_timeService.GetCurrentTime()))
+            {
                 _mockEmailService.Verify(emailService => emailService.NotifyAllAboutUpcomingAbsences(It.IsAny<ICollection<Employee>>(), It.IsAny<ICollection<Holiday>>()));
-
-            if (!_timeService.IsFreeWorkDay(_timeService.GetCurrentTime()))
+            }
+            else
+            {
                 _mockEmailService.Verify(emailService => emailService.NotifyAllAboutUpcomingAbsences(It.IsAny<ICollection<Employee>>(), It.IsAny<ICollection<Holiday>>()), Times.Never());
+            }
         }
 
         [Fact]

@@ -6,6 +6,7 @@ using System.Threading;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using XplicityApp.Infrastructure.Utils.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 
 namespace XplicityApp.Services
 {
@@ -15,13 +16,15 @@ namespace XplicityApp.Services
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<TimedDailyTaskHostedService> _logger;
         private readonly ITimeService _timeService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public TimedDailyTaskHostedService(IServiceProvider serviceProvider, ILogger<TimedDailyTaskHostedService> logger,
-                                           ITimeService timeService)
+                                           ITimeService timeService, IWebHostEnvironment webHostEnvironment)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
             _timeService = timeService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -35,7 +38,7 @@ namespace XplicityApp.Services
 
         private async void TimerCallback(object state)
         {
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+            if (_webHostEnvironment.IsProduction())
             {
                 using var scope = _serviceProvider.CreateScope();
                 var backgroundService = scope.ServiceProvider.GetRequiredService<IBackgroundService>();
@@ -43,7 +46,10 @@ namespace XplicityApp.Services
 
                 _logger.LogInformation(GetType().Name + " has done an additional iteration at " + _timeService.GetCurrentTime());
             }
-            else _logger.LogInformation("Skipping background tasks because not running in production (" + _timeService.GetCurrentTime() + ").");
+            else
+            {
+                _logger.LogInformation("Skipping background tasks because not running in production (" + _timeService.GetCurrentTime() + ").");
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
