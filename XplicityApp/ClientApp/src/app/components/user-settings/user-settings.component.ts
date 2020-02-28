@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { TableRowUserModel } from '../../models/table-row-user-model';
 import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../services/user.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';

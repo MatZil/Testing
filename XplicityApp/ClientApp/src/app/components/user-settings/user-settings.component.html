@@ -1,9 +1,9 @@
         <div>
             <div *ngIf="isAdmin()">
-                <button class="settings" mat-raised-button (click)="showUploadModal()">Upload holiday policy</button>
+                <button class="button" mat-raised-button (click)="showUploadModal()">Upload holiday policy</button>
             </div>
             <div>
-                <button class="settings" mat-raised-button (click)="showPasswordModal()">Change password</button>
+                <button class="button" mat-raised-button (click)="showPasswordModal()">Change password</button>
             </div>
             <nz-modal [(nzVisible)]="isVisibleUploadModal" nzTitle="uploadModal" [nzContent]="modalContent"
                 [nzFooter]="modalFooter" (nzOnCancel)="closeUploadModal()">
