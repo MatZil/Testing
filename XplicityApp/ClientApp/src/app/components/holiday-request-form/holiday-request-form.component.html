@@ -20,6 +20,15 @@
                 <mat-error *ngIf="requestHolidayForm.controls.fromInclusive.errors?.required" class="error">
                     Date cannot be empty.
                 </mat-error>
+                <mat-error *ngIf="requestHolidayForm.controls.fromInclusive.errors?.isEarlierThanToday" class="error">
+                    From date cannot be earlier than today.
+                </mat-error>
+                <mat-error *ngIf="requestHolidayForm.controls.fromInclusive.errors?.isWeekend" class="error">
+                    From date can not be a weekend.
+                </mat-error>
+                <mat-error *ngIf="requestHolidayForm.controls.fromInclusive.errors?.isFreeWorkday" class="error">
+                    From date can not be a public holiday.
+                </mat-error>
             </mat-form-field>
         </div>
         <div>
@@ -29,6 +38,12 @@
                 <mat-datepicker-toggle matSuffix [for]="toInclusive"></mat-datepicker-toggle>
                 <mat-error *ngIf="requestHolidayForm.controls.toInclusive.errors?.required" class="error">
                     Date cannot be empty.
+                </mat-error>
+                <mat-error *ngIf="requestHolidayForm.controls.toInclusive.errors?.isWeekend" class="error">
+                    To date can not be a weekend.
+                </mat-error>
+                <mat-error *ngIf="requestHolidayForm.controls.toInclusive.errors?.isFreeWorkday" class="error">
+                    To date can not be a public holiday.
                 </mat-error>
             </mat-form-field>
         </div>
@@ -42,7 +57,10 @@
         </div>
     </mat-card>
     <mat-card>
-        <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="requestHolidayForm.invalid">
+        <mat-error *ngIf="requestHolidayForm.errors?.isFromLaterThanTo" class="error">
+            To date can not be earlier than From.
+        </mat-error>
+        <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!requestHolidayForm.valid">
           Request holidays
         </button>
         <button mat-flat-button color="warn" [mat-dialog-close] class="floatRight">Cancel</button>

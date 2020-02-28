@@ -23,4 +23,14 @@ export class TagService {
   createNewTag(newTag: NewTag) {
     return this.http.post(this.tagApi, newTag);
   }
+
+  isTagNameValid(tagTitle: string): boolean {
+    const tagTitleValidationRegExp = new RegExp('^[a-zA-Z0-9#-]*$');
+
+    if (tagTitle.length > 10 || tagTitle.length < 3 || !tagTitleValidationRegExp.test(tagTitle)) {
+      return false;
+    }
+
+    return true;
+  }
 }

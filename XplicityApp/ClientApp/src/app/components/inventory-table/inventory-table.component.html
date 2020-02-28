@@ -20,6 +20,10 @@
         <nz-date-picker [(ngModel)]="searchDateValue" (ngModelChange)="search()"></nz-date-picker>
       </th>
       <th>Comment</th>
+      <th nzCustomFilter>
+        Tags
+        <i class="ant-table-filter-icon" id="byTag" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="tag" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+      </th>
       <th></th>
     </tr>
   </thead>
@@ -34,6 +38,12 @@
       <td>{{data.expiryDate | date}}</td>
       <td nzBreakWork>{{data.comment}}</td>
       <td>
+        <mat-chip-list *ngFor="let tag of data.tags|slice:0:2">
+          <mat-chip>{{ tag.title }}</mat-chip>
+        </mat-chip-list>
+        <div *ngIf="data.tags.length > 2">...</div>
+      </td>
+      <td>
         <button mat-flat-button (click)="openEditForm(data)">
           <i nz-icon nzType="edit" nzTheme="outline"></i>
         </button>
@@ -47,7 +57,7 @@
         <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
       Search
     </button>
-        <button nz-button nzSize="small" (click)="resetCategory()">Reset</button>
+        <button nz-button nzSize="small" (click)="resetSearchCategory()">Reset</button>
     </div>
 </nz-dropdown-menu>
 <nz-dropdown-menu #owner="nzDropdownMenu" id="byOwner">
@@ -56,6 +66,15 @@
         <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
       Search
     </button>
-        <button nz-button nzSize="small" (click)="resetOwner()">Reset</button>
+        <button nz-button nzSize="small" (click)="resetSearchOwner()">Reset</button>
     </div>
+</nz-dropdown-menu>
+<nz-dropdown-menu #tag="nzDropdownMenu" id="byTag">
+  <div class="search-box">
+      <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchTagValue" />
+      <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+    Search
+  </button>
+      <button nz-button nzSize="small" (click)="resetSearchTag()">Reset</button>
+  </div>
 </nz-dropdown-menu>
