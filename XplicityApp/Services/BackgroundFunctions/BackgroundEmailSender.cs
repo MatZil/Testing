@@ -32,7 +32,7 @@ namespace XplicityApp.Services.BackgroundFunctions
 
         public async Task SendHolidayReports()
         {
-            var currentTime = _timeService.GetCurrentTimeForBackgroundTasks();
+            var currentTime = _timeService.GetCurrentTime();
             _logger.LogInformation("SendHolidayReports() was initiated at " + currentTime);
 
             if (currentTime.Month != currentTime.AddDays(1).Month)
@@ -62,7 +62,7 @@ namespace XplicityApp.Services.BackgroundFunctions
 
         public async Task BroadcastCoworkersAbsences()
         {
-            var currentTime = _timeService.GetCurrentTimeForBackgroundTasks();
+            var currentTime = _timeService.GetCurrentTime();
             _logger.LogInformation("BroadcastCoworkersAbsences() was initiated at " + currentTime);
             try
             {
@@ -93,7 +93,7 @@ namespace XplicityApp.Services.BackgroundFunctions
 
         public async Task BroadcastCoworkersBirthdays()
         {
-            var currentTime = _timeService.GetCurrentTimeForBackgroundTasks();
+            var currentTime = _timeService.GetCurrentTime();
             _logger.LogInformation("BroadcastCoworkersBirthdays() was initiated at " + currentTime);
             try
             {

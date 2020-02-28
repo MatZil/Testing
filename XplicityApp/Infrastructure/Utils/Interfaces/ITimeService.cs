@@ -5,7 +5,6 @@ namespace XplicityApp.Infrastructure.Utils.Interfaces
     public interface ITimeService
     {
         DateTime GetCurrentTime();
-        DateTime GetCurrentTimeForBackgroundTasks();
         int GetWorkDays(DateTime from, DateTime to);
         int GetCurrentYearWorkDays();
         int GetRemainingMonthWorkDays(DateTime fromInclusive);

@@ -11,28 +11,6 @@ namespace XplicityApp.Infrastructure.Utils
             return DateTime.Now;
         }
 
-        public DateTime GetCurrentTimeForBackgroundTasks()
-        {
-            DateTime currentTime;
-
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
-            {
-                currentTime = GetCurrentTime();
-            }
-            else if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "TestSendingHolidayReports")
-            {
-                var currentDateTime = GetCurrentTime();
-                var daysInCurrentMonth = DateTime.DaysInMonth(currentDateTime.Year, currentDateTime.Month);
-                currentTime = new DateTime(currentDateTime.Year, currentDateTime.Month, daysInCurrentMonth);
-            }
-            else
-            {
-                currentTime = DateTime.MinValue; //makes sure background tasks are not triggered.
-            }
-
-            return currentTime;
-        }
-
         public bool IsFreeWorkDay(DateTime workDay)
         {
             if (workDay.DayOfWeek == DayOfWeek.Saturday || workDay.DayOfWeek == DayOfWeek.Sunday

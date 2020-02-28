@@ -7,11 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
-using System.Linq;
 using XplicityApp.Configurations;
 using XplicityApp.Dtos.EmailTemplates;
 using XplicityApp.Dtos.Employees;
@@ -19,6 +16,7 @@ using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Static_Files;
+using XplicityApp.Infrastructure.Utils;
 
 namespace Tests
 {
@@ -34,6 +32,7 @@ namespace Tests
         private Tag[] _tags;
         private InventoryItemTag[] _inventoryItemTags;
         private FileRecord[] _fileRecords;
+        private TimeService _timeService = new TimeService();
 
         private HolidayDbContext _context;
         public HolidayDbContext HolidayDbContext =>
@@ -305,8 +304,8 @@ namespace Tests
                     Employee = context.Employees.Find(1),
                     EmployeeId = 1,
                     Type = HolidayType.Annual,
-                    FromInclusive = DateTime.Today.AddDays(1),
-                    ToInclusive = DateTime.Today.AddDays(6),
+                    FromInclusive = _timeService.GetNextWorkDay(DateTime.Today),
+                    ToInclusive = _timeService.GetNextWorkDay(DateTime.Today).AddDays(5),
                     Status = HolidayStatus.Confirmed,
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 10, 14),

@@ -8,6 +8,7 @@ using XplicityApp.Services.BackgroundFunctions;
 using Microsoft.Extensions.Logging;
 using XplicityApp.Services.Interfaces;
 using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Infrastructure.Utils.Interfaces;
 
 namespace Tests.Tests.BackgroundTests
 {
@@ -15,8 +16,10 @@ namespace Tests.Tests.BackgroundTests
     public class EmailSenderTests
     {
         private readonly EmployeesRepository _employeesRepository;
+        private readonly Mock<ITimeService> _mockTimeService;
         private readonly TimeService _timeService;
         private readonly BackgroundEmailSender _backgroundEmailSender;
+        private readonly BackgroundEmailSender _backgroundEmailSenderWithMockedTimeService;
         private readonly Mock<ILogger<BackgroundEmailSender>> _mockLoggerEmailSender;
         private readonly Mock<IEmailService> _mockEmailService;
         private readonly HolidaysRepository _holidaysRepository;
@@ -29,12 +32,16 @@ namespace Tests.Tests.BackgroundTests
             var userManager = setup.InitializeUserManager();
 
             _employeesRepository = new EmployeesRepository(context, userManager);
-            _timeService = new TimeService();
             _holidaysRepository = new HolidaysRepository(context);
             var holidayInfoService = new Mock<IHolidayInfoService>().Object;
             _mockLoggerEmailSender = new Mock<ILogger<BackgroundEmailSender>>();
             _mockEmailService = new Mock<IEmailService>();
 
+            _timeService = new TimeService();
+            _mockTimeService = new Mock<ITimeService>();
+
+            _backgroundEmailSenderWithMockedTimeService = new BackgroundEmailSender(_mockTimeService.Object, _employeesRepository, _holidaysRepository,
+                                                                                    _mockEmailService.Object, holidayInfoService, _mockLoggerEmailSender.Object);
             _backgroundEmailSender = new BackgroundEmailSender(_timeService, _employeesRepository, _holidaysRepository,
                                                                _mockEmailService.Object, holidayInfoService, _mockLoggerEmailSender.Object);
         }
@@ -42,9 +49,13 @@ namespace Tests.Tests.BackgroundTests
         [Fact]
         public async void When_SendingHolidayReports_Expect_HolidayReportsWereSent()
         {
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "TestSendingHolidayReports");
+            var currentDateTime = DateTime.Now;
+            var daysInCurrentMonth = DateTime.DaysInMonth(currentDateTime.Year, currentDateTime.Month);
+            var lastDayOfCurrentMonth = new DateTime(currentDateTime.Year, currentDateTime.Month, daysInCurrentMonth);
 
-            await _backgroundEmailSender.SendHolidayReports();
+            _mockTimeService.Setup(m => m.GetCurrentTime()).Returns(lastDayOfCurrentMonth);
+
+            await _backgroundEmailSenderWithMockedTimeService.SendHolidayReports();
 
             _mockEmailService.Verify(emailService => emailService.SendThisMonthsHolidayInfo(It.IsAny<ICollection<Employee>>(), It.IsAny<List<(Holiday, Client)>>()));
         }
@@ -52,18 +63,18 @@ namespace Tests.Tests.BackgroundTests
         [Fact]
         public async void When_BroadcastingCoworkersAbsences_Expect_AbsencesWereBroadcasted()
         {
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Production");
-
             await _backgroundEmailSender.BroadcastCoworkersAbsences();
 
-            _mockEmailService.Verify(emailService => emailService.NotifyAllAboutUpcomingAbsences(It.IsAny<ICollection<Employee>>(), It.IsAny<ICollection<Holiday>>()));
+            if (_timeService.IsFreeWorkDay(_timeService.GetCurrentTime()))
+                _mockEmailService.Verify(emailService => emailService.NotifyAllAboutUpcomingAbsences(It.IsAny<ICollection<Employee>>(), It.IsAny<ICollection<Holiday>>()));
+
+            if (!_timeService.IsFreeWorkDay(_timeService.GetCurrentTime()))
+                _mockEmailService.Verify(emailService => emailService.NotifyAllAboutUpcomingAbsences(It.IsAny<ICollection<Employee>>(), It.IsAny<ICollection<Holiday>>()), Times.Never());
         }
 
         [Fact]
         public async void When_BroadcastingCoworkersBirthdays_Expect_BirthdaysWereBroadcasted()
         {
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Production");
-
             await _backgroundEmailSender.BroadcastCoworkersBirthdays();
 
             _mockEmailService.Verify(emailService => emailService.SendBirthDayReminder(It.IsAny<ICollection<Employee>>(), It.IsAny<ICollection<Employee>>()));

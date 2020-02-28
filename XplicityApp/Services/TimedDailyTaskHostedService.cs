@@ -35,11 +35,15 @@ namespace XplicityApp.Services
 
         private async void TimerCallback(object state)
         {
-            using var scope = _serviceProvider.CreateScope();
-            var backgroundService = scope.ServiceProvider.GetRequiredService<IBackgroundService>();
-            await backgroundService.DoBackgroundTasks();
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+            {
+                using var scope = _serviceProvider.CreateScope();
+                var backgroundService = scope.ServiceProvider.GetRequiredService<IBackgroundService>();
+                await backgroundService.DoBackgroundTasks();
 
-            _logger.LogInformation(GetType().Name + " has done an additional iteration at " + _timeService.GetCurrentTime());
+                _logger.LogInformation(GetType().Name + " has done an additional iteration at " + _timeService.GetCurrentTime());
+            }
+            else _logger.LogInformation("Skipping background tasks because not running in production (" + _timeService.GetCurrentTime() + ").");
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
