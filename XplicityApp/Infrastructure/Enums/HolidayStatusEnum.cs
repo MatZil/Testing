@@ -3,8 +3,9 @@
     public enum HolidayStatus
     {
         Pending,
-        Rejected,
-        Confirmed,
-        ClientConfirmed
+        AdminRejected,
+        AdminConfirmed,
+        ClientConfirmed,
+        ClientRejected
     }
 }

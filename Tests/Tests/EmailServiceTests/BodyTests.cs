@@ -68,8 +68,8 @@ namespace Tests.Tests.EmailServiceTests
             var expectedBody =
                             $"Hello, {_client.OwnerName},\n\nAn employee {_employee.Name} {_employee.Surname} is intending to go on " +
                             $"{_holiday.Type} holidays from {_holiday.FromInclusive.ToShortDateString()} to {_holiday.ToInclusive.ToShortDateString()} (inclusive).\n\n" +
-                            $"Click this link to confirm: {$"{_configuration["AppSettings:RootUrl"]}/api/HolidayClient?holidayId={_holiday.Id}"}\n" +
-                            $"Click this link to decline: {_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={_holiday.Id}";
+                            $"Click this link to confirm: {$"{_configuration["AppSettings:RootUrl"]}/api/HolidayClient?holidayId={_holiday.Id}&confirmerId={_client.Id}"}\n" +
+                            $"Click this link to decline: {_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={_holiday.Id}&confirmerId={_client.Id}";
 
             Assert.Equal(expectedBody, _actualBodyList.FirstOrDefault());
         }

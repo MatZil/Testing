@@ -59,7 +59,7 @@ namespace XplicityApp.Services.Validations
 
         private async Task ValidateHoliday(Holiday holiday)
         {
-            if (holiday.Status == HolidayStatus.Confirmed)
+            if (holiday.Status == HolidayStatus.AdminConfirmed)
             {
                 throw new InvalidOperationException("Holiday already confirmed.");
             }

@@ -30,11 +30,14 @@ export class EnumToStringConverterService {
       case HolidayStatus.ClientConfirmed:
         return 'Confirmed by client';
 
-      case HolidayStatus.Rejected:
-        return 'Rejected';
+      case HolidayStatus.ClientRejected:
+        return 'Rejected by client';
 
-      case HolidayStatus.Confirmed:
-        return 'Confirmed';
+      case HolidayStatus.AdminRejected:
+        return 'Rejected by admin';
+
+      case HolidayStatus.AdminConfirmed:
+        return 'Confirmed by admin';
     }
   }
 
@@ -46,10 +49,13 @@ export class EnumToStringConverterService {
       case HolidayStatus.ClientConfirmed:
         return 'orange';
 
-      case HolidayStatus.Rejected:
+      case HolidayStatus.AdminRejected:
         return 'red';
 
-      case HolidayStatus.Confirmed:
+      case HolidayStatus.ClientRejected:
+        return 'red';
+
+      case HolidayStatus.AdminConfirmed:
         return 'green';
     }
   }

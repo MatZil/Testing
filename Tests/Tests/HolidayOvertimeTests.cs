@@ -39,7 +39,7 @@ namespace Tests.Tests
             var mockDocxGeneratorService = new Mock<IDocxGeneratorService>();
 
             _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _mockTimeService, _overtimeUtility);
-            var holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, _mapper, _mockTimeService, _overtimeUtility);
+            var holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, _mapper, _mockTimeService, _overtimeUtility, clientsRepository);
             _holidayConfirmService = new HolidayConfirmService(mockEmailService.Object, _mapper, _holidaysRepository,
                                                                _employeesRepository, clientsRepository, holidaysService,
                                                                 mockDocxGeneratorService.Object, _overtimeUtility,
