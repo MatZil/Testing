@@ -24,6 +24,7 @@ namespace Tests.Tests
         private readonly EmployeesService _employeesService;
         private readonly EmployeesRepository _employeesRepository;
         private readonly HolidaysRepository _holidaysRepository;
+        private readonly ClientsRepository _clientsRepository;
 
         public HolidayTests(ITestOutputHelper output)
         {
@@ -41,7 +42,8 @@ namespace Tests.Tests
             var mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
             _holidaysRepository = new HolidaysRepository(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
-            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, mockTimeService, mockOvertimeUtility);
+            _clientsRepository = new ClientsRepository(_context);
+            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, mockTimeService, mockOvertimeUtility, _clientsRepository);
             _employeesService = new EmployeesService(_employeesRepository, mapper, mockOvertimeUtility, timeService, mockUserService);
         }
 
@@ -200,34 +202,59 @@ namespace Tests.Tests
             var fullNameExpected = $"{retrievedEmployee.Name} {retrievedEmployee.Surname}";
             var fullNameActual = retrievedHoliday.EmployeeFullName;
 
-            Assert.True(fullNameExpected == fullNameActual, "Employee's full name is incorrect.");
-        }
-
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async void When_DecliningHoliday_Expect_True(int holidayId)
-        {
-            await _holidaysService.Decline(holidayId, 1);
-
-            var updatedHoliday = await _holidaysService.GetById(holidayId);
-            var status = updatedHoliday.Status.ToString();
-
-            Assert.True(status == "Rejected", "Failed to confirm holiday.");
+            Assert.True(fullNameExpected.Equals(fullNameActual), "Employee's full name is incorrect.");
         }
 
         [Theory]
         [InlineData(1, 1)]
         [InlineData(2, 2)]
-        public async void When_DecliningHoliday_Expect_UpdatedConfirmerFullName(int holidayId, int confirmerId)
+        public async void When_DecliningHolidayWithClient_Expect_StatusChangedToRejectedByClient(int holidayId, int confirmerId)
+        {
+            await _holidaysService.Decline(holidayId, confirmerId);
+
+            var updatedHoliday = await _holidaysService.GetById(holidayId);
+            var status = updatedHoliday.Status.ToString();
+
+            Assert.True(status.Equals("ClientRejected"), "Failed to confirm holiday.");
+        }
+
+        [Theory]
+        [InlineData(3, 1)]
+        public async void When_DecliningHolidayWithAdmin_Expect_StatusChangedToRejected(int holidayId, int confirmerId)
+        {
+            await _holidaysService.Decline(holidayId, confirmerId);
+
+            var updatedHoliday = await _holidaysService.GetById(holidayId);
+            var status = updatedHoliday.Status.ToString();
+
+            Assert.True(status.Equals("AdminRejected"), "Failed to confirm holiday.");
+        }
+
+        [Theory]
+        [InlineData(3, 1)]
+        public async void When_DecliningHolidayWithAdmin_Expect_ConfirmerFullNameUpdatedToAdminFullName(int holidayId, int confirmerId)
         {
             await _holidaysService.Decline(holidayId, confirmerId);
             var updatedHoliday = await _holidaysService.GetById(holidayId);
 
-            var fullNameExpected = await _holidaysService.GetConfirmerFullName(updatedHoliday.ConfirmerId);
+            var fullNameExpected = await _holidaysService.GetAdminConfirmerFullName(confirmerId);
             var fullNameActual = updatedHoliday.ConfirmerFullName;
 
-            Assert.True(fullNameExpected == fullNameActual, "Confirmer's full name is incorrect.");
+            Assert.True(fullNameExpected.Equals(fullNameActual), "Confirmer's full name is incorrect.");
+        }
+
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        public async void When_DecliningHolidayWithClient_Expect_ConfirmerFullNameUpdatedToClientCompanyName(int holidayId, int confirmerId)
+        {
+            await _holidaysService.Decline(holidayId, confirmerId);
+            var updatedHoliday = await _holidaysService.GetById(holidayId);
+
+            var fullNameExpected = await _holidaysService.GetClientConfirmerFullName(confirmerId);
+            var fullNameActual = updatedHoliday.ConfirmerFullName;
+
+            Assert.True(fullNameExpected.Equals(fullNameActual), "Confirmer's full name is incorrect.");
         }
     }
 }

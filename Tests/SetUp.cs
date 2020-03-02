@@ -224,7 +224,7 @@ namespace Tests
                 },
                 new Employee
                 {
-                    ClientId = 1,
+                    ClientId = 2,
                     Client = context.Clients.Find(1),
                     Name = "EmployeeName2",
                     Surname = "EmployeeSurname2",
@@ -239,8 +239,6 @@ namespace Tests
                 },
                 new Employee
                 {
-                    ClientId = 1,
-                    Client = context.Clients.Find(1),
                     Name = "EmployeeName3",
                     Surname = "EmployeeSurname3",
                     Email = "taken3@email",
@@ -295,18 +293,18 @@ namespace Tests
                     Type = HolidayType.Annual,
                     FromInclusive = DateTime.Today.AddDays(-1),
                     ToInclusive = DateTime.Today.AddDays(6),
-                    Status = HolidayStatus.Confirmed,
+                    Status = HolidayStatus.AdminConfirmed,
                     RequestCreatedDate = new DateTime(2019, 10, 14),
                     Paid = false
                 },
                 new Holiday
                 {
-                    Employee = context.Employees.Find(1),
-                    EmployeeId = 1,
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
                     Type = HolidayType.Annual,
                     FromInclusive = _timeService.GetNextWorkDay(DateTime.Today),
                     ToInclusive = _timeService.GetNextWorkDay(DateTime.Today).AddDays(5),
-                    Status = HolidayStatus.Confirmed,
+                    Status = HolidayStatus.AdminConfirmed,
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 10, 14),
                     Paid = true

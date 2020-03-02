@@ -46,7 +46,7 @@ namespace XplicityApp.Services.BackgroundFunctions
                 {
                     var allHolidays = await _holidaysRepository.GetAll();
                     var currentMonthHolidays = allHolidays.Where(h =>
-                                                                    h.Status == HolidayStatus.Confirmed &&
+                                                                    h.Status == HolidayStatus.AdminConfirmed &&
                                                                     h.FromInclusive.Year == currentTime.Year &&
                                                                     h.FromInclusive.Month == currentTime.Month
                                                                 ).ToList();
@@ -78,7 +78,7 @@ namespace XplicityApp.Services.BackgroundFunctions
                     var allEmployees = await _employeeRepository.GetAll();
                     var allHolidays = await _holidaysRepository.GetAll();
                     var nextDayHolidays = allHolidays.Where(holiday =>
-                                                                holiday.Status == HolidayStatus.Confirmed &&
+                                                                holiday.Status == HolidayStatus.AdminConfirmed &&
                                                                 holiday.FromInclusive.Date == nextWorkDay.Date
                                                             ).ToList();
 
