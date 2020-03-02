@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using XplicityApp.Dtos.NotificationSettings;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
 
@@ -44,9 +43,12 @@ namespace XplicityApp.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<bool> Update(NotificationSettings entity)
+        public async Task<bool> Update(NotificationSettings entity)
         {
-            throw new NotImplementedException();
+            _context.NotificationSettings.Attach(entity);
+            var changes = await _context.SaveChangesAsync();
+
+            return changes > 0;
         }
     }
 }

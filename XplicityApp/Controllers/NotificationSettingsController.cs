@@ -33,9 +33,9 @@ namespace XplicityApp.Controllers
 
         [HttpPut("{employeeId}")]
         [Produces(typeof(bool))]
-        public async Task<IActionResult> Put(int employeeId, UpdateNotificationSettingsDto updateNotificationSettingsDto)
+        public async Task<IActionResult> Put(int employeeId, NotificationSettingsDto notificationSettingsDto)
         {
-            var isUpdated = await _notificationSettingsSerivce.Update(employeeId, updateNotificationSettingsDto);
+            var isUpdated = await _notificationSettingsSerivce.Update(employeeId, notificationSettingsDto);
 
             return Ok(isUpdated);
         }

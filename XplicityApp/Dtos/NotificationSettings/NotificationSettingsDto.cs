@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace XplicityApp.Dtos.NotificationSettings
+﻿namespace XplicityApp.Dtos.NotificationSettings
 {
     public class NotificationSettingsDto
     {
+        public bool BroadcastOwnBirthday { get; set; }
+        public bool ReceiveBirthdayNotifications { get; set; }
+        public int EmployeeId { get; set; }
     }
 }

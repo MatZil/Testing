@@ -10,7 +10,7 @@ using XplicityApp.Infrastructure.Database;
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20200228142357_AddNotificationSettings")]
+    [Migration("20200302114655_AddNotificationSettings")]
     partial class AddNotificationSettings
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
