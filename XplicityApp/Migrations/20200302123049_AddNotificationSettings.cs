@@ -12,8 +12,8 @@ namespace XplicityApp.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BroadcastOwnBirthday = table.Column<bool>(nullable: false),
-                    ReceiveBirthdayNotifications = table.Column<bool>(nullable: false),
+                    BroadcastOwnBirthday = table.Column<bool>(nullable: false, defaultValue: true),
+                    ReceiveBirthdayNotifications = table.Column<bool>(nullable: false, defaultValue: true),
                     EmployeeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

@@ -16,9 +16,12 @@ namespace XplicityApp.Infrastructure.Repositories
         {
             _context = context;
         }
-        public Task<int> Create(NotificationSettings entity)
+        public async Task<int> Create(NotificationSettings entity)
         {
-            throw new NotImplementedException();
+            _context.NotificationSettings.Add(entity);
+            await _context.SaveChangesAsync();
+
+            return entity.Id;
         }
 
         public Task<bool> Delete(NotificationSettings entity)

@@ -7,10 +7,10 @@ namespace XplicityApp.Infrastructure.Database.Models
     {
         [Required]
         [DefaultValue(true)]
-        public bool BroadcastOwnBirthday { get; set; }
+        public bool BroadcastOwnBirthday { get; set; } = true;
         [Required]
         [DefaultValue(true)]
-        public bool ReceiveBirthdayNotifications { get; set; }
+        public bool ReceiveBirthdayNotifications { get; set; } = true;
         [Required]
         public int EmployeeId { get; set; }
         public Employee Employee { get; set; }

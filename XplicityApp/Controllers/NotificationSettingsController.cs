@@ -39,6 +39,5 @@ namespace XplicityApp.Controllers
 
             return Ok(isUpdated);
         }
-
     }
 }

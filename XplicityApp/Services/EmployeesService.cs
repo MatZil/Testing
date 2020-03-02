@@ -17,15 +17,23 @@ namespace XplicityApp.Services
         private readonly ITimeService _timeService;
         private readonly IUserService _userService;
         private readonly IOvertimeUtility _overtimeUtility;
+        private readonly INotificationSettingsService _notificationSettingsService;
 
-        public EmployeesService(IEmployeeRepository repository, IMapper mapper, IOvertimeUtility overtimeUtility,
-                                ITimeService timeService, IUserService userService)
+        public EmployeesService(
+            IEmployeeRepository repository,
+            IMapper mapper,
+            IOvertimeUtility overtimeUtility,
+            ITimeService timeService,
+            IUserService userService,
+            INotificationSettingsService notificationSettingsService
+            )
         {
             _repository = repository;
             _mapper = mapper;
             _userService = userService;
             _timeService = timeService;
             _overtimeUtility = overtimeUtility;
+            _notificationSettingsService = notificationSettingsService;
         }
 
         public async Task<GetEmployeeDto> GetById(int id)
@@ -92,6 +100,7 @@ namespace XplicityApp.Services
 
             await _repository.Create(newEmployee);
             await _userService.Create(newEmployee, newEmployeeDto);
+            await _notificationSettingsService.Create(newEmployee.Id);
 
             var employeeDto = _mapper.Map<NewEmployeeDto>(newEmployee);
 

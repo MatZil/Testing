@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using XplicityApp.Dtos.NotificationSettings;
+using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services.Interfaces;
 
@@ -16,6 +17,17 @@ namespace XplicityApp.Services
             _notificationSettingsRepository = notificationSettingsRepository;
             _mapper = mapper;
         }
+
+        public Task<int> Create(int employeeId)
+        {
+            var notificationSettings = new NotificationSettings
+            {
+                EmployeeId = employeeId
+            };
+
+            return _notificationSettingsRepository.Create(notificationSettings);
+        }
+
         public async Task<NotificationSettingsDto> GetByEmployeeId(int employeeId)
         {
             var notificationSettings = await _notificationSettingsRepository.GetByEmployeeId(employeeId);

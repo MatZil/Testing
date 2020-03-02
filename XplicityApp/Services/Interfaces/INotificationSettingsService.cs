@@ -7,5 +7,6 @@ namespace XplicityApp.Services.Interfaces
     {
         Task<NotificationSettingsDto> GetByEmployeeId(int employeeId);
         Task<bool> Update(int employeeId, NotificationSettingsDto updateNotificationSettingsDto);
+        Task<int> Create(int employeeId);
     }
 }
