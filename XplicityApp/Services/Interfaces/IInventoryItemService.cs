@@ -14,6 +14,6 @@ namespace XplicityApp.Services.Interfaces
         Task<InventoryItem> Create(NewInventoryItemDto newInventoryItem);
         Task Update(int id, UpdateInventoryItemDto updateInventoryItemDto);
 
-        Task<ICollection<GetInventoryItemDto>> GetByItemStatus(bool showArchivedInventory);
+        Task<ICollection<GetInventoryItemDto>> GetByStatus(bool showArchivedInventory);
     }
 }
