@@ -88,6 +88,24 @@ namespace XplicityApp.Services
             var inventoryItems = await _repository.GetByInventoryItemStatus(showArchivedInventory);
             var inventoryItemsDto = _mapper.Map<GetInventoryItemDto[]>(inventoryItems);
 
+            foreach (var inventoryItemDto in inventoryItemsDto)
+            {
+                inventoryItemDto.Tags = await GetTagsListByItemId(inventoryItemDto.Id);
+
+                foreach (var inventoryItem in inventoryItems)
+                {
+                    if (inventoryItemDto.EmployeeId == inventoryItem.EmployeeId)
+                    {
+                        inventoryItemDto.AssignedTo = inventoryItem.Employee.Name + " " + inventoryItem.Employee.Surname;
+                        break;
+                    }
+                }
+
+                if (inventoryItemDto.AssignedTo == null)
+                {
+                    inventoryItemDto.AssignedTo = "Office";
+                }
+            }
             return inventoryItemsDto;
         }
 
@@ -100,14 +118,14 @@ namespace XplicityApp.Services
 
             var newInventoryItem = _mapper.Map<InventoryItem>(newInventoryItemDto);
             var inventoryItemId = await _repository.Create(newInventoryItem);
-            if (newInventoryItemDto.TagIds != null)
+            if (newInventoryItemDto.Tags != null)
             {
-                foreach (var tagId in newInventoryItemDto.TagIds)
+                foreach (var tag in newInventoryItemDto.Tags)
                 {
                     await _inventoryItemTagsRepository.Create(new InventoryItemTag()
                     {
                         InventoryItemId = inventoryItemId,
-                        TagId = tagId
+                        TagId = tag.Id
                     });
                 }
             }
@@ -158,7 +176,6 @@ namespace XplicityApp.Services
         private async Task<List<TagDto>> GetTagsListByItemId(int itemId)
         {
             var tags = new List<TagDto>();
-
             var InventoryItemTags = await _inventoryItemTagsRepository.FindAllByInventoryItemId(itemId);
 
             foreach (var inventoryItemTag in InventoryItemTags)

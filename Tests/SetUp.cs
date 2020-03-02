@@ -382,6 +382,90 @@ namespace Tests
                     RequestCreatedDate = new DateTime(2019, 12, 14),
                     Paid = true
                 },
+                new Holiday //10 for validation fail 10-14
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(2021, 02, 19),
+                    ToInclusive = new DateTime(2021, 02, 18),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 0,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
+                    Paid = true
+                },
+                new Holiday //11
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(2021, 02, 19),
+                    ToInclusive = new DateTime(2021, 02, 25),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 100,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
+                    Paid = true
+                },
+                new Holiday //12
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 1,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(2021, 02, 19),
+                    ToInclusive = new DateTime(2021, 02, 20),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 3,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
+                    Paid = true
+                },
+                new Holiday //13
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 1,
+                    Type = HolidayType.Parental,
+                    FromInclusive = new DateTime(2021, 02, 19),
+                    ToInclusive = new DateTime(2021, 02, 20),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 3,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
+                    Paid = true
+                },
+                new Holiday //14
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 1,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(2021, 02, 20),
+                    ToInclusive = new DateTime(2021, 02, 24),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 4,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
+                    Paid = true
+                },
+                new Holiday //15
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(2020, 03, 13),
+                    ToInclusive = new DateTime(2020, 03, 18),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 4,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
+                    Paid = true
+                },
+                new Holiday //16
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(2020, 03, 17),
+                    ToInclusive = new DateTime(2020, 03, 19),
+                    Status = HolidayStatus.Pending,
+                    OvertimeDays = 3,
+                    RequestCreatedDate = new DateTime(2019, 12, 14),
+                    Paid = true
+                },
             };
             context.Holidays.AddRange(_holidays);
 
