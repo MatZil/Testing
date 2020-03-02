@@ -29,9 +29,11 @@ namespace XplicityApp.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<ICollection<NotificationSettings>> GetAll()
+        public async Task<ICollection<NotificationSettings>> GetAll()
         {
-            throw new NotImplementedException();
+            var notificationSettings = await _context.NotificationSettings.ToArrayAsync();
+
+            return notificationSettings;
         }
 
         public async Task<NotificationSettings> GetByEmployeeId(int employeeId)

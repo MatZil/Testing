@@ -32,6 +32,7 @@ namespace Tests
         private Tag[] _tags;
         private InventoryItemTag[] _inventoryItemTags;
         private FileRecord[] _fileRecords;
+        private NotificationSettings[] _notificationSettings;
 
         private HolidayDbContext _context;
         public HolidayDbContext HolidayDbContext =>
@@ -127,7 +128,7 @@ namespace Tests
             var roleStore = new RoleStore<IdentityRole>(context);
             _roleManager = InitializeRoleManager();
 
-            if (! await _roleManager.RoleExistsAsync("Admin"))
+            if (!await _roleManager.RoleExistsAsync("Admin"))
             {
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
             }
@@ -585,6 +586,17 @@ namespace Tests
             };
             context.InventoryItemsTags.AddRange(_inventoryItemTags);
             context.SaveChanges();
+
+            _notificationSettings = new[]
+            {
+                new NotificationSettings
+                {
+                    Id = 1,
+                    EmployeeId = 1
+                }
+            };
+            context.NotificationSettings.AddRange(_notificationSettings);
+            context.SaveChanges();
         }
 
         public int GetCount(string type)
@@ -609,6 +621,8 @@ namespace Tests
                     return _inventoryCategories.Length;
                 case "tags":
                     return _tags.Length;
+                case "notificationSettings":
+                    return _notificationSettings.Length;
                 default:
                     return 0;
             }

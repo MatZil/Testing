@@ -28,6 +28,14 @@ namespace XplicityApp.Services
             return _notificationSettingsRepository.Create(notificationSettings);
         }
 
+        public async Task<NotificationSettingsDto[]> GetAll()
+        {
+            var notificationSettings = await _notificationSettingsRepository.GetAll();
+            var notificationSettingsDto = _mapper.Map<NotificationSettingsDto[]>(notificationSettings);
+
+            return notificationSettingsDto;
+        }
+
         public async Task<NotificationSettingsDto> GetByEmployeeId(int employeeId)
         {
             var notificationSettings = await _notificationSettingsRepository.GetByEmployeeId(employeeId);

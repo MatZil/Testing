@@ -42,8 +42,8 @@ namespace Tests.Tests
             _holidaysRepository = new HolidaysRepository(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
             _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, mockTimeService, mockOvertimeUtility);
-            var notificationSettingsService = new Mock<INotificationSettingsService>().Object;
-            _employeesService = new EmployeesService(_employeesRepository, mapper, mockOvertimeUtility, timeService, mockUserService, notificationSettingsService);
+            var mockNotificationSettingsService = new Mock<INotificationSettingsService>().Object;
+            _employeesService = new EmployeesService(_employeesRepository, mapper, mockOvertimeUtility, timeService, mockUserService, mockNotificationSettingsService);
         }
 
         [Theory]
