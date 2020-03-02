@@ -74,7 +74,7 @@ namespace XplicityApp.Controllers
         [Produces(typeof(bool))]
         public IActionResult IsFreeWorkday(DateTime date)
         {
-            return Ok(_timeService.IsFreeWorkDay(date));
+            return Ok(!_timeService.IsWorkDay(date));
         }
     }
 }

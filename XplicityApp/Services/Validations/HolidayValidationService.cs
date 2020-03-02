@@ -75,9 +75,9 @@ namespace XplicityApp.Services.Validations
                 throw new InvalidOperationException("Employee is not eligible for parental leave.");
             }
 
-            if (IsAnyBoundaryFreeWorkday(holiday))
+            if (IsAnyBoundaryNotAWorkday(holiday))
             {
-                throw new InvalidOperationException("Either first or last holiday's day is a free workday anyway.");
+                throw new InvalidOperationException("Either first or last holiday's day is not a workday anyway.");
             }
         }
 
@@ -135,9 +135,9 @@ namespace XplicityApp.Services.Validations
             return true;
         }
 
-        private bool IsAnyBoundaryFreeWorkday(Holiday holiday)
+        private bool IsAnyBoundaryNotAWorkday(Holiday holiday)
         {
-            if (_timeService.IsFreeWorkDay(holiday.FromInclusive) || _timeService.IsFreeWorkDay(holiday.ToInclusive))
+            if (!_timeService.IsWorkDay(holiday.FromInclusive) || !_timeService.IsWorkDay(holiday.ToInclusive))
             {
                 return true;
             }
