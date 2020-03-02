@@ -67,7 +67,7 @@ namespace XplicityApp.Infrastructure.Repositories
         public List<Holiday> GetConfirmedHolidays(int employeeId)
         {
             var holidays = Context.Holidays.Where(holiday =>
-                                                    holiday.EmployeeId == employeeId && holiday.Status == HolidayStatus.Confirmed).ToList();
+                                                    holiday.EmployeeId == employeeId && holiday.Status == HolidayStatus.AdminConfirmed).ToList();
 
             return holidays;
         }

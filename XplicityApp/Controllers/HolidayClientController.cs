@@ -17,9 +17,9 @@ namespace XplicityApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> RequestConfirmationFromAdmin(int holidayId)
+        public async Task<IActionResult> RequestConfirmationFromAdmin(int holidayId, int confirmerId)
         {
-            await _confirmationService.RequestAdminApproval(holidayId, EmployeeClientStatus.CLIENT_CONFIRMED);
+            await _confirmationService.RequestAdminApproval(holidayId, EmployeeClientStatus.CLIENT_CONFIRMED, confirmerId);
 
             return Ok();
         }

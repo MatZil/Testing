@@ -9,6 +9,7 @@ using XplicityApp.Infrastructure.Static_Files;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Extensions.Interfaces;
 using XplicityApp.Services.Interfaces;
+using System;
 
 namespace XplicityApp.Services
 {
@@ -56,7 +57,7 @@ namespace XplicityApp.Services
 
             if (employee.ClientId == null)
             {
-                await RequestAdminApproval(holidayId, EmployeeClientStatus.HAS_NO_CLIENT);
+                await RequestAdminApproval(holidayId, EmployeeClientStatus.HAS_NO_CLIENT, null);
 
                 return true;
             }
@@ -67,7 +68,7 @@ namespace XplicityApp.Services
             return true;
         }
 
-        public async Task<bool> RequestAdminApproval(int holidayId, string clientStatus)
+        public async Task<bool> RequestAdminApproval(int holidayId, string clientStatus, int? confirmerId)
         {
             var holiday = await _repositoryHolidays.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
@@ -75,6 +76,7 @@ namespace XplicityApp.Services
             if (clientStatus == EmployeeClientStatus.CLIENT_CONFIRMED)
             {
                 var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(holiday);
+                updateHolidayDto.ConfirmerClientId = Convert.ToInt32(confirmerId);
                 updateHolidayDto.Status = HolidayStatus.ClientConfirmed;
                 await _holidaysService.Update(holidayId, updateHolidayDto);
             }
@@ -89,11 +91,10 @@ namespace XplicityApp.Services
         public async Task ConfirmHoliday(int holidayId, int confirmerId)
         {
             var getHolidayDto = await _holidaysService.GetById(holidayId);
-            var confirmer = await _repositoryEmployees.GetById(confirmerId);
 
             var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(getHolidayDto);
-            updateHolidayDto.Status = HolidayStatus.Confirmed;
-            updateHolidayDto.ConfirmerId = confirmerId;
+            updateHolidayDto.Status = HolidayStatus.AdminConfirmed;
+            updateHolidayDto.ConfirmerAdminId = confirmerId;
             await _holidaysService.Update(holidayId, updateHolidayDto);
 
             if (getHolidayDto.Type == HolidayType.Parental)
@@ -111,7 +112,7 @@ namespace XplicityApp.Services
         {
             var holiday = await _holidaysService.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
-            var confirmerFullName = await _holidaysService.GetConfirmerFullName(holiday.ConfirmerId);
+            var confirmerFullName = await _holidaysService.GetAdminConfirmerFullName(holiday.ConfirmerAdminId);
 
             switch (receiver)
             {

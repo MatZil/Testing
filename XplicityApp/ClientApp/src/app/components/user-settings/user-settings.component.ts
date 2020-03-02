@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { TableRowUserModel } from '../../models/table-row-user-model';
 import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../services/user.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -14,7 +13,6 @@ import { FileType } from '../../enums/fileType';
   styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettings implements OnInit {
-  currentUser: TableRowUserModel;
   hideOldPassword = true;
   hideFirstPassword = true;
   hideSecondPassword = true;

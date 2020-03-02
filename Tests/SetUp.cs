@@ -16,6 +16,7 @@ using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Static_Files;
+using XplicityApp.Infrastructure.Utils;
 
 namespace Tests
 {
@@ -26,12 +27,12 @@ namespace Tests
         private Holiday[] _holidays;
         private User[] _users;
         private EmailTemplate[] _emailTemplates;
-        private IdentityRole[] _roles;
         private InventoryItem[] _inventoryItems;
         private InventoryCategory[] _inventoryCategories;
         private Tag[] _tags;
         private InventoryItemTag[] _inventoryItemTags;
         private FileRecord[] _fileRecords;
+        private TimeService _timeService = new TimeService();
 
         private HolidayDbContext _context;
         public HolidayDbContext HolidayDbContext =>
@@ -214,7 +215,7 @@ namespace Tests
                     Email = "taken1@email",
                     WorksFromDate = new DateTime(2019,02,25),
                     DaysOfVacation = 20,
-                    BirthdayDate = new DateTime(1988,09,12),
+                    BirthdayDate = DateTime.Today,
                     FreeWorkDays = 10,
                     OvertimeHours = 24,
                     ParentalLeaveLimit = 3,
@@ -223,7 +224,7 @@ namespace Tests
                 },
                 new Employee
                 {
-                    ClientId = 1,
+                    ClientId = 2,
                     Client = context.Clients.Find(1),
                     Name = "EmployeeName2",
                     Surname = "EmployeeSurname2",
@@ -238,8 +239,6 @@ namespace Tests
                 },
                 new Employee
                 {
-                    ClientId = 1,
-                    Client = context.Clients.Find(1),
                     Name = "EmployeeName3",
                     Surname = "EmployeeSurname3",
                     Email = "taken3@email",
@@ -294,18 +293,18 @@ namespace Tests
                     Type = HolidayType.Annual,
                     FromInclusive = DateTime.Today.AddDays(-1),
                     ToInclusive = DateTime.Today.AddDays(6),
-                    Status = HolidayStatus.Confirmed,
+                    Status = HolidayStatus.AdminConfirmed,
                     RequestCreatedDate = new DateTime(2019, 10, 14),
                     Paid = false
                 },
                 new Holiday
                 {
-                    Employee = context.Employees.Find(1),
-                    EmployeeId = 1,
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
                     Type = HolidayType.Annual,
-                    FromInclusive = DateTime.Today.AddDays(1),
-                    ToInclusive = DateTime.Today.AddDays(6),
-                    Status = HolidayStatus.Confirmed,
+                    FromInclusive = _timeService.GetNextWorkDay(DateTime.Today),
+                    ToInclusive = _timeService.GetNextWorkDay(DateTime.Today).AddDays(5),
+                    Status = HolidayStatus.AdminConfirmed,
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 10, 14),
                     Paid = true

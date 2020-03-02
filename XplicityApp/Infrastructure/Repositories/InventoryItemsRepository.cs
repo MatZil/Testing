@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 
 namespace XplicityApp.Infrastructure.Repositories
 {
@@ -16,6 +18,11 @@ namespace XplicityApp.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<ICollection<InventoryItem>> GetByStatus(bool showArchivedInventory)
+        {
+            var inventoryItems = await _context.InventoryItems.Include(i => i.Category).Include(i => i.Employee).Where(x => x.Archived == showArchivedInventory).ToArrayAsync();
+            return inventoryItems;
+        }
 
         public async Task<ICollection<InventoryItem>> GetAll()
         {
