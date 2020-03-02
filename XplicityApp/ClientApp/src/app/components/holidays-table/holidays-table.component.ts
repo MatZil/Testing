@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Holiday } from '../../models/holiday';
 import { NewHoliday } from '../../models/new-holiday';
 import { HolidaysService } from '../../services/holidays.service';
@@ -9,6 +9,8 @@ import { MatDialog } from '@angular/material';
 import { HolidayRequestFormComponent } from '../holiday-request-form/holiday-request-form.component';
 import { HolidayStatus } from 'src/app/enums/holidayStatus';
 import { EmployeeStatus } from 'src/app/models/employee-status.enum';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-holidays-table',
@@ -18,7 +20,11 @@ import { EmployeeStatus } from 'src/app/models/employee-status.enum';
 export class HolidaysTableComponent implements OnInit {
   holidays: Holiday[] = [];
   selectedEmployeeStatus: EmployeeStatus = EmployeeStatus.Current;
+  displayedColumns: string[];
   currentUser: TableRowUserModel;
+  dataSource = new MatTableDataSource<Holiday>(this.getHolidaysByRole());
+
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(
     private userService: UserService,
@@ -31,11 +37,42 @@ export class HolidaysTableComponent implements OnInit {
       this.currentUser = user;
     });
     this.refreshTable(this.selectedEmployeeStatus);
+    this.dataSource.paginator = this.paginator;
+    if(this.isAdmin()){
+      this.displayedColumns = [
+        'employee', 
+        'holidaysType', 
+        'paid', 
+        'dateFrom', 
+        'dateTo', 
+        'overtimeHours', 
+        'status', 
+        'rejectedConfirmed', 
+        'creationDate'
+      ];
+    }
+    else {
+      this.displayedColumns = [
+        'holidaysType', 
+        'paid', 
+        'dateFrom', 
+        'dateTo', 
+        'overtimeDays', 
+        'status', 
+        'rejectedConfirmed', 
+        'creationDate'
+      ];
+    }
   }
+
+
+  
 
   refreshTable(status: EmployeeStatus) {
     this.holidayService.getHolidaysByStatus(status).subscribe(holidays => {
       this.holidays = holidays;
+      this.dataSource = new MatTableDataSource<Holiday>(this.getHolidaysByRole());
+      this.dataSource.paginator = this.paginator;
     });
   }
 
