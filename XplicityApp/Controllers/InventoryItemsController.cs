@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using XplicityApp.Dtos.Inventory;
+using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services.Interfaces;
 
@@ -32,9 +33,10 @@ namespace XplicityApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        [Produces(typeof(GetInventoryItemDto[]))]
+        public async Task<IActionResult> Get(bool showArchivedInventory)
         {
-            var items = await _inventoryItemService.GetAll();
+            var items = await _inventoryItemService.GetByStatus(showArchivedInventory);
             return Ok(items);
         }
 

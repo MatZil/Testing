@@ -20,10 +20,13 @@ export class InventoryTableComponent implements OnInit {
   equipment: InventoryItem[] = [];
   @Input() employeeId: number;
 
+  showArchivedInventory: boolean = false;
+
   inventoryItemToUpdate: InventoryItem
 
   categories: InventoryCategory[] = [];
   employees: TableRowUserModel[] = [];
+  currentUser: TableRowUserModel;
 
   searchCategoryValue = '';
   searchOwnerValue = '';
@@ -37,18 +40,15 @@ export class InventoryTableComponent implements OnInit {
     private inventoryService: InventoryService,
     private categoryService: InventoryCategoryService,
     public dialog: MatDialog,
-    private userService: UserService
-  ) {
-  }
+    private userService: UserService ) { }
 
   ngOnInit() {
-    this.getAllUsers();
     this.getCategoriesList();
-    this.refreshTable();
+    this.refreshTable(this.showArchivedInventory);
   }
 
-  refreshTable() {
-    this.inventoryService.getAllInventoryItems().subscribe(inventoryItems => {
+  refreshTable(showArchivedInventory: boolean) {
+    this.inventoryService.getInventoryByStatus(showArchivedInventory).subscribe(inventoryItems => {
       this.equipment = inventoryItems;
       this.listOfData = [...this.equipment];
     });
@@ -90,13 +90,13 @@ export class InventoryTableComponent implements OnInit {
 
   saveInventoryItem(updateInventoryItem: InventoryItem, id: number) {
     this.inventoryService.updateInventoryItem(id, updateInventoryItem).subscribe(() => {
-      this.refreshTable();
+      this.refreshTable(this.showArchivedInventory);
     });
   }
 
   addInventoryItem(newInventoryItem: NewInventoryItem) {
     this.inventoryService.createNewInventoryItem(newInventoryItem).subscribe(() => {
-      this.refreshTable();
+      this.refreshTable(this.showArchivedInventory);
 
     });
   }
@@ -172,6 +172,9 @@ export class InventoryTableComponent implements OnInit {
           : -1
     );
   }
-  
+
+  isAdmin(): boolean {
+    return this.userService.isAdmin();
+  }
 }
 
