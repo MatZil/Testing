@@ -56,6 +56,7 @@ namespace Tests.Tests
 
         [Theory]
         [InlineData(1, false)]
+        [InlineData(1, true)]
         public async Task When_UpdateBroadcastOwnBirthdaySetting_Expect_NotificationSettingIsChanged(int id, bool settingValue)
         {
             var notificationSettingsDto = await _notificationSettingsService.GetByEmployeeId(id);
@@ -70,6 +71,7 @@ namespace Tests.Tests
 
         [Theory]
         [InlineData(1, false)]
+        [InlineData(1, true)]
         public async Task When_UpdateReceiveBirthdayNotificationSetting_Expect_NotificationSettingIsChanged(int id, bool settingValue)
         {
             var notificationSettingsDto = await _notificationSettingsService.GetByEmployeeId(id);
