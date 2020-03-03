@@ -5,8 +5,9 @@
             <div>
                 <button class="button" mat-raised-button (click)="showPasswordModal()">Change password</button>
             </div>
-            <nz-modal [(nzVisible)]="isVisibleUploadModal" nzTitle="uploadModal" [nzContent]="modalContent"
-                [nzFooter]="modalFooter" (nzOnCancel)="closeUploadModal()">
+
+
+            <nz-modal [(nzVisible)]="isVisibleUploadModal" nzTitle="uploadModal" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="closeUploadModal()">
                 <ng-template #uploadModal>
                     Upload file
                 </ng-template>
@@ -14,11 +15,13 @@
                     <app-upload [fileType]="fileTypes.HolidayPolicy"></app-upload>
                 </ng-template>
                 <ng-template #modalFooter>
-                    <button nz-button nzType="default" (click)="closeUploadModal()">Close</button>
+                    <button mat-raised-button (click)="closeUploadModal()">Close</button>
                 </ng-template>
             </nz-modal>
-            <nz-modal [(nzVisible)]="isVisiblePasswordModal" [nzTitle]="passwordModal" [nzContent]="modalContent2"
-                [nzFooter]="modalFooter2" (nzOnCancel)="closePasswordModal()">
+
+
+
+            <nz-modal [(nzVisible)]="isVisiblePasswordModal" [nzTitle]="passwordModal" [nzContent]="modalContent2" [nzFooter]="modalFooter2" (nzOnCancel)="closePasswordModal()">
                 <ng-template #passwordModal>
                     Change password
                 </ng-template>
@@ -78,14 +81,16 @@
                         </form>
                     </mat-dialog-content>
                     <mat-dialog-actions>
-                        <button mat-button [disabled]="!registerForm.valid" cdkFocusInitial
+                        <button mat-raised-button color="primary" [disabled]="!registerForm.valid" cdkFocusInitial
                             (click)="onChangeClicked()">
                         Change password
                         </button>
                     </mat-dialog-actions>
                 </ng-template>
                 <ng-template #modalFooter2>
-                    <button nz-button nzType="default" (click)="closePasswordModal()">Close</button>
+                    <button mat-raised-button (click)="closePasswordModal()">Close</button>
                 </ng-template>
             </nz-modal>
+
+
         </div>
