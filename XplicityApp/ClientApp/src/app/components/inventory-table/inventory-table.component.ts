@@ -60,7 +60,6 @@ export class InventoryTableComponent implements OnInit {
           row.tagTitles.push(tag.title);
         });
       });
-      console.log(this.equipmentDataSource.data);
     });
   }
 
