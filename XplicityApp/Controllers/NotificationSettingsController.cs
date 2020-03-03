@@ -11,17 +11,17 @@ namespace XplicityApp.Controllers
     [Authorize]
     public class NotificationSettingsController : ControllerBase
     {
-        private readonly INotificationSettingsService _notificationSettingsSerivce;
-        public NotificationSettingsController(INotificationSettingsService notificationSettingsSerivce)
+        private readonly INotificationSettingsService _notificationSettingsService;
+        public NotificationSettingsController(INotificationSettingsService notificationSettingsService)
         {
-            _notificationSettingsSerivce = notificationSettingsSerivce;
+            _notificationSettingsService = notificationSettingsService;
         }
 
         [HttpGet("{employeeId}")]
         [Produces(typeof(NotificationSettingsDto))]
         public async Task<IActionResult> Get(int employeeId)
         {
-            var notificationSettings = await _notificationSettingsSerivce.GetByEmployeeId(employeeId);
+            var notificationSettings = await _notificationSettingsService.GetByEmployeeId(employeeId);
 
             if (notificationSettings == null)
             {
@@ -35,7 +35,7 @@ namespace XplicityApp.Controllers
         [Produces(typeof(bool))]
         public async Task<IActionResult> Put(int employeeId, NotificationSettingsDto notificationSettingsDto)
         {
-            var isUpdated = await _notificationSettingsSerivce.Update(employeeId, notificationSettingsDto);
+            var isUpdated = await _notificationSettingsService.Update(employeeId, notificationSettingsDto);
 
             return Ok(isUpdated);
         }
