@@ -48,8 +48,7 @@ export class HolidaysTableComponent implements OnInit {
         'overtimeHours', 
         'status', 
         'rejectedConfirmed', 
-        'creationDate'
-      ];
+        'creationDate'];
     }
     else {
       this.displayedColumns = [
@@ -60,11 +59,9 @@ export class HolidaysTableComponent implements OnInit {
         'overtimeDays', 
         'status', 
         'rejectedConfirmed', 
-        'creationDate'
-      ];
+        'creationDate'];
     }
   }
-
 
   refreshTable(status: EmployeeStatus) {
     this.holidayService.getHolidaysByStatus(status).subscribe(holidays => {

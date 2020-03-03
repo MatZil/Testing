@@ -15,39 +15,6 @@
     </div>
 </div>
 
-<div *ngIf="holidays">
-  <nz-table #basicTable [nzData]="getHolidaysByRole()">
-      <thead>
-          <tr>
-              <th *ngIf="isAdmin()">Employee</th>
-              <th>Holidays type</th>
-              <th>Paid</th>
-              <th>Date from</th>
-              <th>Date to</th>
-              <th *ngIf="isAdmin()">Overtime hours</th>
-              <th *ngIf="!isAdmin()">Overtime days</th>
-              <th>Status</th>
-              <th>Rejected/confirmed by</th>
-              <th>Request creation date</th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr *ngFor="let holiday of basicTable.data">
-              <td *ngIf="isAdmin()">{{holiday.employeeFullName}}</td>
-              <td>{{enumConverter.determineHolidayType(holiday.type)}}</td>
-              <td>{{paidToString(holiday.paid)}}</td>
-              <td>{{holiday.fromInclusive | date}}</td>
-              <td>{{holiday.toInclusive | date}}</td>
-              <td>{{getOvertime(holiday)}}</td>
-              <td [style.color]="getStatusColor(holiday.status)">{{getStatusName(holiday.status)}}</td>
-              <td>{{holiday.confirmerFullName}}</td>
-              <td>{{holiday.requestCreatedDate | date}}</td>
-          </tr>
-      </tbody>
-  </nz-table>
-</div>
-
-
 <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="employee">
@@ -97,7 +64,3 @@
   
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
-
-
-  
-  
