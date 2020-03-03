@@ -57,7 +57,7 @@ export class ClientTableComponent implements OnInit {
     this.clientService.getClient().subscribe(clients => {
       this.clients = clients;
       this.listOfData = [...this.clients];
-      this.dataSource = new MatTableDataSource<Client>(this.clients);
+      this.dataSource.data = this.clients;
     });
   }
 
@@ -179,5 +179,10 @@ export class ClientTableComponent implements OnInit {
       }
     );
   }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
 }
 
