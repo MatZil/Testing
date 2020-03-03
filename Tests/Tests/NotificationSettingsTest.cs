@@ -29,15 +29,15 @@ namespace Tests.Tests
             _notificationSettingsCount = setup.GetCount("notificationSettings");
 
             var notificationSettingsRepository = new NotificationSettingsRepository(_context);
-            _notificationSettingsService = new NotificationSettingsService(notificationSettingsRepository, mapper);
-
             var mockEmployeeRepository = new Mock<IEmployeeRepository>().Object;
             var mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
             var mockTimeService = new Mock<TimeService>().Object;
             var mockUserService = new Mock<IUserService>().Object;
 
+            _notificationSettingsService = new NotificationSettingsService(notificationSettingsRepository, mapper);
             _employeesService = new EmployeesService(mockEmployeeRepository, mapper, mockOvertimeUtility, mockTimeService, mockUserService, _notificationSettingsService);
         }
+
         [Theory]
         [InlineData(1, "password", "available@email")]
         public async Task When_CreateEmployeeAndNotificationSettings_Expect_NotificationSettingsObjectCreated(int clientId, string password, string email)
@@ -64,6 +64,7 @@ namespace Tests.Tests
             await _notificationSettingsService.Update(id, notificationSettingsDto);
 
             var expectedNotificationSettingsDto = await _notificationSettingsService.GetByEmployeeId(id);
+
             Assert.Equal(settingValue, expectedNotificationSettingsDto.BroadcastOwnBirthday);
         }
 
@@ -77,6 +78,7 @@ namespace Tests.Tests
             await _notificationSettingsService.Update(id, notificationSettingsDto);
 
             var expectedNotificationSettingsDto = await _notificationSettingsService.GetByEmployeeId(id);
+
             Assert.Equal(settingValue, expectedNotificationSettingsDto.ReceiveBirthdayNotifications);
         }
     }

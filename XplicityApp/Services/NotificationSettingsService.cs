@@ -12,6 +12,7 @@ namespace XplicityApp.Services
     {
         private readonly INotificationSettingsRepository _notificationSettingsRepository;
         private readonly IMapper _mapper;
+
         public NotificationSettingsService(INotificationSettingsRepository notificationSettingsRepository, IMapper mapper)
         {
             _notificationSettingsRepository = notificationSettingsRepository;
