@@ -1,26 +1,19 @@
 .example-chip-list {
-  width: 100%;
-}
-.search-box {
-    padding: 8px;
+    width: 100%;
 }
 
-.search-box input {
-    width: 188px;
-    margin-bottom: 8px;
-    display: block;
-}
-
-.search-box button {
-    width: 90px;
-}
-
-.search-button {
-    margin-right: 8px;
-}
 .statusSelect {
-  right: 5em;
-  top: 5em;
-  width: 150px;
-  float: right;
+    right: 5em;
+    top: 5em;
+    width: 150px;
+    float: right;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
 }
