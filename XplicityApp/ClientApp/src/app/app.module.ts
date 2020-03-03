@@ -90,8 +90,7 @@ export function tokenGetter() {
     ClientFormComponent,
     UserInformation,
     UserSettings,
-    HolidayRequestFormComponent,
-    HolidaysTableComponent,
+    HolidayRequestFormComponent
   ],
   imports: [
     BrowserModule,
@@ -135,8 +134,7 @@ export function tokenGetter() {
     AddInventoryFormComponent,
     EditInventoryFormComponent,
     ClientFormComponent,
-    HolidayRequestFormComponent,
-    HolidaysTableComponent
+    HolidayRequestFormComponent
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

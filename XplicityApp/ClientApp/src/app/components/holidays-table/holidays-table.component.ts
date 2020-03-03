@@ -66,8 +66,6 @@ export class HolidaysTableComponent implements OnInit {
   }
 
 
-  
-
   refreshTable(status: EmployeeStatus) {
     this.holidayService.getHolidaysByStatus(status).subscribe(holidays => {
       this.holidays = holidays;
@@ -144,5 +142,9 @@ export class HolidaysTableComponent implements OnInit {
 
   isAdmin(): boolean {
     return this.userService.isAdmin();
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }
