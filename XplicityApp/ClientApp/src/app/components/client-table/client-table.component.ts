@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { Client } from '../../models/client';
 import { Newclient } from '../../models/newclient';
@@ -7,6 +7,8 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { MatDialog } from '@angular/material';
 import { ClientFormComponent } from '../client-form/client-form.component';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-client-table',
@@ -18,6 +20,18 @@ export class ClientTableComponent implements OnInit {
   clients: Client[] = [];
   newClient: Newclient = new Newclient();
   newClientFormData: Newclient;
+
+  displayedColumns: string[] = [
+    'companyName', 
+    'ownerName', 
+    'ownerSurname', 
+    'ownerEmail', 
+    'ownerPhone', 
+    'buttonEdit', 
+    'buttonDelete'];
+  dataSource = new MatTableDataSource<Client>(this.clients);
+
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   confirmDeleteModal: NzModalRef;
 
@@ -36,12 +50,14 @@ export class ClientTableComponent implements OnInit {
 
   ngOnInit() {
     this.refreshTable();
+    this.dataSource.paginator = this.paginator;
   }
 
   refreshTable(): void {
     this.clientService.getClient().subscribe(clients => {
       this.clients = clients;
       this.listOfData = [...this.clients];
+      this.dataSource = new MatTableDataSource<Client>(this.clients);
     });
   }
 
