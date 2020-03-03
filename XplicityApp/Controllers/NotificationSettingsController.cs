@@ -21,14 +21,14 @@ namespace XplicityApp.Controllers
         [Produces(typeof(NotificationSettingsDto))]
         public async Task<IActionResult> Get(int employeeId)
         {
-            var notifcationSettings = await _notificationSettingsSerivce.GetByEmployeeId(employeeId);
+            var notificationSettings = await _notificationSettingsSerivce.GetByEmployeeId(employeeId);
 
-            if (notifcationSettings == null)
+            if (notificationSettings == null)
             {
                 return NotFound();
             }
 
-            return Ok(notifcationSettings);
+            return Ok(notificationSettings);
         }
 
         [HttpPut("{employeeId}")]

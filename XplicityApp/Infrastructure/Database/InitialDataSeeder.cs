@@ -26,7 +26,7 @@ namespace XplicityApp.Infrastructure.Database
                 }
             );
 
-            CreateAdminNotificationSettings(builder, configuration);
+            CreateAdminNotificationSettings(builder);
         }
 
         public static void CreateInitialPolicyRecord(ModelBuilder builder)
@@ -181,7 +181,7 @@ namespace XplicityApp.Infrastructure.Database
             );
         }
 
-        public static void CreateAdminNotificationSettings(ModelBuilder builder, IConfiguration configuration)
+        public static void CreateAdminNotificationSettings(ModelBuilder builder)
         {
             builder.Entity<NotificationSettings>().HasData(
                 new NotificationSettings
