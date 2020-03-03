@@ -1,4 +1,14 @@
+<div class="divider">
 <button mat-flat-button nzType="primary" (click)="openAddForm()">Add item</button>
+<mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Current inventory" (selectionChange)="refreshTable(showArchivedInventory)" [(value)]="showArchivedInventory">
+    <mat-option [value]="false">
+    Current inventory
+    </mat-option>
+    <mat-option [value]="true">
+    Archived inventory
+    </mat-option>
+</mat-select>
+</div>
 <nz-table #basicTable [nzData]="equipment">
   <thead>
     <tr>
@@ -59,8 +69,8 @@
     </button>
         <button nz-button nzSize="small" (click)="resetSearchCategory()">Reset</button>
     </div>
-</nz-dropdown-menu>
-<nz-dropdown-menu #owner="nzDropdownMenu" id="byOwner">
+  </nz-dropdown-menu>
+  <nz-dropdown-menu #owner="nzDropdownMenu" id="byOwner">
     <div class="search-box">
         <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchOwnerValue" />
         <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">

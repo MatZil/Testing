@@ -1,6 +1,6 @@
-﻿using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Moq;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
@@ -10,16 +10,16 @@ using XplicityApp.Services.BackgroundFunctions;
 using Microsoft.Extensions.Logging;
 using XplicityApp.Services.Interfaces;
 
-namespace Tests.Tests
+namespace Tests.Tests.BackgroundTests
 {
     [TestCaseOrderer("Tests.BackgroundTests.AlphabeticalOrderer", "Tests")]
-    public class BackgroundTests
+    public class EmployeeHolidaysUpdaterTests
     {
         private readonly EmployeesRepository _employeesRepository;
-        private readonly ITimeService _mockTimeService;
+        private readonly Mock<ITimeService> _mockTimeService;
         private readonly EmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
 
-        public BackgroundTests()
+        public EmployeeHolidaysUpdaterTests()
         {
             var setup = new SetUp();
             setup.Initialize();
@@ -27,10 +27,10 @@ namespace Tests.Tests
             var userManager = setup.InitializeUserManager();
 
             _employeesRepository = new EmployeesRepository(context, userManager);
-            _mockTimeService = new Mock<ITimeService>().Object;
-            var mockLogger = new Mock<ILogger<EmployeeHolidaysBackgroundUpdater>>().Object;
+            _mockTimeService = new Mock<ITimeService>();
+            var mockLoggerUpdater = new Mock<ILogger<EmployeeHolidaysBackgroundUpdater>>().Object;
             var mockEmployeesService = new Mock<IEmployeesService>().Object;
-            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater(_mockTimeService, _employeesRepository, mockLogger, mockEmployeesService);
+            _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater(_mockTimeService.Object, _employeesRepository, mockLoggerUpdater, mockEmployeesService);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Tests.Tests
             await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(employees);
             var countTrue = 0;
 
-            var currentTime = _mockTimeService.GetCurrentTime();
+            var currentTime = _mockTimeService.Object.GetCurrentTime();
             if (currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.DayOfWeek != DayOfWeek.Sunday && !DateSystem.IsPublicHoliday(currentTime, CountryCode.LT))
             {
                 var final = new double[employees.Count];
@@ -76,8 +76,7 @@ namespace Tests.Tests
         {
             var employees = await _employeesRepository.GetAll();
 
-            var mockTimeService = new Mock<ITimeService>();
-            mockTimeService.Setup(m => m.GetCurrentTime()).Returns(new DateTime(2019,01,01));
+            _mockTimeService.Setup(m => m.GetCurrentTime()).Returns(new DateTime(2019, 01, 01));
 
             var expected = new int[employees.Count, 2];
             var index = 0;

@@ -32,7 +32,7 @@ namespace XplicityApp.Services.BackgroundFunctions
             _logger.LogInformation("AddFreeWorkDays() was initiated at " + currentTime);
             try
             {
-                if (!_timeService.IsFreeWorkDay(currentTime))
+                if (_timeService.IsWorkDay(currentTime))
                 {
                     var workDaysPerYear = _timeService.GetCurrentYearWorkDays();
                     foreach (var employee in employees)
