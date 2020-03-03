@@ -1,66 +1,9 @@
-<button mat-raised-button color="primary" (click)="openAddForm()" >Add new client</button>
-<nz-table #basicTable [nzData]="clients">
-  <thead>
-    <tr>
-      <th nzCustomFilter>
-        Company name
-        <i class="ant-table-filter-icon"
-           nz-icon
-           nz-dropdown
-           #dropdown="nzDropdown"
-           nzType="search"
-           [nzDropdownMenu]="menu"
-           [class.ant-table-filter-open]="dropdown.nzVisible"
-           nzTrigger="click"
-           nzPlacement="bottomRight"
-           [nzClickHide]="false"
-           nzTableFilter></i>
-      </th>
-      <th>Owner Name</th>
-      <th>Owner Surname</th>
-      <th>Owner email</th>
-      <th>Owner phone</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let client of basicTable.data">
-      <td>{{ client.companyName }}</td>
-      <td>{{ client.ownerName }}</td>
-      <td>{{ client.ownerSurname }}</td>
-      <td>{{ client.ownerEmail }}</td>
-      <td>{{ client.ownerPhone }}</td>
-      <td>
-        <button nz-button nzType="primary" (click)="openEditForm(client)">Edit</button>
-      </td>
-      <td>
-        <button mat-flat-button color="warn" (click)="showDeleteConfirm(client.id)">Delete</button>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
-
-<nz-dropdown-menu #menu="nzDropdownMenu">
-  <div class="search-box">
-    <input type="text"
-           nz-input
-           placeholder="Search name"
-           [(ngModel)]="searchValue" />
-    <button nz-button
-            nzSize="small"
-            nzType="primary"
-            (click)="search()"
-            class="search-button">
-      Search
-    </button>
-    <button nz-button nzSize="small" (click)="reset()">Reset</button>
-  </div>
-</nz-dropdown-menu>
-
-
-
-<mat-form-field>
-  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter clients">
-</mat-form-field>
+<div>
+  <button mat-raised-button color="primary" (click)="openAddForm()" >Add new client</button>
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter clients">
+  </mat-form-field>
+</div>
 
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">

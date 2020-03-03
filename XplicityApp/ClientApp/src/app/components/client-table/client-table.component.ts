@@ -17,7 +17,6 @@ import {MatTableDataSource} from '@angular/material/table';
 })
 
 export class ClientTableComponent implements OnInit {
-  clients: Client[] = [];
   newClient: Newclient = new Newclient();
   newClientFormData: Newclient;
 
@@ -29,17 +28,11 @@ export class ClientTableComponent implements OnInit {
     'ownerPhone', 
     'buttonEdit', 
     'buttonDelete'];
-  dataSource = new MatTableDataSource<Client>(this.clients);
+  dataSource = new MatTableDataSource<Client>();
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   confirmDeleteModal: NzModalRef;
-
-  searchValue = '';
-  listOfSearchAddress: string[] = [];
-  sortName: string | null = null;
-  sortValue: string | null = null;
-  listOfData: Client[] = [];
 
   constructor(
     private clientService: ClientService,
@@ -55,9 +48,7 @@ export class ClientTableComponent implements OnInit {
 
   refreshTable(): void {
     this.clientService.getClient().subscribe(clients => {
-      this.clients = clients;
-      this.listOfData = [...this.clients];
-      this.dataSource.data = this.clients;
+      this.dataSource.data = clients;
     });
   }
 
@@ -79,49 +70,6 @@ export class ClientTableComponent implements OnInit {
     this.notification.blank(
       'Form error',
       'A client with this company name already exists'
-    );
-  }
-
-  reset(): void {
-    this.searchValue = '';
-    this.search();
-  }
-
-  search(): void {
-    const filterFunc = (item: {
-      companyName: string;
-      ownerName: string;
-      ownerSurname: string;
-      ownerEmail: string;
-      ownerPhone: string;
-    }) => {
-      return (
-        (this.listOfSearchAddress.length
-          ? this.listOfSearchAddress.some(
-            ownerName => item.ownerName.indexOf(ownerName) !== -1
-          )
-          : true) && item.companyName.indexOf(this.searchValue) !== -1
-      );
-    };
-    const data = this.listOfData.filter(
-      (item: {
-        companyName: string;
-        ownerName: string;
-        ownerSurname: string;
-        ownerEmail: string;
-        ownerPhone: string;
-      }) => filterFunc(item)
-    );
-    this.clients = data.sort((a, b) =>
-      this.sortValue === 'ascend'
-        ? // tslint:disable-next-line:no-non-null-assertion
-        a[this.sortName!] > b[this.sortName!]
-          ? 1
-          : -1
-        : // tslint:disable-next-line:no-non-null-assertion
-        b[this.sortName!] > a[this.sortName!]
-          ? 1
-          : -1
     );
   }
 
