@@ -16,21 +16,28 @@ import { ErrorInterceptor } from './helpers/error-interceptor';
 import { ClientTableComponent } from './components/client-table/client-table.component';
 import { JwtInterceptor } from './helpers/jwt-interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import {
   MatDatepickerModule,
   MatNativeDateModule,
   MatRadioModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatListModule,
+  MatSidenavModule,
+  MatProgressBarModule,
+  MatAutocompleteModule,
+  MatTabsModule,
+  MatDialogModule,
+  MatSnackBarModule,
+  MatMenuModule,
+  MatToolbarModule,
+  MatTableModule,
+  MatSelectModule,
+  MatInputModule,
+  MatIconModule,
+  MatChipsModule,
+  MatCardModule,
+  MatButtonModule
 } from '@angular/material';
-import { MatDialogModule } from '@angular/material/dialog';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
 import { HomeComponent } from './components/home/home.component';
@@ -39,12 +46,9 @@ import { HolidaysTableComponent } from './components/holidays-table/holidays-tab
 import { PolicyComponent } from './components/policy/policy.component';
 import { PdfJsViewerModule } from 'ng2-pdfjs-viewer';
 import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RoleGuardService } from './helpers/role-guard';
-import { MatTabsModule } from '@angular/material/tabs';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { UploadComponent } from './components/upload/upload.component';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { InventoryTableComponent } from './components/inventory-table/inventory-table.component';
 import { OvertimeDisplayComponent } from './components/overtime-display/overtime-display.component';
 import { AddEmployeeFormComponent } from './components/add-employee-form/add-employee-form.component';
@@ -57,7 +61,6 @@ import { ClientFormComponent } from './components/client-form/client-form.compon
 import { UserInformation } from './components/user-information/user-information.component';
 import { UserSettings } from './components/user-settings/user-settings.component';
 import { HolidayRequestFormComponent } from './components/holiday-request-form/holiday-request-form.component';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -110,6 +113,7 @@ export function tokenGetter() {
     MatToolbarModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatMenuModule,
     MatRadioModule,
     PdfJsViewerModule,
     MatDialogModule,
@@ -118,6 +122,8 @@ export function tokenGetter() {
     NzUploadModule,
     MatProgressBarModule,
     MatAutocompleteModule,
+    MatListModule,
+    MatSidenavModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
