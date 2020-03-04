@@ -16,29 +16,29 @@ import { ErrorInterceptor } from './helpers/error-interceptor';
 import { ClientTableComponent } from './components/client-table/client-table.component';
 import { JwtInterceptor } from './helpers/jwt-interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
-import {
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatRadioModule,
-  MatCheckboxModule,
-  MatListModule,
-  MatSidenavModule,
-  MatProgressBarModule,
-  MatAutocompleteModule,
-  MatTabsModule,
-  MatDialogModule,
-  MatSnackBarModule,
-  MatMenuModule,
-  MatToolbarModule,
-  MatTableModule,
-  MatSelectModule,
-  MatInputModule,
-  MatIconModule,
-  MatChipsModule,
-  MatCardModule,
-  MatButtonModule,
-  MatPaginatorModule
-} from '@angular/material';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material';
+import { MatRadioModule} from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
 import { HomeComponent } from './components/home/home.component';
