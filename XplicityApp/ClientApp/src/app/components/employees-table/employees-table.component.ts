@@ -6,13 +6,13 @@ import { UserService } from '../../services/user.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd';
-import { NzNotificationService } from 'ng-zorro-antd';
 import { Role } from '../../models/role';
 import { EmployeeStatus } from '../../models/employee-status.enum';
 import { MatDialog } from '@angular/material';
 import { AddEmployeeFormComponent } from '../add-employee-form/add-employee-form.component';
 import { EditEmployeeFormComponent } from '../edit-employee-form/edit-employee-form.component';
+import { InventoryTableComponent } from '../inventory-table/inventory-table.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-employees-table',
@@ -33,19 +33,22 @@ export class EmployeesTableComponent implements OnInit {
 
   isVisibleEquipmentModal = false;
 
-  confirmDeleteModal: NzModalRef;
-
   searchValue = '';
   listOfSearchAddress: string[] = [];
   sortName: string | null = null;
   sortValue: string | null = null;
   listOfData: TableRowUserModel[] = [];
 
+  displayedColumns: string[] = ['name', 'surname', 'client', 'worksFromDate',
+    'birthdayDate', 'daysOfVacation', 'freeWorkDays', 'overtimeHours',
+    'email', 'position', 'parentalLeaveLimit', 'currentAvailableLeaves',
+    'nextMonthAvailableLeaves', 'healthCheckDate', 'employeeStatus',
+    'actions'];
+  employeeDataSource = new MatTableDataSource(this.listOfData);
+
   constructor(
     private userService: UserService,
     private clientService: ClientService,
-    private modal: NzModalService,
-    private notification: NzNotificationService,
     private authenticationService: AuthenticationService,
     public dialog: MatDialog
   ) { }
@@ -62,6 +65,7 @@ export class EmployeesTableComponent implements OnInit {
     this.userService.getAllUsers().subscribe(users => {
       this.users = users;
       this.listOfData = [...this.users];
+      this.employeeDataSource = new MatTableDataSource(this.listOfData);
     });
   }
 
@@ -94,11 +98,14 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   showDeleteConfirm(userToDelete: TableRowUserModel): void {
-    this.confirmDeleteModal = this.modal.confirm({
-      nzTitle: 'Are you sure?',
-      nzContent: `If you confirm, ${userToDelete.name} ${userToDelete.surname} will be permanently deleted.`,
-      nzOnOk: () => this.deleteUserById(userToDelete.id)
-    });
+      if(confirm('If you confirm,' + userToDelete.name + ' ' + userToDelete.surname + ' will be permanently deleted.')) {
+      this.deleteUserById(userToDelete.id)
+      this.closeModal();
+    }
+  }
+
+  closeModal() {
+    this.dialog.closeAll();
   }
 
   openAddForm(): void {
@@ -151,16 +158,16 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   showUnexpectedError(): void {
-    this.notification.blank(
-      'Form error',
-      'Unexpected error occurred'
-    );
+    error => {
+      this.showUnexpectedError();
+    }
   }
 
   showEquipmentModal(employeeId: number) {
-    this.employeeIdForEquipment = employeeId;
-    this.isVisibleEquipmentModal = true;
-
+    const dialogRef = this.dialog.open(InventoryTableComponent, {
+      width: '1000px',
+      data: { id: employeeId }
+    });
   }
 
   closeEquipmentModal() {
@@ -183,52 +190,8 @@ export class EmployeesTableComponent implements OnInit {
     return [year, month, day].join('-');
   }
 
-  reset(): void {
-    this.searchValue = '';
-    this.search();
-  }
-
-  search(): void {
-    const filterFunc = (item: {
-      name: string;
-      surname: string;
-      clientId: number;
-      worksFromDate: Date;
-      birthdayDate: Date;
-      daysOfVacation: number;
-      overtimeHours: number;
-      email: string;
-      role: string;
-      position: string;
-    }) => {
-      return (
-        (this.listOfSearchAddress.length
-          ? this.listOfSearchAddress.some(name => item.name.indexOf(name) !== -1)
-          : true) && item.surname.indexOf(this.searchValue) !== -1
-      );
-    };
-    const data = this.listOfData.filter((item: {
-      name: string;
-      surname: string;
-      clientId: number;
-      worksFromDate: Date;
-      birthdayDate: Date;
-      daysOfVacation: number;
-      overtimeHours: number;
-      email: string;
-      role: string;
-      position: string;
-    }) => filterFunc(item));
-    this.users = data.sort((a, b) =>
-      this.sortValue === 'ascend'
-        // tslint:disable-next-line:no-non-null-assertion
-        ? a[this.sortName!] > b[this.sortName!]
-          ? 1
-          : -1
-        // tslint:disable-next-line:no-non-null-assertion
-        : b[this.sortName!] > a[this.sortName!]
-          ? 1
-          : -1
-    );
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.employeeDataSource.filter = filterValue.trim().toLowerCase();
   }
 }
