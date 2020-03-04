@@ -1,72 +1,41 @@
-<nz-layout>
-  <nz-sider nzCollapsible [nzCollapsed]="isCollapsed" [nzTrigger]="null">
-    <div class="logo">
-      <p class="logoText">
-        Holidays Manager
-      </p>
-    </div>
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-menu-item>
-        <a routerLink="/home" routerLinkActive="active"></a>
-        <i nz-icon nzType="home"></i>
-        <span>Home</span>
-      </li>
-      <li nz-menu-item>
-        <a routerLink="/calendar" routerLinkActive="active"></a>
-        <i nz-icon nzType="calendar"></i>
-        <span>Calendar</span>
-      </li>
-      <div>
-        <li nz-menu-item *ngIf="isAdmin()">
-          <a routerLink="/clients" routerLinkActive="active"></a>
-          <i nz-icon nzType="team"></i>
-          <span>Clients</span>
-        </li>
-        <li nz-menu-item *ngIf="isAdmin()">
-          <a routerLink="/employees" routerLinkActive="active"></a>
-          <i nz-icon nzType="solution"></i>
-          <span>Employees</span>
-        </li>
-        <li nz-menu-item *ngIf="isAdmin()">
-          <a routerLink="/emailtemplates" routerLinkActive="active"></a>
-          <i nz-icon nzType="border-outer"></i>
-          <span>Email Templates</span>
-        </li>
-      </div>
-      <li nz-menu-item>
-        <a routerLink="/holidays" routerLinkActive="active"></a>
-        <i nz-icon nzType="smile"></i>
-        <span>Holidays</span>
-      </li>
-      <li nz-menu-item *ngIf="isAdmin()">
-        <a routerLink="/inventory-items" routerLinkActive="active"></a>
-        <i nz-icon nzType="book"></i>
-        <span>Inventory</span>
-      </li>
-      <li nz-submenu nzTitle="{{currentUser.name}}" nzIcon="user">
-        <ul>
-          <li nz-menu-item>
-            <a routerLink="/profile" routerLinkActive="active"></a>
-            <i nz-icon nzType="bars"></i>
-            <span>Profile</span>
-          </li>
-          <li nz-menu-item>
-            <a (click)=logout()></a>
-            <i nz-icon nzType="poweroff"></i>
-            <span>Log off</span>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </nz-sider>
-  <nz-layout>
-    <nz-header>
-      <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-        (click)="isCollapsed = !isCollapsed"></i>
-    </nz-header>
+<div class="container">
+  <mat-toolbar color="primary">
+    <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+    <h1 class="app-name">Xplicity Holidays</h1>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav opened="true" style="width: 250px;" #snav [mode]="mode.value">
+      <mat-nav-list>
+        <a mat-list-item routerLink="/home" routerLinkActive="active">
+          <mat-icon>home</mat-icon>&nbsp;Home</a>
+
+        <a mat-list-item routerLink="/calendar" routerLinkActive="active">
+          <mat-icon>date_range</mat-icon>&nbsp;Calendar</a>
+
+        <a mat-list-item routerLink="/clients" routerLinkActive="active" *ngIf="isAdmin()">
+          <mat-icon>people_outline</mat-icon>&nbsp;Clients</a>
+
+        <a mat-list-item routerLink="/employees" routerLinkActive="active" *ngIf="isAdmin()">
+          <mat-icon>work_outline</mat-icon>&nbsp;Employees</a>
+
+        <a mat-list-item routerLink="/emailtemplates" routerLinkActive="active" *ngIf="isAdmin()">
+          <mat-icon>border_outer</mat-icon>&nbsp;Email Templates</a>
+
+        <a mat-list-item routerLink="/holidays" routerLinkActive="active">
+          <mat-icon>brightness_low</mat-icon>&nbsp;Holidays</a>
+
+        <a mat-list-item routerLink="/inventory-items" routerLinkActive="active" *ngIf="isAdmin()">
+          <mat-icon>devices</mat-icon>&nbsp;Inventory</a>
+
+          <mat-list-item [matMenuTriggerFor]="menu" routerLinkActive="active"><mat-icon>face</mat-icon>&nbsp;{{currentUser.name}}
+          <mat-menu #menu="matMenu" [overlapTrigger]="true">
+            <button style="width: 250px;" mat-menu-item routerLink="/profile" routerLinkActive="active"><mat-icon>reorder</mat-icon>Profile</button>
+            <button style="width: 250px;" mat-menu-item (click)=logout()><mat-icon>power_settings_new</mat-icon>Log off</button>
+          </mat-menu>
+          </mat-list-item>
+      </mat-nav-list>
+    </mat-sidenav>
     <router-outlet></router-outlet>
-  </nz-layout>
-</nz-layout>
-<ng-template #zeroTrigger>
-  <i nz-icon nzType="menu-fold" nzTheme="outline"></i>
-</ng-template>
+  </mat-sidenav-container>
+</div>

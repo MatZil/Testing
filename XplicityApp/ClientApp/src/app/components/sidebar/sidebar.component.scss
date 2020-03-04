@@ -1,41 +1,22 @@
-.trigger {
-    font-size: 18px;
-    line-height: 64px;
-    padding: 0 24px;
-    cursor: pointer;
-    transition: color 0.3s;
+.container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
   }
   
-  .trigger:hover {
-    color: #1890ff;
+  h1.app-name {
+    margin-left: 8px;
+    color: white;
   }
   
-  .logo {
-    height: 32px;
-    margin: 16px;
+  .sidenav-container {
+    flex: 1;
   }
-  .logoText{
-    text-align: center;
-    top: 25%;
-    position: relative;
-    color: rgb(255, 255, 255);
-    font-family: 'Arial';
-    font-size: medium;
-  }
-  
-  nz-header {
-    background: #fff;
-    padding: 0;
-  }
-  
-  nz-footer {
-    line-height: 1.5;
-  }
-  
-  nz-layout {
-    height: 100vh;
-  }
-  
-  nz-content {
-    margin: 24px 16px 0;
+
+  .active {
+    color: #3F51B5;
   }
