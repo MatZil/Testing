@@ -4,6 +4,7 @@ using XplicityApp.Dtos.EmailTemplates;
 using XplicityApp.Dtos.Employees;
 using XplicityApp.Dtos.Holidays;
 using XplicityApp.Dtos.Inventory;
+using XplicityApp.Dtos.NotificationSettings;
 using XplicityApp.Dtos.Tags;
 using XplicityApp.Infrastructure.Database.Models;
 
@@ -65,7 +66,10 @@ namespace XplicityApp.Configurations
             CreateMap<Tag, TagDto>(MemberList.None);
 
             CreateMap<NewTagDto, Tag>(MemberList.None);
-            CreateMap<Tag, NewTagDto>(MemberList.None);
+            CreateMap<Tag, NewTagDto>(MemberList.None); 
+            
+            CreateMap<NotificationSettingsDto, NotificationSettings>(MemberList.None);
+            CreateMap<NotificationSettings, NotificationSettingsDto>(MemberList.None);
         }
     }
 }

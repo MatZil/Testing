@@ -33,7 +33,8 @@ namespace Tests.Tests
             var userManager = setup.InitializeUserManager();
             var userService = new Mock<IUserService>().Object;
             var employeesRepository = new EmployeesRepository(_context, userManager);
-            _employeesService = new EmployeesService(employeesRepository, mapper, mockOvertimeUtility, mockTimeService, userService);
+            var mockNotificationSettingsService = new Mock<INotificationSettingsService>().Object;
+            _employeesService = new EmployeesService(employeesRepository, mapper, mockOvertimeUtility, mockTimeService, userService, mockNotificationSettingsService);
         }
 
         [Theory]
