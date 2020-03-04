@@ -1,6 +1,9 @@
 <div>
     <div class="divider">
-        <button nz-button nzType="primary" style="float:left;" (click)="openRequestHolidayModal()">Request holidays</button>
+        <button mat-raised-button color="primary" (click)="openRequestHolidayModal()">Request holidays</button>
+        <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter holidays">
+        </mat-form-field>
         <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Employee status" (selectionChange)="refreshTable(selectedEmployeeStatus)" [(value)]="selectedEmployeeStatus">
             <mat-option [value]="1">
                 Current employees
@@ -12,34 +15,52 @@
     </div>
 </div>
 
-<div *ngIf="holidays">
-    <nz-table #basicTable [nzData]="getHolidaysByRole()">
-        <thead>
-            <tr>
-                <th *ngIf="isAdmin()">Employee</th>
-                <th>Holidays type</th>
-                <th>Paid</th>
-                <th>Date from</th>
-                <th>Date to</th>
-                <th *ngIf="isAdmin()">Overtime hours</th>
-                <th *ngIf="!isAdmin()">Overtime days</th>
-                <th>Status</th>
-                <th>Rejected/confirmed by</th>
-                <th>Request creation date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let holiday of basicTable.data">
-                <td *ngIf="isAdmin()">{{holiday.employeeFullName}}</td>
-                <td>{{enumConverter.determineHolidayType(holiday.type)}}</td>
-                <td>{{paidToString(holiday.paid)}}</td>
-                <td>{{holiday.fromInclusive | date}}</td>
-                <td>{{holiday.toInclusive | date}}</td>
-                <td>{{getOvertime(holiday)}}</td>
-                <td [style.color]="getStatusColor(holiday.status)">{{getStatusName(holiday.status)}}</td>
-                <td>{{holiday.confirmerFullName}}</td>
-                <td>{{holiday.requestCreatedDate | date}}</td>
-            </tr>
-        </tbody>
-    </nz-table>
-</div>
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="employee">
+        <th mat-header-cell *matHeaderCellDef> Employee </th>
+        <td mat-cell *matCellDef="let element"> {{element.employeeFullName}} </td>
+      </ng-container>
+      <ng-container matColumnDef="holidaysType">
+        <th mat-header-cell *matHeaderCellDef> Holidays type </th>
+        <td mat-cell *matCellDef="let element"> {{enumConverter.determineHolidayType(element.type)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="paid">
+        <th mat-header-cell *matHeaderCellDef> Paid </th>
+        <td mat-cell *matCellDef="let element"> {{paidToString(element.paid)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="dateFrom">
+        <th mat-header-cell *matHeaderCellDef> Date from </th>
+        <td mat-cell *matCellDef="let element"> {{element.fromInclusive | date}} </td>
+      </ng-container>
+      <ng-container matColumnDef="dateTo">
+        <th mat-header-cell *matHeaderCellDef> Date to </th>
+        <td mat-cell *matCellDef="let element"> {{element.toInclusive | date}} </td>
+      </ng-container>
+      <ng-container matColumnDef="overtimeHours">
+        <th mat-header-cell *matHeaderCellDef> Overtime hours </th>
+        <td mat-cell *matCellDef="let element"> {{getOvertime(element)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="overtimeDays">
+        <th mat-header-cell *matHeaderCellDef> Overtime days </th>
+        <td mat-cell *matCellDef="let element"> {{getOvertime(element)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let element" [ngStyle]="{'color':getStatusColor(element.status)}"> {{getStatusName(element.status)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="rejectedConfirmed">
+        <th mat-header-cell *matHeaderCellDef> Rejected/confirmed by </th>
+        <td mat-cell *matCellDef="let element"> {{element.confirmerFullName}} </td>
+      </ng-container>
+      <ng-container matColumnDef="creationDate">
+        <th mat-header-cell *matHeaderCellDef> Request creation date </th>
+        <td mat-cell *matCellDef="let element"> {{element.requestCreatedDate | date}} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>

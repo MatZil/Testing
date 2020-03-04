@@ -91,7 +91,6 @@ namespace XplicityApp.Services
         public async Task ConfirmHoliday(int holidayId, int confirmerId)
         {
             var getHolidayDto = await _holidaysService.GetById(holidayId);
-            var confirmer = await _repositoryEmployees.GetById(confirmerId);
 
             var updateHolidayDto = _mapper.Map<UpdateHolidayDto>(getHolidayDto);
             updateHolidayDto.Status = HolidayStatus.AdminConfirmed;

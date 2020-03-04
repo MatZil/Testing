@@ -1,80 +1,66 @@
-<button mat-flat-button nzType="primary" (click)="openAddForm()">Add item</button>
-<nz-table #basicTable [nzData]="equipment">
-  <thead>
-    <tr>
-    <tr>
-      <th nzCustomFilter>
-        Category
-        <i class="ant-table-filter-icon" id="byCategory" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="category" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
-      </th>
-      <th>Name</th>
-      <th>Serial number</th>
-      <th>Purchase Date</th>
-      <th>Price</th>
-      <th nzCustomFilter>
-        Assigned To
-        <i class="ant-table-filter-icon" id="byOwner" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="owner" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
-      </th>
-      <th>
-        Expiration Date
-        <nz-date-picker [(ngModel)]="searchDateValue" (ngModelChange)="search()"></nz-date-picker>
-      </th>
-      <th>Comment</th>
-      <th nzCustomFilter>
-        Tags
-        <i class="ant-table-filter-icon" id="byTag" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search" [nzDropdownMenu]="tag" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
-      </th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let data of basicTable.data">
-      <td>{{data.category.name}}</td>
-      <td>{{data.name}}</td>
-      <td>{{data.serialNumber}}</td>
-      <td>{{data.purchaseDate | date}}</td>
-      <td>{{data.price}}</td>
-      <td>{{data.assignedTo}}</td>
-      <td>{{data.expiryDate | date}}</td>
-      <td nzBreakWork>{{data.comment}}</td>
-      <td>
-        <mat-chip-list *ngFor="let tag of data.tags|slice:0:2">
-          <mat-chip>{{ tag.title }}</mat-chip>
-        </mat-chip-list>
-        <div *ngIf="data.tags.length > 2">...</div>
-      </td>
-      <td>
-        <button mat-flat-button (click)="openEditForm(data)">
-          <i nz-icon nzType="edit" nzTheme="outline"></i>
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
-<nz-dropdown-menu #category="nzDropdownMenu" id="byCategory">
-    <div class="search-box">
-        <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchCategoryValue" />
-        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
-      Search
-    </button>
-        <button nz-button nzSize="small" (click)="resetSearchCategory()">Reset</button>
-    </div>
-</nz-dropdown-menu>
-<nz-dropdown-menu #owner="nzDropdownMenu" id="byOwner">
-    <div class="search-box">
-        <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchOwnerValue" />
-        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
-      Search
-    </button>
-        <button nz-button nzSize="small" (click)="resetSearchOwner()">Reset</button>
-    </div>
-</nz-dropdown-menu>
-<nz-dropdown-menu #tag="nzDropdownMenu" id="byTag">
-  <div class="search-box">
-      <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchTagValue" />
-      <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
-    Search
-  </button>
-      <button nz-button nzSize="small" (click)="resetSearchTag()">Reset</button>
-  </div>
-</nz-dropdown-menu>
+<div class="divider">
+    <button mat-flat-button color="primary" (click)="openAddForm()">Add item</button>
+    <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Current inventory" (selectionChange)="refreshTable(showArchivedInventory)" [(value)]="showArchivedInventory">
+        <mat-option [value]="false">
+            Current inventory
+        </mat-option>
+        <mat-option [value]="true">
+            Archived inventory
+        </mat-option>
+    </mat-select>
+</div>
+
+<mat-form-field class="fullWidth">
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Filter keyword">
+</mat-form-field>
+
+<table mat-table [dataSource]="equipmentDataSource">
+    <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>Category</th>
+        <td mat-cell *matCellDef="let item"> {{item.categoryName}} </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let item"> {{item.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="serial number">
+        <th mat-header-cell *matHeaderCellDef>Serial Number</th>
+        <td mat-cell *matCellDef="let item"> {{item.serialNumber}} </td>
+    </ng-container>
+    <ng-container matColumnDef="purchase date">
+        <th mat-header-cell *matHeaderCellDef>Purchase Date</th>
+        <td mat-cell *matCellDef="let item"> {{item.purchaseDate | date}} </td>
+    </ng-container>
+    <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Price</th>
+        <td mat-cell *matCellDef="let item"> {{item.price}} </td>
+    </ng-container>
+    <ng-container matColumnDef="assigned to">
+        <th mat-header-cell *matHeaderCellDef>Assigned To</th>
+        <td mat-cell *matCellDef="let item"> {{item.assignedTo}} </td>
+    </ng-container>
+    <ng-container matColumnDef="expiry date">
+        <th mat-header-cell *matHeaderCellDef>Expiration Date</th>
+        <td mat-cell *matCellDef="let item"> {{item.expiryDate | date}} </td>
+    </ng-container>
+    <ng-container matColumnDef="comment">
+        <th mat-header-cell *matHeaderCellDef>Comment</th>
+        <td mat-cell *matCellDef="let item"> {{item.comment}} </td>
+    </ng-container>
+    <ng-container matColumnDef="tags">
+        <th mat-header-cell *matHeaderCellDef>Tags</th>
+        <td mat-cell *matCellDef="let item">
+            <div *ngFor="let tag of item.tagTitles|slice:0:2">{{tag}}</div>
+            <div *ngIf="item.tags.length > 2">...</div>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let item">
+            <button mat-flat-button color="primary" (click)="openEditForm(item)">Edit</button>
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

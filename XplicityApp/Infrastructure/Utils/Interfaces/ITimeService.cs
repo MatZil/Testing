@@ -8,7 +8,7 @@ namespace XplicityApp.Infrastructure.Utils.Interfaces
         int GetWorkDays(DateTime from, DateTime to);
         int GetCurrentYearWorkDays();
         int GetRemainingMonthWorkDays(DateTime fromInclusive);
-        bool IsFreeWorkDay(DateTime freeWorkDay);
+        bool IsWorkDay(DateTime freeWorkDay);
         DateTime GetNextWorkDay(DateTime nextWorkDay);
     }
 }

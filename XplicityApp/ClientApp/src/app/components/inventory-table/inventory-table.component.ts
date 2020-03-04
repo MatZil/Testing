@@ -5,11 +5,12 @@ import { InventoryCategory } from 'src/app/models/inventory-category';
 import { InventoryCategoryService } from 'src/app/services/inventory-category.service';
 import { TableRowUserModel } from 'src/app/models/table-row-user-model';
 import { UserService } from 'src/app/services/user.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatTableDataSource } from '@angular/material';
 import { AddInventoryFormComponent } from '../inventory-add-form/inventory-add-form.component';
 import { EditInventoryFormComponent } from '../inventory-edit-form/inventory-edit-form.component';
 import { NewInventoryItem } from '../../models/new-inventory-item';
 import { Tag } from 'src/app/models/tag';
+import { TableRowInventoryItem } from 'src/app/models/table-row-inventory-item';
 
 @Component({
   selector: 'app-inventory-table',
@@ -17,40 +18,48 @@ import { Tag } from 'src/app/models/tag';
   styleUrls: ['./inventory-table.component.scss']
 })
 export class InventoryTableComponent implements OnInit {
-  equipment: InventoryItem[] = [];
+  equipmentDataSource: MatTableDataSource<TableRowInventoryItem>;
   @Input() employeeId: number;
 
-  inventoryItemToUpdate: InventoryItem
+  showArchivedInventory = false;
+  displayedColumns = [
+    'category',
+    'name',
+    'serial number',
+    'purchase date',
+    'price',
+    'assigned to',
+    'expiry date',
+    'comment',
+    'tags',
+    'edit'];
+  inventoryItemToUpdate: InventoryItem;
 
   categories: InventoryCategory[] = [];
   employees: TableRowUserModel[] = [];
-
-  searchCategoryValue = '';
-  searchOwnerValue = '';
-  searchTagValue = '';
-  searchDateValue: Date;
-  sortName: string | null = null;
-  sortValue: string | null = null;
-  listOfData: InventoryItem[] = [];
+  currentUser: TableRowUserModel;
 
   constructor(
     private inventoryService: InventoryService,
     private categoryService: InventoryCategoryService,
     public dialog: MatDialog,
-    private userService: UserService
-  ) {
-  }
+    private userService: UserService ) { }
 
   ngOnInit() {
-    this.getAllUsers();
     this.getCategoriesList();
-    this.refreshTable();
+    this.refreshTable(this.showArchivedInventory);
   }
 
-  refreshTable() {
-    this.inventoryService.getAllInventoryItems().subscribe(inventoryItems => {
-      this.equipment = inventoryItems;
-      this.listOfData = [...this.equipment];
+  refreshTable(showArchivedInventory: boolean) {
+    this.inventoryService.getInventoryByStatus(showArchivedInventory).subscribe(inventoryItems => {
+      this.equipmentDataSource = new MatTableDataSource(inventoryItems as TableRowInventoryItem[]);
+      this.equipmentDataSource.data.forEach(row => {
+        row.categoryName = row.category.name;
+        row.tagTitles = [];
+        row.tags.forEach(tag => {
+          row.tagTitles.push(tag.title);
+        });
+      });
     });
   }
 
@@ -90,13 +99,13 @@ export class InventoryTableComponent implements OnInit {
 
   saveInventoryItem(updateInventoryItem: InventoryItem, id: number) {
     this.inventoryService.updateInventoryItem(id, updateInventoryItem).subscribe(() => {
-      this.refreshTable();
+      this.refreshTable(this.showArchivedInventory);
     });
   }
 
   addInventoryItem(newInventoryItem: NewInventoryItem) {
     this.inventoryService.createNewInventoryItem(newInventoryItem).subscribe(() => {
-      this.refreshTable();
+      this.refreshTable(this.showArchivedInventory);
 
     });
   }
@@ -113,65 +122,13 @@ export class InventoryTableComponent implements OnInit {
     });
   }
 
-  resetSearchCategory(): void {
-    this.searchCategoryValue = '';
-    this.search();
+  isAdmin(): boolean {
+    return this.userService.isAdmin();
   }
-  resetSearchOwner(): void {
-    this.searchOwnerValue = '';
-    this.search();
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.equipmentDataSource.filter = filterValue.trim().toLowerCase();
   }
-  resetSearchTag(): void {
-    this.searchTagValue = '';
-    this.search();
-  }
-  itemHasSearchTag(Tags: Tag[]): Boolean{
-    if(!this.searchTagValue) return true;
-    var contains : boolean = false;
-    Tags.forEach(tag => {
-      if(tag.title.toLocaleUpperCase().indexOf(this.searchTagValue.toLocaleUpperCase()) !== -1)
-      {
-        contains = true;
-      }
-    });
-    return contains;
-  }
-  search(): void {
-    const filterFunc = (item: InventoryItem) => {
-      if (!this.searchDateValue) {
-        return (
-          item.category.name.toUpperCase().indexOf(this.searchCategoryValue.toUpperCase()) !== -1 &&
-          item.assignedTo.toUpperCase().indexOf(this.searchOwnerValue.toUpperCase()) !== -1 &&
-          this.itemHasSearchTag(item.tags)
-        );
-      }
-      else {
-        if (!item.expiryDate)
-          return false;
-        else {
-          var targetDate = Date.parse(this.searchDateValue.toDateString());
-          var tempDate = new Date(item.expiryDate);
-          var itemDate = Date.parse(tempDate.toDateString());
-          return (
-            item.category.name.toUpperCase().indexOf(this.searchCategoryValue.toUpperCase()) !== -1 &&
-            item.assignedTo.toUpperCase().indexOf(this.searchOwnerValue.toUpperCase()) !== -1 &&
-            targetDate == itemDate && 
-            this.itemHasSearchTag(item.tags)
-          );
-        }
-      }
-    }
-    const data = this.listOfData.filter((item: InventoryItem) => filterFunc(item));
-    this.equipment = data.sort((a, b) =>
-      this.sortValue === 'ascend'
-        ? a[this.sortName!] > b[this.sortName!]
-          ? 1
-          : -1
-        : b[this.sortName!] > a[this.sortName!]
-          ? 1
-          : -1
-    );
-  }
-  
 }
 

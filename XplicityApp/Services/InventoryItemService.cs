@@ -6,6 +6,7 @@ using AutoMapper;
 using XplicityApp.Dtos.Inventory;
 using XplicityApp.Dtos.Tags;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services.Interfaces;
 
@@ -80,6 +81,31 @@ namespace XplicityApp.Services
                 inventoryItemDto.Tags = await GetTagsListByItemId(inventoryItemDto.Id);
             }
 
+            return inventoryItemsDto;
+        }
+        public async Task<ICollection<GetInventoryItemDto>> GetByStatus(bool showArchivedInventory)
+        {
+            var inventoryItems = await _repository.GetByStatus(showArchivedInventory);
+            var inventoryItemsDto = _mapper.Map<GetInventoryItemDto[]>(inventoryItems);
+
+            foreach (var inventoryItemDto in inventoryItemsDto)
+            {
+                inventoryItemDto.Tags = await GetTagsListByItemId(inventoryItemDto.Id);
+
+                foreach (var inventoryItem in inventoryItems)
+                {
+                    if (inventoryItemDto.EmployeeId == inventoryItem.EmployeeId)
+                    {
+                        inventoryItemDto.AssignedTo = inventoryItem.Employee.Name + " " + inventoryItem.Employee.Surname;
+                        break;
+                    }
+                }
+
+                if (inventoryItemDto.AssignedTo == null)
+                {
+                    inventoryItemDto.AssignedTo = "Office";
+                }
+            }
             return inventoryItemsDto;
         }
 

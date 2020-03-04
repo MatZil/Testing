@@ -36,7 +36,8 @@ import {
   MatIconModule,
   MatChipsModule,
   MatCardModule,
-  MatButtonModule
+  MatButtonModule,
+  MatPaginatorModule
 } from '@angular/material';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
@@ -124,6 +125,7 @@ export function tokenGetter() {
     MatAutocompleteModule,
     MatListModule,
     MatSidenavModule,
+    MatPaginatorModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

@@ -11,14 +11,14 @@ namespace XplicityApp.Infrastructure.Utils
             return DateTime.Now;
         }
 
-        public bool IsFreeWorkDay(DateTime workDay)
+        public bool IsWorkDay(DateTime workDay)
         {
             if (workDay.DayOfWeek == DayOfWeek.Saturday || workDay.DayOfWeek == DayOfWeek.Sunday
                                                 || DateSystem.IsPublicHoliday(workDay, CountryCode.LT))
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         public int GetWorkDays(DateTime fromInclusive, DateTime toInclusive)
@@ -27,7 +27,7 @@ namespace XplicityApp.Infrastructure.Utils
 
             while (fromInclusive <= toInclusive)
             {
-                if (IsFreeWorkDay(fromInclusive))
+                if (!IsWorkDay(fromInclusive))
                 {
                     fromInclusive = fromInclusive.AddDays(1);
                     continue;
@@ -57,7 +57,7 @@ namespace XplicityApp.Infrastructure.Utils
         {
             var nextWorkDay = currentTime.AddDays(1);
 
-            while (IsFreeWorkDay(nextWorkDay))
+            while (!IsWorkDay(nextWorkDay))
             {
                 nextWorkDay = nextWorkDay.AddDays(1);
             }

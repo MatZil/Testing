@@ -16,6 +16,7 @@ using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Static_Files;
+using XplicityApp.Infrastructure.Utils;
 
 namespace Tests
 {
@@ -31,6 +32,8 @@ namespace Tests
         private Tag[] _tags;
         private InventoryItemTag[] _inventoryItemTags;
         private FileRecord[] _fileRecords;
+        private NotificationSettings[] _notificationSettings;
+        private TimeService _timeService = new TimeService();
 
         private HolidayDbContext _context;
         public HolidayDbContext HolidayDbContext =>
@@ -126,7 +129,7 @@ namespace Tests
             var roleStore = new RoleStore<IdentityRole>(context);
             _roleManager = InitializeRoleManager();
 
-            if (! await _roleManager.RoleExistsAsync("Admin"))
+            if (!await _roleManager.RoleExistsAsync("Admin"))
             {
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
             }
@@ -213,7 +216,7 @@ namespace Tests
                     Email = "taken1@email",
                     WorksFromDate = new DateTime(2019,02,25),
                     DaysOfVacation = 20,
-                    BirthdayDate = new DateTime(1988,09,12),
+                    BirthdayDate = DateTime.Today,
                     FreeWorkDays = 10,
                     OvertimeHours = 24,
                     ParentalLeaveLimit = 3,
@@ -300,8 +303,8 @@ namespace Tests
                     Employee = context.Employees.Find(3),
                     EmployeeId = 3,
                     Type = HolidayType.Annual,
-                    FromInclusive = DateTime.Today.AddDays(1),
-                    ToInclusive = DateTime.Today.AddDays(6),
+                    FromInclusive = _timeService.GetNextWorkDay(DateTime.Today),
+                    ToInclusive = _timeService.GetNextWorkDay(DateTime.Today).AddDays(5),
                     Status = HolidayStatus.AdminConfirmed,
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 10, 14),
@@ -582,6 +585,17 @@ namespace Tests
             };
             context.InventoryItemsTags.AddRange(_inventoryItemTags);
             context.SaveChanges();
+
+            _notificationSettings = new[]
+            {
+                new NotificationSettings
+                {
+                    Id = 1,
+                    EmployeeId = 1
+                }
+            };
+            context.NotificationSettings.AddRange(_notificationSettings);
+            context.SaveChanges();
         }
 
         public int GetCount(string type)
@@ -606,6 +620,8 @@ namespace Tests
                     return _inventoryCategories.Length;
                 case "tags":
                     return _tags.Length;
+                case "notificationSettings":
+                    return _notificationSettings.Length;
                 default:
                     return 0;
             }

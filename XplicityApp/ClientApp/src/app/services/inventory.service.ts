@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { InventoryItem } from '../models/inventory-item';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { NewInventoryItem } from '../models/new-inventory-item';
 
 @Injectable({
@@ -16,8 +16,10 @@ export class InventoryService {
     return this.http.get<InventoryItem[]>(`${this.inventoryItemApi}/employee/${employeeId}`);
   }
 
-  getAllInventoryItems(): Observable<InventoryItem[]> {
-    return this.http.get<InventoryItem[]>(this.inventoryItemApi);
+  getInventoryByStatus(showArchivedInventory: boolean): Observable<InventoryItem[]> {
+    let parameters = new HttpParams();
+    parameters = parameters.append('showArchivedInventory', showArchivedInventory.toString());
+    return this.http.get<InventoryItem[]>(`${this.inventoryItemApi}`, { params: parameters });
   }
 
   createNewInventoryItem(newInventoryItem: NewInventoryItem) {
