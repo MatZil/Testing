@@ -45,7 +45,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
 import { PolicyComponent } from './components/policy/policy.component';
-import { PdfJsViewerModule } from 'ng2-pdfjs-viewer';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
 import { RoleGuardService } from './helpers/role-guard';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
@@ -116,7 +116,7 @@ export function tokenGetter() {
     MatNativeDateModule,
     MatMenuModule,
     MatRadioModule,
-    PdfJsViewerModule,
+    PdfViewerModule,
     MatDialogModule,
     MatSnackBarModule,
     MatTabsModule,
