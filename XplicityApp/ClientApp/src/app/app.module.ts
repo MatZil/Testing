@@ -58,6 +58,7 @@ import { UserInformation } from './components/user-information/user-information.
 import { UserSettings } from './components/user-settings/user-settings.component';
 import { HolidayRequestFormComponent } from './components/holiday-request-form/holiday-request-form.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { UserPasswordFormComponent } from './components/user-password-form/user-password-form.component';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -89,7 +90,8 @@ export function tokenGetter() {
     ClientFormComponent,
     UserInformation,
     UserSettings,
-    HolidayRequestFormComponent
+    HolidayRequestFormComponent,
+    UserPasswordFormComponent
   ],
   imports: [
     BrowserModule,
@@ -132,7 +134,9 @@ export function tokenGetter() {
     AddInventoryFormComponent,
     EditInventoryFormComponent,
     ClientFormComponent,
-    HolidayRequestFormComponent
+    HolidayRequestFormComponent,
+    UserPasswordFormComponent,
+    UploadComponent
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
