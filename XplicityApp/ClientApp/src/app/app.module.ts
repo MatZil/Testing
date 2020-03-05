@@ -62,11 +62,7 @@ import { ClientFormComponent } from './components/client-form/client-form.compon
 import { UserInformation } from './components/user-information/user-information.component';
 import { UserSettings } from './components/user-settings/user-settings.component';
 import { HolidayRequestFormComponent } from './components/holiday-request-form/holiday-request-form.component';
-<<<<<<< HEAD
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { UserPasswordFormComponent } from './components/user-password-form/user-password-form.component';
-=======
->>>>>>> master
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem('token');
