@@ -1,14 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-
 import { Client } from '../../models/client';
 import { Newclient } from '../../models/newclient';
 import { ClientService } from '../../services/client.service';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd';
-import { NzNotificationService } from 'ng-zorro-antd';
 import { MatDialog } from '@angular/material';
 import { ClientFormComponent } from '../client-form/client-form.component';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-client-table',
@@ -30,14 +28,12 @@ export class ClientTableComponent implements OnInit {
     'buttonDelete'];
   dataSource = new MatTableDataSource<Client>();
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-  confirmDeleteModal: NzModalRef;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(
     private clientService: ClientService,
-    private modal: NzModalService,
-    private notification: NzNotificationService,
+    private alertService: AlertService,
     public dialog: MatDialog
   ) { }
 
@@ -59,18 +55,14 @@ export class ClientTableComponent implements OnInit {
   }
 
   showDeleteConfirm(id: number): void {
-    this.confirmDeleteModal = this.modal.confirm({
-      nzTitle: 'Do you want to delete this section?',
-      nzContent: 'When clicked the OK button this section will be deleted',
-      nzOnOk: () => this.onDeleteButtonClick(id)
-    });
+    if(confirm('When clicked the OK button this section will be deleted')) {
+      this.onDeleteButtonClick(id);
+      this.closeModal();
+    }
   }
 
-  createBasicNotification(): void {
-    this.notification.blank(
-      'Form error',
-      'A client with this company name already exists'
-    );
+  closeModal(){
+    this.dialog.closeAll();
   }
 
   openEditForm(client: Client): void {
@@ -123,7 +115,7 @@ export class ClientTableComponent implements OnInit {
         this.refreshTable();
       },
       error => {
-        this.createBasicNotification();
+        this.alertService.displayMessage('A client with this company name already exists');
       }
     );
   }
