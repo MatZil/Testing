@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import {FormControl} from '@angular/forms';
 
 import { TableRowUserModel } from '../../models/table-row-user-model';
 import { AuthenticationService } from '../../services/authentication.service';
@@ -10,12 +11,14 @@ import { HolidaysService } from '../../services/holidays.service';
 
 @Component({ templateUrl: 'sidebar.component.html', styleUrls: ['sidebar.component.scss'] })
 export class SidebarComponent implements OnInit {
-  isCollapsed = false;
+
+  mode = new FormControl('side');
   currentUser: TableRowUserModel;
   users = [];
   holidays: Holiday[];
   errorMessage: string;
   role: string;
+
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
