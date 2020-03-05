@@ -30,7 +30,7 @@
     <ng-container matColumnDef="buttonEdit">
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let client">
-        <button nz-button nzType="primary" (click)="openEditForm(client)">Edit</button>
+        <button mat-raised-button color="primary" (click)="openEditForm(client)">Edit</button>
       </td>
     </ng-container>
     <ng-container matColumnDef="buttonDelete">
