@@ -16,6 +16,7 @@ import { ErrorInterceptor } from './helpers/error-interceptor';
 import { ClientTableComponent } from './components/client-table/client-table.component';
 import { JwtInterceptor } from './helpers/jwt-interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -24,27 +25,31 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import {
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatRadioModule,
-  MatCheckboxModule
-} from '@angular/material';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material';
+import { MatRadioModule} from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
 import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
 import { PolicyComponent } from './components/policy/policy.component';
-import { PdfJsViewerModule } from 'ng2-pdfjs-viewer';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RoleGuardService } from './helpers/role-guard';
-import { MatTabsModule } from '@angular/material/tabs';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { UploadComponent } from './components/upload/upload.component';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { InventoryTableComponent } from './components/inventory-table/inventory-table.component';
 import { OvertimeDisplayComponent } from './components/overtime-display/overtime-display.component';
 import { AddEmployeeFormComponent } from './components/add-employee-form/add-employee-form.component';
@@ -57,8 +62,11 @@ import { ClientFormComponent } from './components/client-form/client-form.compon
 import { UserInformation } from './components/user-information/user-information.component';
 import { UserSettings } from './components/user-settings/user-settings.component';
 import { HolidayRequestFormComponent } from './components/holiday-request-form/holiday-request-form.component';
+<<<<<<< HEAD
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { UserPasswordFormComponent } from './components/user-password-form/user-password-form.component';
+=======
+>>>>>>> master
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -112,14 +120,18 @@ export function tokenGetter() {
     MatToolbarModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatMenuModule,
     MatRadioModule,
-    PdfJsViewerModule,
+    PdfViewerModule,
     MatDialogModule,
     MatSnackBarModule,
     MatTabsModule,
     NzUploadModule,
     MatProgressBarModule,
     MatAutocompleteModule,
+    MatListModule,
+    MatSidenavModule,
+    MatPaginatorModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

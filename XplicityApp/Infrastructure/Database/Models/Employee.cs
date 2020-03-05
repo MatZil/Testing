@@ -6,7 +6,7 @@ using XplicityApp.Infrastructure.Enums;
 
 namespace XplicityApp.Infrastructure.Database.Models
 {
-    public class Employee: BaseEntity
+    public class Employee : BaseEntity
     {
         [Required]
         [MinLength(3)]
@@ -47,6 +47,7 @@ namespace XplicityApp.Infrastructure.Database.Models
         public EmployeeStatusEnum Status { get; set; }
 
         public ICollection<InventoryItem> InventoryItems { get; set; }
+        public NotificationSettings NotificationSettings { get; set; }
 
         [NotMapped]
         public double OvertimeDays { get; set; } //Current amount of overtime days (converted from hours)

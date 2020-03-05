@@ -16,8 +16,10 @@ namespace XplicityApp.Infrastructure.Database
         public DbSet<InventoryItem> InventoryItems { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<InventoryItemTag> InventoryItemsTags { get; set; }
-        private readonly IConfiguration _configuration;
         public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<NotificationSettings> NotificationSettings { get; set; }
+        private readonly IConfiguration _configuration;
+
 
         public HolidayDbContext(DbContextOptions options, IConfiguration configuration) : base(options)
         {
