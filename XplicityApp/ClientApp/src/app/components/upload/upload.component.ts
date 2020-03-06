@@ -4,6 +4,7 @@ import { HttpEventType } from '@angular/common/http';
 import { AlertService } from 'src/app/services/alert.service';
 import { FileType } from '../../enums/fileType';
 import { FilesService } from 'src/app/services/files.service';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-upload',
@@ -17,9 +18,14 @@ export class UploadComponent implements OnInit {
 
   constructor(
     private alertService: AlertService,
-    private fileService: FilesService) { }
+    private fileService: FilesService,
+    public dialogRef: MatDialogRef<UploadComponent>) { }
 
   ngOnInit() {
+  }
+
+  closeUploadModal(){
+    this.dialogRef.close();
   }
 
   public uploadFile = (files: string | any[]) => {
