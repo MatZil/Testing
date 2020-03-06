@@ -3,6 +3,9 @@ import { UserService } from '../../services/user.service';
 import { MatDialog } from '@angular/material';
 import { UserPasswordFormComponent } from '../user-password-form/user-password-form.component';
 import { UploadComponent } from '../upload/upload.component';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { NotificationSettingsService } from 'src/app/services/notification-settings.service';
+import { NotificationSettings } from 'src/app/models/notification-settings';
 
 @Component({
   selector: 'app-user-settings',
@@ -10,29 +13,34 @@ import { UploadComponent } from '../upload/upload.component';
   styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettings implements OnInit {
+  currentUserSettings: NotificationSettings = new NotificationSettings();
 
   constructor(
     private userService: UserService,
-    public dialog: MatDialog
-  ) {
-  }
+    public dialog: MatDialog,
+    private notificationSettingsService: NotificationSettingsService,
+    private authenticationService: AuthenticationService
+  ) { }
 
   ngOnInit() {
+    this.loadCurrentUserSettings();
   }
 
-  showUploadModal() {
+  showUploadModal(): void {
     const dialogRef = this.dialog.open(UploadComponent, {
       width: '500px'
     });
   }
 
-  closeUploadModal() {
+  closeUploadModal(): void {
     this.dialog.closeAll();
   }
-  closePasswordModal() {
+
+  closePasswordModal(): void {
     this.dialog.closeAll();
   }
-  showPasswordModal() {
+
+  showPasswordModal(): void {
     const dialogRef = this.dialog.open(UserPasswordFormComponent, {
       width: '500px'
     });
@@ -40,5 +48,27 @@ export class UserSettings implements OnInit {
 
   isAdmin(): boolean {
     return this.userService.isAdmin();
+  }
+
+  onReceiveBirthdayNotificationsInputChange(settingValue: boolean): void {
+    this.currentUserSettings.receiveBirthdayNotifications = settingValue;
+    this.updateNotificationSettings();
+  }
+
+  onBroadcastOwnBirthdayInputChange(settingValue: boolean): void {
+    this.currentUserSettings.broadcastOwnBirthday = settingValue;
+    this.updateNotificationSettings();
+  }
+
+  updateNotificationSettings(): void {
+    this.notificationSettingsService.updateNotificationSettings(this.authenticationService.getUserId(), this.currentUserSettings).subscribe();
+  }
+
+  loadCurrentUserSettings(): void {
+    this.notificationSettingsService.getNotificationSettings(this.authenticationService.getUserId()).subscribe(
+      data => {
+        this.currentUserSettings = Object.assign({}, data);
+      }
+    )
   }
 }
