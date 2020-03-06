@@ -27,13 +27,14 @@
 <div *ngIf="currentUser" class="settingsInfo">
     <h1><b>Notification settings</b></h1>
     <p>
-        <mat-slide-toggle (input)="onInputChange1(!currentUserSettings.receiveBirthdayNotifications)"
+        <mat-slide-toggle
+            (input)="onReceiveBirthdayNotificationsInputChange(!currentUserSettings.receiveBirthdayNotifications)"
             [(ngModel)]="currentUserSettings.receiveBirthdayNotifications">
             Receive birthday notifications
         </mat-slide-toggle>
     </p>
     <p>
-        <mat-slide-toggle (input)="onInputChange2(!currentUserSettings.broadcastOwnBirthday)"
+        <mat-slide-toggle (input)="onBroadcastOwnBirthdayInputChange2(!currentUserSettings.broadcastOwnBirthday)"
             [(ngModel)]=currentUserSettings.broadcastOwnBirthday>
             Broadcast birthday notifications
         </mat-slide-toggle>

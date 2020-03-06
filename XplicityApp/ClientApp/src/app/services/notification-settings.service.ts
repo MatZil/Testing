@@ -12,11 +12,11 @@ export class NotificationSettingsService {
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
-  getUserNotificationSettings(userId: number): Observable<NotificationSettings> {
+  getNotificationSettings(userId: number): Observable<NotificationSettings> {
     return this.http.get<NotificationSettings>(`${this.notificationSettingsApi}/${userId}`);
   }
 
-  updateUserNotificationSettings(userId: number, updateNotificationSettings: NotificationSettings) {
+  updateNotificationSettings(userId: number, updateNotificationSettings: NotificationSettings) {
     return this.http.put(`${this.notificationSettingsApi}/${userId}`, updateNotificationSettings);
   }
 
