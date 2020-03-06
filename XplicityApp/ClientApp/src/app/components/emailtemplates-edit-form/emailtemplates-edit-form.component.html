@@ -1,0 +1,32 @@
+<form #clientForm="ngForm">
+
+  <h1 mat-dialog-title>Edit email template </h1>
+
+  <h2>Purpose: {{data.emailTemplatesFormData.purpose}}</h2>
+  <div>
+    <div>
+      <mat-form-field>
+        <input matInput [(ngModel)]="data.emailTemplatesFormData.subject" type="text" name="subject"
+               placeholder="Subject" required #nameInput="ngModel">
+        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
+          Subject cannot be empty.
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <textarea matInput [(ngModel)]="data.emailTemplatesFormData.template" name="template" rows="10"
+                  placeholder="Template" required #nameInput="ngModel"></textarea>
+        <mat-error *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)" class="error">
+          Email template cannot be empty.
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="saveLines">
+    <br>Available aliases:<br><br>
+    {{data.emailTemplatesFormData.instructions}}
+  </div>
+
+</form>

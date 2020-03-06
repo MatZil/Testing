@@ -16,3 +16,8 @@ mat-form-field {
 .saveLines {
     white-space: pre-line;
 }
+th,td {
+  width: 590px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

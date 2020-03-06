@@ -57,6 +57,7 @@ import { EditEmployeeFormComponent } from './components/edit-employee-form/edit-
 import { BaseEmployeeFormComponent } from './components/base-employee-form/base-employee-form.component';
 import { AddInventoryFormComponent } from './components/inventory-add-form/inventory-add-form.component';
 import { EditInventoryFormComponent } from './components/inventory-edit-form/inventory-edit-form.component';
+import { EmailTemplatesFormComponent } from './components/emailtemplates-edit-form/emailtemplates-edit-form.component'
 import { BaseInventoryFormComponent } from './components/inventory-base-form/inventory-base-form.component';
 import { ClientFormComponent } from './components/client-form/client-form.component';
 import { UserInformation } from './components/user-information/user-information.component';
@@ -95,6 +96,7 @@ export function tokenGetter() {
     UserInformation,
     UserSettings,
     HolidayRequestFormComponent,
+    EmailTemplatesFormComponent,
     UserPasswordFormComponent
   ],
   imports: [
@@ -143,6 +145,7 @@ export function tokenGetter() {
     EditInventoryFormComponent,
     ClientFormComponent,
     HolidayRequestFormComponent,
+    EmailTemplatesFormComponent,
     UserPasswordFormComponent,
     UploadComponent
   ],
