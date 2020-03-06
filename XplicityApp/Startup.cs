@@ -32,7 +32,7 @@ namespace XplicityApp
             services.SetupJtwAuthentication(Configuration);
             services.AddAllDependencies();
             services.SetUpAudit();
-
+            services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -75,6 +75,13 @@ namespace XplicityApp
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+            });
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>
