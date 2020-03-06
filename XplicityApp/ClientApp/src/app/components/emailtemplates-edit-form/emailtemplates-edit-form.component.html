@@ -1,4 +1,4 @@
-<form #clientForm="ngForm">
+<form #editEmailTemplateForm="ngForm">
 
   <h1 mat-dialog-title>Edit email template </h1>
 
@@ -24,9 +24,15 @@
     </div>
   </div>
 
-  <div class="saveLines">
+  <div>
     <br>Available aliases:<br><br>
     {{data.emailTemplatesFormData.instructions}}
   </div>
+  <mat-dialog-actions align="end">
+    <button mat-flat-button color="warn" mat-button-base [mat-dialog-close]>Cancel</button>
+    <button mat-flat-button color="primary" (click)="closeModal(data.emailTemplatesFormData)" [disabled]="editEmailTemplateForm.form.invalid">
+      Save
+    </button>
+  </mat-dialog-actions>
 
 </form>
