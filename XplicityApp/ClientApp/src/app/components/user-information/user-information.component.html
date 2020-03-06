@@ -1,23 +1,41 @@
-        <div *ngIf="currentUser" class="employeesInfo">
-            <h1><b>Profile information</b></h1>
-            <p><b>Name</b>: {{ currentUser.name }}</p>
-            <p><b>Surname</b>: {{ currentUser.surname }}</p>
-            <p><b>Email</b>: {{ currentUser.email }}</p>
-            <p><b>Position</b>: {{ currentUser.position }}</p>
-            <p><b>BirthdayDate</b>: {{ currentUser.birthdayDate | date }}</p>
-            <p><b>Works from</b>: {{ currentUser.worksFromDate | date }}</p>
-            <p><b>Maximum days of vacation per year</b>: {{ currentUser.daysOfVacation }}</p>
-            <p><b>Free workdays left</b>: {{ currentUser.freeWorkDays | number : '.0-2' }}</p>
-            <p><b>Overtime hours</b>: {{ currentUser.overtimeHours | number : '.0-2' }}</p>
-            <p><b>Maximum parental leaves per month</b>: {{ currentUser.parentalLeaveLimit }}</p>
-            <div *ngIf="currentUser.parentalLeaveLimit">
-                <p><b>Available parental leaves this month</b>: {{ currentUser.currentAvailableLeaves }}</p>
-                <p><b>Available parental leaves next month</b>: {{ currentUser.nextMonthAvailableLeaves }}</p>
-            </div>
-            <p><b>Role</b>: {{ currentUser.role }}</p>
-        </div>
+<div *ngIf="currentUser" class="employeesInfo">
+    <h1><b>Profile information</b></h1>
+    <p><b>Name</b>: {{ currentUser.name }}</p>
+    <p><b>Surname</b>: {{ currentUser.surname }}</p>
+    <p><b>Email</b>: {{ currentUser.email }}</p>
+    <p><b>Position</b>: {{ currentUser.position }}</p>
+    <p><b>BirthdayDate</b>: {{ currentUser.birthdayDate | date }}</p>
+    <p><b>Works from</b>: {{ currentUser.worksFromDate | date }}</p>
+    <p><b>Maximum days of vacation per year</b>: {{ currentUser.daysOfVacation }}</p>
+    <p><b>Free workdays left</b>: {{ currentUser.freeWorkDays | number : '.0-2' }}</p>
+    <p><b>Overtime hours</b>: {{ currentUser.overtimeHours | number : '.0-2' }}</p>
+    <p><b>Maximum parental leaves per month</b>: {{ currentUser.parentalLeaveLimit }}</p>
+    <div *ngIf="currentUser.parentalLeaveLimit">
+        <p><b>Available parental leaves this month</b>: {{ currentUser.currentAvailableLeaves }}</p>
+        <p><b>Available parental leaves next month</b>: {{ currentUser.nextMonthAvailableLeaves }}</p>
+    </div>
+    <p><b>Role</b>: {{ currentUser.role }}</p>
+</div>
 
-        <div *ngIf="currentUser" class="holidaysInfo">
-            <h1><b>Holiday information</b></h1>
-            <p><app-overtime-display></app-overtime-display></p>
-        </div>
+<div *ngIf="currentUser" class="holidaysInfo">
+    <h1><b>Holiday information</b></h1>
+    <p>
+        <app-overtime-display></app-overtime-display>
+    </p>
+</div>
+
+<div *ngIf="currentUser" class="settingsInfo">
+    <h1><b>Notification settings</b></h1>
+    <p>
+        <mat-slide-toggle (input)="onInputChange1(!currentUserSettings.receiveBirthdayNotifications)"
+            [(ngModel)]="currentUserSettings.receiveBirthdayNotifications">
+            Receive birthday notifications
+        </mat-slide-toggle>
+    </p>
+    <p>
+        <mat-slide-toggle (input)="onInputChange2(!currentUserSettings.broadcastOwnBirthday)"
+            [(ngModel)]=currentUserSettings.broadcastOwnBirthday>
+            Broadcast birthday notifications
+        </mat-slide-toggle>
+    </p>
+</div>
