@@ -19,6 +19,4 @@ export class NotificationSettingsService {
   updateNotificationSettings(userId: number, updateNotificationSettings: NotificationSettings) {
     return this.http.put(`${this.notificationSettingsApi}/${userId}`, updateNotificationSettings);
   }
-
-
 }
