@@ -16,7 +16,7 @@ export class NotificationSettingsService {
     return this.http.get<NotificationSettings>(`${this.notificationSettingsApi}/${userId}`);
   }
 
-  updateNotificationSettings(userId: number, updateNotificationSettings: NotificationSettings) {
-    return this.http.put(`${this.notificationSettingsApi}/${userId}`, updateNotificationSettings);
+  updateNotificationSettings(userId: number, updateNotificationSettings: NotificationSettings): Observable<boolean> {
+    return this.http.put<boolean>(`${this.notificationSettingsApi}/${userId}`, updateNotificationSettings);
   }
 }
