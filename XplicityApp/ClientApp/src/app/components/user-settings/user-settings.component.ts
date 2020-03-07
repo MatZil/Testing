@@ -50,16 +50,6 @@ export class UserSettings implements OnInit {
     return this.userService.isAdmin();
   }
 
-  onReceiveBirthdayNotificationsInputChange(settingValue: boolean): void {
-    this.currentUserSettings.receiveBirthdayNotifications = settingValue;
-    this.updateNotificationSettings();
-  }
-
-  onBroadcastOwnBirthdayInputChange(settingValue: boolean): void {
-    this.currentUserSettings.broadcastOwnBirthday = settingValue;
-    this.updateNotificationSettings();
-  }
-
   updateNotificationSettings(): void {
     this.notificationSettingsService.updateNotificationSettings(this.authenticationService.getUserId(), this.currentUserSettings).subscribe();
   }
