@@ -4,9 +4,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { EditModalData } from './edit-modal-data';
 
 @Component({
-  selector: 'app-emailtemplates-edit-form',
-  templateUrl: './emailtemplates-edit-form.component.html',
-  styleUrls: ['./emailtemplates-edit-form.component.scss']
+  selector: 'app-edit-email-templates-form',
+  templateUrl: './edit-email-templates-form.component.html',
+  styleUrls: ['./edit-email-templates-form.component.scss']
 })
 export class EmailTemplatesFormComponent implements OnInit {
   editEmailTemplateForm: FormGroup;
@@ -22,7 +22,6 @@ export class EmailTemplatesFormComponent implements OnInit {
   }
 
   initializeFormGroup() {
-    this.data.emailTemplatesFormData.purpose
     this.editEmailTemplateForm = this.formBuilder.group({
       purpose: ['', [
         Validators.required,

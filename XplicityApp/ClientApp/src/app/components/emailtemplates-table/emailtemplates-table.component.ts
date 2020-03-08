@@ -5,7 +5,7 @@ import { EmailTemplatesService } from 'src/app/services/email-templates.service'
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material';
-import { EmailTemplatesFormComponent } from '../emailtemplates-edit-form/emailtemplates-edit-form.component';
+import { EmailTemplatesFormComponent } from '../edit-email-templates-form/edit-email-templates-form.component';
 
 @Component({
   selector: 'app-emailtemplates-table',
