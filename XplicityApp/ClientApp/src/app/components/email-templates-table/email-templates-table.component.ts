@@ -8,9 +8,9 @@ import { MatDialog } from '@angular/material';
 import { EmailTemplatesFormComponent } from '../edit-email-templates-form/edit-email-templates-form.component';
 
 @Component({
-  selector: 'app-emailtemplates-table',
-  templateUrl: './emailtemplates-table.component.html',
-  styleUrls: ['./emailtemplates-table.component.scss']
+  selector: 'app-email-templates-table',
+  templateUrl: './email-templates-table.component.html',
+  styleUrls: ['./email-templates-table.component.scss']
 })
 
 export class EmailtemplatesTableComponent implements OnInit {

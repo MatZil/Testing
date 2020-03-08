@@ -46,7 +46,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
 import { PolicyComponent } from './components/policy/policy.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
+import { EmailtemplatesTableComponent } from './components/email-templates-table/email-templates-table.component';
 import { RoleGuardService } from './helpers/role-guard';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { UploadComponent } from './components/upload/upload.component';
