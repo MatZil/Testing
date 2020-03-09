@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Client } from '../../models/client';
 import { Newclient } from '../../models/newclient';
 import { ClientService } from '../../services/client.service';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd';
-import { NzNotificationService } from 'ng-zorro-antd';
 import { MatDialog } from '@angular/material';
 import { ClientFormComponent } from '../client-form/client-form.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-client-table',
@@ -15,33 +15,36 @@ import { ClientFormComponent } from '../client-form/client-form.component';
 })
 
 export class ClientTableComponent implements OnInit {
-  clients: Client[] = [];
   newClient: Newclient = new Newclient();
   newClientFormData: Newclient;
 
-  confirmDeleteModal: NzModalRef;
+  displayedColumns: string[] = [
+    'companyName', 
+    'ownerName', 
+    'ownerSurname', 
+    'ownerEmail', 
+    'ownerPhone', 
+    'buttonEdit', 
+    'buttonDelete'];
+  dataSource = new MatTableDataSource<Client>();
 
-  searchValue = '';
-  listOfSearchAddress: string[] = [];
-  sortName: string | null = null;
-  sortValue: string | null = null;
-  listOfData: Client[] = [];
+
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(
     private clientService: ClientService,
-    private modal: NzModalService,
-    private notification: NzNotificationService,
+    private alertService: AlertService,
     public dialog: MatDialog
   ) { }
 
   ngOnInit() {
     this.refreshTable();
+    this.dataSource.paginator = this.paginator;
   }
 
   refreshTable(): void {
     this.clientService.getClient().subscribe(clients => {
-      this.clients = clients;
-      this.listOfData = [...this.clients];
+      this.dataSource.data = clients;
     });
   }
 
@@ -52,61 +55,14 @@ export class ClientTableComponent implements OnInit {
   }
 
   showDeleteConfirm(id: number): void {
-    this.confirmDeleteModal = this.modal.confirm({
-      nzTitle: 'Do you want to delete this section?',
-      nzContent: 'When clicked the OK button this section will be deleted',
-      nzOnOk: () => this.onDeleteButtonClick(id)
-    });
+    if(confirm('When clicked the OK button this section will be deleted')) {
+      this.onDeleteButtonClick(id);
+      this.closeModal();
+    }
   }
 
-  createBasicNotification(): void {
-    this.notification.blank(
-      'Form error',
-      'A client with this company name already exists'
-    );
-  }
-
-  reset(): void {
-    this.searchValue = '';
-    this.search();
-  }
-
-  search(): void {
-    const filterFunc = (item: {
-      companyName: string;
-      ownerName: string;
-      ownerSurname: string;
-      ownerEmail: string;
-      ownerPhone: string;
-    }) => {
-      return (
-        (this.listOfSearchAddress.length
-          ? this.listOfSearchAddress.some(
-            ownerName => item.ownerName.indexOf(ownerName) !== -1
-          )
-          : true) && item.companyName.indexOf(this.searchValue) !== -1
-      );
-    };
-    const data = this.listOfData.filter(
-      (item: {
-        companyName: string;
-        ownerName: string;
-        ownerSurname: string;
-        ownerEmail: string;
-        ownerPhone: string;
-      }) => filterFunc(item)
-    );
-    this.clients = data.sort((a, b) =>
-      this.sortValue === 'ascend'
-        ? // tslint:disable-next-line:no-non-null-assertion
-        a[this.sortName!] > b[this.sortName!]
-          ? 1
-          : -1
-        : // tslint:disable-next-line:no-non-null-assertion
-        b[this.sortName!] > a[this.sortName!]
-          ? 1
-          : -1
-    );
+  closeModal(){
+    this.dialog.closeAll();
   }
 
   openEditForm(client: Client): void {
@@ -159,9 +115,14 @@ export class ClientTableComponent implements OnInit {
         this.refreshTable();
       },
       error => {
-        this.createBasicNotification();
+        this.alertService.displayMessage('A client with this company name already exists');
       }
     );
   }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
 }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FilesService } from '../../services/files.service';
 import { UrlService } from 'src/app/services/url.service';
 
@@ -13,25 +13,21 @@ export class PolicyComponent implements OnInit {
 
   constructor(
     private fileService: FilesService,
-    private urlService: UrlService,
-    private elementRef: ElementRef) {}
+    private urlService: UrlService) { }
 
   ngOnInit() {
   }
 
   onButtonClick() {
     this.fileService.getPolicyRelativePath().subscribe(relativePath => {
-        this.policyPath = this.urlService.getAbsolutePath(relativePath);
-        this.showPolicy = true;
-      }
+      this.policyPath = this.urlService.getAbsolutePath(relativePath);
+      this.showPolicy = true;
+    }
     );
   }
 
   @HostListener('document:click', ['$event'])
-  exitPdf(event: any) {
-    if (!this.elementRef.nativeElement.contains(event.target)) {
-      this.showPolicy = false;
-    }
+  exitPdf() {
+    this.showPolicy = false;
   }
-
 }

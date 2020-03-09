@@ -1,58 +1,49 @@
-<button nz-button nzType="primary" (click)="openAddForm()">Add new client</button>
+<div>
+  <button mat-raised-button color="primary" (click)="openAddForm()" >Add new client</button>
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter clients">
+  </mat-form-field>
+</div>
 
-<nz-table #basicTable [nzData]="clients">
-  <thead>
-    <tr>
-      <th nzCustomFilter>
-        Company name
-        <i class="ant-table-filter-icon"
-           nz-icon
-           nz-dropdown
-           #dropdown="nzDropdown"
-           nzType="search"
-           [nzDropdownMenu]="menu"
-           [class.ant-table-filter-open]="dropdown.nzVisible"
-           nzTrigger="click"
-           nzPlacement="bottomRight"
-           [nzClickHide]="false"
-           nzTableFilter></i>
-      </th>
-      <th>Owner Name</th>
-      <th>Owner Surname</th>
-      <th>Owner email</th>
-      <th>Owner phone</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let client of basicTable.data">
-      <td>{{ client.companyName }}</td>
-      <td>{{ client.ownerName }}</td>
-      <td>{{ client.ownerSurname }}</td>
-      <td>{{ client.ownerEmail }}</td>
-      <td>{{ client.ownerPhone }}</td>
-      <td>
-        <button nz-button nzType="primary" (click)="openEditForm(client)">Edit</button>
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="companyName">
+      <th mat-header-cell *matHeaderCellDef> Company name </th>
+      <td mat-cell *matCellDef="let client"> {{client.companyName}} </td>
+    </ng-container>
+    <ng-container matColumnDef="ownerName">
+      <th mat-header-cell *matHeaderCellDef> Owner Name </th>
+      <td mat-cell *matCellDef="let client"> {{client.ownerName}} </td>
+    </ng-container>
+    <ng-container matColumnDef="ownerSurname">
+      <th mat-header-cell *matHeaderCellDef> Owner Surname </th>
+      <td mat-cell *matCellDef="let client"> {{client.ownerSurname}} </td>
+    </ng-container>
+    <ng-container matColumnDef="ownerEmail">
+      <th mat-header-cell *matHeaderCellDef> Owner email </th>
+      <td mat-cell *matCellDef="let client"> {{client.ownerEmail}} </td>
+    </ng-container>
+    <ng-container matColumnDef="ownerPhone">
+      <th mat-header-cell *matHeaderCellDef> Owner phone </th>
+      <td mat-cell *matCellDef="let client"> {{client.ownerPhone}} </td>
+    </ng-container>
+    <ng-container matColumnDef="buttonEdit">
+      <th mat-header-cell *matHeaderCellDef> </th>
+      <td mat-cell *matCellDef="let client">
+        <button mat-raised-button color="primary" (click)="openEditForm(client)">Edit</button>
       </td>
-      <td>
+    </ng-container>
+    <ng-container matColumnDef="buttonDelete">
+      <th mat-header-cell *matHeaderCellDef> </th>
+      <td mat-cell *matCellDef="let client">
         <button mat-flat-button color="warn" (click)="showDeleteConfirm(client.id)">Delete</button>
       </td>
-    </tr>
-  </tbody>
-</nz-table>
+    </ng-container>
 
-<nz-dropdown-menu #menu="nzDropdownMenu">
-  <div class="search-box">
-    <input type="text"
-           nz-input
-           placeholder="Search name"
-           [(ngModel)]="searchValue" />
-    <button nz-button
-            nzSize="small"
-            nzType="primary"
-            (click)="search()"
-            class="search-button">
-      Search
-    </button>
-    <button nz-button nzSize="small" (click)="reset()">Reset</button>
-  </div>
-</nz-dropdown-menu>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+

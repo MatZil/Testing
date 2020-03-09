@@ -1,4 +1,10 @@
-<div *ngIf="showPolicy" class="pdf-viewer">
-    <ng2-pdfjs-viewer pdfSrc="{{policyPath}}" zoom="75" pagemode="none"></ng2-pdfjs-viewer>
+<button mat-flat-button color="primary" nzType="primary" (click)="onButtonClick()">View holiday policy</button>
+<div style='position: fixed;' *ngIf="showPolicy" class="pdf-viewer-container">
+  <pdf-viewer [src]="policyPath"
+              [show-all]="false"
+              [autoresize]="true"
+              [original-size]='true'
+              [fit-to-page]='true'
+              [render-text]='false'>
+  </pdf-viewer>
 </div>
-<button nz-button nzType="primary" (click)="onButtonClick()">View holiday policy</button>

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../services/user.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { passwordMatcherValidatorFn } from '../../helpers/password-match-validator';
-import { PasswordChangeModel } from '../../models/password-change-model';
-import { AlertService } from 'src/app/services/alert.service';
-import { FileType } from '../../enums/fileType';
+import { MatDialog } from '@angular/material';
+import { UserPasswordFormComponent } from '../user-password-form/user-password-form.component';
+import { UploadComponent } from '../upload/upload.component';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { NotificationSettingsService } from 'src/app/services/notification-settings.service';
+import { NotificationSettings } from 'src/app/models/notification-settings';
 
 @Component({
   selector: 'app-user-settings',
@@ -13,85 +13,52 @@ import { FileType } from '../../enums/fileType';
   styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettings implements OnInit {
-  hideOldPassword = true;
-  hideFirstPassword = true;
-  hideSecondPassword = true;
-  registerForm: FormGroup;
-  isVisibleUploadModal = false;
-  isVisiblePasswordModal = false;
-  fileTypes = FileType;
+  currentUserSettings: NotificationSettings = new NotificationSettings();
 
   constructor(
-    private authenticationService: AuthenticationService,
     private userService: UserService,
-    private formBuilder: FormBuilder,
-    private alertService: AlertService
-  ) {
-  }
-  get oldPassword() {
-    return this.registerForm.get('passwords.oldPassword');
-  }
+    public dialog: MatDialog,
+    private notificationSettingsService: NotificationSettingsService,
+    private authenticationService: AuthenticationService
+  ) { }
 
-  get newPassword() {
-    return this.registerForm.get('passwords.newPassword');
-  }
-
-  get passwordConfirm() {
-    return this.registerForm.get('passwords.passwordConfirm');
-  }
   ngOnInit() {
-    this.createFormGroup();
+    this.loadCurrentUserSettings();
   }
 
-  showUploadModal() {
-    this.isVisibleUploadModal = true;
-  }
-
-  closeUploadModal() {
-    this.isVisibleUploadModal = false;
-  }
-  closePasswordModal() {
-    this.isVisiblePasswordModal = false;
-  }
-  showPasswordModal() {
-    this.isVisiblePasswordModal = true;
-  }
-
-  createFormGroup() {
-    this.registerForm = this.formBuilder.group({
-      passwords: this.formBuilder.group({
-        oldPassword: ['', Validators.required],
-        newPassword: ['', [Validators.required, Validators.minLength(6)]],
-        passwordConfirm: ['', Validators.required]
-      }, { validator: passwordMatcherValidatorFn })
+  showUploadModal(): void {
+    const dialogRef = this.dialog.open(UploadComponent, {
+      width: '500px'
     });
   }
 
-  onChangeClicked() {
-    const currentPassword = this.registerForm.get('passwords.oldPassword').value;
-    const newPassword = this.registerForm.get('passwords.newPassword').value;
-    const id = this.authenticationService.getUserId();
+  closeUploadModal(): void {
+    this.dialog.closeAll();
+  }
 
-    if (this.registerForm.valid && currentPassword && newPassword) {
-      const passwordChangeModel = new PasswordChangeModel();
-      passwordChangeModel.currentPassword = currentPassword;
-      passwordChangeModel.newPassword = newPassword;
+  closePasswordModal(): void {
+    this.dialog.closeAll();
+  }
 
-      this.userService.changePassword(id, passwordChangeModel)
-        .subscribe(
-          () => {
-            this.alertService.displayMessage('You have successfuly changed your password');
-            this.registerForm.reset();
-          },
-          error => {
-            this.alertService.displayMessage('There was an error while changing password');
-            console.log(error);
-          }
-        );
-    }
+  showPasswordModal(): void {
+    const dialogRef = this.dialog.open(UserPasswordFormComponent, {
+      width: '500px'
+    });
   }
 
   isAdmin(): boolean {
     return this.userService.isAdmin();
+  }
+
+  updateNotificationSettings(): void {
+    this.notificationSettingsService.updateNotificationSettings(this.authenticationService.getUserId(), this.currentUserSettings).subscribe();
+  }
+
+  loadCurrentUserSettings(): void {
+    this.notificationSettingsService.getNotificationSettings(this.authenticationService.getUserId()).subscribe(
+      data => {
+        this.currentUserSettings = Object.assign({}, data);
+      }
+    )
   }
 }
