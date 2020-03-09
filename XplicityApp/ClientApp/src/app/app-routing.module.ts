@@ -7,7 +7,7 @@ import { ClientTableComponent } from './components/client-table/client-table.com
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
-import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
+import { EmailtemplatesTableComponent } from './components/email-templates-table/email-templates-table.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './helpers/auth-guard';
 import { RoleGuardService } from './helpers/role-guard';
