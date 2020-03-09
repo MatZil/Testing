@@ -46,7 +46,7 @@ namespace XplicityApp.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> ConfirmHoliday(int holidayId, int confirmerId)
         {
             _logger.LogInformation($"Holiday confirm request received for holiday id:{holidayId}");
