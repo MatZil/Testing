@@ -1,5 +1,5 @@
 <form [formGroup]="editEmployeeForm">
-    <h1 style="text-align: center;" mat-dialog-title>Edit employee</h1>
+    <h1  class="alignCenter" mat-dialog-title>Edit employee</h1>
     <mat-card>
         <app-base-employee-form #baseComponent="baseEmployeeComponent" formControlName="baseForm" [clients]="data.clients" [roles]="data.roles" [initialEmail]="data.userToUpdate.email"></app-base-employee-form>
         <div class="alignRight">
@@ -33,10 +33,11 @@
             </div>
         </div>
     </mat-card>
-    <mat-card>
+
+    <mat-dialog-actions align="end">
         <button mat-flat-button color="primary" (click)="confirmEdit()" [disabled]="isFormInvalid(baseComponent.baseForm)">
-          Edit employee
+            Edit employee
         </button>
         <button mat-flat-button color="warn" (click)="closeModal(null)" class="floatRight">Cancel</button>
-    </mat-card>
+    </mat-dialog-actions>
 </form>

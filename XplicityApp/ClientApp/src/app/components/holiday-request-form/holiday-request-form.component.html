@@ -1,5 +1,5 @@
 <form [formGroup]="requestHolidayForm">
-    <h1 style="text-align: center;" mat-dialog-title>Request holidays</h1>
+    <h1 class="alignCenter" mat-dialog-title>Request holidays</h1>
     <mat-card>
         <div>
             <mat-form-field>
@@ -56,13 +56,14 @@
             </mat-form-field>
         </div>
     </mat-card>
-    <mat-card>
+    
+    <mat-dialog-actions align="end">
         <mat-error *ngIf="requestHolidayForm.errors?.isFromLaterThanTo" class="error">
             To date can not be earlier than From.
         </mat-error>
         <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!requestHolidayForm.valid">
           Request holidays
         </button>
-        <button mat-flat-button color="warn" [mat-dialog-close] class="floatRight">Cancel</button>
-    </mat-card>
+        <button mat-flat-button color="warn" [mat-dialog-close]>Cancel</button>
+    </mat-dialog-actions>
 </form>

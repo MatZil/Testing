@@ -49,10 +49,10 @@ table {
   justify-content: space-between;
 }
 
-.floatRight {
-  float: right;
-}
-
 .alignRight {
   text-align: right;
+}
+
+.alignCenter {
+  text-align: center;
 }
