@@ -36,8 +36,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material';
-import { MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ErrorPageComponent } from './components/error-page/error-page.component';
@@ -46,7 +47,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HolidaysTableComponent } from './components/holidays-table/holidays-table.component';
 import { PolicyComponent } from './components/policy/policy.component';
-import { PdfJsViewerModule } from 'ng2-pdfjs-viewer';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EmailtemplatesTableComponent } from './components/emailtemplates-table/emailtemplates-table.component';
 import { RoleGuardService } from './helpers/role-guard';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
@@ -63,6 +64,7 @@ import { ClientFormComponent } from './components/client-form/client-form.compon
 import { UserInformation } from './components/user-information/user-information.component';
 import { UserSettings } from './components/user-settings/user-settings.component';
 import { HolidayRequestFormComponent } from './components/holiday-request-form/holiday-request-form.component';
+import { UserPasswordFormComponent } from './components/user-password-form/user-password-form.component';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -94,7 +96,8 @@ export function tokenGetter() {
     ClientFormComponent,
     UserInformation,
     UserSettings,
-    HolidayRequestFormComponent
+    HolidayRequestFormComponent,
+    UserPasswordFormComponent
   ],
   imports: [
     BrowserModule,
@@ -117,7 +120,7 @@ export function tokenGetter() {
     MatNativeDateModule,
     MatMenuModule,
     MatRadioModule,
-    PdfJsViewerModule,
+    PdfViewerModule,
     MatDialogModule,
     MatSnackBarModule,
     MatTabsModule,
@@ -128,6 +131,7 @@ export function tokenGetter() {
     MatListModule,
     MatSidenavModule,
     MatPaginatorModule,
+    MatSlideToggleModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -142,7 +146,9 @@ export function tokenGetter() {
     AddInventoryFormComponent,
     EditInventoryFormComponent,
     ClientFormComponent,
-    HolidayRequestFormComponent
+    HolidayRequestFormComponent,
+    UserPasswordFormComponent,
+    UploadComponent
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
