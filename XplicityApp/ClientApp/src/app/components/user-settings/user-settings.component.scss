@@ -1,4 +1,24 @@
-.button  {
-    margin-top: 10px;
-    margin-left: 10px;
+.button {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.generalSettings {
+  position: fixed;
+  font-size: 15px;
+  top: 10em;
+  left: 41em;
+  border-style: solid;
+  padding: 10px;
+  background-color: azure;
+}
+
+.notificationSettings {
+  position: fixed;
+  font-size: 15px;
+  top: 10em;
+  left: 20em;
+  border-style: solid;
+  padding: 10px;
+  background-color: azure;
 }
