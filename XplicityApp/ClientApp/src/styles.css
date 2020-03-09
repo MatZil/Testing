@@ -14,3 +14,45 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+.top-of-page-actions{
+  width: 200px !important;
+  text-align: center !important;
+}
+
+.statusSelect {
+  width: 150px !important;
+  float: right !important;
+}
+
+.table-wrapper {
+  position:relative;
+}
+
+.table-scroll {
+  height:100%;
+  overflow:auto;  
+  margin-top:20px;
+}
+
+table {
+  width: 100%;
+  box-shadow: none;
+}
+
+.mat-row:hover {
+  background-color: lightblue;
+}
+
+.divider {
+  display: flex;
+  justify-content: space-between;
+}
+
+.floatRight {
+  float: right;
+}
+
+.alignRight {
+  text-align: right;
+}

@@ -1,5 +1,5 @@
 <form [formGroup]="editEmployeeForm">
-    <h1 mat-dialog-title>Edit employee</h1>
+    <h1 style="text-align: center;" mat-dialog-title>Edit employee</h1>
     <mat-card>
         <app-base-employee-form #baseComponent="baseEmployeeComponent" formControlName="baseForm" [clients]="data.clients" [roles]="data.roles" [initialEmail]="data.userToUpdate.email"></app-base-employee-form>
         <div class="alignRight">

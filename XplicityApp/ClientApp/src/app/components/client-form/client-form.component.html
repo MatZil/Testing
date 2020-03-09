@@ -1,6 +1,6 @@
 <form #clientForm="ngForm">
 
-  <h1 mat-dialog-title>{{data.formTitle}}</h1>
+  <h1 style="text-align: center;" mat-dialog-title>{{data.formTitle}}</h1>
 
   <mat-dialog-content>
     <mat-card>
@@ -52,11 +52,11 @@
     </mat-card>
   </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-flat-button mat-button-base [mat-dialog-close]>Cancel</button>
+  <mat-card>
     <button mat-flat-button color="primary" (click)="closeModal(data.clientFormData)" [disabled]="clientForm.form.invalid">
       {{data.formConfirmationButtonName}}
     </button>
-  </mat-dialog-actions>
+    <button mat-flat-button color="warn" class="floatRight" [mat-dialog-close]>Cancel</button>
+  </mat-card>
 
 </form>

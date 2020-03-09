@@ -1,5 +1,5 @@
 <form [formGroup]="addEmployeeForm" >
-    <h1 mat-dialog-title>Add new employee</h1>
+    <h1 style="text-align: center;" mat-dialog-title>Add new employee</h1>
     <mat-card>
         <app-base-employee-form #baseComponent="baseEmployeeComponent" formControlName="baseForm" [clients]="data.clients" [roles]="data.roles"></app-base-employee-form>
         <div class="alignRight">

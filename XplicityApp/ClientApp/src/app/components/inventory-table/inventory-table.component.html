@@ -1,5 +1,10 @@
-<div class="divider">
-    <button mat-flat-button color="primary" (click)="openAddForm()">Add item</button>
+<div>
+    <br>
+    <button mat-flat-button class="top-of-page-actions" color="primary" (click)="openAddForm()">Add new item</button>
+    <br>
+    <mat-form-field class="top-of-page-actions">
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
+    </mat-form-field>
     <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Current inventory" (selectionChange)="refreshTable(showArchivedInventory)" [(value)]="showArchivedInventory">
         <mat-option [value]="false">
             Current inventory
@@ -10,44 +15,49 @@
     </mat-select>
 </div>
 
-<mat-form-field class="fullWidth">
-    <mat-label>Filter</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Filter keyword">
-</mat-form-field>
 
 <table mat-table [dataSource]="equipmentDataSource">
+
     <ng-container matColumnDef="category">
         <th mat-header-cell *matHeaderCellDef>Category</th>
         <td mat-cell *matCellDef="let item"> {{item.categoryName}} </td>
     </ng-container>
+
     <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Name</th>
         <td mat-cell *matCellDef="let item"> {{item.name}} </td>
     </ng-container>
+
     <ng-container matColumnDef="serial number">
         <th mat-header-cell *matHeaderCellDef>Serial Number</th>
         <td mat-cell *matCellDef="let item"> {{item.serialNumber}} </td>
     </ng-container>
+
     <ng-container matColumnDef="purchase date">
         <th mat-header-cell *matHeaderCellDef>Purchase Date</th>
         <td mat-cell *matCellDef="let item"> {{item.purchaseDate | date}} </td>
     </ng-container>
+
     <ng-container matColumnDef="price">
         <th mat-header-cell *matHeaderCellDef>Price</th>
         <td mat-cell *matCellDef="let item"> {{item.price}} </td>
     </ng-container>
+
     <ng-container matColumnDef="assigned to">
         <th mat-header-cell *matHeaderCellDef>Assigned To</th>
         <td mat-cell *matCellDef="let item"> {{item.assignedTo}} </td>
     </ng-container>
+
     <ng-container matColumnDef="expiry date">
         <th mat-header-cell *matHeaderCellDef>Expiration Date</th>
         <td mat-cell *matCellDef="let item"> {{item.expiryDate | date}} </td>
     </ng-container>
+
     <ng-container matColumnDef="comment">
         <th mat-header-cell *matHeaderCellDef>Comment</th>
         <td mat-cell *matCellDef="let item"> {{item.comment}} </td>
     </ng-container>
+
     <ng-container matColumnDef="tags">
         <th mat-header-cell *matHeaderCellDef>Tags</th>
         <td mat-cell *matCellDef="let item">
@@ -55,12 +65,15 @@
             <div *ngIf="item.tags.length > 2">...</div>
         </td>
     </ng-container>
+
     <ng-container matColumnDef="edit">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let item">
             <button mat-flat-button color="primary" (click)="openEditForm(item)">Edit</button>
         </td>
     </ng-container>
+    
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+<mat-paginator [pageSizeOptions]="[10, 20, 40]" showFirstLastButtons></mat-paginator>

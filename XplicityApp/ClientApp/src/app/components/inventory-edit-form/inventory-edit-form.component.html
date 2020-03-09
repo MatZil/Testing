@@ -1,5 +1,5 @@
 <form [formGroup]="editInventoryForm">
-  <h1 mat-dialog-title>Edit Iventory Item</h1>
+  <h1 style="text-align: center;" mat-dialog-title>Edit Iventory Item</h1>
   <mat-card>
     <app-base-inventory-form #baseComponent="baseInventoryFormComponent" formControlName="baseForm" [categories]="data.categories" [employees]="data.employees" [tagsSelected]="data.tags"></app-base-inventory-form>
   </mat-card>
