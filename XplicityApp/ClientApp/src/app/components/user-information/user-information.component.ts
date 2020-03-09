@@ -11,9 +11,14 @@ export class UserInformation implements OnInit {
   currentUser: TableRowUserModel;
 
   constructor(
-    private userService: UserService) { }
+    private userService: UserService
+  ) { }
 
   ngOnInit() {
+    this.loadCurrentUser();
+  }
+
+  loadCurrentUser(): void {
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
       this.currentUser.role = this.userService.getRole();
