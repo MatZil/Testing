@@ -33,6 +33,10 @@ export class HolidaysService {
     return this.http.post(this.holidaysApiRequest, holiday);
   }
 
+  updateHoliday(id: number, holiday: Holiday): Observable<Holiday> {
+    return this.http.put<Holiday>(`${this.holidaysApiBase}/${id}`, holiday);
+  }
+
   isFreeWorkday(date: Date): Observable<boolean> {
     const dateString = date.toLocaleDateString('lt-LT');
     return this.http.get<boolean>(`${this.holidaysApiBase}/is-free-workday?date=${dateString}`);
