@@ -26,7 +26,7 @@ export class HolidaysTableComponent implements OnInit {
   displayedColumns: string[];
   currentUser: TableRowUserModel;
   dataSource = new MatTableDataSource<Holiday>(this.getHolidaysByRole());
-  message = new FormControl('Info about the action');
+  toolTip = new FormControl('Info about the action');
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
@@ -147,16 +147,16 @@ export class HolidaysTableComponent implements OnInit {
         return false;
       }
       else if (holiday.status == HolidayStatus.Abandoned) {
-        this.message = new FormControl("");
+        this.toolTip = new FormControl("");
         return true;
       }
       else {
-        this.message = new FormControl("Can only abandon pending holidays");
+        this.toolTip = new FormControl("Can only abandon pending holidays");
         return true;
       }
     }
     else {
-      this.message = new FormControl("Can only abandon your own holiday requests");
+      this.toolTip = new FormControl("Can only abandon your own holiday requests");
       return true;
     }
   }
