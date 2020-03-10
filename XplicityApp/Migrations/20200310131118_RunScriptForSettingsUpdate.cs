@@ -19,9 +19,9 @@ While @RecordsCount > @RecordNumber
 Begin
   Declare @SettingsRecordsCount int = (Select Count(NotificationSettings.EmployeeId) from NotificationSettings)
   insert into @SettingsRecords Select NotificationSettings.EmployeeId from NotificationSettings
-  Declare @SettingsRecordNumber int = 0;
+  Declare @SettingsRecordNumber int = 1;
 
-  while @SettingsRecordsCount > @SettingsRecordNumber
+  while @SettingsRecordsCount >= @SettingsRecordNumber
   begin
       if (Select EmployeeId from @SettingsRecords where RowID = @SettingsRecordNumber) = (select top 1 Id from @Ids)
           begin
