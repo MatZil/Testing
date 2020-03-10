@@ -1,8 +1,48 @@
 ﻿@page
 @model XplicityApp.HolidayConfirmationModel
+@RouteData.Values["holidayId"]
+@RouteData.Values["confirmedId"]
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
 @{
     ViewData["Title"] = "HolidayConfirmation";
 }
 
-<h1>HolidayConfirmation123</h1>
+<h2>@Model.Employee.Name</h2>
+<h2>@Model.Employee.Surname</h2>
+<p>Is requesting a holiday</p><p>@Model.Holiday.FromInclusive</p><p>@Model.Holiday.ToInclusive</p>
+
+<a href="@Url.Action("ConfirmHoliday", "api", new { holidayId = Model.Holiday.Id, confirmerId = Model.ConfimerId })">
+    ACCEPT TEST
+</a>
+<a href="@Url.Action("DeclineHoliday", "api", new { holidayId = Model.Holiday.Id, confirmerId = Model.ConfimerId })">
+    DECLINE TEST
+</a>
+@if (@Model.isConfimerAdmin)
+{
+
+    <div>
+        @using (Html.BeginForm("ConfirmHoliday", "HolidayConfirmController", new { holidayId = Model.Holiday.Id, confirmerId = Model.ConfimerId }, FormMethod.Post))
+        {
+
+            <input type="submit" value="Accept" />
+
+        }
+    </div>
+}
+@if (!@Model.isConfimerAdmin)
+{
+    @using (Html.BeginForm("RequestConfirmationFromAdmin", "HolidayClientController", new { holidayId = Model.Holiday.Id, confirmerId = Model.ConfimerId }, FormMethod.Post))
+    {
+
+        <input type="submit" value="Accept" />
+
+    }
+}
+@using (Html.BeginForm("DeclineHoliday", "HolidayDeclineController", new { holidayId = Model.Holiday.Id, confirmerId = Model.ConfimerId }, FormMethod.Post))
+{
+
+    <input type="submit" value="Decline" />
+
+}
 

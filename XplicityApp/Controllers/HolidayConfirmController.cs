@@ -47,7 +47,8 @@ namespace XplicityApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfirmHoliday(int holidayId, int confirmerId)
+        [Route("HolidayConfirmController/ConfirmHoliday/{holidayId}/{confirmerId}")]
+        public async Task<IActionResult> ConfirmHoliday([FromRoute] int holidayId, [FromRoute] int confirmerId)
         {
             _logger.LogInformation($"Holiday confirm request received for holiday id:{holidayId}");
             try
