@@ -1,10 +1,15 @@
-<div class="container mat-elevation-z8">
-  <button mat-flat-button color="primary" (click)=openAddForm()>Add new employee</button>
-  <div>
-    <mat-form-field>
+<div>
+  <br>
+  <button mat-flat-button class="top-of-page-actions" color="primary" (click)=openAddForm()>Add new employee</button>
+  <br>
+    <mat-form-field class="top-of-page-actions">
       <input matInput (keyup)="applyFilter($event)" placeholder="Search...">
     </mat-form-field>
-  </div>
+  <br>
+</div>
+
+<div class="table-wrapper">
+  <div class="table-scroll">
   <table mat-table [dataSource]="employeeDataSource">
 
     <ng-container matColumnDef="name">
@@ -76,8 +81,7 @@
       <th mat-header-cell *matHeaderCellDef> Health check-up date </th>
       <td mat-cell *matCellDef="let user"> {{user.healthCheckDate | date}} </td>
     </ng-container>
-
-
+    
     <ng-container matColumnDef="employeeStatus">
       <th mat-header-cell *matHeaderCellDef> Status </th>
       <td mat-cell *matCellDef="let user"> {{employeeStatus[user.status]}} </td>
@@ -87,13 +91,16 @@
       <th mat-header-cell *matHeaderCellDef> Actions </th>
       <td mat-cell *matCellDef="let user">
         <button mat-flat-button color="primary" (click)="openEditForm(user)">Edit</button>
+        &nbsp;
         <button mat-flat-button color="warn" (click)="showDeleteConfirm(user)" [disabled]="user.id === getCurrentUserId()">Delete</button>
+        &nbsp;
         <button mat-flat-button color="primary" (click)="showEquipmentModal(user.id)">Equipment</button>
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
   </table>
 </div>
+</div>
+<mat-paginator [pageSizeOptions]="[10, 20, 40]" showFirstLastButtons></mat-paginator>

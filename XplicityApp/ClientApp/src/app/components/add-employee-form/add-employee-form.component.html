@@ -1,5 +1,5 @@
 <form [formGroup]="addEmployeeForm" >
-    <h1 mat-dialog-title>Add new employee</h1>
+    <h1  class="alignCenter" mat-dialog-title>Add new employee</h1>
     <mat-card>
         <app-base-employee-form #baseComponent="baseEmployeeComponent" formControlName="baseForm" [clients]="data.clients" [roles]="data.roles"></app-base-employee-form>
         <div class="alignRight">
@@ -26,10 +26,11 @@
             </div>
         </div>
     </mat-card>
-    <mat-card>
+
+    <mat-dialog-actions align="end">
         <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="isFormInvalid(baseComponent.baseForm)">
             Add Employee
         </button>
-        <button mat-flat-button color="warn" class="floatRight" [mat-dialog-close]>Cancel</button>
-    </mat-card>
+        <button mat-flat-button color="warn" [mat-dialog-close]>Cancel</button>
+    </mat-dialog-actions>
 </form>
