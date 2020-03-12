@@ -65,6 +65,8 @@ import { UserInformation } from './components/user-information/user-information.
 import { UserSettings } from './components/user-settings/user-settings.component';
 import { HolidayRequestFormComponent } from './components/holiday-request-form/holiday-request-form.component';
 import { UserPasswordFormComponent } from './components/user-password-form/user-password-form.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -104,6 +106,10 @@ export function tokenGetter() {
     BrowserModule,
     AppRoutingModule,
     NgZorroAntdModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
     FormsModule,
     ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: 'never' }),
     HttpClientModule,
