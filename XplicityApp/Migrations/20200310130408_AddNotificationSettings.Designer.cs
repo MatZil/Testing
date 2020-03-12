@@ -10,7 +10,7 @@ using XplicityApp.Infrastructure.Database;
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20200302123049_AddNotificationSettings")]
+    [Migration("20200310130408_AddNotificationSettings")]
     partial class AddNotificationSettings
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -472,7 +472,10 @@ Please use the first line for team's title, second line for individual employee'
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ConfirmerId")
+                    b.Property<int>("ConfirmerAdminId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ConfirmerClientId")
                         .HasColumnType("int");
 
                     b.Property<int>("EmployeeId")
@@ -637,15 +640,6 @@ Please use the first line for team's title, second line for individual employee'
                         .IsUnique();
 
                     b.ToTable("NotificationSettings");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BroadcastOwnBirthday = true,
-                            EmployeeId = 1,
-                            ReceiveBirthdayNotifications = true
-                        });
                 });
 
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Tag", b =>

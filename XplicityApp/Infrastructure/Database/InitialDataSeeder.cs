@@ -25,8 +25,6 @@ namespace XplicityApp.Infrastructure.Database
                     Status = EmployeeStatusEnum.Current
                 }
             );
-
-            CreateAdminNotificationSettings(builder);
         }
 
         public static void CreateInitialPolicyRecord(ModelBuilder builder)
@@ -179,19 +177,6 @@ namespace XplicityApp.Infrastructure.Database
                     Deprecation = Convert.ToInt32(configuration["EquipmentCategories:License:Deprecation"])
                 }
             );
-        }
-
-        public static void CreateAdminNotificationSettings(ModelBuilder builder)
-        {
-            builder.Entity<NotificationSettings>().HasData(
-                new NotificationSettings
-                {
-                    Id = 1,
-                    BroadcastOwnBirthday = true,
-                    ReceiveBirthdayNotifications = true,
-                    EmployeeId = 1
-                }
-                );
         }
     }
 }

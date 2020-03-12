@@ -1,6 +1,6 @@
 <form #editEmailTemplateForm="ngForm">
 
-  <h1 mat-dialog-title>Edit email template </h1>
+  <h1 class="alignCenter" mat-dialog-title>Edit email template </h1>
 
   <h2>Purpose: {{data.emailTemplatesFormData.purpose}}</h2>
   <div>
@@ -28,11 +28,11 @@
     <br>Available aliases:<br><br>
     {{data.emailTemplatesFormData.instructions}}
   </div>
+
   <mat-dialog-actions align="end">
-    <button mat-flat-button color="warn" mat-button-base [mat-dialog-close]>Cancel</button>
     <button mat-flat-button color="primary" (click)="closeModal(data.emailTemplatesFormData)" [disabled]="editEmailTemplateForm.form.invalid">
       Save
     </button>
+    <button mat-flat-button color="warn" mat-button-base [mat-dialog-close]>Cancel</button>
   </mat-dialog-actions>
-
 </form>

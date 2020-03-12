@@ -9,7 +9,6 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 import { AddInventoryFormComponent } from '../inventory-add-form/inventory-add-form.component';
 import { EditInventoryFormComponent } from '../inventory-edit-form/inventory-edit-form.component';
 import { NewInventoryItem } from '../../models/new-inventory-item';
-import { Tag } from 'src/app/models/tag';
 import { TableRowInventoryItem } from 'src/app/models/table-row-inventory-item';
 
 @Component({
@@ -47,6 +46,7 @@ export class InventoryTableComponent implements OnInit {
 
   ngOnInit() {
     this.getCategoriesList();
+    this.getAllUsers();
     this.refreshTable(this.showArchivedInventory);
   }
 
