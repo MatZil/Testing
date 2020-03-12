@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -49,7 +48,6 @@ import { PolicyComponent } from './components/policy/policy.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { EmailtemplatesTableComponent } from './components/email-templates-table/email-templates-table.component';
 import { RoleGuardService } from './helpers/role-guard';
-import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { UploadComponent } from './components/upload/upload.component';
 import { InventoryTableComponent } from './components/inventory-table/inventory-table.component';
 import { OvertimeDisplayComponent } from './components/overtime-display/overtime-display.component';
@@ -58,7 +56,7 @@ import { EditEmployeeFormComponent } from './components/edit-employee-form/edit-
 import { BaseEmployeeFormComponent } from './components/base-employee-form/base-employee-form.component';
 import { AddInventoryFormComponent } from './components/inventory-add-form/inventory-add-form.component';
 import { EditInventoryFormComponent } from './components/inventory-edit-form/inventory-edit-form.component';
-import { EmailTemplatesFormComponent } from './components/edit-email-templates-form/edit-email-templates-form.component'
+import { EmailTemplatesFormComponent } from './components/edit-email-templates-form/edit-email-templates-form.component';
 import { BaseInventoryFormComponent } from './components/inventory-base-form/inventory-base-form.component';
 import { ClientFormComponent } from './components/client-form/client-form.component';
 import { UserInformation } from './components/user-information/user-information.component';
@@ -105,7 +103,6 @@ export function tokenGetter() {
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgZorroAntdModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
@@ -131,7 +128,6 @@ export function tokenGetter() {
     MatDialogModule,
     MatSnackBarModule,
     MatTabsModule,
-    NzUploadModule,
     MatProgressBarModule,
     MatAutocompleteModule,
     MatListModule,
@@ -158,7 +154,6 @@ export function tokenGetter() {
     UploadComponent
   ],
   providers: [
-    { provide: NZ_I18N, useValue: en_US },
     [RoleGuardService],
     [DatePipe],
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

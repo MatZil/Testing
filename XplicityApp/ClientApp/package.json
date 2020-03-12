@@ -36,7 +36,6 @@
     "jquery": "3.4.1",
     "jwt-decode": "^2.2.0",
     "mime-types": "^2.1.25",
-    "ng-zorro-antd": "^8.1.2",
     "ng2-pdf-viewer": "^5.3.4",
     "oidc-client": "^1.10.1",
     "path": "^0.12.7",
