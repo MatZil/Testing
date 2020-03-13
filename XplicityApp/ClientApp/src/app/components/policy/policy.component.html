@@ -1,10 +1,5 @@
-<button mat-flat-button color="primary" nzType="primary" (click)="onButtonClick()">View holiday policy</button>
+<button mat-flat-button color="primary" (click)="onButtonClick()">View holiday policy</button>
 <div style='position: fixed;' *ngIf="showPolicy" class="pdf-viewer-container">
-  <pdf-viewer [src]="policyPath"
-              [show-all]="false"
-              [autoresize]="true"
-              [original-size]='true'
-              [fit-to-page]='true'
-              [render-text]='false'>
-  </pdf-viewer>
+    <pdf-viewer [src]="policyPath" [show-all]="false" [autoresize]="true" [original-size]='true' [fit-to-page]='true' [render-text]='false'>
+    </pdf-viewer>
 </div>
