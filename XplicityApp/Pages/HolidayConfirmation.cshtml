@@ -11,38 +11,37 @@
 <h2>@Model.Employee.Name</h2>
 <h2>@Model.Employee.Surname</h2>
 <p>Is requesting a holiday</p><p>@Model.Holiday.FromInclusive</p><p>@Model.Holiday.ToInclusive</p>
-
-<a href="@Url.Action("ConfirmHoliday", "api", new { holidayId = Model.Holiday.Id, confirmerId = Model.ConfimerId })">
-    ACCEPT TEST
-</a>
-<a href="@Url.Action("DeclineHoliday", "api", new { holidayId = Model.Holiday.Id, confirmerId = Model.ConfimerId })">
-    DECLINE TEST
-</a>
 @if (@Model.isConfimerAdmin)
 {
-
     <div>
-        @using (Html.BeginForm("ConfirmHoliday", "HolidayConfirmController", new { holidayId = Model.Holiday.Id, confirmerId = Model.ConfimerId }, FormMethod.Post))
-        {
+        <form action="api/HolidayConfirm/ConfirmHoliday" method="post">
+
+            <input id="holidayId" type="number" value="@Model.Holiday.Id" name="holidayId" hidden>
+            <input id="confirmerId" type="number" value="@Model.ConfimerId" name="confirmerId" hidden>
 
             <input type="submit" value="Accept" />
-
-        }
+        </form>
     </div>
 }
 @if (!@Model.isConfimerAdmin)
 {
-    @using (Html.BeginForm("RequestConfirmationFromAdmin", "HolidayClientController", new { holidayId = Model.Holiday.Id, confirmerId = Model.ConfimerId }, FormMethod.Post))
-    {
+    <div>
+        <form action="api/HolidayClient/RequestConfirmationFromAdmin" method="post">
+
+            <input id="holidayId" type="number" value="@Model.HolidayId" name="holidayId" hidden>
+            <input id="confirmerId" type="number" value="@Model.ConfimerId" name="confirmerId" hidden>
+
+            <input type="submit" value="Accept" />
+        </form>
+    </div>
+}
+<div>
+    <form action="api/HolidayDecline/HolidayDecline" method="post">
+
+        <input id="holidayId" type="number" value="@Model.HolidayId" name="holidayId" hidden>
+        <input id="confirmerId" type="number" value="@Model.ConfimerId" name="confirmerId" hidden>
 
         <input type="submit" value="Accept" />
-
-    }
-}
-@using (Html.BeginForm("DeclineHoliday", "HolidayDeclineController", new { holidayId = Model.Holiday.Id, confirmerId = Model.ConfimerId }, FormMethod.Post))
-{
-
-    <input type="submit" value="Decline" />
-
-}
+    </form>
+</div>
 

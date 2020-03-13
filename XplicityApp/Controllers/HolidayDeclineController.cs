@@ -15,8 +15,8 @@ namespace XplicityApp.Controllers
             _holidaysService = holidaysService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> DeclineHoliday([FromRoute] int holidayId, [FromRoute] int confirmerId)
+        [HttpPost]
+        public async Task<IActionResult> DeclineHoliday([FromForm]int holidayId, [FromForm]int confirmerId)
         {
             var successful = await _holidaysService.Decline(holidayId, confirmerId);
 

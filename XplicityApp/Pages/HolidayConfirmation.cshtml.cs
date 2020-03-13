@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
@@ -28,14 +29,14 @@ namespace XplicityApp
         {
             Context = context;
         }
-        public async Task OnGetAsync(int confirmerId, int holidayId)
+        public async Task OnGetAsync([FromRoute]int holidayId, [FromRoute]int confirmerId)
         {
             ConfimerId = confirmerId;
             HolidayId = holidayId;
 
-            Holiday = await Context.Holidays.FindAsync(1);
+            Holiday = await Context.Holidays.FindAsync(holidayId);
             Employee = await Context.Employees.FindAsync(Holiday.EmployeeId);
-            if(Employee.ClientId == null || Holiday.Status == HolidayStatus.ClientConfirmed)
+            if (Employee.ClientId == null || Holiday.Status == HolidayStatus.ClientConfirmed)
             {
                 isConfimerAdmin = true;
             }
