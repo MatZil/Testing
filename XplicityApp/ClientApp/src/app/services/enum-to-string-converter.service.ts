@@ -27,6 +27,9 @@ export class EnumToStringConverterService {
       case HolidayStatus.Pending:
         return 'Pending';
 
+      case HolidayStatus.Abandoned:
+        return 'Abandoned';
+
       case HolidayStatus.ClientConfirmed:
         return 'Confirmed by client';
 
@@ -45,6 +48,9 @@ export class EnumToStringConverterService {
     switch (status) {
       case HolidayStatus.Pending:
         return 'orange';
+
+      case HolidayStatus.Abandoned:
+        return 'red';
 
       case HolidayStatus.ClientConfirmed:
         return 'orange';

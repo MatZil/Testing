@@ -38,6 +38,7 @@ import { MatNativeDateModule } from '@angular/material';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
@@ -129,6 +130,7 @@ export function tokenGetter() {
     MatSnackBarModule,
     MatTabsModule,
     MatProgressBarModule,
+    MatTooltipModule,
     MatAutocompleteModule,
     MatListModule,
     MatSidenavModule,
