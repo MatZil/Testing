@@ -136,7 +136,7 @@ export class HolidaysTableComponent implements OnInit {
     return holiday.overtimeDays;
   }
 
-  abandonHoliday(holiday: Holiday) {
+  abandonHoliday(holiday: Holiday): void {
     holiday.status = HolidayStatus.Abandoned;
     this.holidayService.updateHoliday(holiday.id, holiday).subscribe(() => {
       this.refreshTable(this.selectedEmployeeStatus);
