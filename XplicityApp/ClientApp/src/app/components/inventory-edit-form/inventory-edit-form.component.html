@@ -1,15 +1,16 @@
 <form [formGroup]="editInventoryForm">
-  <h1 mat-dialog-title>Edit Iventory Item</h1>
+  <h1 class="alignCenter" mat-dialog-title>Edit Iventory Item</h1>
   <mat-card>
     <app-base-inventory-form #baseComponent="baseInventoryFormComponent" formControlName="baseForm" [categories]="data.categories" [employees]="data.employees" [tagsSelected]="data.tags"></app-base-inventory-form>
   </mat-card>
-  <mat-card>
-    <button mat-flat-button color="primary" class="floatLeft" (click)="archiveItem()">
+
+  <mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" (click)="archiveItem()">
       Archive
     </button>
     <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="isFormInvalid(baseComponent.baseForm)">
       Save
     </button>
-    <button mat-flat-button color="warn" class="floatRight" [mat-dialog-close]>Cancel</button>
-  </mat-card>
+    <button mat-flat-button color="warn" [mat-dialog-close]>Cancel</button>
+  </mat-dialog-actions>
 </form>

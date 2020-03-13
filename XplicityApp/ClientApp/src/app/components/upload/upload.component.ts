@@ -22,6 +22,7 @@ export class UploadComponent implements OnInit {
     public dialogRef: MatDialogRef<UploadComponent>) { }
 
   ngOnInit() {
+    this.fileType = FileType.HolidayPolicy;
   }
 
   closeUploadModal(){

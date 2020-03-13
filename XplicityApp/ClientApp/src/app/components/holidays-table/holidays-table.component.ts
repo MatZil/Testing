@@ -53,7 +53,8 @@ export class HolidaysTableComponent implements OnInit {
         'overtimeHours', 
         'status', 
         'rejectedConfirmed', 
-        'creationDate','action'];
+        'creationDate',
+        'action'];
     }
     else {
       this.displayedColumns = [
@@ -64,7 +65,8 @@ export class HolidaysTableComponent implements OnInit {
         'overtimeDays', 
         'status', 
         'rejectedConfirmed', 
-        'creationDate', 'action'];
+        'creationDate',
+        'action'];
     }
   }
 
