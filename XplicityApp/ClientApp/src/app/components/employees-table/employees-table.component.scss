@@ -1,7 +1,3 @@
-.container {
-  overflow: auto;
-}
-
 .mat-cell,
 .mat-header-cell {
   word-wrap: initial;
@@ -17,8 +13,4 @@
 .mat-row,
 .mat-header-row {
   display: table-row;
-}
-
-.mat-row:hover {
-  background-color: lightblue;
 }

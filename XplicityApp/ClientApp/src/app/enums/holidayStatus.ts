@@ -1,7 +1,8 @@
 export enum HolidayStatus {
-    Pending,
-    AdminRejected,
-    AdminConfirmed,
-    ClientConfirmed,
-    ClientRejected
+  Pending,
+  AdminRejected,
+  AdminConfirmed,
+  ClientConfirmed,
+  ClientRejected,
+  Abandoned
 }

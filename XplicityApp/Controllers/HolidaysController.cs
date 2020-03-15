@@ -70,6 +70,14 @@ namespace XplicityApp.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateHolidayDto updateHolidayDto)
+        {
+            await _holidaysService.Update(id, updateHolidayDto);
+
+            return NoContent();
+        }
+
         [HttpGet("is-free-workday")]
         [Produces(typeof(bool))]
         public IActionResult IsFreeWorkday(DateTime date)

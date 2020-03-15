@@ -24,8 +24,7 @@ export class ClientTableComponent implements OnInit {
     'ownerSurname', 
     'ownerEmail', 
     'ownerPhone', 
-    'buttonEdit', 
-    'buttonDelete'];
+    'actions'];
   dataSource = new MatTableDataSource<Client>();
 
 

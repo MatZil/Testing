@@ -5,12 +5,15 @@ import { HolidaysService } from '../../services/holidays.service';
 import { TableRowUserModel } from '../../models/table-row-user-model';
 import { UserService } from '../../services/user.service';
 import { EnumToStringConverterService } from 'src/app/services/enum-to-string-converter.service';
+import { AuthenticationService } from '../../services/authentication.service';
 import { MatDialog } from '@angular/material';
 import { HolidayRequestFormComponent } from '../holiday-request-form/holiday-request-form.component';
 import { HolidayStatus } from 'src/app/enums/holidayStatus';
 import { EmployeeStatus } from 'src/app/models/employee-status.enum';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableDataSource } from '@angular/material/table';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-holidays-table',
@@ -23,12 +26,14 @@ export class HolidaysTableComponent implements OnInit {
   displayedColumns: string[];
   currentUser: TableRowUserModel;
   dataSource = new MatTableDataSource<Holiday>(this.getHolidaysByRole());
+  toolTip = new FormControl('Info about the action');
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(
     private userService: UserService,
     private holidayService: HolidaysService,
+    private authenticationService: AuthenticationService,
     public enumConverter: EnumToStringConverterService,
     public dialog: MatDialog) { }
 
@@ -48,7 +53,8 @@ export class HolidaysTableComponent implements OnInit {
         'overtimeHours', 
         'status', 
         'rejectedConfirmed', 
-        'creationDate'];
+        'creationDate',
+        'action'];
     }
     else {
       this.displayedColumns = [
@@ -59,7 +65,8 @@ export class HolidaysTableComponent implements OnInit {
         'overtimeDays', 
         'status', 
         'rejectedConfirmed', 
-        'creationDate'];
+        'creationDate',
+        'action'];
     }
   }
 
@@ -127,6 +134,33 @@ export class HolidaysTableComponent implements OnInit {
       return holiday.overtimeHours;
     }
     return holiday.overtimeDays;
+  }
+
+  abandonHoliday(holiday: Holiday): void {
+    holiday.status = HolidayStatus.Abandoned;
+    this.holidayService.updateHoliday(holiday.id, holiday).subscribe(() => {
+      this.refreshTable(this.selectedEmployeeStatus);
+    });
+  }
+
+  allowedToAbandon(holiday: Holiday): boolean {
+    if (holiday.employeeId == this.authenticationService.getUserId()) {
+      if (holiday.status == HolidayStatus.Pending) {
+        return false;
+      }
+      else if (holiday.status == HolidayStatus.Abandoned) {
+        this.toolTip = new FormControl("");
+        return true;
+      }
+      else {
+        this.toolTip = new FormControl("Can only abandon pending holidays");
+        return true;
+      }
+    }
+    else {
+      this.toolTip = new FormControl("Can only abandon your own holiday requests");
+      return true;
+    }
   }
 
   paidToString(paid: boolean): string {

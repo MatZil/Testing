@@ -1,1 +1,17 @@
-<nz-calendar [(ngModel)]="date" [(nzMode)]="mode" (nzPanelChange)="panelChange($event)"></nz-calendar>
+<div class="alignCenter">
+    <h1>{{ viewDate | calendarDate:(CalendarView.Month + 'ViewTitle'):'en' }}</h1>
+</div>
+
+<div class="alignCenter">
+    <button mat-flat-button color="primary" class="floatLeft" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate">
+            Previous
+    </button>
+    <button mat-flat-button color="primary" mwlCalendarToday [(viewDate)]="viewDate">
+            Today
+    </button>
+    <button mat-flat-button color="primary" class="floatRight" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate">
+            Next
+    </button>
+</div>
+
+<mwl-calendar-month-view [viewDate]="viewDate"></mwl-calendar-month-view>
