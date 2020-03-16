@@ -1,49 +1,71 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Configuration;
+using System;
+using System.Threading.Tasks;
 using XplicityApp.Infrastructure.Database;
-using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 
-namespace XplicityApp
+namespace XplicityApp.Pages
 {
+    [UsedImplicitly]
     public class HolidayConfirmationModel : PageModel
     {
-        private readonly HolidayDbContext Context;
+        private readonly HolidayDbContext _context;
 
-        public int ConfimerId { get; set; }
-        public int HolidayId { get; set; }
+        public int ConfirmerId { get; private set; }
+        public int HolidayId { get; private set; }
 
-        public Employee Employee { get; set; }
+        //public Employee Employee { get; private set; }
+        public string RequesterName { get; private set; }
+        public DateTime HolidayFrom { get; private set; }
+        public DateTime HolidayTo { get; private set; }
 
-        public Holiday Holiday { get; set; }
+        [BindProperty]
+        public string RejectionReason { get; set; }
 
-        public bool isConfimerAdmin { get; set; }
+        public bool IsConfirmerAdmin { get; private set; }
 
         public HolidayConfirmationModel(HolidayDbContext context)
         {
-            Context = context;
+            _context = context;
         }
-        public async Task OnGetAsync([FromRoute]int holidayId, [FromRoute]int confirmerId)
+
+        public async Task OnGetAsync(int holidayId, int confirmerId)
         {
-            ConfimerId = confirmerId;
+            //url for this page is {{RootUrl}}/HolidayConfirmation?holidayid=X&confirmerid=Y
+            ConfirmerId = confirmerId;
             HolidayId = holidayId;
 
-            Holiday = await Context.Holidays.FindAsync(holidayId);
-            Employee = await Context.Employees.FindAsync(Holiday.EmployeeId);
-            if (Employee.ClientId == null || Holiday.Status == HolidayStatus.ClientConfirmed)
+            var holiday = await _context.Holidays.FindAsync(holidayId);
+            HolidayFrom = holiday.FromInclusive;
+            HolidayTo = holiday.ToInclusive;
+
+            var employee = await _context.Employees.FindAsync(holiday.EmployeeId);
+            RequesterName = $"{employee.Name} {employee.Surname}";
+
+            if (employee.ClientId == null || holiday.Status == HolidayStatus.ClientConfirmed)
             {
-                isConfimerAdmin = true;
+                IsConfirmerAdmin = true;
             }
             else
             {
-                isConfimerAdmin = false;
+                IsConfirmerAdmin = false;
             }
+        }
+
+        public IActionResult OnPostAsync(bool confirm, int holidayId, int confirmerId, bool isConfirmerAdmin)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            Console.WriteLine($"{RejectionReason} {confirm} {holidayId} {confirmerId} {isConfirmerAdmin}");
+            //consider creating a holiday confirmation object to call the service with
+            //_holidayConfirmationService.UpdateHolidayConfirmationStatus(confirm, holidayId, confirmerId, isConfirmerAdmin, RejectionReason);
+
+            return RedirectToPage("/HolidayConfirmationResult");
         }
     }
 }

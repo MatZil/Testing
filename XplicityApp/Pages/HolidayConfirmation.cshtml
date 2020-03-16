@@ -1,47 +1,24 @@
 ﻿@page
-@model XplicityApp.HolidayConfirmationModel
-@RouteData.Values["holidayId"]
-@RouteData.Values["confirmedId"]
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@addTagHelper *, AuthoringTagHelpers
+@model XplicityApp.Pages.HolidayConfirmationModel
+
 @{
-    ViewData["Title"] = "HolidayConfirmation";
+    ViewData["Title"] = "Holiday Confirmation";
 }
 
-<h2>@Model.Employee.Name</h2>
-<h2>@Model.Employee.Surname</h2>
-<p>Is requesting a holiday</p><p>@Model.Holiday.FromInclusive</p><p>@Model.Holiday.ToInclusive</p>
-@if (@Model.isConfimerAdmin)
-{
-    <div>
-        <form action="api/HolidayConfirm/ConfirmHoliday" method="post">
+<p>@Model.RequesterName is requesting a holiday from @Model.HolidayFrom to @Model.HolidayTo</p>
 
-            <input id="holidayId" type="number" value="@Model.Holiday.Id" name="holidayId" hidden>
-            <input id="confirmerId" type="number" value="@Model.ConfimerId" name="confirmerId" hidden>
-
-            <input type="submit" value="Accept" />
-        </form>
-    </div>
-}
-@if (!@Model.isConfimerAdmin)
-{
-    <div>
-        <form action="api/HolidayClient/RequestConfirmationFromAdmin" method="post">
-
-            <input id="holidayId" type="number" value="@Model.HolidayId" name="holidayId" hidden>
-            <input id="confirmerId" type="number" value="@Model.ConfimerId" name="confirmerId" hidden>
-
-            <input type="submit" value="Accept" />
-        </form>
-    </div>
-}
 <div>
-    <form action="api/HolidayDecline/HolidayDecline" method="post">
+    <form method="post">
 
-        <input id="holidayId" type="number" value="@Model.HolidayId" name="holidayId" hidden>
-        <input id="confirmerId" type="number" value="@Model.ConfimerId" name="confirmerId" hidden>
+        <input asp-for="@Model.HolidayId" name="holidayId" hidden>
+        <input asp-for="@Model.ConfirmerId" name="confirmerId" hidden>
+        <input asp-for="@Model.IsConfirmerAdmin" name="isConfirmerAdmin" hidden>
 
-        <input type="submit" value="Accept" />
+        <button type="submit" asp-route-confirm="true">Confirm</button>
+        <button type="submit" asp-route-confirm="false">Decline</button>
+
+        <input asp-for="@Model.RejectionReason" name="rejectionReason" />
     </form>
 </div>
+
 
