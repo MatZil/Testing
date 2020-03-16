@@ -13,7 +13,9 @@ export class HomeComponent implements OnInit {
   currentUser: TableRowUserModel;
   image: string;
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService
+  ) {
     this.image = 'assets/bg.jpg';
   }
 
