@@ -28,14 +28,15 @@ export class HolidaysTableComponent implements OnInit {
   dataSource = new MatTableDataSource<Holiday>(this.getHolidaysByRole());
   toolTip = new FormControl('Info about the action');
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private userService: UserService,
     private holidayService: HolidaysService,
     private authenticationService: AuthenticationService,
     public enumConverter: EnumToStringConverterService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog
+  ) { }
 
   ngOnInit() {
     this.userService.getCurrentUser().subscribe(user => {
@@ -43,28 +44,28 @@ export class HolidaysTableComponent implements OnInit {
     });
     this.refreshTable(this.selectedEmployeeStatus);
     this.dataSource.paginator = this.paginator;
-    if(this.isAdmin()){
+    if (this.isAdmin()) {
       this.displayedColumns = [
-        'employee', 
-        'holidaysType', 
-        'paid', 
-        'dateFrom', 
-        'dateTo', 
-        'overtimeHours', 
-        'status', 
-        'rejectedConfirmed', 
+        'employee',
+        'holidaysType',
+        'paid',
+        'dateFrom',
+        'dateTo',
+        'overtimeHours',
+        'status',
+        'rejectedConfirmed',
         'creationDate',
         'action'];
     }
     else {
       this.displayedColumns = [
-        'holidaysType', 
-        'paid', 
-        'dateFrom', 
-        'dateTo', 
-        'overtimeDays', 
-        'status', 
-        'rejectedConfirmed', 
+        'holidaysType',
+        'paid',
+        'dateFrom',
+        'dateTo',
+        'overtimeDays',
+        'status',
+        'rejectedConfirmed',
         'creationDate',
         'action'];
     }

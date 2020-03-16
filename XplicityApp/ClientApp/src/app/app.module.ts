@@ -66,6 +66,7 @@ import { HolidayRequestFormComponent } from './components/holiday-request-form/h
 import { UserPasswordFormComponent } from './components/user-password-form/user-password-form.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { HolidayRequestButtonComponent } from './components/holiday-request-button/holiday-request-button.component';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -99,7 +100,8 @@ export function tokenGetter() {
     UserSettings,
     HolidayRequestFormComponent,
     EmailTemplatesFormComponent,
-    UserPasswordFormComponent
+    UserPasswordFormComponent,
+    HolidayRequestButtonComponent
   ],
   imports: [
     BrowserModule,

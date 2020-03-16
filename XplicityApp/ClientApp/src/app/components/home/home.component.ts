@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TableRowUserModel } from '../../models/table-row-user-model';
 import { UserService } from '../../services/user.service';
+import { MatDialog } from '@angular/material';
+import { HolidayRequestFormComponent } from '../holiday-request-form/holiday-request-form.component';
 
 @Component({
   selector: 'app-home',
@@ -10,10 +12,8 @@ import { UserService } from '../../services/user.service';
 export class HomeComponent implements OnInit {
   currentUser: TableRowUserModel;
   image: string;
-  constructor(
-    private userService: UserService
-  ) {
-    // this.currentUser = this.authenticationService.currentUserValue;
+
+  constructor(private userService: UserService) {
     this.image = 'assets/bg.jpg';
   }
 
