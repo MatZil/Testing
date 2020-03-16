@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { UserPasswordFormComponent } from '../user-password-form/user-password-form.component';
 import { UploadComponent } from '../upload/upload.component';
 import { AuthenticationService } from 'src/app/services/authentication.service';

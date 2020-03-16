@@ -6,7 +6,7 @@ import { TableRowUserModel } from '../../models/table-row-user-model';
 import { UserService } from '../../services/user.service';
 import { EnumToStringConverterService } from 'src/app/services/enum-to-string-converter.service';
 import { AuthenticationService } from '../../services/authentication.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { HolidayRequestFormComponent } from '../holiday-request-form/holiday-request-form.component';
 import { HolidayStatus } from 'src/app/enums/holidayStatus';
 import { EmployeeStatus } from 'src/app/models/employee-status.enum';

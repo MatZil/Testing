@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject} from '@angular/core';
 import { NewInventoryItem } from 'src/app/models/new-inventory-item';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddModalData } from '../inventory-add-form/add-modal-data';
 
 @Component({
