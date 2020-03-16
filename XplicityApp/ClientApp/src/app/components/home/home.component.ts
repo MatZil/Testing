@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TableRowUserModel } from '../../models/table-row-user-model';
 import { UserService } from '../../services/user.service';
-import { MatDialog } from '@angular/material';
-import { HolidayRequestFormComponent } from '../holiday-request-form/holiday-request-form.component';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +8,7 @@ import { HolidayRequestFormComponent } from '../holiday-request-form/holiday-req
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+
   currentUser: TableRowUserModel;
   image: string;
 
