@@ -8,7 +8,7 @@ import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
 import { Role } from '../../models/role';
 import { EmployeeStatus } from '../../models/employee-status.enum';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddEmployeeFormComponent } from '../add-employee-form/add-employee-form.component';
 import { EditEmployeeFormComponent } from '../edit-employee-form/edit-employee-form.component';
 import { InventoryTableComponent } from '../inventory-table/inventory-table.component';
