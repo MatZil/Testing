@@ -1,6 +1,6 @@
 <div>
   <br>
-  <app-holiday-request-button (holidayRequest)="updateHolidaysTable()"></app-holiday-request-button>
+  <app-holiday-request-button (holidayRequested)="updateHolidaysTable()"></app-holiday-request-button>
   <br>
   <mat-form-field class=" top-of-page-actions">
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
