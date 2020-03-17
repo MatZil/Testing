@@ -127,13 +127,16 @@ namespace XplicityApp.Services
             var template = await _repository.GetByPurpose(EmailPurposes.BIRTHDAY_REMINDER);
             foreach (var employee in employees)
             {
-                foreach (var employeeWithBirthday in employeesWithBirthdays)
+                if (employee.NotificationSettings.ReceiveBirthdayNotifications == true)
                 {
-                    if (!employeeWithBirthday.IsSamePerson(employee))
+                    foreach (var employeeWithBirthday in employeesWithBirthdays)
                     {
-                        var messageString = template.Template
-                                                    .Replace("{employee.fullName}", $"{employeeWithBirthday.Name} {employeeWithBirthday.Surname}");
-                        _emailer.SendMail(employee.Email, template.Subject, messageString);
+                        if (!employeeWithBirthday.IsSamePerson(employee))
+                        {
+                            var messageString = template.Template
+                                                        .Replace("{employee.fullName}", $"{employeeWithBirthday.Name} {employeeWithBirthday.Surname}");
+                            _emailer.SendMail(employee.Email, template.Subject, messageString);
+                        }
                     }
                 }
             }

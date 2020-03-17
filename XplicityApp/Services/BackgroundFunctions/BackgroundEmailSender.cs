@@ -104,6 +104,7 @@ namespace XplicityApp.Services.BackgroundFunctions
             {
                 var allEmployees = await _employeeRepository.GetAll();
                 var employeesWithBirthdays = allEmployees.Where(employee =>
+                                                                    employee.NotificationSettings.BroadcastOwnBirthday == true &&
                                                                     employee.BirthdayDate.Month == currentTime.Month &&
                                                                     employee.BirthdayDate.Day == currentTime.Day
                                                                ).ToList();
