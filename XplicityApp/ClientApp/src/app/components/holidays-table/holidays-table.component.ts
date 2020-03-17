@@ -79,27 +79,6 @@ export class HolidaysTableComponent implements OnInit {
     });
   }
 
-  addHoliday(newHoliday: NewHoliday) {
-    this.holidayService.addHoliday(newHoliday).subscribe(() => {
-      this.refreshTable(this.selectedEmployeeStatus);
-    });
-  }
-
-  openRequestHolidayModal() {
-    const dialogRef = this.dialog.open(HolidayRequestFormComponent, {
-      width: '350px',
-      data: {
-        employeeId: this.currentUser.id,
-        isParentalAvailable: this.currentUser.currentAvailableLeaves > 0 || this.currentUser.nextMonthAvailableLeaves > 0
-      }
-    });
-    dialogRef.afterClosed().subscribe(newHoliday => {
-      if (newHoliday) {
-        this.addHoliday(newHoliday);
-      }
-    });
-  }
-
   getHolidaysByRole(): Holiday[] {
     const currentEmployeeHolidays = [];
     if (!this.isAdmin()) {
@@ -178,5 +157,9 @@ export class HolidaysTableComponent implements OnInit {
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  updateHolidaysTable() {
+    this.refreshTable(this.selectedEmployeeStatus);
   }
 }

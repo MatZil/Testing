@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TableRowUserModel } from '../../models/table-row-user-model';
 import { UserService } from '../../services/user.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EnumToStringConverterService } from 'src/app/services/enum-to-string-converter.service';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +15,9 @@ export class HomeComponent implements OnInit {
   image: string;
 
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    public enumConverter: EnumToStringConverterService,
+    public dialog: MatDialog
   ) {
     this.image = 'assets/bg.jpg';
   }
@@ -23,4 +27,6 @@ export class HomeComponent implements OnInit {
       this.currentUser = user;
     });
   }
+
+
 }
