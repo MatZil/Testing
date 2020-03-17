@@ -38,7 +38,7 @@ import { MatNativeDateModule } from '@angular/material';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { FullCalendarModule } from 'primeng/fullcalendar';
 
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
@@ -64,8 +64,6 @@ import { UserInformation } from './components/user-information/user-information.
 import { UserSettings } from './components/user-settings/user-settings.component';
 import { HolidayRequestFormComponent } from './components/holiday-request-form/holiday-request-form.component';
 import { UserPasswordFormComponent } from './components/user-password-form/user-password-form.component';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { HolidayRequestButtonComponent } from './components/holiday-request-button/holiday-request-button.component';
 registerLocaleData(en);
 export function tokenGetter() {
@@ -106,10 +104,6 @@ export function tokenGetter() {
   imports: [
     BrowserModule,
     AppRoutingModule,
-    CalendarModule.forRoot({
-      provide: DateAdapter,
-      useFactory: adapterFactory
-    }),
     FormsModule,
     ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: 'never' }),
     HttpClientModule,
@@ -132,7 +126,7 @@ export function tokenGetter() {
     MatSnackBarModule,
     MatTabsModule,
     MatProgressBarModule,
-    MatTooltipModule,
+    FullCalendarModule,
     MatAutocompleteModule,
     MatListModule,
     MatSidenavModule,
