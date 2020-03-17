@@ -2,9 +2,9 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { TableRowUserModel } from 'src/app/models/table-row-user-model';
 import { UserService } from 'src/app/services/user.service';
 import { HolidaysService } from 'src/app/services/holidays.service';
-import { MatDialog } from '@angular/material';
 import { NewHoliday } from 'src/app/models/new-holiday';
 import { HolidayRequestFormComponent } from '../holiday-request-form/holiday-request-form.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-holiday-request-button',
