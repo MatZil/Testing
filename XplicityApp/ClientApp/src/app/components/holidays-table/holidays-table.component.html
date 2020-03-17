@@ -72,10 +72,10 @@
   <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef> Action </th>
     <td mat-cell *matCellDef="let element">
-      <input matInput [formControl]="toolTip" hidden>
-      <div [matTooltip]="toolTip.value" [matTooltipDisabled]="!allowedToAbandon(element)">
-        <button mat-raised-button [disabled]="allowedToAbandon(element)" color="primary"
-          (click)="abandonHoliday(element)">Abandon</button>
+      <div *ngIf=!allowedToAbandon(element)>
+        <button mat-raised-button color="primary" (click)="abandonHoliday(element)">
+          Abandon
+        </button>
       </div>
     </td>
   </ng-container>

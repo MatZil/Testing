@@ -1,19 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Holiday } from '../../models/holiday';
-import { NewHoliday } from '../../models/new-holiday';
 import { HolidaysService } from '../../services/holidays.service';
 import { TableRowUserModel } from '../../models/table-row-user-model';
 import { UserService } from '../../services/user.service';
 import { EnumToStringConverterService } from 'src/app/services/enum-to-string-converter.service';
 import { AuthenticationService } from '../../services/authentication.service';
-import { MatDialog } from '@angular/material';
-import { HolidayRequestFormComponent } from '../holiday-request-form/holiday-request-form.component';
 import { HolidayStatus } from 'src/app/enums/holidayStatus';
 import { EmployeeStatus } from 'src/app/models/employee-status.enum';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableDataSource } from '@angular/material/table';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-holidays-table',
@@ -26,7 +21,6 @@ export class HolidaysTableComponent implements OnInit {
   displayedColumns: string[];
   currentUser: TableRowUserModel;
   dataSource = new MatTableDataSource<Holiday>(this.getHolidaysByRole());
-  toolTip = new FormControl('Info about the action');
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -34,8 +28,7 @@ export class HolidaysTableComponent implements OnInit {
     private userService: UserService,
     private holidayService: HolidaysService,
     private authenticationService: AuthenticationService,
-    public enumConverter: EnumToStringConverterService,
-    public dialog: MatDialog
+    public enumConverter: EnumToStringConverterService
   ) { }
 
   ngOnInit() {
@@ -129,16 +122,13 @@ export class HolidaysTableComponent implements OnInit {
         return false;
       }
       else if (holiday.status == HolidayStatus.Abandoned) {
-        this.toolTip = new FormControl("");
         return true;
       }
       else {
-        this.toolTip = new FormControl("Can only abandon pending holidays");
         return true;
       }
     }
     else {
-      this.toolTip = new FormControl("Can only abandon your own holiday requests");
       return true;
     }
   }

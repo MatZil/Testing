@@ -14,7 +14,7 @@ import { HolidayRequestFormComponent } from '../holiday-request-form/holiday-req
 export class HolidayRequestButtonComponent implements OnInit {
 
   currentUser: TableRowUserModel;
-  @Output() holidayRequest: EventEmitter<any> = new EventEmitter();
+  @Output() holidayRequested: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private userService: UserService,
@@ -31,7 +31,7 @@ export class HolidayRequestButtonComponent implements OnInit {
   addHoliday(newHoliday: NewHoliday) {
     this.holidayService.addHoliday(newHoliday).subscribe(
       () => {
-        this.holidayRequest.emit();
+        this.holidayRequested.emit();
       }
     );
   }
