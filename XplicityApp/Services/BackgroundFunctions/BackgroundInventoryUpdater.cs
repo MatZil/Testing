@@ -33,7 +33,8 @@ namespace XplicityApp.Services.BackgroundFunctions
             foreach (var item in inventoryItemsToDepreciate)
             {
                 var category = await _inventoryCategoryRepository.GetById(item.InventoryCategoryId);
-                var serviceLifeInDays = _timeService.ConvertYearsToDays((int)category.Deprecation);
+                var serviceLifeInYears = (int)category.Deprecation;
+                var serviceLifeInDays = _timeService.ConvertYearsToDays(serviceLifeInYears);
                 var dailyDepreciation = (item.OriginalPrice - 1) / serviceLifeInDays;
 
                 item.CurrentPrice -= (decimal)dailyDepreciation;

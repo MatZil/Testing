@@ -34,7 +34,7 @@ namespace Tests.Tests.BackgroundTests
         public async void When_DepreciatingInventoryItems_Expect_CurrentPriceDepreciated()
         {
             var allInventoryItems = await _inventoryItemRepository.GetAll();
-            var currentPrices = allInventoryItems.Where(item => item.InventoryCategoryId != licenseCategoryId)
+            var formerPrices = allInventoryItems.Where(item => item.InventoryCategoryId != licenseCategoryId)
                                                  .Select(item => item.CurrentPrice).ToList();
 
             await _backgroundInventoryUpdater.ApplyDepreciationToInventoryItems();
@@ -44,7 +44,9 @@ namespace Tests.Tests.BackgroundTests
 
             for (int i = 0; i < tangibleItems.Count(); i++)
             {
-                Assert.True(tangibleItems.ElementAt(i).CurrentPrice < currentPrices.ElementAt(i), "Failed to depreciate all tangible items.");
+                var currentPrice = tangibleItems.ElementAt(i).CurrentPrice;
+                var formerPrice = formerPrices.ElementAt(i);
+                Assert.True(currentPrice < formerPrice, "Failed to depreciate all tangible items.");
             }
         }
 
@@ -52,7 +54,7 @@ namespace Tests.Tests.BackgroundTests
         public async void When_DepreciatingLicenses_Expect_NoDepreciationApplied()
         {
             var allInventoryItems = await _inventoryItemRepository.GetAll();
-            var currentPrices = allInventoryItems.Where(item => item.InventoryCategoryId == licenseCategoryId)
+            var formerPrices = allInventoryItems.Where(item => item.InventoryCategoryId == licenseCategoryId)
                                                  .Select(item => item.CurrentPrice).ToList();
 
             await _backgroundInventoryUpdater.ApplyDepreciationToInventoryItems();
@@ -62,7 +64,9 @@ namespace Tests.Tests.BackgroundTests
 
             for (int i = 0; i < licenses.Count(); i++)
             {
-                Assert.True(licenses.ElementAt(i).CurrentPrice == currentPrices.ElementAt(i), "Item of 'Software license' category was depreciated.");
+                var currentPrice = licenses.ElementAt(i).CurrentPrice;
+                var formerPrice = formerPrices.ElementAt(i);
+                Assert.True(currentPrice == formerPrice, "Item of 'Software license' category was depreciated.");
             }
         }
 
@@ -79,9 +83,9 @@ namespace Tests.Tests.BackgroundTests
                 await _backgroundInventoryUpdater.ApplyDepreciationToInventoryItems();
 
             var itemAfterFullDepreciation = await _inventoryItemRepository.GetById(id);
-            var roundedValue = Math.Round(itemAfterFullDepreciation.CurrentPrice);
+            var priceAfterFullDepreciation = Math.Round(itemAfterFullDepreciation.CurrentPrice);
 
-            Assert.True(roundedValue == 1, "Failed to apply full depreciation.");
+            Assert.True(priceAfterFullDepreciation == 1, "Failed to apply full depreciation.");
         }
     }
 }
