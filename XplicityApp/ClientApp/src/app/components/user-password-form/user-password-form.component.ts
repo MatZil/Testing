@@ -1,6 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { PasswordChangeModel } from 'src/app/models/password-change-model';
 import { passwordMatcherValidatorFn } from '../../helpers/password-match-validator';
 import { AuthenticationService } from '../../services/authentication.service';

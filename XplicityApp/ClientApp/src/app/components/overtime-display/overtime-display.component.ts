@@ -11,7 +11,8 @@ export class OvertimeDisplayComponent implements OnInit {
   currentUser: TableRowUserModel;
 
   constructor(
-    private userService: UserService) {}
+    private userService: UserService
+  ) { }
 
   ngOnInit() {
     this.userService.getCurrentUser().subscribe(user => {

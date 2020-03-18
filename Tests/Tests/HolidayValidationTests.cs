@@ -82,8 +82,8 @@ namespace Tests.Tests
             await Assert.ThrowsAsync<InvalidOperationException>(() => _holidayValidationService.ValidateNewHolidayConfirmationReadiness(holidayDto));
         }
         [Theory]
-        [InlineData(100)]
-        [InlineData(101)]
+        [InlineData(-1)]
+        [InlineData(-2)]
         public async void When_ValidatingNewHolidayConfirmationReadiness_Expect_NullException(int holidayId)
         {
 

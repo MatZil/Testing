@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EditEmployeeFormComponent } from '../edit-employee-form/edit-employee-form.component';
 import { NewHoliday } from 'src/app/models/new-holiday';
 import { HolidayType } from 'src/app/enums/holidayType';

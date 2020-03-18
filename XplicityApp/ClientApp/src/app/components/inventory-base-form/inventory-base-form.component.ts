@@ -7,7 +7,8 @@ import { BaseUser } from 'src/app/models/base-user';
 import { DatePipe } from '@angular/common';
 
 import { ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent, MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { TagService } from '../../services/tag.service';
 import { Tag } from '../../models/tag';
 import { FormControl } from '@angular/forms';
@@ -41,8 +42,8 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
   tagsAfterFiltration: Tag[] = [];
   tagSuggestions: Observable<Tag[]>;
 
-  @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   constructor(
     private formBuilder: FormBuilder,

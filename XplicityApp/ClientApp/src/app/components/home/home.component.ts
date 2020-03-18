@@ -8,12 +8,13 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+
   currentUser: TableRowUserModel;
   image: string;
+
   constructor(
     private userService: UserService
   ) {
-    // this.currentUser = this.authenticationService.currentUserValue;
     this.image = 'assets/bg.jpg';
   }
 
@@ -22,4 +23,5 @@ export class HomeComponent implements OnInit {
       this.currentUser = user;
     });
   }
+
 }
