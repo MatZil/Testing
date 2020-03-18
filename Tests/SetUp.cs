@@ -492,6 +492,16 @@ namespace Tests
                 {
                     Name = "Category2",
                     Deprecation = 2
+                },
+                new InventoryCategory
+                {
+                    Name = "Category3",
+                    Deprecation = 3
+                },
+                new InventoryCategory
+                {
+                    Name = "Category4",
+                    Deprecation = 4
                 }
             };
             context.InventoryCategories.AddRange(_inventoryCategories);
@@ -525,6 +535,32 @@ namespace Tests
                     Category = context.InventoryCategories.Find(2),
                     InventoryCategoryId = 2
                 },
+                new InventoryItem
+                {
+                    Id = 3,
+                    Name = "Item3",
+                    SerialNumber = "Serial no 3",
+                    PurchaseDate = DateTime.Today,
+                    ExpiryDate = null,
+                    OriginalPrice = 300,
+                    CurrentPrice = 300,
+                    Comment = null,
+                    Category = context.InventoryCategories.Find(3),
+                    InventoryCategoryId = 3
+                },
+                new InventoryItem
+                {
+                    Id = 4,
+                    Name = "Item4",
+                    SerialNumber = "Serial no 4",
+                    PurchaseDate = DateTime.Today,
+                    ExpiryDate = null,
+                    OriginalPrice = 400,
+                    CurrentPrice = 400,
+                    Comment = null,
+                    Category = context.InventoryCategories.Find(4),
+                    InventoryCategoryId = 4
+                }
             };
             context.InventoryItems.AddRange(_inventoryItems);
 

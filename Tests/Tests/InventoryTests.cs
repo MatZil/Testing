@@ -44,7 +44,7 @@ namespace Tests.Tests
         }
 
         [Theory]
-        [InlineData(3)]
+        [InlineData(-1)]
         public async void When_GettingNonexistentInventoryItemById_Expect_ReturnsNull(int id)
         {
             var retrievedInventoryItem = await _inventoryItemService.GetById(id);
