@@ -447,8 +447,8 @@ namespace Tests
                     Employee = context.Employees.Find(3),
                     EmployeeId = 3,
                     Type = HolidayType.Annual,
-                    FromInclusive = new DateTime(2020, 03, 13),
-                    ToInclusive = new DateTime(2020, 03, 18),
+                    FromInclusive = new DateTime(2021, 03, 8),
+                    ToInclusive = new DateTime(2021, 03, 12),
                     Status = HolidayStatus.Pending,
                     OvertimeDays = 4,
                     RequestCreatedDate = new DateTime(2019, 12, 14),
@@ -459,8 +459,8 @@ namespace Tests
                     Employee = context.Employees.Find(3),
                     EmployeeId = 3,
                     Type = HolidayType.Annual,
-                    FromInclusive = new DateTime(2020, 03, 17),
-                    ToInclusive = new DateTime(2020, 03, 19),
+                    FromInclusive = new DateTime(2021, 03, 22),
+                    ToInclusive = new DateTime(2021, 03, 25),
                     Status = HolidayStatus.Pending,
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 12, 14),
@@ -500,11 +500,13 @@ namespace Tests
             {
                 new InventoryItem
                 {
+                    Id = 1,
                     Name = "Item1",
                     SerialNumber = "Serial no 1",
                     PurchaseDate = DateTime.Today,
                     ExpiryDate = null,
-                    Price = 100,
+                    OriginalPrice = 100,
+                    CurrentPrice = 100,
                     Comment = null,
                     Category = context.InventoryCategories.Find(1),
                     InventoryCategoryId = 1
@@ -512,11 +514,13 @@ namespace Tests
                 },
                 new InventoryItem
                 {
+                    Id = 2,
                     Name = "Item2",
                     SerialNumber = "Serial no 2",
                     PurchaseDate = DateTime.Today,
                     ExpiryDate = null,
-                    Price = 100,
+                    OriginalPrice = 200,
+                    CurrentPrice = 200,
                     Comment = null,
                     Category = context.InventoryCategories.Find(2),
                     InventoryCategoryId = 2

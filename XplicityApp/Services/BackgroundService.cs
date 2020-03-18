@@ -14,19 +14,22 @@ namespace XplicityApp.Services
         private readonly IEmployeeHolidaysBackgroundUpdater _employeeHolidaysBackgroundUpdater;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly ILogger<BackgroundService> _logger;
+        private readonly IBackgroundInventoryUpdater _backgroundInventoryUpdater;
 
         public BackgroundService(
             ITimeService timeService, 
             IEmployeeHolidaysBackgroundUpdater employeeHolidaysBackgroundUpdater, 
             IEmployeeRepository employeeRepository, 
             IBackgroundEmailSender backgroundEmailSender, 
-            ILogger<BackgroundService> logger)
+            ILogger<BackgroundService> logger,
+            IBackgroundInventoryUpdater backgroundInventoryUpdater)
         {
             _timeService = timeService;
             _employeeHolidaysBackgroundUpdater = employeeHolidaysBackgroundUpdater;
             _employeeRepository = employeeRepository;
             _backgroundEmailSender = backgroundEmailSender;
             _logger = logger;
+            _backgroundInventoryUpdater = backgroundInventoryUpdater;
         }
         public async Task DoBackgroundTasks()
         {
@@ -43,6 +46,8 @@ namespace XplicityApp.Services
             await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(allEmployees);
 
             await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(allEmployees);
+
+            await _backgroundInventoryUpdater.ApplyDepreciationToInventoryItems();
 
             _logger.LogInformation("Background tasks ended at " + _timeService.GetCurrentTime());
         }

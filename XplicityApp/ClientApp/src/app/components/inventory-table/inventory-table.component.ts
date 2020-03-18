@@ -26,7 +26,7 @@ export class InventoryTableComponent implements OnInit {
     'name',
     'serial number',
     'purchase date',
-    'price',
+    'originalPrice',
     'assigned to',
     'expiry date',
     'comment',
