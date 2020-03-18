@@ -1,19 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Holiday } from '../../models/holiday';
-import { NewHoliday } from '../../models/new-holiday';
 import { HolidaysService } from '../../services/holidays.service';
 import { TableRowUserModel } from '../../models/table-row-user-model';
 import { UserService } from '../../services/user.service';
 import { EnumToStringConverterService } from 'src/app/services/enum-to-string-converter.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
-import { HolidayRequestFormComponent } from '../holiday-request-form/holiday-request-form.component';
 import { HolidayStatus } from 'src/app/enums/holidayStatus';
 import { EmployeeStatus } from 'src/app/models/employee-status.enum';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableDataSource } from '@angular/material/table';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-holidays-table',
@@ -26,16 +22,15 @@ export class HolidaysTableComponent implements OnInit {
   displayedColumns: string[];
   currentUser: TableRowUserModel;
   dataSource = new MatTableDataSource<Holiday>(this.getHolidaysByRole());
-  toolTip = new FormControl('Info about the action');
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private userService: UserService,
     private holidayService: HolidaysService,
     private authenticationService: AuthenticationService,
-    public enumConverter: EnumToStringConverterService,
-    public dialog: MatDialog) { }
+    public enumConverter: EnumToStringConverterService
+  ) { }
 
   ngOnInit() {
     this.userService.getCurrentUser().subscribe(user => {
@@ -43,28 +38,28 @@ export class HolidaysTableComponent implements OnInit {
     });
     this.refreshTable(this.selectedEmployeeStatus);
     this.dataSource.paginator = this.paginator;
-    if(this.isAdmin()){
+    if (this.isAdmin()) {
       this.displayedColumns = [
-        'employee', 
-        'holidaysType', 
-        'paid', 
-        'dateFrom', 
-        'dateTo', 
-        'overtimeHours', 
-        'status', 
-        'rejectedConfirmed', 
+        'employee',
+        'holidaysType',
+        'paid',
+        'dateFrom',
+        'dateTo',
+        'overtimeHours',
+        'status',
+        'rejectedConfirmed',
         'creationDate',
         'action'];
     }
     else {
       this.displayedColumns = [
-        'holidaysType', 
-        'paid', 
-        'dateFrom', 
-        'dateTo', 
-        'overtimeDays', 
-        'status', 
-        'rejectedConfirmed', 
+        'holidaysType',
+        'paid',
+        'dateFrom',
+        'dateTo',
+        'overtimeDays',
+        'status',
+        'rejectedConfirmed',
         'creationDate',
         'action'];
     }
@@ -75,27 +70,6 @@ export class HolidaysTableComponent implements OnInit {
       this.holidays = holidays;
       this.dataSource = new MatTableDataSource<Holiday>(this.getHolidaysByRole());
       this.dataSource.paginator = this.paginator;
-    });
-  }
-
-  addHoliday(newHoliday: NewHoliday) {
-    this.holidayService.addHoliday(newHoliday).subscribe(() => {
-      this.refreshTable(this.selectedEmployeeStatus);
-    });
-  }
-
-  openRequestHolidayModal() {
-    const dialogRef = this.dialog.open(HolidayRequestFormComponent, {
-      width: '350px',
-      data: {
-        employeeId: this.currentUser.id,
-        isParentalAvailable: this.currentUser.currentAvailableLeaves > 0 || this.currentUser.nextMonthAvailableLeaves > 0
-      }
-    });
-    dialogRef.afterClosed().subscribe(newHoliday => {
-      if (newHoliday) {
-        this.addHoliday(newHoliday);
-      }
     });
   }
 
@@ -149,16 +123,13 @@ export class HolidaysTableComponent implements OnInit {
         return false;
       }
       else if (holiday.status == HolidayStatus.Abandoned) {
-        this.toolTip = new FormControl("");
         return true;
       }
       else {
-        this.toolTip = new FormControl("Can only abandon pending holidays");
         return true;
       }
     }
     else {
-      this.toolTip = new FormControl("Can only abandon your own holiday requests");
       return true;
     }
   }
@@ -177,5 +148,9 @@ export class HolidaysTableComponent implements OnInit {
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  updateHolidaysTable() {
+    this.refreshTable(this.selectedEmployeeStatus);
   }
 }
