@@ -221,7 +221,7 @@ namespace Tests
                     OvertimeHours = 24,
                     ParentalLeaveLimit = 3,
                     CurrentAvailableLeaves = 1,
-                    NextMonthAvailableLeaves = 2,
+                    NextMonthAvailableLeaves = 2
                 },
                 new Employee
                 {
@@ -232,11 +232,11 @@ namespace Tests
                     Email = "taken2@email",
                     WorksFromDate = new DateTime(2018,01,06),
                     DaysOfVacation = 20,
-                    BirthdayDate = new DateTime(1988,07,06),
+                    BirthdayDate = DateTime.Today,
                     FreeWorkDays = 15,
                     ParentalLeaveLimit = 4,
                     CurrentAvailableLeaves = 2,
-                    NextMonthAvailableLeaves = 1,
+                    NextMonthAvailableLeaves = 1
                 },
                 new Employee
                 {
@@ -250,7 +250,21 @@ namespace Tests
                     OvertimeHours = 24,
                     ParentalLeaveLimit = 4,
                     CurrentAvailableLeaves = 2,
-                    NextMonthAvailableLeaves = 1,
+                    NextMonthAvailableLeaves = 1
+                },
+                new Employee
+                {
+                    Name = "EmployeeName4",
+                    Surname = "EmployeeSurname4",
+                    Email = "taken4@email",
+                    WorksFromDate = new DateTime(2019,01,06),
+                    DaysOfVacation = 20,
+                    BirthdayDate = new DateTime(1987,07,06),
+                    FreeWorkDays = 15,
+                    OvertimeHours = 24,
+                    ParentalLeaveLimit = 4,
+                    CurrentAvailableLeaves = 2,
+                    NextMonthAvailableLeaves = 1
                 },
             };
             context.Employees.AddRange(_employees);
@@ -591,7 +605,30 @@ namespace Tests
                 new NotificationSettings
                 {
                     Id = 1,
-                    EmployeeId = 1
+                    EmployeeId = 1,
+                    BroadcastOwnBirthday = true,
+                    ReceiveBirthdayNotifications = true
+                },
+                new NotificationSettings
+                {
+                    Id = 2,
+                    EmployeeId = 2,
+                    BroadcastOwnBirthday = true,
+                    ReceiveBirthdayNotifications = false
+                },
+                new NotificationSettings
+                {
+                    Id = 3,
+                    EmployeeId = 3,
+                    BroadcastOwnBirthday = false,
+                    ReceiveBirthdayNotifications = true
+                },
+                new NotificationSettings
+                {
+                    Id = 4,
+                    EmployeeId = 4,
+                    BroadcastOwnBirthday = false,
+                    ReceiveBirthdayNotifications = false
                 }
             };
             context.NotificationSettings.AddRange(_notificationSettings);
