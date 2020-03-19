@@ -23,7 +23,7 @@ namespace XplicityApp.Dtos.Inventory
 
         public InventoryCategory Category { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal OriginalPrice { get; set; }
 
         public int EmployeeId { get; set; }
 

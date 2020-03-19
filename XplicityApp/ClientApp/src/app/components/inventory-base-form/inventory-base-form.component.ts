@@ -68,7 +68,7 @@ export class BaseInventoryFormComponent implements OnInit, ControlValueAccessor 
         [Validators.required]],
       serialNumber: ['',
         [Validators.required]],
-      price: ['', [Validators.required]],
+      originalPrice: ['', [Validators.required]],
       purchaseDate: ['',
         [Validators.required]],
       expiryDate: [''],
