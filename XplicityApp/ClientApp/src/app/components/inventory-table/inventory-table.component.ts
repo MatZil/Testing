@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { InventoryItem } from 'src/app/models/inventory-item';
 import { InventoryService } from 'src/app/services/inventory.service';
 import { InventoryCategory } from 'src/app/models/inventory-category';
@@ -28,6 +28,7 @@ export class InventoryTableComponent implements OnInit {
     'serial number',
     'purchase date',
     'originalPrice',
+    'currentPrice',
     'assigned to',
     'expiry date',
     'comment',
@@ -43,7 +44,7 @@ export class InventoryTableComponent implements OnInit {
     private inventoryService: InventoryService,
     private categoryService: InventoryCategoryService,
     public dialog: MatDialog,
-    private userService: UserService ) { }
+    private userService: UserService) { }
 
   ngOnInit() {
     this.getCategoriesList();

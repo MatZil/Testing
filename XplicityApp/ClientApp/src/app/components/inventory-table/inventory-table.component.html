@@ -3,9 +3,10 @@
     <button mat-flat-button class="top-of-page-actions" color="primary" (click)="openAddForm()">Add new item</button>
     <br>
     <mat-form-field class="top-of-page-actions">
-      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
     </mat-form-field>
-    <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Current inventory" (selectionChange)="refreshTable(showArchivedInventory)" [(value)]="showArchivedInventory">
+    <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Current inventory"
+        (selectionChange)="refreshTable(showArchivedInventory)" [(value)]="showArchivedInventory">
         <mat-option [value]="false">
             Current inventory
         </mat-option>
@@ -42,6 +43,11 @@
         <td mat-cell *matCellDef="let item"> {{item.originalPrice}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="currentPrice">
+        <th mat-header-cell *matHeaderCellDef>Current price</th>
+        <td mat-cell *matCellDef="let item"> {{item.currentPrice}} </td>
+    </ng-container>
+
     <ng-container matColumnDef="assigned to">
         <th mat-header-cell *matHeaderCellDef>Assigned To</th>
         <td mat-cell *matCellDef="let item"> {{item.assignedTo}} </td>
@@ -71,7 +77,7 @@
             <button mat-flat-button color="primary" (click)="openEditForm(item)">Edit</button>
         </td>
     </ng-container>
-    
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
