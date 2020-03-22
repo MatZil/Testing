@@ -3,8 +3,10 @@
     <button mat-flat-button class="top-of-page-actions" color="primary" (click)="openAddForm()">Add new item</button>
     <br>
     <mat-form-field class="top-of-page-actions">
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
+        <input class="search-text-size" matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
+        <mat-icon class="search-icon-size" matSuffix>search</mat-icon>
     </mat-form-field>
+
     <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Current inventory"
         (selectionChange)="refreshTable(showArchivedInventory)" [(value)]="showArchivedInventory">
         <mat-option [value]="false">

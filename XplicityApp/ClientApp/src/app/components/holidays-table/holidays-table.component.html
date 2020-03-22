@@ -2,9 +2,11 @@
   <br>
   <app-holiday-request-button (holidayRequested)="updateHolidaysTable()"></app-holiday-request-button>
   <br>
-  <mat-form-field class=" top-of-page-actions">
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
+  <mat-form-field class="top-of-page-actions">
+    <input class="search-text-size" matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
+    <mat-icon class="search-icon-size" matSuffix>search</mat-icon>
   </mat-form-field>
+
   <mat-select *ngIf="isAdmin()" class="statusSelect" name="status" placeholder="Employee status"
     (selectionChange)="refreshTable(selectedEmployeeStatus)" [(value)]="selectedEmployeeStatus">
     <mat-option [value]="1">
