@@ -2,105 +2,107 @@
   <br>
   <button mat-flat-button class="top-of-page-actions" color="primary" (click)=openAddForm()>Add new employee</button>
   <br>
-    <mat-form-field class="top-of-page-actions">
-      <input matInput (keyup)="applyFilter($event)" placeholder="Search...">
-    </mat-form-field>
+  <mat-form-field class="top-of-page-actions">
+    <input class="search-text-size" matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
+    <mat-icon class="mat-icon-size" matSuffix>search</mat-icon>
+  </mat-form-field>
   <br>
 </div>
 
 <div class="table-wrapper">
   <div class="table-scroll">
-  <table mat-table [dataSource]="employeeDataSource">
+    <table mat-table [dataSource]="employeeDataSource">
 
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let user">{{user.name}}</td>
-    </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let user">{{user.name}}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="surname">
-      <th mat-header-cell *matHeaderCellDef> Surname </th>
-      <td mat-cell *matCellDef="let user"> {{user.surname}} </td>
-    </ng-container>
+      <ng-container matColumnDef="surname">
+        <th mat-header-cell *matHeaderCellDef> Surname </th>
+        <td mat-cell *matCellDef="let user"> {{user.surname}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="client">
-      <th mat-header-cell *matHeaderCellDef> Client </th>
-      <td mat-cell *matCellDef="let user"> {{getClientName(user.clientId)}} </td>
-    </ng-container>
+      <ng-container matColumnDef="client">
+        <th mat-header-cell *matHeaderCellDef> Client </th>
+        <td mat-cell *matCellDef="let user"> {{getClientName(user.clientId)}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="worksFromDate">
-      <th mat-header-cell *matHeaderCellDef> Works from </th>
-      <td mat-cell *matCellDef="let user"> {{user.worksFromDate | date}} </td>
-    </ng-container>
+      <ng-container matColumnDef="worksFromDate">
+        <th mat-header-cell *matHeaderCellDef> Works from </th>
+        <td mat-cell *matCellDef="let user"> {{user.worksFromDate | date}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="birthdayDate">
-      <th mat-header-cell *matHeaderCellDef> Birthday date </th>
-      <td mat-cell *matCellDef="let user"> {{user.birthdayDate | date}} </td>
-    </ng-container>
+      <ng-container matColumnDef="birthdayDate">
+        <th mat-header-cell *matHeaderCellDef> Birthday date </th>
+        <td mat-cell *matCellDef="let user"> {{user.birthdayDate | date}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="daysOfVacation">
-      <th mat-header-cell *matHeaderCellDef> Days of vacation </th>
-      <td mat-cell *matCellDef="let user"> {{user.daysOfVacation}} </td>
-    </ng-container>
+      <ng-container matColumnDef="daysOfVacation">
+        <th mat-header-cell *matHeaderCellDef> Days of vacation </th>
+        <td mat-cell *matCellDef="let user"> {{user.daysOfVacation}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="freeWorkDays">
-      <th mat-header-cell *matHeaderCellDef> Free workdays left </th>
-      <td mat-cell *matCellDef="let user"> {{user.freeWorkDays | number : '.0-2'}} </td>
-    </ng-container>
+      <ng-container matColumnDef="freeWorkDays">
+        <th mat-header-cell *matHeaderCellDef> Free workdays left </th>
+        <td mat-cell *matCellDef="let user"> {{user.freeWorkDays | number : '.0-2'}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="overtimeHours">
-      <th mat-header-cell *matHeaderCellDef> Overtime hours </th>
-      <td mat-cell *matCellDef="let user"> {{user.overtimeHours}} </td>
-    </ng-container>
+      <ng-container matColumnDef="overtimeHours">
+        <th mat-header-cell *matHeaderCellDef> Overtime hours </th>
+        <td mat-cell *matCellDef="let user"> {{user.overtimeHours}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef> Email </th>
-      <td mat-cell *matCellDef="let user"> {{user.email}} </td>
-    </ng-container>
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="position">
-      <th mat-header-cell *matHeaderCellDef> Position </th>
-      <td mat-cell *matCellDef="let user"> {{user.position}} </td>
-    </ng-container>
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef> Position </th>
+        <td mat-cell *matCellDef="let user"> {{user.position}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="parentalLeaveLimit">
-      <th mat-header-cell *matHeaderCellDef> Parental leave limit </th>
-      <td mat-cell *matCellDef="let user"> {{user.parentalLeaveLimit}} </td>
-    </ng-container>
+      <ng-container matColumnDef="parentalLeaveLimit">
+        <th mat-header-cell *matHeaderCellDef> Parental leave limit </th>
+        <td mat-cell *matCellDef="let user"> {{user.parentalLeaveLimit}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="currentAvailableLeaves">
-      <th mat-header-cell *matHeaderCellDef> Current available parental leaves </th>
-      <td mat-cell *matCellDef="let user"> {{user.currentAvailableLeaves}} </td>
-    </ng-container>
+      <ng-container matColumnDef="currentAvailableLeaves">
+        <th mat-header-cell *matHeaderCellDef> Current available parental leaves </th>
+        <td mat-cell *matCellDef="let user"> {{user.currentAvailableLeaves}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="nextMonthAvailableLeaves">
-      <th mat-header-cell *matHeaderCellDef> Next month's parental leaves </th>
-      <td mat-cell *matCellDef="let user"> {{user.nextMonthAvailableLeaves}} </td>
-    </ng-container>
+      <ng-container matColumnDef="nextMonthAvailableLeaves">
+        <th mat-header-cell *matHeaderCellDef> Next month's parental leaves </th>
+        <td mat-cell *matCellDef="let user"> {{user.nextMonthAvailableLeaves}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="healthCheckDate">
-      <th mat-header-cell *matHeaderCellDef> Health check-up date </th>
-      <td mat-cell *matCellDef="let user"> {{user.healthCheckDate | date}} </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="employeeStatus">
-      <th mat-header-cell *matHeaderCellDef> Status </th>
-      <td mat-cell *matCellDef="let user"> {{employeeStatus[user.status]}} </td>
-    </ng-container>
+      <ng-container matColumnDef="healthCheckDate">
+        <th mat-header-cell *matHeaderCellDef> Health check-up date </th>
+        <td mat-cell *matCellDef="let user"> {{user.healthCheckDate | date}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions </th>
-      <td mat-cell *matCellDef="let user">
-        <button mat-flat-button color="primary" (click)="openEditForm(user)">Edit</button>
-        &nbsp;
-        <button mat-flat-button color="warn" (click)="showDeleteConfirm(user)" [disabled]="user.id === getCurrentUserId()">Delete</button>
-        &nbsp;
-        <button mat-flat-button color="primary" (click)="showEquipmentModal(user.id)">Equipment</button>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="employeeStatus">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let user"> {{employeeStatus[user.status]}} </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</div>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let user">
+          <button mat-flat-button color="primary" (click)="openEditForm(user)">Edit</button>
+          &nbsp;
+          <button mat-flat-button color="warn" (click)="showDeleteConfirm(user)"
+            [disabled]="user.id === getCurrentUserId()">Delete</button>
+          &nbsp;
+          <button mat-flat-button color="primary" (click)="showEquipmentModal(user.id)">Equipment</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
 </div>
 <mat-paginator [pageSizeOptions]="[10, 20, 40]" showFirstLastButtons></mat-paginator>

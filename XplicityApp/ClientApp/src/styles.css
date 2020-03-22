@@ -1,6 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 
-
 /* Provide sufficient contrast against white background */
 
 a {
@@ -57,4 +56,12 @@ table {
 
 .alignCenter {
     text-align: center;
+}
+
+.search-text-size {
+    font-size: 20px !important;
+}
+
+.mat-icon-size {
+    font-size: 18px !important;
 }
