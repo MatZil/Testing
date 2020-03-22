@@ -31,6 +31,8 @@ namespace XplicityApp.Dtos.Inventory
 
         public bool Archived { get; set; }
 
+        public decimal CurrentPrice { get; set; }
+
         public ICollection<TagDto> Tags { get; set; }
     }
 }
