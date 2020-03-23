@@ -4,6 +4,8 @@ import { EmployeeStatus } from 'src/app/models/employee-status.enum';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Updateuser } from 'src/app/models/updateuser';
 import { EditModalData } from './edit-modal-data';
+import { UserService } from '../../services/user.service';
+import { TableRowUserModel } from '../../models/table-row-user-model';
 
 @Component({
   selector: 'app-edit-employee-form',
@@ -15,6 +17,7 @@ export class EditEmployeeFormComponent implements OnInit {
   editEmployeeForm: FormGroup;
 
   constructor(
+    private userService: UserService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<EditEmployeeFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditModalData) {}
@@ -78,5 +81,16 @@ export class EditEmployeeFormComponent implements OnInit {
 
   isFormInvalid(baseForm: FormGroup): boolean {
     return !(baseForm.valid && this.editEmployeeForm.valid);
+  }
+  deleteUserById(id: number) {
+    this.userService.deleteUser(id).subscribe(() => {
+    });
+  }
+  showDeleteConfirm(userToDelete: TableRowUserModel): void {
+    const userToUpdate = this.getFormUser();
+      if(confirm('If you confirm,' + userToDelete.name + ' ' + userToDelete.surname + ' will be permanently deleted.')) {
+      this.deleteUserById(userToDelete.id)
+      this.closeModal(userToUpdate);
+    }
   }
 }

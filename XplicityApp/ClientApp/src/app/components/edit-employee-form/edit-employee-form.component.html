@@ -33,7 +33,9 @@
             </div>
         </div>
     </mat-card>
-
+    <mat-dialog-actions>
+        <button mat-flat-button color="accent" (click)="showDeleteConfirm(data.userToUpdate)" >Delete</button>
+    </mat-dialog-actions>
     <mat-dialog-actions align="end">
         <button mat-flat-button color="primary" (click)="confirmEdit()" [disabled]="isFormInvalid(baseComponent.baseForm)">
             Edit employee
