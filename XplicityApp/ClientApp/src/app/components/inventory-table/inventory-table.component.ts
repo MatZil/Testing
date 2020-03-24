@@ -128,8 +128,7 @@ export class InventoryTableComponent implements OnInit {
     return this.userService.isAdmin();
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+  applyFilter(filterValue: string) {
     this.equipmentDataSource.filter = filterValue.trim().toLowerCase();
   }
 }
