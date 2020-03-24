@@ -17,14 +17,18 @@ namespace Tests.Tests.EmailServiceTests
                 Email = "taken1@email",
                 WorksFromDate = DateTime.MinValue,
                 DaysOfVacation = 20,
-                BirthdayDate = DateTime.MinValue,
+                BirthdayDate = DateTime.Today,
                 FreeWorkDays = 10,
                 OvertimeHours = 24,
                 ParentalLeaveLimit = 2,
                 CurrentAvailableLeaves = 1,
-                NextMonthAvailableLeaves = 2
+                NextMonthAvailableLeaves = 2,
+                NotificationSettings = new NotificationSettings
+                {
+                    BroadcastOwnBirthday = true,
+                    ReceiveBirthdayNotifications = true
+                }
             };
-
             return employee;
         }
 
@@ -44,7 +48,12 @@ namespace Tests.Tests.EmailServiceTests
                     OvertimeHours = 24,
                     ParentalLeaveLimit = 2,
                     CurrentAvailableLeaves = 1,
-                    NextMonthAvailableLeaves = 2
+                    NextMonthAvailableLeaves = 2,
+                    NotificationSettings = new NotificationSettings
+                    {
+                        BroadcastOwnBirthday = true,
+                        ReceiveBirthdayNotifications = true
+                    }
                 },
                 new Employee
                 {
@@ -58,10 +67,52 @@ namespace Tests.Tests.EmailServiceTests
                     OvertimeHours = 24,
                     ParentalLeaveLimit = 2,
                     CurrentAvailableLeaves = 1,
-                    NextMonthAvailableLeaves = 2
+                    NextMonthAvailableLeaves = 2,
+                    NotificationSettings = new NotificationSettings
+                    {
+                        BroadcastOwnBirthday = true,
+                        ReceiveBirthdayNotifications = false
+                    }
+                },
+                new Employee
+                {
+                    Name = "AdminName3",
+                    Surname = "AdminSurname3",
+                    Email = "admin3@email",
+                    WorksFromDate = DateTime.MinValue,
+                    DaysOfVacation = 20,
+                    BirthdayDate = DateTime.MinValue,
+                    FreeWorkDays = 10,
+                    OvertimeHours = 24,
+                    ParentalLeaveLimit = 2,
+                    CurrentAvailableLeaves = 1,
+                    NextMonthAvailableLeaves = 2,
+                    NotificationSettings = new NotificationSettings
+                    {
+                        BroadcastOwnBirthday = false,
+                        ReceiveBirthdayNotifications = true
+                    }
+                },
+                new Employee
+                {
+                    Name = "AdminName4",
+                    Surname = "AdminSurname4",
+                    Email = "admin4@email",
+                    WorksFromDate = DateTime.MinValue,
+                    DaysOfVacation = 20,
+                    BirthdayDate = DateTime.MinValue,
+                    FreeWorkDays = 10,
+                    OvertimeHours = 24,
+                    ParentalLeaveLimit = 2,
+                    CurrentAvailableLeaves = 1,
+                    NextMonthAvailableLeaves = 2,
+                    NotificationSettings = new NotificationSettings
+                    {
+                        BroadcastOwnBirthday = false,
+                        ReceiveBirthdayNotifications = false
+                    }
                 }
             };
-
             return admins;
         }
 

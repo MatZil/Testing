@@ -43,6 +43,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<IEmployeeHolidaysBackgroundUpdater, EmployeeHolidaysBackgroundUpdater>()
                 .AddScoped<IEmployeeHolidaysConfirmationUpdater, EmployeeHolidaysConfirmationUpdater>()
                 .AddScoped<IBackgroundEmailSender, BackgroundEmailSender>()
+                .AddScoped<IBackgroundInventoryUpdater, BackgroundInventoryUpdater>()
                 .AddScoped<IOvertimeUtility, OvertimeUtility>()
                 .AddScoped<ITagsRepository, TagsRepository>()
                 .AddScoped<IInventoryItemTagsRepository, InventoryItemTagsRepository>()
@@ -70,7 +71,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<IInventoryCategoryService, InventoryCategoryService>()
                 .AddScoped<IBackgroundService, BackgroundService>()
                 .AddScoped<ITagsService, TagsService>()
-                 .AddScoped<INotificationSettingsService, NotificationSettingsService>()
+                .AddScoped<INotificationSettingsService, NotificationSettingsService>()
                 .AddHostedService<TimedDailyTaskHostedService>();
         }
     }

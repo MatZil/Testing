@@ -64,5 +64,11 @@ namespace XplicityApp.Infrastructure.Utils
 
             return nextWorkDay;
         }
+
+        public int ConvertYearsToDays(int years)
+        {
+            int daysInYear = 365;
+            return years * daysInYear;
+        }
     }
 }

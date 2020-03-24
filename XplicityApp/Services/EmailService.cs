@@ -129,13 +129,15 @@ namespace XplicityApp.Services
             {
                 foreach (var employeeWithBirthday in employeesWithBirthdays)
                 {
-                    if (!employeeWithBirthday.IsSamePerson(employee))
+                   if (!employeeWithBirthday.IsSamePerson(employee))
                     {
+                        
                         var messageString = template.Template
                                                     .Replace("{employee.fullName}", $"{employeeWithBirthday.Name} {employeeWithBirthday.Surname}");
                         _emailer.SendMail(employee.Email, template.Subject, messageString);
                     }
                 }
+
             }
         }
 

@@ -1,11 +1,12 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { InventoryItem } from 'src/app/models/inventory-item';
 import { InventoryService } from 'src/app/services/inventory.service';
 import { InventoryCategory } from 'src/app/models/inventory-category';
 import { InventoryCategoryService } from 'src/app/services/inventory-category.service';
 import { TableRowUserModel } from 'src/app/models/table-row-user-model';
 import { UserService } from 'src/app/services/user.service';
-import { MatDialog, MatTableDataSource } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { AddInventoryFormComponent } from '../inventory-add-form/inventory-add-form.component';
 import { EditInventoryFormComponent } from '../inventory-edit-form/inventory-edit-form.component';
 import { NewInventoryItem } from '../../models/new-inventory-item';
@@ -26,7 +27,8 @@ export class InventoryTableComponent implements OnInit {
     'name',
     'serial number',
     'purchase date',
-    'price',
+    'originalPrice',
+    'currentPrice',
     'assigned to',
     'expiry date',
     'comment',
@@ -42,7 +44,7 @@ export class InventoryTableComponent implements OnInit {
     private inventoryService: InventoryService,
     private categoryService: InventoryCategoryService,
     public dialog: MatDialog,
-    private userService: UserService ) { }
+    private userService: UserService) { }
 
   ngOnInit() {
     this.getCategoriesList();

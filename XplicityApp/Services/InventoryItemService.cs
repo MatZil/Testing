@@ -6,7 +6,6 @@ using AutoMapper;
 using XplicityApp.Dtos.Inventory;
 using XplicityApp.Dtos.Tags;
 using XplicityApp.Infrastructure.Database.Models;
-using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services.Interfaces;
 
@@ -117,6 +116,7 @@ namespace XplicityApp.Services
             }
 
             var newInventoryItem = _mapper.Map<InventoryItem>(newInventoryItemDto);
+            newInventoryItem.CurrentPrice = newInventoryItem.OriginalPrice;
             var inventoryItemId = await _repository.Create(newInventoryItem);
             if (newInventoryItemDto.Tags != null)
             {

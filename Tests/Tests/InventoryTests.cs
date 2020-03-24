@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using XplicityApp.Dtos.Inventory;
 using XplicityApp.Dtos.Tags;
 using XplicityApp.Infrastructure.Database;
-using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services;
 using Xunit;
@@ -46,7 +44,7 @@ namespace Tests.Tests
         }
 
         [Theory]
-        [InlineData(3)]
+        [InlineData(-1)]
         public async void When_GettingNonexistentInventoryItemById_Expect_ReturnsNull(int id)
         {
             var retrievedInventoryItem = await _inventoryItemService.GetById(id);
@@ -73,7 +71,7 @@ namespace Tests.Tests
                 PurchaseDate = DateTime.Today,
                 ExpiryDate = null,
                 Comment = "new comment",
-                Price = 100,
+                OriginalPrice = 100,
                 InventoryCategoryId = 1,
                 EmployeeId = 1,
                 Tags = new List<TagDto>()

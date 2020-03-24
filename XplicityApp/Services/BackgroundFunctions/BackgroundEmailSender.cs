@@ -105,12 +105,13 @@ namespace XplicityApp.Services.BackgroundFunctions
                 var allEmployees = await _employeeRepository.GetAll();
                 var employeesWithBirthdays = allEmployees.Where(employee =>
                                                                     employee.BirthdayDate.Month == currentTime.Month &&
-                                                                    employee.BirthdayDate.Day == currentTime.Day
+                                                                    employee.BirthdayDate.Day == currentTime.Day &&
+                                                                    employee.NotificationSettings.BroadcastOwnBirthday == true
                                                                ).ToList();
-
-                if (employeesWithBirthdays.Any())
+                var employeesToReceiveBirthdays = allEmployees.Where(employee => employee.NotificationSettings.ReceiveBirthdayNotifications == true).ToList();
+                if (employeesWithBirthdays.Any() && employeesToReceiveBirthdays.Any())
                 {
-                    await _emailService.SendBirthDayReminder(employeesWithBirthdays, allEmployees);
+                    await _emailService.SendBirthDayReminder(employeesWithBirthdays, employeesToReceiveBirthdays);
                 }
             }
             catch (Exception exception)

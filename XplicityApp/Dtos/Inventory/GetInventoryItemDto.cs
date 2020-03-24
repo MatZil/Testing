@@ -23,13 +23,15 @@ namespace XplicityApp.Dtos.Inventory
 
         public InventoryCategory Category { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal OriginalPrice { get; set; }
 
         public int EmployeeId { get; set; }
 
         public string AssignedTo { get; set; }
 
         public bool Archived { get; set; }
+
+        public decimal CurrentPrice { get; set; }
 
         public ICollection<TagDto> Tags { get; set; }
     }
