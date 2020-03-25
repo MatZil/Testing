@@ -94,7 +94,4 @@ export class EditEmployeeFormComponent implements OnInit {
       this.closeModal(userToUpdate);
     }
   }
-  getCurrentUserId() {
-    return this.authenticationService.getUserId();
-  }
 }
