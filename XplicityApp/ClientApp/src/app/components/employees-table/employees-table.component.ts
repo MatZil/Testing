@@ -83,25 +83,12 @@ export class EmployeesTableComponent implements OnInit {
     });
   }
 
-  deleteUserById(id: number) {
-    this.userService.deleteUser(id).subscribe(() => {
-      this.refreshTable();
-    });
-  }
-
   editUser(user: Updateuser, id: number) {
     this.userService.editUser(user, id).subscribe(() => {
       this.refreshTable();
     }, error => {
       this.showUnexpectedError();
     });
-  }
-
-  showDeleteConfirm(userToDelete: TableRowUserModel): void {
-    if (confirm('If you confirm,' + userToDelete.name + ' ' + userToDelete.surname + ' will be permanently deleted.')) {
-      this.deleteUserById(userToDelete.id)
-      this.closeModal();
-    }
   }
 
   closeModal() {
@@ -132,13 +119,15 @@ export class EmployeesTableComponent implements OnInit {
         userToUpdate: this.userToUpdate,
         roles: this.roles,
         clients: this.clients,
-        isEditingSelf: user.id === this.getCurrentUserId()
+        isEditingSelf: user.id === this.getCurrentUserId(),
+        employeeId: user.id
       }
     });
 
     dialogRef.afterClosed().subscribe(userToUpdate => {
       if (userToUpdate) {
         this.editUser(userToUpdate, user.id);
+        this.refreshTable();
       }
     });
   }

@@ -33,11 +33,18 @@
             </div>
         </div>
     </mat-card>
+    &nbsp;
+    <div class='buttons'>
+        <div class ="buttonLeft">
+            <button mat-flat-button color="accent" class = "coloredButton" (click)="showDeleteConfirm(data.userToUpdate,data.employeeId)" 
+            [disabled]="data.isEditingSelf">Delete</button>
+        </div>
+        <div class="buttonRight">
+            <button mat-flat-button color="primary" (click)="confirmEdit()" [disabled]="isFormInvalid(baseComponent.baseForm)">Edit employee</button>
+            &nbsp;
+            <button mat-flat-button color="warn" (click)="closeModal(null)">Cancel</button>
+        </div>
+    </div>
 
-    <mat-dialog-actions align="end">
-        <button mat-flat-button color="primary" (click)="confirmEdit()" [disabled]="isFormInvalid(baseComponent.baseForm)">
-            Edit employee
-        </button>
-        <button mat-flat-button color="warn" (click)="closeModal(null)" class="floatRight">Cancel</button>
-    </mat-dialog-actions>
+   
 </form>

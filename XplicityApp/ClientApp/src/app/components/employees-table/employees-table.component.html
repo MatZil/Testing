@@ -93,9 +93,6 @@
         <td mat-cell *matCellDef="let user">
           <button mat-flat-button color="primary" (click)="openEditForm(user)">Edit</button>
           &nbsp;
-          <button mat-flat-button color="warn" (click)="showDeleteConfirm(user)"
-            [disabled]="user.id === getCurrentUserId()">Delete</button>
-          &nbsp;
           <button mat-flat-button color="primary" (click)="showEquipmentModal(user.id)">Equipment</button>
         </td>
       </ng-container>

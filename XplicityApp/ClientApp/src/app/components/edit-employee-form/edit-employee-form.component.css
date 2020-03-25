@@ -1,0 +1,9 @@
+.buttonRight {
+    float: right;
+  }
+.buttonLeft {
+    float: left;
+}
+.coloredButton {
+  background-color: salmon;
+}
