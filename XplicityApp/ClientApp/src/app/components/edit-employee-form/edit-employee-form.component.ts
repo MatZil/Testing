@@ -88,10 +88,10 @@ export class EditEmployeeFormComponent implements OnInit {
     this.userService.deleteUser(id).subscribe(() => {
     });
   }
-  showDeleteConfirm(userToDelete: TableRowUserModel): void {
+  showDeleteConfirm(userToDelete: Updateuser, employeeId: number): void {
     const userToUpdate = this.getFormUser();
       if(confirm('If you confirm,' + userToDelete.name + ' ' + userToDelete.surname + ' will be permanently deleted.')) {
-      this.deleteUserById(userToDelete.id)
+      this.deleteUserById(employeeId);
       this.closeModal(userToUpdate);
     }
   }

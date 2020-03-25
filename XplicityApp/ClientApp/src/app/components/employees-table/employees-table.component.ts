@@ -119,7 +119,8 @@ export class EmployeesTableComponent implements OnInit {
         userToUpdate: this.userToUpdate,
         roles: this.roles,
         clients: this.clients,
-        isEditingSelf: user.id === this.getCurrentUserId()
+        isEditingSelf: user.id === this.getCurrentUserId(),
+        employeeId: user.id
       }
     });
 
