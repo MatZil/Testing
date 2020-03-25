@@ -3,7 +3,7 @@
   <button mat-flat-button class="top-of-page-actions" color="primary" (click)=openAddForm()>Add new employee</button>
   <br>
   <mat-form-field class="top-of-page-actions">
-    <input class="search-text-size" matInput (keyup)="applyFilter($event)" placeholder="Search...">
+    <input class="search-text-size" matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
     <mat-icon class="search-icon-size" matSuffix>search</mat-icon>
   </mat-form-field>
   <br>

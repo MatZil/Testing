@@ -178,8 +178,7 @@ export class EmployeesTableComponent implements OnInit {
     return [year, month, day].join('-');
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+  applyFilter(filterValue: string) {
     this.employeeDataSource.filter = filterValue.trim().toLowerCase();
   }
 }
