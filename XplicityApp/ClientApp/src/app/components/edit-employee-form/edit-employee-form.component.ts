@@ -5,7 +5,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Updateuser } from 'src/app/models/updateuser';
 import { EditModalData } from './edit-modal-data';
 import { UserService } from '../../services/user.service';
-import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-edit-employee-form',
@@ -18,7 +17,6 @@ export class EditEmployeeFormComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private authenticationService: AuthenticationService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<EditEmployeeFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EditModalData) {}
