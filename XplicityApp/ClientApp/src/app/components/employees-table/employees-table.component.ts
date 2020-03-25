@@ -98,7 +98,7 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   showDeleteConfirm(userToDelete: TableRowUserModel): void {
-      if(confirm('If you confirm,' + userToDelete.name + ' ' + userToDelete.surname + ' will be permanently deleted.')) {
+    if (confirm('If you confirm,' + userToDelete.name + ' ' + userToDelete.surname + ' will be permanently deleted.')) {
       this.deleteUserById(userToDelete.id)
       this.closeModal();
     }
@@ -190,8 +190,7 @@ export class EmployeesTableComponent implements OnInit {
     return [year, month, day].join('-');
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+  applyFilter(filterValue: string) {
     this.employeeDataSource.filter = filterValue.trim().toLowerCase();
   }
 }
