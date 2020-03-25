@@ -5,7 +5,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Updateuser } from 'src/app/models/updateuser';
 import { EditModalData } from './edit-modal-data';
 import { UserService } from '../../services/user.service';
-import { TableRowUserModel } from '../../models/table-row-user-model';
 import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
