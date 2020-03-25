@@ -37,7 +37,7 @@
     <div class='buttons'>
         <div class ="buttonLeft">
             <button mat-flat-button color="accent" class = "coloredButton" (click)="showDeleteConfirm(data.userToUpdate)" 
-            [disabled]="data.userToUpdate.id === getCurrentUserId()">Delete</button>
+            [disabled]="data.isEditingSelf">Delete</button>
         </div>
         <div class="buttonRight">
             <button mat-flat-button color="primary" (click)="confirmEdit()" [disabled]="isFormInvalid(baseComponent.baseForm)">Edit employee</button>
