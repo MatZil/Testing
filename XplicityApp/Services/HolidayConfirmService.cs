@@ -10,6 +10,7 @@ using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Extensions.Interfaces;
 using XplicityApp.Services.Interfaces;
 using System;
+using XplicityApp.Services.Validations.Interfaces;
 
 namespace XplicityApp.Services
 {
@@ -50,6 +51,27 @@ namespace XplicityApp.Services
             _logger = logger;
         }
 
+        public async Task UpdateHolidayConfirmationStatus(UpdateHolidayStatusDto holidayConfirmationStatus)
+        {
+            if (holidayConfirmationStatus.Confirm)
+            {
+                if (holidayConfirmationStatus.IsConfirmerAdmin)
+                {
+                    await ConfirmHoliday(holidayConfirmationStatus.HolidayId, holidayConfirmationStatus.ConfirmerId);
+                }
+                else
+                {
+                    await RequestAdminApproval(holidayConfirmationStatus.HolidayId, EmployeeClientStatus.CLIENT_CONFIRMED,
+                        holidayConfirmationStatus.ConfirmerId);
+                }
+            }
+            else
+            {
+                await Decline(holidayConfirmationStatus.HolidayId, holidayConfirmationStatus.ConfirmerId,
+                    holidayConfirmationStatus.RejectionReason);
+            }
+        }
+
         public async Task<bool> RequestClientApproval(int holidayId)
         {
             var holiday = await _repositoryHolidays.GetById(holidayId);
@@ -80,8 +102,8 @@ namespace XplicityApp.Services
                 updateHolidayDto.Status = HolidayStatus.ClientConfirmed;
                 await _holidaysService.Update(holidayId, updateHolidayDto);
             }
-
-            var admins = await _repositoryEmployees.GetAllAdmins();
+            
+            var admins = await _repositoryEmployees.GetAllAdmins(); 
             var overtimeSentence = _overtimeUtility.GetOvertimeSentence(OvertimeEmail.CONFIRMATION, holiday.OvertimeDays);
             await _emailService.ConfirmHolidayWithAdmin(admins, employee, holiday, clientStatus, overtimeSentence);
 
@@ -141,6 +163,42 @@ namespace XplicityApp.Services
             await Notify(fileId, holidayId, EmployeeRoleEnum.Administrator);
 
             return true;
+        }
+
+        public async Task<bool> Decline(int holidayId, int confirmerId, string rejectionReason)
+        {
+            var holiday = await _holidaysService.GetById(holidayId);
+
+            if (holiday == null)
+            {
+                return false;
+            }
+
+            var updatedHolidayDto = _mapper.Map<UpdateHolidayDto>(holiday);
+            var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
+            if (employee.ClientId == null || holiday.ConfirmerClientId != 0)
+            {
+                updatedHolidayDto.Status = HolidayStatus.AdminRejected;
+                updatedHolidayDto.ConfirmerAdminId = confirmerId;
+                updatedHolidayDto.RejectionReason = rejectionReason;
+            }
+            else
+            {
+                if (employee.ClientId == confirmerId)
+                {
+                    updatedHolidayDto.Status = HolidayStatus.ClientRejected;
+                    updatedHolidayDto.ConfirmerClientId = confirmerId;
+                    updatedHolidayDto.RejectionReason = rejectionReason;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            var successful = await _holidaysService.Update(holidayId, updatedHolidayDto);
+
+            return successful;
         }
     }
 }

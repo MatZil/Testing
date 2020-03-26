@@ -68,8 +68,8 @@ namespace Tests.Tests.EmailServiceTests
             var expectedBody =
                             $"Hello, {_client.OwnerName},\n\nAn employee {_employee.Name} {_employee.Surname} is intending to go on " +
                             $"{_holiday.Type} holidays from {_holiday.FromInclusive.ToShortDateString()} to {_holiday.ToInclusive.ToShortDateString()} (inclusive).\n\n" +
-                            $"Click this link to confirm: {$"{_configuration["AppSettings:RootUrl"]}/api/HolidayClient?holidayId={_holiday.Id}&confirmerId={_client.Id}"}\n" +
-                            $"Click this link to decline: {_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={_holiday.Id}&confirmerId={_client.Id}";
+                            $"Click this link to confirm: {$"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={_holiday.Id}&confirmerId={_client.Id}"}\n" +
+                            $"Click this link to decline: {_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={_holiday.Id}&confirmerId={_client.Id}";
 
             Assert.Equal(expectedBody, _actualBodyList.FirstOrDefault());
         }
@@ -88,8 +88,8 @@ namespace Tests.Tests.EmailServiceTests
                 var expectedBody =
                     $"Hello, {admin.Name},\n\nAn employee {_employee.Name} {_employee.Surname} is intending to go on {GetPaidString(_holiday.Paid)} " +
                     $"{_holiday.Type} holidays from {_holiday.FromInclusive.ToShortDateString()} to {_holiday.ToInclusive.ToShortDateString()} (inclusive). " +
-                    $"{clientStatus} \n\nClick this link to confirm: {$"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm?holidayId={_holiday.Id}&confirmerId={admin.Id}"}\n" +
-                    $"Click this link to decline: {$"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={_holiday.Id}&confirmerId={admin.Id}"}";
+                    $"{clientStatus} \n\nClick this link to confirm: {$"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={_holiday.Id}&confirmerId={admin.Id}"}\n" +
+                    $"Click this link to decline: {$"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={_holiday.Id}&confirmerId={admin.Id}"}";
 
                 expectedBodies.Add(expectedBody);
             }

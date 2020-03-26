@@ -40,12 +40,11 @@ namespace XplicityApp.Services
                                         .Replace("{holiday.type}", holiday.Type.ToString())
                                         .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
                                         .Replace("{holiday.to}", holiday.ToInclusive.ToShortDateString())
-                                        .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayClient?holidayId={holiday.Id}&confirmerId={client.Id}")
-                                        .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={holiday.Id}&confirmerId={client.Id}");
+                                        .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={holiday.Id}&confirmerId={client.Id}")
+                                        .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={holiday.Id}&confirmerId={client.Id}");
 
             _emailer.SendMail(client.OwnerEmail, template.Subject, messageString);
         }
-
         public async Task ConfirmHolidayWithAdmin(ICollection<Employee> admins, Employee employee, Holiday holiday, string clientStatus, string overtimeSentence)
         {
 
@@ -59,8 +58,8 @@ namespace XplicityApp.Services
                                             .Replace("{holiday.type}", holiday.Type.ToString())
                                             .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
                                             .Replace("{holiday.to}", holiday.ToInclusive.ToShortDateString())
-                                            .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayConfirm?holidayId={holiday.Id}&confirmerId={admin.Id}")
-                                            .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/api/HolidayDecline?holidayId={holiday.Id}&confirmerId={admin.Id}")
+                                            .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={holiday.Id}&confirmerId={admin.Id}")
+                                            .Replace("{holiday.decline}", $"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={holiday.Id}&confirmerId={admin.Id}")
                                             .Replace("{client.status}", clientStatus)
                                             .Replace("{holiday.overtimeHours}", overtimeSentence);
 
