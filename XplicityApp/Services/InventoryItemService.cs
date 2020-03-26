@@ -78,6 +78,15 @@ namespace XplicityApp.Services
             foreach (var inventoryItemDto in inventoryItemsDto)
             {
                 inventoryItemDto.Tags = await GetTagsListByItemId(inventoryItemDto.Id);
+
+                foreach (var inventoryItem in inventoryItems)
+                {
+                    if (inventoryItemDto.EmployeeId == inventoryItem.EmployeeId)
+                    {
+                        inventoryItemDto.AssignedTo = inventoryItem.Employee.Name + " " + inventoryItem.Employee.Surname;
+                        break;
+                    }
+                }
             }
 
             return inventoryItemsDto;

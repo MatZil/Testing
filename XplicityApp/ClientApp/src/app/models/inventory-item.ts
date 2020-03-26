@@ -12,6 +12,7 @@ export class InventoryItem {
   comment: string;
   category: InventoryCategory;
   assignedTo: string;
+  employeeId: number;
   archived: boolean;
   tags: Tag[];
 }

@@ -11,7 +11,7 @@ import { EmployeeStatus } from '../../models/employee-status.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEmployeeFormComponent } from '../add-employee-form/add-employee-form.component';
 import { EditEmployeeFormComponent } from '../edit-employee-form/edit-employee-form.component';
-import { InventoryTableComponent } from '../inventory-table/inventory-table.component';
+import { EmployeeEquipmentComponent } from '../employee-equipment/employee-equipment.component';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -164,8 +164,8 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   showEquipmentModal(employeeId: number) {
-    const dialogRef = this.dialog.open(InventoryTableComponent, {
-      width: '1000px',
+    const dialogRef = this.dialog.open(EmployeeEquipmentComponent, {
+      width: '1300px',
       data: { id: employeeId }
     });
   }
