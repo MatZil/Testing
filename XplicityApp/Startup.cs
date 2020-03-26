@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using XplicityApp.Configurations;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
@@ -87,8 +88,9 @@ namespace XplicityApp
 
                 if (env.IsDevelopment())
                 {
-                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
-                    spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
+                    //spa.UseAngularCliServer(npmScript: "start");
+                    //spa.Options.StartupTimeout = TimeSpan.FromSeconds(200);
                 }
             });
 
