@@ -65,12 +65,6 @@ export class EmployeeEquipmentComponent implements OnInit {
       });
   }
 
-  saveInventoryItem(updateInventoryItem: InventoryItem, id: number) {
-    this.inventoryService.updateInventoryItem(id, updateInventoryItem).subscribe(() => {
-      this.refreshTables();
-    });
-  }
-
   applyFilter(filterValue: string) {
     this.unassignedEquipment.filter = filterValue.trim().toLowerCase();
   }
