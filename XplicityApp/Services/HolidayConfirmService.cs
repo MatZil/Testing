@@ -58,6 +58,7 @@ namespace XplicityApp.Services
                 if (holidayConfirmationStatus.IsConfirmerAdmin)
                 {
                     await ConfirmHoliday(holidayConfirmationStatus.HolidayId, holidayConfirmationStatus.ConfirmerId);
+                    await GenerateFilesAndNotify(holidayConfirmationStatus.HolidayId);
                 }
                 else
                 {
@@ -90,7 +91,7 @@ namespace XplicityApp.Services
             return true;
         }
 
-        public async Task<bool> RequestAdminApproval(int holidayId, string clientStatus, int? confirmerId)
+        private async Task<bool> RequestAdminApproval(int holidayId, string clientStatus, int? confirmerId)
         {
             var holiday = await _repositoryHolidays.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
@@ -110,7 +111,7 @@ namespace XplicityApp.Services
             return true;
         }
 
-        public async Task ConfirmHoliday(int holidayId, int confirmerId)
+        private async Task ConfirmHoliday(int holidayId, int confirmerId)
         {
             var getHolidayDto = await _holidaysService.GetById(holidayId);
 
@@ -154,7 +155,7 @@ namespace XplicityApp.Services
             }
         }
 
-        public async Task<bool> GenerateFilesAndNotify(int holidayId)
+        private async Task<bool> GenerateFilesAndNotify(int holidayId)
         {
             var fileId = await _docxGeneratorService.GenerateHolidayDocx(holidayId, FileTypeEnum.Request);
             await Notify(fileId, holidayId, EmployeeRoleEnum.Regular);
@@ -165,7 +166,7 @@ namespace XplicityApp.Services
             return true;
         }
 
-        public async Task<bool> Decline(int holidayId, int confirmerId, string rejectionReason)
+        private async Task<bool> Decline(int holidayId, int confirmerId, string rejectionReason)
         {
             var holiday = await _holidaysService.GetById(holidayId);
 

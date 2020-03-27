@@ -36,7 +36,7 @@ namespace XplicityApp.Pages
 
         public async Task OnGetAsync(int holidayId, int confirmerId)
         {
-                //url for this page is {{RootUrl}}/HolidayConfirmation?holidayid=X&confirmerid=Y
+
                 ConfirmerId = confirmerId;
                 HolidayId = holidayId;
 
@@ -64,7 +64,6 @@ namespace XplicityApp.Pages
                 return Page();
             }
 
-            Console.WriteLine($"{RejectionReason} {confirm} {holidayId} {confirmerId} {isConfirmerAdmin}");
             var updatedHolidayStatusDto = new UpdateHolidayStatusDto()
             {
                 Confirm = confirm,
@@ -73,7 +72,7 @@ namespace XplicityApp.Pages
                 IsConfirmerAdmin = isConfirmerAdmin,
                 RejectionReason = RejectionReason
             };
-            //consider creating a holiday confirmation object to call the service with
+
             await _holidayConfirmationService.UpdateHolidayConfirmationStatus(updatedHolidayStatusDto);
 
             return RedirectToPage("/HolidayConfirmationResult");
