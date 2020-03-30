@@ -53,7 +53,7 @@ namespace Tests.Tests
             _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, _mapper, _timeService, _mockOvertimeUtility, _clientsRepository);
             _holidayConfirmService = new HolidayConfirmService(mockEmailService.Object, _mapper, _holidaysRepository,
                                                                _employeesRepository, clientsRepository, _holidaysService,
-                                                                mockDocxGeneratorService.Object, _mockOvertimeUtility, 
+                                                                mockDocxGeneratorService.Object, _mockOvertimeUtility,
                                                                _employeeHolidaysConfirmationUpdater, new Mock<ILogger<HolidayConfirmService>>().Object);
             _holidayValidationService = new HolidayValidationService(
                 _holidaysRepository,
@@ -73,11 +73,19 @@ namespace Tests.Tests
         }
 
         [Theory]
-        [InlineData(1, EmployeeClientStatus.CLIENT_CONFIRMED, 1)]
-        [InlineData(2, EmployeeClientStatus.CLIENT_CONFIRMED, 2)]
-        public async void When_ConfirmingWithClient_Expect_StatusChangedToClientConfirmed(int holidayId, string clientStatus, int confirmerId)
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        public async void When_ConfirmingWithClient_Expect_StatusChangedToClientConfirmed(int holidayId, int confirmerId)
         {
-            await _holidayConfirmService.RequestAdminApproval(holidayId, clientStatus, confirmerId);
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = true,
+                IsConfirmerAdmin = false,
+                HolidayId = holidayId,
+                ConfirmerId = confirmerId
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
             var updatedHoliday = await _holidaysRepository.GetById(holidayId);
             var status = updatedHoliday.Status.ToString();
 
@@ -89,7 +97,15 @@ namespace Tests.Tests
         [InlineData(2, 2)]
         public async void When_ConfirmingHolidayWithAdmin_Expect_StatusChangedToConfirmed(int holidayId, int confirmerId)
         {
-            await _holidayConfirmService.ConfirmHoliday(holidayId, confirmerId);
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = true,
+                IsConfirmerAdmin = true,
+                HolidayId = holidayId,
+                ConfirmerId = confirmerId
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
 
             var updatedHoliday = await _holidaysRepository.GetById(holidayId);
             var status = updatedHoliday.Status.ToString();
@@ -102,7 +118,15 @@ namespace Tests.Tests
         [InlineData(2, 2)]
         public async void When_ConfirmingHolidayWithAdmin_Expect_ConfirmerFullNameUpdatedToAdminFullName(int holidayId, int confirmerId)
         {
-            await _holidayConfirmService.ConfirmHoliday(holidayId, confirmerId);
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = true,
+                IsConfirmerAdmin = true,
+                HolidayId = holidayId,
+                ConfirmerId = confirmerId
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
             var updatedHoliday = await _holidaysService.GetById(holidayId);
 
             var fullNameExpected = await _holidaysService.GetAdminConfirmerFullName(confirmerId);
@@ -116,7 +140,15 @@ namespace Tests.Tests
         [InlineData(2, 2)]
         public async void When_ConfirmingHolidayWithClient_Expect_StatusChangedToConfirmedByClient(int holidayId, int confirmerId)
         {
-            await _holidayConfirmService.RequestAdminApproval(holidayId, EmployeeClientStatus.CLIENT_CONFIRMED, confirmerId);
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = true,
+                IsConfirmerAdmin = false,
+                HolidayId = holidayId,
+                ConfirmerId = confirmerId
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
 
             var updatedHoliday = await _holidaysRepository.GetById(holidayId);
             var status = updatedHoliday.Status.ToString();
@@ -129,7 +161,15 @@ namespace Tests.Tests
         [InlineData(2, 2)]
         public async void When_ConfirmingHolidayWithClient_Expect_ConfirmerFullNameUpdatedToClientCompanyName(int holidayId, int confirmerId)
         {
-            await _holidayConfirmService.RequestAdminApproval(holidayId, EmployeeClientStatus.CLIENT_CONFIRMED, confirmerId);
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = true,
+                IsConfirmerAdmin = false,
+                HolidayId = holidayId,
+                ConfirmerId = confirmerId
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
             var updatedHoliday = await _holidaysService.GetById(holidayId);
 
             var fullNameExpected = await _holidaysService.GetClientConfirmerFullName(confirmerId);
@@ -197,7 +237,16 @@ namespace Tests.Tests
         [InlineData(2, 2)]
         public async void When_DecliningHolidayWithClient_Expect_StatusChangedToRejectedByClient(int holidayId, int confirmerId)
         {
-            await _holidayConfirmService.Decline(holidayId, confirmerId, "");
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = false,
+                IsConfirmerAdmin = false,
+                HolidayId = holidayId,
+                ConfirmerId = confirmerId,
+                RejectionReason = "Rejected"
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
 
             var updatedHoliday = await _holidaysService.GetById(holidayId);
             var status = updatedHoliday.Status.ToString();
@@ -209,7 +258,16 @@ namespace Tests.Tests
         [InlineData(3, 1)]
         public async void When_DecliningHolidayWithAdmin_Expect_StatusChangedToRejected(int holidayId, int confirmerId)
         {
-            await _holidayConfirmService.Decline(holidayId, confirmerId, "");
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = false,
+                IsConfirmerAdmin = true,
+                HolidayId = holidayId,
+                ConfirmerId = confirmerId,
+                RejectionReason = "Rejected"
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
 
             var updatedHoliday = await _holidaysService.GetById(holidayId);
             var status = updatedHoliday.Status.ToString();
@@ -221,7 +279,16 @@ namespace Tests.Tests
         [InlineData(3, 1)]
         public async void When_DecliningHolidayWithAdmin_Expect_ConfirmerFullNameUpdatedToAdminFullName(int holidayId, int confirmerId)
         {
-            await _holidayConfirmService.Decline(holidayId, confirmerId, "");
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = false,
+                IsConfirmerAdmin = false,
+                HolidayId = holidayId,
+                ConfirmerId = confirmerId,
+                RejectionReason = "Rejected"
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
             var updatedHoliday = await _holidaysService.GetById(holidayId);
 
             var fullNameExpected = await _holidaysService.GetAdminConfirmerFullName(confirmerId);
@@ -235,13 +302,66 @@ namespace Tests.Tests
         [InlineData(2, 2)]
         public async void When_DecliningHolidayWithClient_Expect_ConfirmerFullNameUpdatedToClientCompanyName(int holidayId, int confirmerId)
         {
-            await _holidayConfirmService.Decline(holidayId, confirmerId, "");
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = false,
+                IsConfirmerAdmin = false,
+                HolidayId = holidayId,
+                ConfirmerId = confirmerId,
+                RejectionReason = "Rejected"
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
             var updatedHoliday = await _holidaysService.GetById(holidayId);
 
             var fullNameExpected = await _holidaysService.GetClientConfirmerFullName(confirmerId);
             var fullNameActual = updatedHoliday.ConfirmerFullName;
 
             Assert.True(fullNameExpected.Equals(fullNameActual), "Confirmer's full name is incorrect.");
+        }
+
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        public async void When_DecliningHolidayWithClient_Expect_DeclineReason(int holidayId, int confirmerId)
+        {
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = false,
+                IsConfirmerAdmin = false,
+                HolidayId = holidayId,
+                ConfirmerId = confirmerId,
+                RejectionReason = "Rejected"
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
+            var updatedHoliday = await _holidaysService.GetById(holidayId);
+
+            var rejectionReason = updatedHoliday.RejectionReason;
+
+            Assert.True(rejectionReason.Equals("Rejected"), "Rejected");
+        }
+
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        public async void When_DecliningHolidayWithAdmin_Expect_DeclineReason(int holidayId, int confirmerId)
+        {
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = false,
+                IsConfirmerAdmin = true,
+                HolidayId = holidayId,
+                ConfirmerId = confirmerId,
+                RejectionReason = "Rejected"
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
+            var updatedHoliday = await _holidaysService.GetById(holidayId);
+
+            var rejectionReason = updatedHoliday.RejectionReason;
+
+            Assert.True(rejectionReason.Equals("Rejected"), "Rejected");
         }
     }
 }
