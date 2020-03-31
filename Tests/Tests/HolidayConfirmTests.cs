@@ -242,8 +242,7 @@ namespace Tests.Tests
                 Confirm = false,
                 IsConfirmerAdmin = false,
                 HolidayId = holidayId,
-                ConfirmerId = confirmerId,
-                RejectionReason = "Rejected"
+                ConfirmerId = confirmerId
             };
 
             await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
@@ -263,8 +262,7 @@ namespace Tests.Tests
                 Confirm = false,
                 IsConfirmerAdmin = true,
                 HolidayId = holidayId,
-                ConfirmerId = confirmerId,
-                RejectionReason = "Rejected"
+                ConfirmerId = confirmerId
             };
 
             await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
@@ -284,8 +282,7 @@ namespace Tests.Tests
                 Confirm = false,
                 IsConfirmerAdmin = false,
                 HolidayId = holidayId,
-                ConfirmerId = confirmerId,
-                RejectionReason = "Rejected"
+                ConfirmerId = confirmerId
             };
 
             await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
@@ -307,8 +304,7 @@ namespace Tests.Tests
                 Confirm = false,
                 IsConfirmerAdmin = false,
                 HolidayId = holidayId,
-                ConfirmerId = confirmerId,
-                RejectionReason = "Rejected"
+                ConfirmerId = confirmerId
             };
 
             await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
@@ -331,7 +327,7 @@ namespace Tests.Tests
                 IsConfirmerAdmin = false,
                 HolidayId = holidayId,
                 ConfirmerId = confirmerId,
-                RejectionReason = "Rejected"
+                RejectionReason = "Holiday was rejected"
             };
 
             await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
@@ -339,7 +335,7 @@ namespace Tests.Tests
 
             var rejectionReason = updatedHoliday.RejectionReason;
 
-            Assert.True(rejectionReason.Equals("Rejected"), "Rejected");
+            Assert.True(rejectionReason.Equals("Holiday was rejected"), "Holiday was rejected");
         }
 
         [Theory]
@@ -353,7 +349,7 @@ namespace Tests.Tests
                 IsConfirmerAdmin = true,
                 HolidayId = holidayId,
                 ConfirmerId = confirmerId,
-                RejectionReason = "Rejected"
+                RejectionReason = "Holiday was rejected"
             };
 
             await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
@@ -361,7 +357,7 @@ namespace Tests.Tests
 
             var rejectionReason = updatedHoliday.RejectionReason;
 
-            Assert.True(rejectionReason.Equals("Rejected"), "Rejected");
+            Assert.True(rejectionReason.Equals("Holiday was rejected"), "Holiday was rejected");
         }
     }
 }
