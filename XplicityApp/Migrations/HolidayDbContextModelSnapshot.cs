@@ -564,6 +564,9 @@ Please use the first line for team's title, second line for individual employee'
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("CurrentPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int?>("EmployeeId")
                         .HasColumnType("int");
 
@@ -577,7 +580,7 @@ Please use the first line for team's title, second line for individual employee'
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("OriginalPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("PurchaseDate")

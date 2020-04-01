@@ -108,11 +108,36 @@ namespace Tests.Tests.EmailServiceTests
             _actualReceiverList = new List<string>();
             var expectedReceivers = new List<string>();
             var employeesWithBirthdays = new List<Employee> { _employee };
-            await _emailService.SendBirthDayReminder(employeesWithBirthdays, _admins);
-            foreach (var admin in _admins)
+            var employeesToReceiveBirthdays = new List<Employee>();
+
+            foreach (var employee in _admins)
             {
-                expectedReceivers.Add(admin.Email);
+                if (employee.NotificationSettings.ReceiveBirthdayNotifications)
+                {
+                    expectedReceivers.Add(employee.Email);
+                    employeesToReceiveBirthdays.Add(employee);
+                }
             }
+            await _emailService.SendBirthDayReminder(employeesWithBirthdays, employeesToReceiveBirthdays);
+            Assert.Equal(expectedReceivers, _actualReceiverList);
+        }
+
+        [Fact]
+        public async void When_SendingBirthdayReminders_Expect_CorrectNumberOfBirthdaysSent()
+        {
+            _actualReceiverList = new List<string>();
+            var expectedReceivers = new List<string>();
+            var employeesWithBirthdays = new List<Employee>();
+            var employeesToReceiveBirthdays = new List<Employee> { _employee };
+            foreach (var employeeWithBirthday in _admins)
+            {
+                if (employeeWithBirthday.NotificationSettings.BroadcastOwnBirthday)
+                {
+                    employeesWithBirthdays.Add(employeeWithBirthday);
+                    expectedReceivers.Add(_employee.Email);
+                }
+            }
+            await _emailService.SendBirthDayReminder(employeesWithBirthdays, employeesToReceiveBirthdays);
 
             Assert.Equal(expectedReceivers, _actualReceiverList);
         }

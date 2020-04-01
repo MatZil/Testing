@@ -8,7 +8,7 @@ import { Client } from '../../models/client';
 import { ClientService } from '../../services/client.service';
 import { Role } from '../../models/role';
 import { EmployeeStatus } from '../../models/employee-status.enum';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddEmployeeFormComponent } from '../add-employee-form/add-employee-form.component';
 import { EditEmployeeFormComponent } from '../edit-employee-form/edit-employee-form.component';
 import { InventoryTableComponent } from '../inventory-table/inventory-table.component';
@@ -83,25 +83,12 @@ export class EmployeesTableComponent implements OnInit {
     });
   }
 
-  deleteUserById(id: number) {
-    this.userService.deleteUser(id).subscribe(() => {
-      this.refreshTable();
-    });
-  }
-
   editUser(user: Updateuser, id: number) {
     this.userService.editUser(user, id).subscribe(() => {
       this.refreshTable();
     }, error => {
       this.showUnexpectedError();
     });
-  }
-
-  showDeleteConfirm(userToDelete: TableRowUserModel): void {
-      if(confirm('If you confirm,' + userToDelete.name + ' ' + userToDelete.surname + ' will be permanently deleted.')) {
-      this.deleteUserById(userToDelete.id)
-      this.closeModal();
-    }
   }
 
   closeModal() {
@@ -132,13 +119,15 @@ export class EmployeesTableComponent implements OnInit {
         userToUpdate: this.userToUpdate,
         roles: this.roles,
         clients: this.clients,
-        isEditingSelf: user.id === this.getCurrentUserId()
+        isEditingSelf: user.id === this.getCurrentUserId(),
+        employeeId: user.id
       }
     });
 
     dialogRef.afterClosed().subscribe(userToUpdate => {
       if (userToUpdate) {
         this.editUser(userToUpdate, user.id);
+        this.refreshTable();
       }
     });
   }
@@ -190,8 +179,7 @@ export class EmployeesTableComponent implements OnInit {
     return [year, month, day].join('-');
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+  applyFilter(filterValue: string) {
     this.employeeDataSource.filter = filterValue.trim().toLowerCase();
   }
 }

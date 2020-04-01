@@ -9,8 +9,7 @@ namespace XplicityApp.Services.EntityBehavior
 
         public static double GetOvertimeDays(this Employee employee) => employee.OvertimeHours * OneOvertimeHour / DailyHourLimit;
 
-        public static bool IsSamePerson(this Employee employee, Employee other) =>
-            employee.Name.Equals(other.Name) && employee.Surname.Equals(other.Name);
+        public static bool IsSamePerson(this Employee employee, Employee other) => employee.Email.Equals(other.Email);
 
     }
 }

@@ -221,7 +221,7 @@ namespace Tests
                     OvertimeHours = 24,
                     ParentalLeaveLimit = 3,
                     CurrentAvailableLeaves = 1,
-                    NextMonthAvailableLeaves = 2,
+                    NextMonthAvailableLeaves = 2
                 },
                 new Employee
                 {
@@ -232,11 +232,11 @@ namespace Tests
                     Email = "taken2@email",
                     WorksFromDate = new DateTime(2018,01,06),
                     DaysOfVacation = 20,
-                    BirthdayDate = new DateTime(1988,07,06),
+                    BirthdayDate = DateTime.Today,
                     FreeWorkDays = 15,
                     ParentalLeaveLimit = 4,
                     CurrentAvailableLeaves = 2,
-                    NextMonthAvailableLeaves = 1,
+                    NextMonthAvailableLeaves = 1
                 },
                 new Employee
                 {
@@ -250,7 +250,21 @@ namespace Tests
                     OvertimeHours = 24,
                     ParentalLeaveLimit = 4,
                     CurrentAvailableLeaves = 2,
-                    NextMonthAvailableLeaves = 1,
+                    NextMonthAvailableLeaves = 1
+                },
+                new Employee
+                {
+                    Name = "EmployeeName4",
+                    Surname = "EmployeeSurname4",
+                    Email = "taken4@email",
+                    WorksFromDate = new DateTime(2019,01,06),
+                    DaysOfVacation = 20,
+                    BirthdayDate = new DateTime(1987,07,06),
+                    FreeWorkDays = 15,
+                    OvertimeHours = 24,
+                    ParentalLeaveLimit = 4,
+                    CurrentAvailableLeaves = 2,
+                    NextMonthAvailableLeaves = 1
                 },
             };
             context.Employees.AddRange(_employees);
@@ -492,6 +506,16 @@ namespace Tests
                 {
                     Name = "Category2",
                     Deprecation = 2
+                },
+                new InventoryCategory
+                {
+                    Name = "Category3",
+                    Deprecation = 3
+                },
+                new InventoryCategory
+                {
+                    Name = "Category4",
+                    Deprecation = 4
                 }
             };
             context.InventoryCategories.AddRange(_inventoryCategories);
@@ -500,11 +524,13 @@ namespace Tests
             {
                 new InventoryItem
                 {
+                    Id = 1,
                     Name = "Item1",
                     SerialNumber = "Serial no 1",
                     PurchaseDate = DateTime.Today,
                     ExpiryDate = null,
-                    Price = 100,
+                    OriginalPrice = 100,
+                    CurrentPrice = 100,
                     Comment = null,
                     Category = context.InventoryCategories.Find(1),
                     InventoryCategoryId = 1
@@ -512,15 +538,43 @@ namespace Tests
                 },
                 new InventoryItem
                 {
+                    Id = 2,
                     Name = "Item2",
                     SerialNumber = "Serial no 2",
                     PurchaseDate = DateTime.Today,
                     ExpiryDate = null,
-                    Price = 100,
+                    OriginalPrice = 200,
+                    CurrentPrice = 200,
                     Comment = null,
                     Category = context.InventoryCategories.Find(2),
                     InventoryCategoryId = 2
                 },
+                new InventoryItem
+                {
+                    Id = 3,
+                    Name = "Item3",
+                    SerialNumber = "Serial no 3",
+                    PurchaseDate = DateTime.Today,
+                    ExpiryDate = null,
+                    OriginalPrice = 300,
+                    CurrentPrice = 300,
+                    Comment = null,
+                    Category = context.InventoryCategories.Find(3),
+                    InventoryCategoryId = 3
+                },
+                new InventoryItem
+                {
+                    Id = 4,
+                    Name = "Item4",
+                    SerialNumber = "Serial no 4",
+                    PurchaseDate = DateTime.Today,
+                    ExpiryDate = null,
+                    OriginalPrice = 400,
+                    CurrentPrice = 400,
+                    Comment = null,
+                    Category = context.InventoryCategories.Find(4),
+                    InventoryCategoryId = 4
+                }
             };
             context.InventoryItems.AddRange(_inventoryItems);
 
@@ -591,7 +645,30 @@ namespace Tests
                 new NotificationSettings
                 {
                     Id = 1,
-                    EmployeeId = 1
+                    EmployeeId = 1,
+                    BroadcastOwnBirthday = true,
+                    ReceiveBirthdayNotifications = true
+                },
+                new NotificationSettings
+                {
+                    Id = 2,
+                    EmployeeId = 2,
+                    BroadcastOwnBirthday = true,
+                    ReceiveBirthdayNotifications = false
+                },
+                new NotificationSettings
+                {
+                    Id = 3,
+                    EmployeeId = 3,
+                    BroadcastOwnBirthday = false,
+                    ReceiveBirthdayNotifications = true
+                },
+                new NotificationSettings
+                {
+                    Id = 4,
+                    EmployeeId = 4,
+                    BroadcastOwnBirthday = false,
+                    ReceiveBirthdayNotifications = false
                 }
             };
             context.NotificationSettings.AddRange(_notificationSettings);

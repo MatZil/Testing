@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Client } from '../../models/client';
 import { Newclient } from '../../models/newclient';
 import { ClientService } from '../../services/client.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ClientFormComponent } from '../client-form/client-form.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -15,20 +15,21 @@ import { AlertService } from '../../services/alert.service';
 })
 
 export class ClientTableComponent implements OnInit {
+
   newClient: Newclient = new Newclient();
   newClientFormData: Newclient;
 
   displayedColumns: string[] = [
-    'companyName', 
-    'ownerName', 
-    'ownerSurname', 
-    'ownerEmail', 
-    'ownerPhone', 
+    'companyName',
+    'ownerName',
+    'ownerSurname',
+    'ownerEmail',
+    'ownerPhone',
     'actions'];
   dataSource = new MatTableDataSource<Client>();
 
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private clientService: ClientService,
@@ -54,13 +55,13 @@ export class ClientTableComponent implements OnInit {
   }
 
   showDeleteConfirm(id: number): void {
-    if(confirm('When clicked the OK button this section will be deleted')) {
+    if (confirm('When clicked the OK button this section will be deleted')) {
       this.onDeleteButtonClick(id);
       this.closeModal();
     }
   }
 
-  closeModal(){
+  closeModal() {
     this.dialog.closeAll();
   }
 
@@ -96,7 +97,7 @@ export class ClientTableComponent implements OnInit {
       if (newClient) {
         this.addNewClient(newClient);
         this.newClient = new Newclient();
-        }
+      }
     });
   }
 

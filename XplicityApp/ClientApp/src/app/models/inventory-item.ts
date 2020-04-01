@@ -5,7 +5,8 @@ export class InventoryItem {
   id: number;
   name: string;
   serialNumber: string;
-  price: number;
+  originalPrice: number;
+  currentPrice: number;
   purchaseDate: Date;
   expiryDate: Date;
   comment: string;
