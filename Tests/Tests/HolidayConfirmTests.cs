@@ -335,7 +335,7 @@ namespace Tests.Tests
 
             var rejectionReason = updatedHoliday.RejectionReason;
 
-            Assert.True(rejectionReason.Equals("Holiday was rejected"), "Holiday was rejected");
+            Assert.True(rejectionReason.Equals("Holiday was rejected"), "Rejection reason was incorrect");
         }
 
         [Theory]
@@ -357,7 +357,7 @@ namespace Tests.Tests
 
             var rejectionReason = updatedHoliday.RejectionReason;
 
-            Assert.True(rejectionReason.Equals("Holiday was rejected"), "Holiday was rejected");
+            Assert.True(rejectionReason.Equals("Holiday was rejected"), "Rejection reason was incorrect");
         }
     }
 }
