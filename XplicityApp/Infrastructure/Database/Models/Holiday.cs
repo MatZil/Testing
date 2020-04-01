@@ -30,5 +30,8 @@ namespace XplicityApp.Infrastructure.Database.Models
 
         [NotMapped]
         public double OvertimeHours { get; set; }
+
+#nullable enable
+        public string? RejectionReason { get; set; }
     }
 }

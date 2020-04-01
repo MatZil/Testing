@@ -19,5 +19,6 @@ namespace XplicityApp.Dtos.Holidays
         public int ConfirmerAdminId { get; set; }
         public int ConfirmerClientId { get; set; }
         public string ConfirmerFullName { get; set; }
+        public string RejectionReason { get; set; }
     }
 }

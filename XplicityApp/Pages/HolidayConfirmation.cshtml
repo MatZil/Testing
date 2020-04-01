@@ -1,0 +1,24 @@
+﻿@page
+@model XplicityApp.Pages.HolidayConfirmationModel
+
+@{
+    ViewData["Title"] = "Holiday Confirmation";
+}
+
+<p>@Model.RequesterName is requesting a holiday from @Model.HolidayFrom to @Model.HolidayTo</p>
+
+<div>
+    <form method="post">
+
+        <input asp-for="@Model.HolidayId" name="holidayId" hidden>
+        <input asp-for="@Model.ConfirmerId" name="confirmerId" hidden>
+        <input asp-for="@Model.IsConfirmerAdmin" name="isConfirmerAdmin" hidden>
+
+        <button type="submit" asp-route-confirm="true">Confirm</button>
+        <button type="submit" asp-route-confirm="false">Decline</button>
+
+        <input asp-for="@Model.RejectionReason" name="rejectionReason" />
+    </form>
+</div>
+
+

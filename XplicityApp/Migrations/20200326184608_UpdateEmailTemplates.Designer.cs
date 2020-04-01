@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XplicityApp.Infrastructure.Database;
 
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    partial class HolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200326184608_UpdateEmailTemplates")]
+    partial class UpdateEmailTemplates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -259,16 +261,14 @@ namespace XplicityApp.Migrations
 {holiday.to} - Holiday's ending date.
 {client.status} - Message that client has confirmed the holiday.
 {holiday.overtimeHours} - Message that employee wants to use some of his overtime hours for this holiday.
-{holiday.confirm} - Holiday's confirmation link.
-{holiday.decline} - Holiday's rejection link.",
+{holiday.confirm} - Holiday's confirmation or rejection link.",
                             Purpose = "Admin Confirmation",
                             Subject = "An employee is requesting confirmation for holidays",
                             Template = @"Hello, {admin.name},
 
 An employee {employee.fullName} is intending to go on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {client.status} {holiday.overtimeHours}
 
-Click this link to confirm: {holiday.confirm}
-Click this link to decline: {holiday.decline}"
+Click this link to confirm or decline: {holiday.confirm}"
                         },
                         new
                         {
@@ -278,16 +278,14 @@ Click this link to decline: {holiday.decline}"
 {holiday.type} - Holiday's type.
 {holiday.from} - Holiday's starting date.
 {holiday.to} - Holiday's ending date.
-{holiday.confirm} - Holiday's confirmation link.
-{holiday.decline} - Holiday's rejection link.",
+{holiday.confirm} - Holiday's confirmation or rejection link.",
                             Purpose = "Client Confirmation",
                             Subject = "One of your employees is requesting confirmation for holidays",
                             Template = @"Hello, {client.name},
 
 An employee {employee.fullName} is intending to go on {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive).
 
-Click this link to confirm: {holiday.confirm}
-Click this link to decline: {holiday.decline}"
+Click this link to confirm or decline: {holiday.confirm}"
                         },
                         new
                         {

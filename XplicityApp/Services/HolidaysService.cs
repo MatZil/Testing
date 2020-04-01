@@ -109,40 +109,6 @@ namespace XplicityApp.Services
             return await _holidaysRepository.Update(itemToUpdate);
         }
 
-        public async Task<bool> Decline(int holidayId, int confirmerId)
-        {
-            var holiday = await _holidaysRepository.GetById(holidayId);
-
-            if (holiday == null)
-            {
-                return false;
-            }
-
-            var updatedHolidayDto = _mapper.Map<UpdateHolidayDto>(holiday);
-            var employee = await _employeeRepository.GetById(holiday.EmployeeId);
-            if (employee.ClientId == null || holiday.ConfirmerClientId != 0)
-            {
-                updatedHolidayDto.Status = HolidayStatus.AdminRejected;
-                updatedHolidayDto.ConfirmerAdminId = confirmerId;
-            }
-            else
-            {
-                if (employee.ClientId == confirmerId)
-                {
-                    updatedHolidayDto.Status = HolidayStatus.ClientRejected;
-                    updatedHolidayDto.ConfirmerClientId = confirmerId;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            var successful = await Update(holidayId, updatedHolidayDto);
-
-            return successful;
-        }
-
         public async Task<ICollection<GetHolidayDto>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus)
         {
             var holidays = await _holidaysRepository.GetByEmployeeStatus(employeeStatus);
