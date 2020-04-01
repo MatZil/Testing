@@ -1,10 +1,14 @@
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using XplicityApp.Configurations;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
@@ -19,7 +23,6 @@ namespace XplicityApp
         }
 
         public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -32,6 +35,9 @@ namespace XplicityApp
             services.SetupJtwAuthentication(Configuration);
             services.AddAllDependencies();
             services.SetUpAudit();
+            services.AddHealthChecks()
+                    .AddCheck<HealthChecks.ClientHealthCheck>("ClientHealth")
+                    .AddCheck<HealthChecks.HolidayHealthCheck>("HolidayHealthCheck");
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -70,8 +76,11 @@ namespace XplicityApp
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            HealthCheckOptions options = GetOptions();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health", options);
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
@@ -86,12 +95,29 @@ namespace XplicityApp
 
                 if (env.IsDevelopment())
                 {
-                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
-                    spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
+                    //spa.UseAngularCliServer(npmScript: "start");
                 }
             });
 
             IdentityDataSeeder.SeedData(userManager, roleManager, Configuration);
+        }
+
+        private static HealthCheckOptions GetOptions()
+        {
+            HealthCheckOptions options = new HealthCheckOptions();
+            options.ResponseWriter = async (c, r) =>
+            {
+                c.Response.ContentType = "application/json";
+
+                var result = JsonConvert.SerializeObject(new
+                {
+                    status = r.Status.ToString(),
+                    errors = r.Entries.Select(e => new { key = e.Key, value = e.Value.Status.ToString() })
+                });
+                await c.Response.WriteAsync(result);
+            };
+            return options;
         }
     }
 }
