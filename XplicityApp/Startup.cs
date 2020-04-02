@@ -35,14 +35,10 @@ namespace XplicityApp
             services.SetupJtwAuthentication(Configuration);
             services.AddAllDependencies();
             services.SetUpAudit();
-<<<<<<< HEAD
             services.AddHealthChecks()
                     .AddCheck<HealthChecks.ClientHealthCheck>("ClientHealth")
                     .AddCheck<HealthChecks.HolidayHealthCheck>("HolidayHealthCheck");
-
-=======
             services.AddRazorPages();
->>>>>>> master
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
