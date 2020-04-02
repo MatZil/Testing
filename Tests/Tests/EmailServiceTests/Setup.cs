@@ -122,12 +122,11 @@ namespace Tests.Tests.EmailServiceTests
             {
                 EmployeeId = 1,
                 Employee = GetInitializedEmployee(),
-                Type = HolidayType.Parental,
+                Type = HolidayType.DayForChildren,
                 FromInclusive = DateTime.Today.AddDays(1),
                 ToInclusive = DateTime.Today.AddDays(14),
                 Status = HolidayStatus.Pending,
-                RequestCreatedDate = DateTime.Today,
-                Paid = false
+                RequestCreatedDate = DateTime.Today
             };
 
             return holiday;

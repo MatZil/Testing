@@ -70,7 +70,7 @@ namespace XplicityApp.Services.Validations
             ValidateDateInterval(holiday, currentTime);
             ValidateOvertime(holiday, employee);
 
-            if (holiday.Type == HolidayType.Parental && !IsEmployeeEligibleForParental(holiday, employee, currentTime))
+            if (holiday.Type == HolidayType.DayForChildren && !IsEmployeeEligibleForParental(holiday, employee, currentTime))
             {
                 throw new InvalidOperationException("Employee is not eligible for parental leave.");
             }

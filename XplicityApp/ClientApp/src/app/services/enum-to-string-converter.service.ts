@@ -14,11 +14,14 @@ export class EnumToStringConverterService {
       case HolidayType.Annual:
         return 'Annual';
 
-      case HolidayType.Parental:
-        return 'Parental';
+      case HolidayType.DayForChildren:
+        return 'Day for children';
 
       case HolidayType.Science:
         return 'Science';
+
+      case HolidayType.Unpaid:
+        return 'Unpaid';
     }
   }
 

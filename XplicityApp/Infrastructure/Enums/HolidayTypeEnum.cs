@@ -3,7 +3,8 @@
     public enum HolidayType
     {
         Annual,
-        Parental,
-        Science
+        DayForChildren,
+        Science,
+        Unpaid
     }
 }

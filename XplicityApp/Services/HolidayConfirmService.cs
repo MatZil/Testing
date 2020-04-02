@@ -120,11 +120,11 @@ namespace XplicityApp.Services
             updateHolidayDto.ConfirmerAdminId = confirmerId;
             await _holidaysService.Update(holidayId, updateHolidayDto);
 
-            if (getHolidayDto.Type == HolidayType.Parental)
+            if (getHolidayDto.Type == HolidayType.DayForChildren)
             {
                 await _employeeHolidaysConfirmationUpdater.UpdateParentalLeaves(getHolidayDto);
             }
-            else if (getHolidayDto.Type == HolidayType.Annual && getHolidayDto.Paid)
+            else if (getHolidayDto.Type == HolidayType.Annual)
             {
                 await _employeeHolidaysConfirmationUpdater.UpdateEmployeesWorkdays(getHolidayDto);
                 await _employeeHolidaysConfirmationUpdater.UpdateEmployeesOvertime(getHolidayDto);

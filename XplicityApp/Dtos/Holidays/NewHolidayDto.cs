@@ -10,6 +10,5 @@ namespace XplicityApp.Dtos.Holidays
         public DateTime FromInclusive { get; set; }
         public DateTime ToInclusive { get; set; }
         public int OvertimeDays { get; set; }
-        public bool Paid { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +54,6 @@ namespace XplicityApp.Services
                 var messageString = template.Template
                                             .Replace("{admin.name}", admin.Name)
                                             .Replace("{employee.fullName}", $"{employee.Name} {employee.Surname}")
-                                            .Replace("{holiday.paid}", holiday.Paid ? "Paid" : "Unpaid")
                                             .Replace("{holiday.type}", holiday.Type.ToString())
                                             .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
                                             .Replace("{holiday.to}", holiday.ToInclusive.ToShortDateString())
@@ -81,7 +81,6 @@ namespace XplicityApp.Services
 
                     var messageString = template.Template.Substring(titleEnd)
                                                         .Replace("{employee.fullName}", $"{holiday.Item1.Employee.Name} {holiday.Item1.Employee.Surname}")
-                                                        .Replace("{holiday.paid}", holiday.Item1.Paid ? "Paid" : "Unpaid")
                                                         .Replace("{holiday.type}", holiday.Item1.Type.ToString())
                                                         .Replace("{holiday.from}", holiday.Item1.FromInclusive.ToShortDateString())
                                                         .Replace("{holiday.to}", holiday.Item1.ToInclusive.ToShortDateString())

@@ -32,7 +32,6 @@ export class HolidayRequestFormComponent implements OnInit {
   }
 
   setDefaultValues() {
-    this.newHoliday.paid = false;
     this.newHoliday.type = HolidayType.Annual;
   }
 
@@ -51,21 +50,10 @@ export class HolidayRequestFormComponent implements OnInit {
       overtimeDays: [],
       paid: [this.newHoliday.paid]
     }, { validators: dateRangeValidator() });
-    this.requestHolidayForm.controls.type.valueChanges.subscribe(type => {
-      if (type === HolidayType.Annual) {
-        this.requestHolidayForm.controls.paid.setValue(true);
-      } else {
-        this.requestHolidayForm.controls.paid.setValue(false);
-      }
-    });
   }
 
   canBePaid(): boolean {
     return this.requestHolidayForm.controls.type.value === HolidayType.Annual;
-  }
-
-  isPaid(): boolean {
-    return this.requestHolidayForm.controls.paid.value;
   }
 
   onSubmit() {

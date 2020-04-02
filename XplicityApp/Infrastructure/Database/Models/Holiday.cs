@@ -22,8 +22,6 @@ namespace XplicityApp.Infrastructure.Database.Models
         [Required]
         public HolidayStatus Status { get; set; }
         [Required]
-        public bool Paid { get; set; }
-        [Required]
         public DateTime RequestCreatedDate { get; set; }
         public int ConfirmerAdminId { get; set; }
         public int ConfirmerClientId { get; set; }

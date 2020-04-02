@@ -102,7 +102,7 @@ namespace Tests.Tests
             var newHoliday = new NewHolidayDto()
             {
                 EmployeeId = employeeId,
-                Type = HolidayType.Parental,
+                Type = HolidayType.DayForChildren,
                 FromInclusive = new DateTime(2019, 10, 24),
                 ToInclusive = new DateTime(2019, 10, 27),
             };

@@ -42,7 +42,6 @@ export class HolidaysTableComponent implements OnInit {
       this.displayedColumns = [
         'employee',
         'holidaysType',
-        'paid',
         'dateFrom',
         'dateTo',
         'overtimeHours',
@@ -54,7 +53,6 @@ export class HolidaysTableComponent implements OnInit {
     else {
       this.displayedColumns = [
         'holidaysType',
-        'paid',
         'dateFrom',
         'dateTo',
         'overtimeDays',
