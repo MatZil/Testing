@@ -81,7 +81,15 @@ namespace Tests.Tests
             var expectedVacation = employee.FreeWorkDays;
             var expectedOvertime = employee.OvertimeHours - _overtimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
 
-            await _holidayConfirmService.ConfirmHoliday(holidayId, 0);
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = true,
+                IsConfirmerAdmin = true,
+                HolidayId = holidayId,
+                ConfirmerId = 1
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
 
             employee = await _employeesRepository.GetById(employeeId);
 
@@ -107,7 +115,15 @@ namespace Tests.Tests
             var expectedVacation = employee.FreeWorkDays - workDays + holiday.OvertimeDays;
             var expectedOvertime = employee.OvertimeHours - _overtimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
 
-            await _holidayConfirmService.ConfirmHoliday(holidayId, 0);
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = true,
+                IsConfirmerAdmin = true,
+                HolidayId = holidayId,
+                ConfirmerId = 1
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
 
             employee = await _employeesRepository.GetById(employeeId);
 
@@ -131,7 +147,15 @@ namespace Tests.Tests
             var expectedVacation = employee.FreeWorkDays - workDays;
             var expectedOvertime = employee.OvertimeHours;
 
-            await _holidayConfirmService.ConfirmHoliday(holidayId, 0);
+            UpdateHolidayStatusDto holidayConfimationStatus = new UpdateHolidayStatusDto()
+            {
+                Confirm = true,
+                IsConfirmerAdmin = true,
+                HolidayId = holidayId,
+                ConfirmerId = 1
+            };
+
+            await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
 
             employee = await _employeesRepository.GetById(employeeId);
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XplicityApp.Infrastructure.Database;
 
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    partial class HolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200303112759_HolidayRejectionReason")]
+    partial class HolidayRejectionReason
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -567,9 +569,6 @@ Please use the first line for team's title, second line for individual employee'
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("CurrentPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int?>("EmployeeId")
                         .HasColumnType("int");
 
@@ -583,7 +582,7 @@ Please use the first line for team's title, second line for individual employee'
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("OriginalPrice")
+                    b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("PurchaseDate")
@@ -620,30 +619,6 @@ Please use the first line for team's title, second line for individual employee'
                     b.HasIndex("TagId");
 
                     b.ToTable("InventoryItemsTags");
-                });
-
-            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.NotificationSettings", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("BroadcastOwnBirthday")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("ReceiveBirthdayNotifications")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
-
-                    b.ToTable("NotificationSettings");
                 });
 
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Tag", b =>
@@ -824,15 +799,6 @@ Please use the first line for team's title, second line for individual employee'
                     b.HasOne("XplicityApp.Infrastructure.Database.Models.Tag", "Tag")
                         .WithMany("InventoryItemsTags")
                         .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.NotificationSettings", b =>
-                {
-                    b.HasOne("XplicityApp.Infrastructure.Database.Models.Employee", "Employee")
-                        .WithOne("NotificationSettings")
-                        .HasForeignKey("XplicityApp.Infrastructure.Database.Models.NotificationSettings", "EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
