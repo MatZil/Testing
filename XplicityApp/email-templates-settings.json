@@ -2,14 +2,14 @@
   "EmailTemplates": {
     "AdminConfirmation": {
       "Subject": "An employee is requesting confirmation for holidays",
-      "Template": "Hello, {admin.name},\n\nAn employee {employee.fullName} is intending to go on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {client.status} {holiday.overtimeHours}\n\nClick this link to confirm: {holiday.confirm}\nClick this link to decline: {holiday.decline}",
-      "Instructions": "{admin.name} - Receiving admin's first name.\n{employee.fullName} - Employee's full name.\n{holiday.paid} - Whether or not holiday is paid.\n{holiday.type} - Holiday's type.\n{holiday.from} - Holiday's starting date.\n{holiday.to} - Holiday's ending date.\n{client.status} - Message that client has confirmed the holiday.\n{holiday.overtimeHours} - Message that employee wants to use some of his overtime hours for this holiday.\n{holiday.confirm} - Holiday's confirmation link.\n{holiday.decline} - Holiday's rejection link."
+      "Template": "Hello, {admin.name},\n\nAn employee {employee.fullName} is intending to go on {holiday.paid} {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive). {client.status} {holiday.overtimeHours}\n\nClick this link to confirm or decline: {holiday.confirm}",
+      "Instructions": "{admin.name} - Receiving admin's first name.\n{employee.fullName} - Employee's full name.\n{holiday.paid} - Whether or not holiday is paid.\n{holiday.type} - Holiday's type.\n{holiday.from} - Holiday's starting date.\n{holiday.to} - Holiday's ending date.\n{client.status} - Message that client has confirmed the holiday.\n{holiday.overtimeHours} - Message that employee wants to use some of his overtime hours for this holiday.\n{holiday.confirm} - Holiday's confirmation or rejection link."
     },
 
     "ClientConfirmation": {
       "Subject": "One of your employees is requesting confirmation for holidays",
-      "Template": "Hello, {client.name},\n\nAn employee {employee.fullName} is intending to go on {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive).\n\nClick this link to confirm: {holiday.confirm}\nClick this link to decline: {holiday.decline}",
-      "Instructions": "{client.name} - Receiving client's first name.\n {employee.fullName} - Employee's full name.\n{holiday.type} - Holiday's type.\n{holiday.from} - Holiday's starting date.\n{holiday.to} - Holiday's ending date.\n{holiday.confirm} - Holiday's confirmation link.\n{holiday.decline} - Holiday's rejection link."
+      "Template": "Hello, {client.name},\n\nAn employee {employee.fullName} is intending to go on {holiday.type} holidays from {holiday.from} to {holiday.to} (inclusive).\n\nClick this link to confirm or decline: {holiday.confirm}",
+      "Instructions": "{client.name} - Receiving client's first name.\n {employee.fullName} - Employee's full name.\n{holiday.type} - Holiday's type.\n{holiday.from} - Holiday's starting date.\n{holiday.to} - Holiday's ending date.\n{holiday.confirm} - Holiday's confirmation or rejection link."
     },
 
     "MonthlyReport": {

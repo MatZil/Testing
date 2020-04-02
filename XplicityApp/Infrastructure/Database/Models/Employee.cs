@@ -51,9 +51,6 @@ namespace XplicityApp.Infrastructure.Database.Models
 
         [NotMapped]
         public double OvertimeDays { get; set; } //Current amount of overtime days (converted from hours)
-        [NotMapped]
-        public int NextOvertimeHours { get; set; } //Hours left till next overtime day
-        [NotMapped]
-        public int NextOvertimeMinutes { get; set; } //Minutes left till next overtime day
+        
     }
 }
