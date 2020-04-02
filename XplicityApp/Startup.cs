@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using XplicityApp.Configurations;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Utils;
 
 namespace XplicityApp
 {
@@ -19,7 +20,6 @@ namespace XplicityApp
         }
 
         public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -32,6 +32,8 @@ namespace XplicityApp
             services.SetupJtwAuthentication(Configuration);
             services.AddAllDependencies();
             services.SetUpAudit();
+            services.AddHealthChecks()
+                    .AddCheck<HealthCheck>("HealthCheck");
             services.AddRazorPages();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -70,8 +72,10 @@ namespace XplicityApp
 
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
