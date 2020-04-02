@@ -37,7 +37,7 @@ namespace XplicityApp.Services.Extensions
             await _repositoryEmployees.Update(employee);
         }
 
-        public async Task UpdateParentalLeaves(GetHolidayDto holidayDto)
+        public async Task UpdateDayForChildrenLeaves(GetHolidayDto holidayDto)
         {
             var employee = await _repositoryEmployees.GetById(holidayDto.EmployeeId);
             var leaveTime = _timeService.GetWorkDays(holidayDto.FromInclusive, holidayDto.ToInclusive);

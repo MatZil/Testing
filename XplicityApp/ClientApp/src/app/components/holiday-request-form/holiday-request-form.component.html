@@ -3,13 +3,14 @@
     <mat-card>
         <div>
             <mat-form-field>
-                <mat-select placeholder="Type" formControlName="type">
-                    <mat-option [value]="0">Annual</mat-option>
-                    <mat-option [value]="1" *ngIf="data.isParentalAvailable">
-                        Parental
-                    </mat-option>
-                    <mat-option [value]="2">Science</mat-option>
-                </mat-select>
+              <mat-select placeholder="Type" formControlName="type">
+                <mat-option [value]="0">Annual</mat-option>
+                <mat-option [value]="1" *ngIf="data.isParentalAvailable">
+                  Day for children
+                </mat-option>
+                <mat-option [value]="2">Science</mat-option>
+                <mat-option [value]="3">Unpaid</mat-option>
+              </mat-select>
             </mat-form-field>
         </div>
         <div>
@@ -47,11 +48,8 @@
                 </mat-error>
             </mat-form-field>
         </div>
-        <div *ngIf="canBePaid()">
-            <mat-checkbox formControlName="paid">Paid</mat-checkbox>
-        </div>
         <div>
-            <mat-form-field *ngIf="isPaid()">
+            <mat-form-field *ngIf="canBePaid()">
                 <input matInput type="number" step="1" placeholder="Overtime Days" formControlName="overtimeDays">
             </mat-form-field>
         </div>

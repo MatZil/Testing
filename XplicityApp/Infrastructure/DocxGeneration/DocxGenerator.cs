@@ -93,10 +93,6 @@ namespace XplicityApp.Infrastructure.DocxGeneration
                 {"{HOLIDAY_END}", holiday.ToInclusive.ToString("yyyy-MM-dd")},
                 {"{WORK_DAY_COUNT}", _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToInclusive).ToString()},
                 {"{HOLIDAY_TYPE}", TypeToLithuanian(holiday.Type) },
-                {"{ORDER_PAID_INFO}", holiday.Paid ? _configuration["DocxGeneration:OrderPaid"] : _configuration["DocxGeneration:OrderUnpaid"] },
-                {"{REQUEST_PAID_INFO}", holiday.Paid ? _configuration["DocxGeneration:RequestPaid"] : _configuration["DocxGeneration:RequestUnpaid"] },
-                {"{INCREASED_SALARY_REQUEST}", holiday.Paid ? _configuration["DocxGeneration:IncreasedSalaryRequest"] : ""},
-                {"{INCREASED_SALARY_ORDER}", holiday.Paid ? _configuration["DocxGeneration:IncreasedSalaryOrder"] : ""},
                 {"{OVERTIME_ORDER}", overtimeOrderString },
                 {"{OVERTIME_REQUEST}", overtimeRequestString }
             };
@@ -109,11 +105,14 @@ namespace XplicityApp.Infrastructure.DocxGeneration
                 case HolidayType.Annual:
                     return "kasmetinių";
 
-                case HolidayType.Parental:
-                    return "tėvystės-motinystės";
+                case HolidayType.DayForChildren:
+                    return "dienos vaikams";
 
                 case HolidayType.Science:
                     return "mokslo";
+
+                case HolidayType.Unpaid:
+                    return "neapmokamas";
             }
 
             return "";

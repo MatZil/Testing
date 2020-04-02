@@ -85,7 +85,7 @@ namespace Tests.Tests.EmailServiceTests
             foreach (var admin in _admins)
             {
                 var expectedBody =
-                    $"Hello, {admin.Name},\n\nAn employee {_employee.Name} {_employee.Surname} is intending to go on {GetPaidString(_holiday.Paid)} " +
+                    $"Hello, {admin.Name},\n\nAn employee {_employee.Name} {_employee.Surname} is intending to go on " +
                     $"{_holiday.Type} holidays from {_holiday.FromInclusive.ToShortDateString()} to {_holiday.ToInclusive.ToShortDateString()} (inclusive). " +
                     $"{clientStatus} \n\nClick this link to confirm or decline: {$"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={_holiday.Id}&confirmerId={admin.Id}"}";
 
@@ -102,7 +102,7 @@ namespace Tests.Tests.EmailServiceTests
             var holidays = new List<(Holiday, Client)> { (_holiday, _client) };
             await _emailService.SendThisMonthsHolidayInfo(_admins, holidays);
             var expectedBody =
-                $"{_client.CompanyName} team's employees:\n\n\n{_employee.Name} {_employee.Surname} went on {GetPaidString(_holiday.Paid)} " +
+                $"{_client.CompanyName} team's employees:\n\n\n{_employee.Name} {_employee.Surname} went on " +
                 $"{_holiday.Type} holidays from {_holiday.FromInclusive.ToShortDateString()} to {_holiday.ToInclusive.ToShortDateString()} (inclusive). \n\n";
 
 

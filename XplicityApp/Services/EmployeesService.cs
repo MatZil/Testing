@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using XplicityApp.Dtos.Employees;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
@@ -165,7 +166,7 @@ namespace XplicityApp.Services
 
             foreach (var holiday in employeeHolidays)
             {
-                if (holiday.FromInclusive <= currentTime && holiday.ToInclusive >= currentTime && !holiday.Paid)
+                if (holiday.FromInclusive <= currentTime && holiday.ToInclusive >= currentTime && holiday.Type == HolidayType.Unpaid)
                 {
                     return true;
                 }
