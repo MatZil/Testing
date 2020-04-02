@@ -20,7 +20,6 @@ namespace Tests.Tests
         private readonly int _holidaysCount;
         private readonly ITestOutputHelper _output;
         private readonly HolidaysService _holidaysService;
-        private readonly ITimeService mockTimeService;
         private readonly EmployeesService _employeesService;
         private readonly EmployeesRepository _employeesRepository;
         private readonly HolidaysRepository _holidaysRepository;
@@ -37,7 +36,6 @@ namespace Tests.Tests
             _holidaysCount = setup.GetCount("holidays");
 
             var timeService = new TimeService();
-            mockTimeService = new Mock<ITimeService>().Object;
             var mockUserService = new Mock<IUserService>().Object;
             var mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
             _holidaysRepository = new HolidaysRepository(_context);
@@ -112,24 +110,6 @@ namespace Tests.Tests
 
             Assert.True(createdHolidayId > -1 && createdHoliday != null);
         }
-
-        //[Theory]
-        //[InlineData(3)]
-        //public void When_CreatingHolidayWithNonexistentEmployee_Expect_EmployeeException(int employeeId)
-        //{
-        //    var newHoliday = new NewHolidayDto()
-        //    {
-        //        EmployeeId = employeeId,
-        //        Type = HolidayType.Parental,
-        //        FromInclusive = new DateTime(2019, 10, 24),
-        //        ToExclusive = new DateTime(2019, 10, 28),
-        //    };
-
-        //    var exception = Record.ExceptionAsync(async () => await _holidaysService.Create(newHoliday));
-        //    _output.WriteLine(exception.Result.Message);
-
-        //    Assert.Equal("Employee not found", exception.Result.Message);
-        //}
 
         [Theory]
         [InlineData(1)]
@@ -206,5 +186,26 @@ namespace Tests.Tests
 
             Assert.True(fullNameExpected.Equals(fullNameActual), "Employee's full name is incorrect.");
         }
+
+        [Theory]
+        [InlineData(EmployeeStatusEnum.Current)]
+        [InlineData(EmployeeStatusEnum.Former)]
+        public async void When_GettingHolidaysByEmployeeStatus_Expect_ReturnsHolidays(EmployeeStatusEnum employeeStatus)
+        {
+            var retrievedHolidays = await _holidaysService.GetByEmployeeStatus(employeeStatus);
+            int actualHolidaysCount = 0;
+
+            var allHolidays = await _holidaysService.GetAll();
+            foreach (var holiday in allHolidays)
+            {
+                var employee = await _employeesService.GetById(holiday.EmployeeId);
+                if(employee.Status == employeeStatus)
+                {
+                    actualHolidaysCount++;
+                }
+            }
+            Assert.Equal(retrievedHolidays.Count, actualHolidaysCount);
+        }
+
     }
 }
