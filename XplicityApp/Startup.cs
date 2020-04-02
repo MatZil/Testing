@@ -32,7 +32,7 @@ namespace XplicityApp
             services.AddAllDependencies();
             services.SetUpAudit();
             services.AddHealthChecks()
-                    .AddCheck<HealthChecks.DbHealthCheck>("DbCheck");
+                    .AddCheck<HealthCheck>("DbCheck");
             services.AddRazorPages();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

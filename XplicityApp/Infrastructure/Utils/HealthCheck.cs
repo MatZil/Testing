@@ -6,11 +6,11 @@ using XplicityApp.Infrastructure.Database.Models;
 
 namespace XplicityApp.HealthChecks
 {
-    public class DbHealthCheck : IHealthCheck
+    public class HealthCheck : IHealthCheck
     {
         private readonly IHolidaysRepository _holidaysRepository;
         private readonly IRepository<Client> _clientRepository;
-        public DbHealthCheck(IHolidaysRepository holidayRepository, IRepository<Client> clientRepository)
+        public HealthCheck(IHolidaysRepository holidayRepository, IRepository<Client> clientRepository)
         {
             _holidaysRepository = holidayRepository;
              _clientRepository = clientRepository;
