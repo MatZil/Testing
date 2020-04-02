@@ -70,9 +70,9 @@ namespace XplicityApp.Services.Validations
             ValidateDateInterval(holiday, currentTime);
             ValidateOvertime(holiday, employee);
 
-            if (holiday.Type == HolidayType.DayForChildren && !IsEmployeeEligibleForParental(holiday, employee, currentTime))
+            if (holiday.Type == HolidayType.DayForChildren && !IsEmployeeEligibleForDayForChildren(holiday, employee, currentTime))
             {
-                throw new InvalidOperationException("Employee is not eligible for parental leave.");
+                throw new InvalidOperationException("Employee is not eligible for day for children leave.");
             }
 
             if (IsAnyBoundaryNotAWorkday(holiday))
@@ -109,7 +109,7 @@ namespace XplicityApp.Services.Validations
             }
         }
 
-        private bool IsEmployeeEligibleForParental(Holiday holiday, Employee employee, DateTime currentTime)
+        private bool IsEmployeeEligibleForDayForChildren(Holiday holiday, Employee employee, DateTime currentTime)
         {
             var leaveTime = _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToInclusive);
 
