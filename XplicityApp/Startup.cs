@@ -36,8 +36,7 @@ namespace XplicityApp
             services.AddAllDependencies();
             services.SetUpAudit();
             services.AddHealthChecks()
-                    .AddCheck<HealthChecks.ClientHealthCheck>("ClientHealth")
-                    .AddCheck<HealthChecks.HolidayHealthCheck>("HolidayHealthCheck");
+                    .AddCheck<HealthChecks.DbHealthCheck>("DbCheck");
             services.AddRazorPages();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -77,10 +76,9 @@ namespace XplicityApp
             app.UseAuthentication();
             app.UseAuthorization();
 
-            HealthCheckOptions options = GetOptions();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHealthChecks("/health", options);
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
@@ -102,23 +100,6 @@ namespace XplicityApp
             });
 
             IdentityDataSeeder.SeedData(userManager, roleManager, Configuration);
-        }
-
-        private static HealthCheckOptions GetOptions()
-        {
-            HealthCheckOptions options = new HealthCheckOptions();
-            options.ResponseWriter = async (c, r) =>
-            {
-                c.Response.ContentType = "application/json";
-
-                var result = JsonConvert.SerializeObject(new
-                {
-                    status = r.Status.ToString(),
-                    errors = r.Entries.Select(e => new { key = e.Key, value = e.Value.Status.ToString() })
-                });
-                await c.Response.WriteAsync(result);
-            };
-            return options;
         }
     }
 }
