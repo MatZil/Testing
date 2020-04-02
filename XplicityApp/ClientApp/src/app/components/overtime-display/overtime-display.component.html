@@ -1,5 +1,5 @@
 <div *ngIf="currentUser">
   <p class="p-tiny-space-below-title"><b>You are currently entitled to:</b></p>
-  <p class="p-tiny-space-below"><b>{{ currentUser.freeWorkDays}}</b> days of annual leave</p>
+  <p class="p-tiny-space-below"><b>{{ currentUser.freeWorkDays | number : '.0-2'}}</b> days of annual leave</p>
   <p class="p-no-space-below"><b>{{ currentUser.overtimeDays}}</b> days of overtime leave</p>
 </div>
