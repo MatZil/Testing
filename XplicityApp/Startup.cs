@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using XplicityApp.Configurations;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Utils;
 
 namespace XplicityApp
 {

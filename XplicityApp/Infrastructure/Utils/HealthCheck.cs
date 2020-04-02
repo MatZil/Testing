@@ -4,7 +4,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Database.Models;
 
-namespace XplicityApp.HealthChecks
+namespace XplicityApp.Infrastructure.Utils
 {
     public class HealthCheck : IHealthCheck
     {
