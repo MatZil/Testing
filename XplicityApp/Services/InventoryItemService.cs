@@ -53,14 +53,7 @@ namespace XplicityApp.Services
             {
                 inventoryItemDto.Tags = await GetTagsListByItemId(inventoryItemDto.Id);
 
-                foreach (var inventoryItem in inventoryItems)
-                {
-                    if (inventoryItemDto.EmployeeId == inventoryItem.EmployeeId)
-                    {
-                        inventoryItemDto.AssignedTo = inventoryItem.Employee.Name + " " + inventoryItem.Employee.Surname;
-                        break;
-                    }
-                }
+                inventoryItemDto.AssignedTo = GetOwnerName(inventoryItemDto.EmployeeId, inventoryItems);
 
                 if (inventoryItemDto.AssignedTo == null)
                 {
@@ -78,6 +71,8 @@ namespace XplicityApp.Services
             foreach (var inventoryItemDto in inventoryItemsDto)
             {
                 inventoryItemDto.Tags = await GetTagsListByItemId(inventoryItemDto.Id);
+
+                inventoryItemDto.AssignedTo = GetOwnerName(inventoryItemDto.EmployeeId, inventoryItems);
             }
 
             return inventoryItemsDto;
@@ -91,14 +86,7 @@ namespace XplicityApp.Services
             {
                 inventoryItemDto.Tags = await GetTagsListByItemId(inventoryItemDto.Id);
 
-                foreach (var inventoryItem in inventoryItems)
-                {
-                    if (inventoryItemDto.EmployeeId == inventoryItem.EmployeeId)
-                    {
-                        inventoryItemDto.AssignedTo = inventoryItem.Employee.Name + " " + inventoryItem.Employee.Surname;
-                        break;
-                    }
-                }
+                inventoryItemDto.AssignedTo = GetOwnerName(inventoryItemDto.EmployeeId, inventoryItems);
 
                 if (inventoryItemDto.AssignedTo == null)
                 {
@@ -184,6 +172,18 @@ namespace XplicityApp.Services
             };
 
             return tags;
+        }
+
+        private string GetOwnerName(int id, ICollection<InventoryItem> inventoryItems)
+        {
+            foreach (var inventoryItem in inventoryItems)
+            {
+                if (id == inventoryItem.EmployeeId)
+                {
+                    return inventoryItem.Employee.Name + " " + inventoryItem.Employee.Surname;
+                }
+            }
+            return null;
         }
     }
 }

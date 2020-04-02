@@ -22,6 +22,10 @@ export class InventoryService {
     return this.http.get<InventoryItem[]>(`${this.inventoryItemApi}`, { params: parameters });
   }
 
+  getAllInventoryItems(): Observable<InventoryItem[]> {
+    return this.http.get<InventoryItem[]>(this.inventoryItemApi);
+  }
+
   createNewInventoryItem(newInventoryItem: NewInventoryItem) {
     return this.http.post(this.inventoryItemApi, newInventoryItem);
   }

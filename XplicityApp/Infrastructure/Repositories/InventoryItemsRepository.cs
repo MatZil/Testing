@@ -62,7 +62,7 @@ namespace XplicityApp.Infrastructure.Repositories
 
         public async Task<ICollection<InventoryItem>> GetByEmployeeId(int employeeId)
         {
-            var inventoryItems = _context.InventoryItems.Include(i =>i.Category).Where(i => i.EmployeeId == employeeId);
+            var inventoryItems = _context.InventoryItems.Include(i =>i.Category).Include(i => i.Employee).Where(i => i.EmployeeId == employeeId);
             return await inventoryItems.ToListAsync();
         }
     }
