@@ -8,6 +8,7 @@ using System;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
 using Moq;
+using XplicityApp.Infrastructure.Utils;
 
 namespace Tests.Tests
 {
@@ -28,13 +29,14 @@ namespace Tests.Tests
             var mapper = setup.Mapper;
             _employeesCount = setup.GetCount("employees");
 
+            var configuration = setup.GetConfiguration();
             var mockTimeService = new Mock<ITimeService>().Object;
-            var mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
+            var overtimeUtility = new OvertimeUtility(configuration);
             var userManager = setup.InitializeUserManager();
             var userService = new Mock<IUserService>().Object;
             var employeesRepository = new EmployeesRepository(_context, userManager);
             var mockNotificationSettingsService = new Mock<INotificationSettingsService>().Object;
-            _employeesService = new EmployeesService(employeesRepository, mapper, mockOvertimeUtility, mockTimeService, userService, mockNotificationSettingsService);
+            _employeesService = new EmployeesService(employeesRepository, mapper, overtimeUtility, mockTimeService, userService, mockNotificationSettingsService);
         }
 
         [Theory]
@@ -73,29 +75,6 @@ namespace Tests.Tests
             Assert.Equal(retrievedEmployees.Count, _employeesCount);
         }
 
-        //[Theory]
-        //[InlineData(1, "pass", "available@email")]
-        //public async void When_CreatingEmployee_Expect_ReturnsNewEmployee(int clientId, string password, string email)
-        //{
-        //    var newEmployee = _setup.NewEmployeeDto(clientId, password, email);
-
-        //    var createdEmployee = await _employeesService.Create(newEmployee);
-
-        //    Assert.NotNull(createdEmployee);
-        //}
-
-        //[Theory]
-        //[InlineData(3, "pass", "available@email")]
-        //public void When_CreatingEmployeeWithNonexistentClient_Expect_ClientException(int clientId, string password, string email)
-        //{
-        //    var newEmployee = _setup.NewEmployeeDto(clientId, password, email);
-
-        //    var exception = Record.ExceptionAsync(async () => await _employeesService.Create(newEmployee));
-        //    _output.WriteLine(exception.Result.Message);
-
-        //    Assert.Equal("Client not found", exception.Result.Message);
-        //}
-
         [Theory]
         [InlineData(1, "", "available@email")]
         public void When_CreatingEmployeeWithoutPassword_Expect_PasswordException(int clientId, string password, string email)
@@ -119,26 +98,6 @@ namespace Tests.Tests
 
             Assert.Equal("Email \"" + email + "\" is already taken", exception.Result.Message);
         }
-
-        //[Theory]
-        //[InlineData(1, "available@email")]      //email is available
-        //[InlineData(1, "taken1@email")]         //email is the same
-        //public async void When_UpdatingEmployee_Expect_ReturnsUpdatedEmployee(int id, string email)
-        //{
-        //    var foundEmployee = _context.Employees.Find(id);
-        //    var initial = foundEmployee.Email;
-
-        //    var updatedEmployee = new UpdateEmployeeDto()
-        //    {
-        //        Email = email,
-        //    };
-
-        //    await _employeesService.Update(id, updatedEmployee);
-        //    var actual = _context.Employees.Find(id).Email;
-        //    _output.WriteLine(initial + "   >>   " + actual);
-
-        //    Assert.Equal(email, actual);
-        //}
 
         [Theory]
         [InlineData(2, "taken1@email")]
@@ -206,6 +165,54 @@ namespace Tests.Tests
             bool deletedEmployee = await _employeesService.Delete(id);
 
             Assert.False(deletedEmployee);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public void When_AddOvertimeDays_Expect_DaysAdded(int id)
+        {
+            var employee = _context.Employees.Find(id);
+            employee = _employeesService.AddOvertimeDays(employee);
+
+            Assert.Equal(employee.OvertimeDays, Math.Floor(employee.OvertimeHours / 8));
+        }
+
+        [Theory]
+        [InlineData("", false)]
+        [InlineData("taken1@email", true)]
+        [InlineData("notExistingEmail@email.com", false)]
+        public async void When_EmailExists_Expect_GetTrueIfEmailExists(string email, bool isExsits)
+        {
+            Assert.True(await _employeesService.EmailExists(email) == isExsits);
+        }
+
+        [Theory]
+        [InlineData(1, "pass", "available@email")]
+        public async void When_CreatingNewEmployee_Expect_NewEmployeeCreated(int clientId, string password, string email)
+        {
+            var newEmployee = SetUp.NewEmployeeDto(clientId, password, email);
+            newEmployee.IsManualHolidaysInput = true;
+            newEmployee.FreeWorkDays = 20;
+
+            var employee = await _employeesService.Create(newEmployee);
+
+            Assert.Equal(employee.FreeWorkDays, newEmployee.FreeWorkDays);
+        }
+
+        [Theory]
+        [InlineData(1, "pass", "available@email")]
+        public async void When_CreatingNewEmployee_Expect_ThrowsArgumentNullException(int clientId, string password, string email)
+        {
+            var newEmployee = SetUp.NewEmployeeDto(clientId, password, email);
+            newEmployee.IsManualHolidaysInput = true;
+
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _employeesService.Create(newEmployee));
+        }
+
+        [Fact]
+        public async void When_CreatingNullEmployee_Expect_ThrowsArgumentNullException()
+        {
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _employeesService.Create(null));
         }
     }
 }
