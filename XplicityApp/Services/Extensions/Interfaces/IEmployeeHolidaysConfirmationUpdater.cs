@@ -7,6 +7,6 @@ namespace XplicityApp.Services.Extensions.Interfaces
     {
         Task UpdateEmployeesOvertime(GetHolidayDto holidayDto);
         Task UpdateEmployeesWorkdays(GetHolidayDto holidayDto);
-        Task UpdateParentalLeaves(GetHolidayDto holidayDto);
+        Task UpdateDayForChildrenLeaves(GetHolidayDto holidayDto);
     }
 }

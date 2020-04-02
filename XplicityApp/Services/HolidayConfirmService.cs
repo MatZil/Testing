@@ -122,7 +122,7 @@ namespace XplicityApp.Services
 
             if (getHolidayDto.Type == HolidayType.DayForChildren)
             {
-                await _employeeHolidaysConfirmationUpdater.UpdateParentalLeaves(getHolidayDto);
+                await _employeeHolidaysConfirmationUpdater.UpdateDayForChildrenLeaves(getHolidayDto);
             }
             else if (getHolidayDto.Type == HolidayType.Annual)
             {

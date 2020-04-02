@@ -215,7 +215,7 @@ namespace Tests.Tests
             initial[0] = employee.CurrentAvailableLeaves;
             initial[1] = employee.NextMonthAvailableLeaves;
 
-            await _employeeHolidaysConfirmationUpdater.UpdateParentalLeaves(holidayDto);
+            await _employeeHolidaysConfirmationUpdater.UpdateDayForChildrenLeaves(holidayDto);
 
             var final = new int[2];
             final[0] = employee.CurrentAvailableLeaves;
