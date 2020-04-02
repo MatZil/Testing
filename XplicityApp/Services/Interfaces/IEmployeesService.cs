@@ -12,7 +12,7 @@ namespace XplicityApp.Services.Interfaces
         Task<NewEmployeeDto> Create(NewEmployeeDto newClient);
         Task Update(int id, UpdateEmployeeDto updateData);
         Task<bool> Delete(int id);
-        Employee AddOvertimeDetails(Employee employee);
+        Employee AddOvertimeDays(Employee employee);
         bool HasActiveUnpaidHoliday(int id);
         Task<bool> EmailExists(string email);
     }

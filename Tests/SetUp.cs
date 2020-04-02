@@ -218,7 +218,7 @@ namespace Tests
                     DaysOfVacation = 20,
                     BirthdayDate = DateTime.Today,
                     FreeWorkDays = 10,
-                    OvertimeHours = 24,
+                    OvertimeHours = 32,
                     ParentalLeaveLimit = 3,
                     CurrentAvailableLeaves = 1,
                     NextMonthAvailableLeaves = 2
@@ -247,7 +247,7 @@ namespace Tests
                     DaysOfVacation = 20,
                     BirthdayDate = new DateTime(1987,07,06),
                     FreeWorkDays = 15,
-                    OvertimeHours = 24,
+                    OvertimeHours = 32,
                     ParentalLeaveLimit = 4,
                     CurrentAvailableLeaves = 2,
                     NextMonthAvailableLeaves = 1

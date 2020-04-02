@@ -48,6 +48,7 @@ namespace XplicityApp.Services
         {
             var employees = await _repository.GetAll();
             var employeesDto = _mapper.Map<GetEmployeeDto[]>(employees);
+
             foreach (var employee in employeesDto)
             {
                 employee.Role = await _userService.GetUserRole(employee.Id);
@@ -152,9 +153,9 @@ namespace XplicityApp.Services
             await _userService.Update(id, updateData);
         }
 
-        public Employee AddOvertimeDetails(Employee employee)
+        public Employee AddOvertimeDays(Employee employee)
         {
-            return _overtimeUtility.AddOvertimeDetailsToEmployee(employee);
+            return _overtimeUtility.AddOvertimeDaysToEmployee(employee);
         }
 
         public bool HasActiveUnpaidHoliday(int employeeId)

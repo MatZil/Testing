@@ -37,7 +37,7 @@ namespace XplicityApp.Controllers
         {
             var userEmail = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var currentUser = await _userService.GetCurrentUser(userEmail);
-            currentUser = _employeesService.AddOvertimeDetails(currentUser);
+            currentUser = _employeesService.AddOvertimeDays(currentUser);
 
             return Ok(currentUser);
         }

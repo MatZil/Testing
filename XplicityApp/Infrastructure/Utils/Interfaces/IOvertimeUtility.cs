@@ -8,9 +8,7 @@ namespace XplicityApp.Infrastructure.Utils.Interfaces
         string GetOvertimeSentence(string initialSentence, int overtimeDays);
         double ConvertOvertimeHoursToDays(double overtimeHours);
         double ConvertOvertimeDaysToHours(double overtimeDays);
-        int GetHoursTillNextOvertimeDay(double overtimeDays);
-        int GetMinutesTillNextOvertimeDay(double overtimeDays);
-        Employee AddOvertimeDetailsToEmployee(Employee employee);
+        Employee AddOvertimeDaysToEmployee(Employee employee);
         GetHolidayDto AddOvertimeDetailsToHoliday(GetHolidayDto holiday);
     }
 }
