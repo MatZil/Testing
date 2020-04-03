@@ -221,7 +221,8 @@ namespace Tests
                     OvertimeHours = 32,
                     ParentalLeaveLimit = 3,
                     CurrentAvailableLeaves = 1,
-                    NextMonthAvailableLeaves = 2
+                    NextMonthAvailableLeaves = 2,
+                    Status = EmployeeStatusEnum.Current
                 },
                 new Employee
                 {
