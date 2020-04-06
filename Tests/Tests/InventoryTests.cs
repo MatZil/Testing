@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using XplicityApp.Dtos.Inventory;
 using XplicityApp.Dtos.Tags;
 using XplicityApp.Infrastructure.Database;
@@ -40,6 +41,7 @@ namespace Tests.Tests
         public async void When_GettingExistingInventoryItemById_Expect_ReturnsInventoryItem(int id)
         {
             var retrievedInventoryItem = await _inventoryItemService.GetById(id);
+
             Assert.NotNull(retrievedInventoryItem);
         }
 
@@ -58,6 +60,7 @@ namespace Tests.Tests
         {
             var retrievedInventoryItems = await _inventoryItemService.GetAll();
             var retrievedNumberOfItemsInInventory = retrievedInventoryItems.Count;
+
             Assert.Equal(_actualNumberOfItemsInInventory, retrievedNumberOfItemsInInventory);
         }
 
@@ -111,7 +114,7 @@ namespace Tests.Tests
         public async void When_UpdatingInventoryItem_Expect_ReturnsUpdatedInventoryItemWithTags(int itemId, int tagsCount)
         {
             var tagIds = new List<TagDto>();
-           
+
             for (int i = 1; i <= tagsCount; i++)
             {
                 tagIds.Add(_mapper.Map<TagDto>(_context.Tags.Find(i)));
@@ -128,5 +131,80 @@ namespace Tests.Tests
             Assert.Equal(tagsCount, inventoryItem.InventoryItemsTags.Count);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void When_GettingInventoryItemByStatus_Expect_ItemsCountIsEqualToExpected(bool status)
+        {
+            var expectedInventoryItemsCount = _context.InventoryItems.Where(x => x.Archived == status).Count();
+            var actualInventoryItemsCount = (await _inventoryItemService.GetByStatus(status)).Count;
+
+            Assert.Equal(expectedInventoryItemsCount, actualInventoryItemsCount);
+        }
+
+        [Theory]
+        [InlineData(true, 0, "EmployeeName1 EmployeeSurname1")]
+        [InlineData(true, 1, "Office")]
+        public async void When_GettingInventoryItemByStatus_Expect_AssignIsCorrect(bool status, int itemIndex, string expectedOwnerFullName)
+        {
+            var actualInventoryItems = (await _inventoryItemService.GetByStatus(status)).ToList();
+
+            Assert.Equal(expectedOwnerFullName, actualInventoryItems[itemIndex].AssignedTo);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public async void When_GetInventoryItemByEmployeeId_Expect_ItemsCountIsEqualToExpected(int employeeId)
+        {
+            var expectedInventoryItemsCount = _context.InventoryItems.Where(x => x.EmployeeId == employeeId).Count();
+            var actualInventoryItemsCount = (await _inventoryItemService.GetByEmployeeId(employeeId)).Count();
+
+            Assert.Equal(expectedInventoryItemsCount, actualInventoryItemsCount);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public async void When_GetInventoryItemByEmployeeId_AssignIsCorrect(int employeeId)
+        {
+            var employee = _context.Employees.Find(employeeId);
+            var fullName = employee.Name + " " + employee.Surname;
+            var actualInventoryItems = (await _inventoryItemService.GetByEmployeeId(employeeId)).ToList();
+
+            Assert.Equal(fullName, actualInventoryItems[0].AssignedTo);
+        }
+
+        [Theory]
+        [InlineData(1, "Tag1")]
+        public async void When_CreatingInventoryItemWithTags_Expect_ReturnsCreatedInventoryItemWithTags(int tagId, string tagTitle)
+        {
+            var newInventoryItem = new NewInventoryItemDto()
+            {
+                Name = "New inventory item",
+                SerialNumber = "new serial number",
+                PurchaseDate = DateTime.Today,
+                ExpiryDate = null,
+                Comment = "new comment",
+                OriginalPrice = 100,
+                InventoryCategoryId = 1,
+                EmployeeId = 1,
+                Tags = new List<TagDto>()
+            };
+
+            newInventoryItem.Tags.Add(new TagDto() { Id = tagId, Title = tagTitle });
+            var itemId = (await _inventoryItemService.Create(newInventoryItem)).Id;
+            var inventoryItem = _context.InventoryItems.Find(itemId);
+
+            Assert.NotNull(inventoryItem.InventoryItemsTags.FirstOrDefault());
+        }
+
+        [Theory]
+        [InlineData(5, "EmployeeName1 EmployeeSurname1")]
+        [InlineData(6, "Office")]
+        public async void When_GettingAllItemsWithAssingedEmployee_Expect_EmployeesAssingedSuccessful(int itemIndex, string expectedOwnerFullName)
+        {
+            var retrievedInventoryItems = (await _inventoryItemService.GetAll()).ToList();
+
+            Assert.Equal(expectedOwnerFullName, retrievedInventoryItems[itemIndex].AssignedTo);
+        }
     }
 }
