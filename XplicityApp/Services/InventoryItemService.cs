@@ -179,7 +179,7 @@ namespace XplicityApp.Services
             {
                 if (id == inventoryItem.EmployeeId)
                 {
-                    return inventoryItem.Employee.Name + " " + inventoryItem.Employee.Surname;
+                    return $"{inventoryItem.Employee.Name} {inventoryItem.Employee.Surname}";
                 }
             }
 

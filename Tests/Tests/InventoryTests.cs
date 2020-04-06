@@ -167,7 +167,7 @@ namespace Tests.Tests
         public async void When_GetInventoryItemByEmployeeId_AssignIsCorrect(int employeeId)
         {
             var employee = _context.Employees.Find(employeeId);
-            var fullName = employee.Name + " " + employee.Surname;
+            var fullName = $"{employee.Name} {employee.Surname}";
             var actualInventoryItems = (await _inventoryItemService.GetByEmployeeId(employeeId)).ToList();
 
             Assert.Equal(fullName, actualInventoryItems[0].AssignedTo);
