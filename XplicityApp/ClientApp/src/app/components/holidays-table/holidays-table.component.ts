@@ -48,6 +48,7 @@ export class HolidaysTableComponent implements OnInit {
         'status',
         'rejectedConfirmed',
         'creationDate',
+        'rejectionReason',
         'action'];
     }
     else {
@@ -59,6 +60,7 @@ export class HolidaysTableComponent implements OnInit {
         'status',
         'rejectedConfirmed',
         'creationDate',
+        'rejectionReason',
         'action'];
     }
   }
