@@ -34,19 +34,24 @@ namespace XplicityApp.Pages
             _holidayConfirmationService = holidayConfirmationService;
         }
 
-        public async Task OnGetAsync(int holidayId, int confirmerId)
+        public async Task<IActionResult> OnGetAsync(int holidayId, int confirmerId)
         {
 
-                ConfirmerId = confirmerId;
-                HolidayId = holidayId;
+            ConfirmerId = confirmerId;
+            HolidayId = holidayId;
 
-                var holiday = await _context.Holidays.FindAsync(holidayId);
-                HolidayFrom = holiday.FromInclusive;
-                HolidayTo = holiday.ToInclusive;
+            var holiday = await _context.Holidays.FindAsync(holidayId);
+            HolidayFrom = holiday.FromInclusive;
+            HolidayTo = holiday.ToInclusive;
 
-                var employee = await _context.Employees.FindAsync(holiday.EmployeeId);
-                RequesterName = $"{employee.Name} {employee.Surname}";
-
+            var employee = await _context.Employees.FindAsync(holiday.EmployeeId);
+            RequesterName = $"{employee.Name} {employee.Surname}";
+            if (holiday.Status == HolidayStatus.Abandoned)
+            {
+                return RedirectToPage("HolidayConfirmationAbandoned", new { userWhoAbandoned = RequesterName });
+            }
+            else
+            {
                 if (employee.ClientId == null || holiday.Status == HolidayStatus.ClientConfirmed)
                 {
                     IsConfirmerAdmin = true;
@@ -55,6 +60,8 @@ namespace XplicityApp.Pages
                 {
                     IsConfirmerAdmin = false;
                 }
+            }
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(bool confirm, int holidayId, int confirmerId, bool isConfirmerAdmin)
