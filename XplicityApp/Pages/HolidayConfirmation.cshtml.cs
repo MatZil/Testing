@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
@@ -50,16 +49,9 @@ namespace XplicityApp.Pages
             {
                 return RedirectToPage("HolidayConfirmationAbandoned", new { userWhoAbandoned = RequesterName });
             }
-            else
+            if (IsConfirmerAdmin = employee.ClientId == null || holiday.Status == HolidayStatus.ClientConfirmed)
             {
-                if (employee.ClientId == null || holiday.Status == HolidayStatus.ClientConfirmed)
-                {
-                    IsConfirmerAdmin = true;
-                }
-                else
-                {
-                    IsConfirmerAdmin = false;
-                }
+                IsConfirmerAdmin = true;
             }
             return Page();
         }
