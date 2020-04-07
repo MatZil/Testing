@@ -52,7 +52,6 @@ namespace XplicityApp.Services
             foreach (var inventoryItemDto in inventoryItemsDto)
             {
                 inventoryItemDto.Tags = await GetTagsListByItemId(inventoryItemDto.Id);
-
                 inventoryItemDto.AssignedTo = GetOwnerName(inventoryItemDto.EmployeeId, inventoryItems);
 
                 if (inventoryItemDto.AssignedTo == null)
@@ -71,7 +70,6 @@ namespace XplicityApp.Services
             foreach (var inventoryItemDto in inventoryItemsDto)
             {
                 inventoryItemDto.Tags = await GetTagsListByItemId(inventoryItemDto.Id);
-
                 inventoryItemDto.AssignedTo = GetOwnerName(inventoryItemDto.EmployeeId, inventoryItems);
             }
 
@@ -85,7 +83,6 @@ namespace XplicityApp.Services
             foreach (var inventoryItemDto in inventoryItemsDto)
             {
                 inventoryItemDto.Tags = await GetTagsListByItemId(inventoryItemDto.Id);
-
                 inventoryItemDto.AssignedTo = GetOwnerName(inventoryItemDto.EmployeeId, inventoryItems);
 
                 if (inventoryItemDto.AssignedTo == null)
@@ -93,6 +90,7 @@ namespace XplicityApp.Services
                     inventoryItemDto.AssignedTo = "Office";
                 }
             }
+
             return inventoryItemsDto;
         }
 
@@ -106,6 +104,7 @@ namespace XplicityApp.Services
             var newInventoryItem = _mapper.Map<InventoryItem>(newInventoryItemDto);
             newInventoryItem.CurrentPrice = newInventoryItem.OriginalPrice;
             var inventoryItemId = await _repository.Create(newInventoryItem);
+
             if (newInventoryItemDto.Tags != null)
             {
                 foreach (var tag in newInventoryItemDto.Tags)
@@ -131,8 +130,8 @@ namespace XplicityApp.Services
             }
 
             _mapper.Map(updateInventoryItemDto, itemToUpdate);
-
             await _repository.Update(itemToUpdate);
+
             if (updateInventoryItemDto.Tags != null)
             {
                 foreach (var inventoryItemTag in updateInventoryItemDto.Tags)
@@ -180,9 +179,10 @@ namespace XplicityApp.Services
             {
                 if (id == inventoryItem.EmployeeId)
                 {
-                    return inventoryItem.Employee.Name + " " + inventoryItem.Employee.Surname;
+                    return $"{inventoryItem.Employee.Name} {inventoryItem.Employee.Surname}";
                 }
             }
+
             return null;
         }
     }

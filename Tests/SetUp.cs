@@ -519,7 +519,6 @@ namespace Tests
                     Comment = null,
                     Category = context.InventoryCategories.Find(1),
                     InventoryCategoryId = 1
-
                 },
                 new InventoryItem
                 {
@@ -559,7 +558,50 @@ namespace Tests
                     Comment = null,
                     Category = context.InventoryCategories.Find(4),
                     InventoryCategoryId = 4
-                }
+                },
+                 new InventoryItem
+                {
+                    Id = 5,
+                    Name = "Item5",
+                    SerialNumber = "Serial no 5",
+                    PurchaseDate = DateTime.Today,
+                    ExpiryDate = null,
+                    OriginalPrice = 100,
+                    CurrentPrice = 100,
+                    Comment = null,
+                    Category = context.InventoryCategories.Find(4),
+                    InventoryCategoryId = 4,
+                    Archived = false
+                },
+                 new InventoryItem
+                {
+                    Id = 6,
+                    Name = "Item6",
+                    SerialNumber = "Serial no 2",
+                    PurchaseDate = DateTime.Today,
+                    ExpiryDate = null,
+                    OriginalPrice = 200,
+                    CurrentPrice = 200,
+                    Comment = null,
+                     Category = context.InventoryCategories.Find(4),
+                    InventoryCategoryId = 4,
+                    Archived = true,
+                    EmployeeId = 1
+                },
+                new InventoryItem
+                {
+                    Id = 7,
+                    Name = "Item7",
+                    SerialNumber = "Serial no 7",
+                    PurchaseDate = DateTime.Today,
+                    ExpiryDate = null,
+                    OriginalPrice = 300,
+                    CurrentPrice = 300,
+                    Comment = null,
+                       Category = context.InventoryCategories.Find(4),
+                    InventoryCategoryId = 4,
+                    Archived = true,
+                },
             };
             context.InventoryItems.AddRange(_inventoryItems);
 
@@ -614,6 +656,7 @@ namespace Tests
                     Id = 1,
                     InventoryItemId = 2,
                     TagId = 1
+
                 },
                 new InventoryItemTag
                 {
