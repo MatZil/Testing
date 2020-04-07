@@ -49,10 +49,7 @@ namespace XplicityApp.Pages
             {
                 return RedirectToPage("HolidayConfirmationAbandoned", new { userWhoAbandoned = RequesterName });
             }
-            if (IsConfirmerAdmin = employee.ClientId == null || holiday.Status == HolidayStatus.ClientConfirmed)
-            {
-                IsConfirmerAdmin = true;
-            }
+            IsConfirmerAdmin = employee.ClientId == null || holiday.Status == HolidayStatus.ClientConfirmed;
             return Page();
         }
 
