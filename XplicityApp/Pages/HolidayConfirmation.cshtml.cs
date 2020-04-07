@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
@@ -34,27 +33,24 @@ namespace XplicityApp.Pages
             _holidayConfirmationService = holidayConfirmationService;
         }
 
-        public async Task OnGetAsync(int holidayId, int confirmerId)
+        public async Task<IActionResult> OnGetAsync(int holidayId, int confirmerId)
         {
 
-                ConfirmerId = confirmerId;
-                HolidayId = holidayId;
+            ConfirmerId = confirmerId;
+            HolidayId = holidayId;
 
-                var holiday = await _context.Holidays.FindAsync(holidayId);
-                HolidayFrom = holiday.FromInclusive;
-                HolidayTo = holiday.ToInclusive;
+            var holiday = await _context.Holidays.FindAsync(holidayId);
+            HolidayFrom = holiday.FromInclusive;
+            HolidayTo = holiday.ToInclusive;
 
-                var employee = await _context.Employees.FindAsync(holiday.EmployeeId);
-                RequesterName = $"{employee.Name} {employee.Surname}";
-
-                if (employee.ClientId == null || holiday.Status == HolidayStatus.ClientConfirmed)
-                {
-                    IsConfirmerAdmin = true;
-                }
-                else
-                {
-                    IsConfirmerAdmin = false;
-                }
+            var employee = await _context.Employees.FindAsync(holiday.EmployeeId);
+            RequesterName = $"{employee.Name} {employee.Surname}";
+            if (holiday.Status == HolidayStatus.Abandoned)
+            {
+                return RedirectToPage("HolidayConfirmationAbandoned", new { userWhoAbandoned = RequesterName });
+            }
+            IsConfirmerAdmin = employee.ClientId == null || holiday.Status == HolidayStatus.ClientConfirmed;
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(bool confirm, int holidayId, int confirmerId, bool isConfirmerAdmin)

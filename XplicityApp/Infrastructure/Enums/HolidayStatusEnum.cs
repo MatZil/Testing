@@ -6,6 +6,7 @@
         AdminRejected,
         AdminConfirmed,
         ClientConfirmed,
-        ClientRejected
+        ClientRejected,
+        Abandoned
     }
 }
