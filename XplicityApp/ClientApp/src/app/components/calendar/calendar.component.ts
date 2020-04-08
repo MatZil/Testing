@@ -6,7 +6,6 @@ import { UserService } from '../../services/user.service';
 
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import 'rxjs/add/operator/map';
 import { HolidayType } from 'src/app/enums/holidayType';
 
 @Component({
@@ -22,8 +21,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   options: any;
   currentUserId: number;
   dataSource = new MatTableDataSource<Holiday>();
-  colors = [['#B7CEF5', 'Annual unpaid'], ['#88B0F5', 'Annual paid'], ['#547EC8', 'Annual paid, with overtime'], ['#BDA1EA', 'Science'], ['#DBC7FC', 'Day for children']];
-  
+  colors = [['#B7CEF5', 'Annual unpaid'], ['#88B0F5', 'Annual paid'], 
+            ['#547EC8', 'Annual paid, with overtime'], ['#BDA1EA', 'Science'], ['#DBC7FC', 'Day for children']];
+
       @ViewChild('fullCalendar') fullCalendar: any;
               
       constructor(
@@ -92,11 +92,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
      {
         let color : string;
 
-        if (holiday.type  == HolidayType.Annual && holiday.paid && holiday.overtimeDays > 0)
+        if (holiday.type == HolidayType.Annual && holiday.overtimeDays > 0)
         {
             color = this.colors[2][0];
         }
-        else if (holiday.type == HolidayType.Annual && holiday.paid)
+        else if (holiday.type == HolidayType.Annual)
         {
             color = this.colors[1][0];
         }
