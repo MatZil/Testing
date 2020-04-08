@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using Moq;
-using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using Xunit;
-using Nager.Date;
 using XplicityApp.Services.BackgroundFunctions;
 using Microsoft.Extensions.Logging;
 using XplicityApp.Services.Interfaces;
@@ -27,11 +24,7 @@ namespace Tests.Tests.BackgroundTests
             var userManager = setup.InitializeUserManager();
 
             _employeesRepository = new EmployeesRepository(context, userManager);
-
             _mockTimeService = new Mock<ITimeService>();
-            _mockTimeService.Setup(x => x.GetCurrentTime()).Returns(DateTime.MinValue.AddDays(2));
-            _mockTimeService.Setup(x => x.IsWorkDay(DateTime.MinValue.AddDays(2))).Returns(true);
-
             var mockLoggerUpdater = new Mock<ILogger<EmployeeHolidaysBackgroundUpdater>>().Object;
             var mockEmployeesService = new Mock<IEmployeesService>().Object;
             _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater(_mockTimeService.Object, _employeesRepository, mockLoggerUpdater, mockEmployeesService);
@@ -40,37 +33,31 @@ namespace Tests.Tests.BackgroundTests
         [Fact]
         public async void When_AddingFreeWorkDays_Expect_AddsDaysOff()
         {
+            _mockTimeService.Setup(m => m.GetCurrentTime()).Returns(DateTime.MinValue);
+            _mockTimeService.Setup(m => m.IsWorkDay(DateTime.MinValue)).Returns(true);
+
             var employees = await _employeesRepository.GetAll();
             var initial = new double[employees.Count];
+            var final = new double[employees.Count];
             var index = 0;
+            var countTrue = 0;
 
-            foreach (var e in employees)
+            foreach (var employee in employees)
             {
-                initial[index++] = e.FreeWorkDays;
+                initial[index++] = employee.FreeWorkDays;
             }
 
             await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(employees);
-            var countTrue = 0;
-            var currentTime = _mockTimeService.Object.GetCurrentTime();
+            index = 0;
 
-            if (currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.DayOfWeek != DayOfWeek.Sunday && !DateSystem.IsPublicHoliday(currentTime, CountryCode.LT))
+            foreach (var employee in employees)
             {
-                var final = new double[employees.Count];
-                index = 0;
+                final[index] = employee.FreeWorkDays;
 
-                foreach (var e in employees)
+                if (final[index] > initial[index++])
                 {
-                    final[index] = e.FreeWorkDays;
-
-                    if (final[index] > initial[index++])
-                    {
-                        countTrue++;
-                    }
+                    countTrue++;
                 }
-            }
-            else
-            {
-                countTrue = employees.Count;
             }
 
             Assert.Equal(employees.Count, countTrue);
@@ -79,31 +66,32 @@ namespace Tests.Tests.BackgroundTests
         [Fact]
         public async void When_ResettingParentalLeaves_Expect_ResetsLeaves()
         {
-            var employees = await _employeesRepository.GetAll();
-
             _mockTimeService.Setup(m => m.GetCurrentTime()).Returns(new DateTime(2019, 01, 01));
 
+            var employees = await _employeesRepository.GetAll();
+            var actual = new int[employees.Count, 2];
             var expected = new int[employees.Count, 2];
+            var countTrue = 0;
             var index = 0;
-            foreach (var e in employees)
+
+            foreach (var employee in employees)
             {
-                expected[index, 0] = e.NextMonthAvailableLeaves;
-                expected[index++, 1] = e.ParentalLeaveLimit;
+                expected[index, 0] = employee.NextMonthAvailableLeaves;
+                expected[index++, 1] = employee.ParentalLeaveLimit;
             }
 
             await _employeeHolidaysBackgroundUpdater.ResetParentalLeaves(employees);
-
-            var countTrue = 0;
-            var actual = new int[employees.Count, 2];
             index = 0;
-            foreach (var e in employees)
-            {
-                actual[index, 0] = e.CurrentAvailableLeaves;
-                actual[index, 1] = e.NextMonthAvailableLeaves;
 
-                if (actual[index, 0] == expected[index, 0] &&
-                    actual[index, 1] == expected[index++, 1])
+            foreach (var employee in employees)
+            {
+                actual[index, 0] = employee.CurrentAvailableLeaves;
+                actual[index, 1] = employee.NextMonthAvailableLeaves;
+
+                if (actual[index, 0] == expected[index, 0] && actual[index, 1] == expected[index++, 1])
+                {
                     countTrue++;
+                }
             }
 
             Assert.Equal(employees.Count, countTrue);

@@ -753,39 +753,6 @@ namespace Tests
             return newEmployeeDto;
         }
 
-        //public Employee NewEmployee(int clientId, string email)
-        //{
-        //    var newEmployee = new Employee
-        //    {
-        //        ClientId = clientId,
-        //        Email = email,
-
-        //        Name = "EmployeeNameNew",
-        //        Surname = "EmployeeSurnameNew",
-        //        WorksFromDate = new DateTime(2019, 07, 06),
-        //        DaysOfVacation = 20,
-        //        BirthdayDate = new DateTime(1988, 07, 06),
-        //        ParentalLeaveLimit = 30,
-        //        Position = "Position"
-        //    };
-
-        //    return newEmployee;
-        //}
-
-        //public NewHolidayDto NewHolidayDto()
-        //{
-        //    var newHolidayDto = new NewHolidayDto
-        //    {
-        //        EmployeeId = 1,
-        //        Type = HolidayType.Parental,
-        //        FromInclusive = new DateTime(2019, 11, 11),
-        //        ToExclusive = new DateTime(2019, 11, 18),
-        //        Paid = true
-        //    };
-
-        //    return newHolidayDto;
-        //}
-
         public static NewEmailTemplateDto NewEmailTemplateDto()
         {
             var newEmailTemplateDto = new NewEmailTemplateDto
@@ -798,18 +765,5 @@ namespace Tests
 
             return newEmailTemplateDto;
         }
-
-        //public User NewUser()
-        //{
-        //    var newUser = new User
-        //    {
-        //        EmployeeId = 1,
-        //        Email = "emailNew",
-        //        UserName = "usrnameNew",
-        //        NormalizedEmail = "emailNew"
-        //    };
-
-        //    return newUser;
-        //}
     }
 }
