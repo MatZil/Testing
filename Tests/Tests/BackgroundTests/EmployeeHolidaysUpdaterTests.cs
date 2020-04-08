@@ -27,7 +27,11 @@ namespace Tests.Tests.BackgroundTests
             var userManager = setup.InitializeUserManager();
 
             _employeesRepository = new EmployeesRepository(context, userManager);
+
             _mockTimeService = new Mock<ITimeService>();
+            _mockTimeService.Setup(x => x.GetCurrentTime()).Returns(DateTime.MinValue.AddDays(2));
+            _mockTimeService.Setup(x => x.IsWorkDay(DateTime.MinValue.AddDays(2))).Returns(true);
+
             var mockLoggerUpdater = new Mock<ILogger<EmployeeHolidaysBackgroundUpdater>>().Object;
             var mockEmployeesService = new Mock<IEmployeesService>().Object;
             _employeeHolidaysBackgroundUpdater = new EmployeeHolidaysBackgroundUpdater(_mockTimeService.Object, _employeesRepository, mockLoggerUpdater, mockEmployeesService);
@@ -36,10 +40,10 @@ namespace Tests.Tests.BackgroundTests
         [Fact]
         public async void When_AddingFreeWorkDays_Expect_AddsDaysOff()
         {
-            ICollection<Employee> employees = await _employeesRepository.GetAll();
-
+            var employees = await _employeesRepository.GetAll();
             var initial = new double[employees.Count];
             var index = 0;
+
             foreach (var e in employees)
             {
                 initial[index++] = e.FreeWorkDays;
@@ -47,12 +51,13 @@ namespace Tests.Tests.BackgroundTests
 
             await _employeeHolidaysBackgroundUpdater.AddFreeWorkDays(employees);
             var countTrue = 0;
-
             var currentTime = _mockTimeService.Object.GetCurrentTime();
+
             if (currentTime.DayOfWeek != DayOfWeek.Saturday && currentTime.DayOfWeek != DayOfWeek.Sunday && !DateSystem.IsPublicHoliday(currentTime, CountryCode.LT))
             {
                 var final = new double[employees.Count];
                 index = 0;
+
                 foreach (var e in employees)
                 {
                     final[index] = e.FreeWorkDays;
