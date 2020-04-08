@@ -1,11 +1,11 @@
-.alignCenter {
-    text-align: center;
+div {
+    display: flex;
+    justify-content: space-evenly;  
 }
 
-.floatLeft {
-    float: left;
-}
-
-.floatRight {
-    float: right;
-}
+.dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 10%;
+    display: inline-block;
+  }

@@ -31,6 +31,7 @@ namespace Tests.Tests
         private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
         private readonly HolidayValidationService _holidayValidationService;
         private readonly HolidaysService _holidaysService;
+        //private readonly UserService _userService;
 
         public HolidayConfirmTests()
         {
@@ -50,7 +51,8 @@ namespace Tests.Tests
             _mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
             _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _timeService, _mockOvertimeUtility);
 
-            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, _mapper, _timeService, _mockOvertimeUtility, _clientsRepository);
+            var mockUserService = new Mock<IUserService>().Object;
+            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, _mapper, _timeService, _mockOvertimeUtility, _clientsRepository, mockUserService);
             _holidayConfirmService = new HolidayConfirmService(mockEmailService.Object, _mapper, _holidaysRepository,
                                                                _employeesRepository, clientsRepository, _holidaysService,
                                                                 mockDocxGeneratorService.Object, _mockOvertimeUtility,
@@ -129,7 +131,7 @@ namespace Tests.Tests
             await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
             var updatedHoliday = await _holidaysService.GetById(holidayId);
 
-            var fullNameExpected = await _holidaysService.GetAdminConfirmerFullName(confirmerId);
+            var fullNameExpected = await _holidaysService.GetEmployeeFullName(confirmerId);
             var fullNameActual = updatedHoliday.ConfirmerFullName;
 
             Assert.True(fullNameExpected.Equals(fullNameActual), "Confirmer full name is incorrect.");
@@ -172,7 +174,7 @@ namespace Tests.Tests
             await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
             var updatedHoliday = await _holidaysService.GetById(holidayId);
 
-            var fullNameExpected = await _holidaysService.GetClientConfirmerFullName(confirmerId);
+            var fullNameExpected = await _holidaysService.GetClientFullName(confirmerId);
             var fullNameActual = updatedHoliday.ConfirmerFullName;
 
             Assert.True(fullNameExpected.Equals(fullNameActual), "Confirmer full name is incorrect.");
@@ -288,7 +290,7 @@ namespace Tests.Tests
             await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
             var updatedHoliday = await _holidaysService.GetById(holidayId);
 
-            var fullNameExpected = await _holidaysService.GetAdminConfirmerFullName(confirmerId);
+            var fullNameExpected = await _holidaysService.GetEmployeeFullName(confirmerId);
             var fullNameActual = updatedHoliday.ConfirmerFullName;
 
             Assert.True(fullNameExpected.Equals(fullNameActual), "Confirmer's full name is incorrect.");
@@ -310,7 +312,7 @@ namespace Tests.Tests
             await _holidayConfirmService.UpdateHolidayConfirmationStatus(holidayConfimationStatus);
             var updatedHoliday = await _holidaysService.GetById(holidayId);
 
-            var fullNameExpected = await _holidaysService.GetClientConfirmerFullName(confirmerId);
+            var fullNameExpected = await _holidaysService.GetClientFullName(confirmerId);
             var fullNameActual = updatedHoliday.ConfirmerFullName;
 
             Assert.True(fullNameExpected.Equals(fullNameActual), "Confirmer's full name is incorrect.");

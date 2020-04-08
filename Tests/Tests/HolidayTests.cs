@@ -25,6 +25,9 @@ namespace Tests.Tests
         private readonly HolidaysRepository _holidaysRepository;
         private readonly ClientsRepository _clientsRepository;
 
+        const int numberOfLastMonthDays = 6;
+        const int numberOfNextMonthDays = 13;
+
         public HolidayTests(ITestOutputHelper output)
         {
             _output = output;
@@ -43,7 +46,7 @@ namespace Tests.Tests
             _clientsRepository = new ClientsRepository(_context);
             var mockNotificationSettingsService = new Mock<INotificationSettingsService>().Object;
             _employeesService = new EmployeesService(_employeesRepository, mapper, mockOvertimeUtility, timeService, mockUserService, mockNotificationSettingsService);
-            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, timeService, mockOvertimeUtility, _clientsRepository);
+            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, timeService, mockOvertimeUtility, _clientsRepository, mockUserService);
         
         }
 
@@ -207,5 +210,37 @@ namespace Tests.Tests
             Assert.Equal(retrievedHolidays.Count, actualHolidaysCount);
         }
 
+        [Fact]
+        public async void When_GettingConfirmedHolidaysByMonth_Expect_ReturnsHolidaysStartingFromEndOfLastMonth()
+        {
+            var currentMonthFirstDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var startDate = currentMonthFirstDay.AddDays(-numberOfLastMonthDays);
+            _output.WriteLine(startDate.ToString());
+            var selectedDate = DateTime.Today;
+            var selectedMonthConfirmedHolidays = await _holidaysService.GetConfirmedByMonth(selectedDate, 1);
+
+            foreach (var holiday in selectedMonthConfirmedHolidays)
+            {
+                _output.WriteLine(holiday.FromInclusive.ToString() + "  " + holiday.ToInclusive.ToString());
+                Assert.True(holiday.ToInclusive >= startDate && holiday.Status == HolidayStatus.AdminConfirmed);
+            }
+        }
+
+        [Fact]
+        public async void When_GettingConfirmedHolidaysByMonth_Expect_ReturnsHolidaysLastingToStartOfNextMonth()
+        {
+            var currentMonthFirstDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var endDate = currentMonthFirstDay.AddMonths(1).AddDays(numberOfNextMonthDays - 1);
+
+            _output.WriteLine(endDate.ToString());
+            var selectedDate = DateTime.Today;
+            var selectedMonthConfirmedHolidays = await _holidaysService.GetConfirmedByMonth(selectedDate, 1);
+
+            foreach (var holiday in selectedMonthConfirmedHolidays)
+            {
+                _output.WriteLine(holiday.FromInclusive.ToString() + "  " + holiday.ToInclusive.ToString());
+                Assert.True(holiday.FromInclusive <= endDate && holiday.Status == HolidayStatus.AdminConfirmed);
+            }
+        }
     }
 }

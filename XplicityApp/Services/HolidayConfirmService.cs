@@ -135,7 +135,7 @@ namespace XplicityApp.Services
         {
             var holiday = await _holidaysService.GetById(holidayId);
             var employee = await _repositoryEmployees.GetById(holiday.EmployeeId);
-            var confirmerFullName = await _holidaysService.GetAdminConfirmerFullName(holiday.ConfirmerAdminId);
+            var confirmerFullName = await _holidaysService.GetEmployeeFullName(holiday.ConfirmerAdminId);
 
             switch (receiver)
             {

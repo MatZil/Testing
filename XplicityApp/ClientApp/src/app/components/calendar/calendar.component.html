@@ -1,1 +1,5 @@
-<p-fullCalendar [events]="events" [options]="options"></p-fullCalendar>
+<div>
+<p *ngFor="let color of colors"><span class="dot" [ngStyle]="{'background-color':color[0]}"></span> {{color[1]}}  </p>
+</div>
+
+<p-fullCalendar #fullCalendar [events]="events" [options]="options"></p-fullCalendar>
