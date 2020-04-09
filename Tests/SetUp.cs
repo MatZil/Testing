@@ -465,6 +465,26 @@ namespace Tests
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 12, 14)
                 },
+                new Holiday //17
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.DayForChildren,
+                    FromInclusive = DateTime.Today.AddDays(40),
+                    ToInclusive = DateTime.Today.AddDays(47),
+                    Status = HolidayStatus.Pending,
+                    RequestCreatedDate = new DateTime(2019, 10, 13)
+                },
+                new Holiday //18
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.DayForChildren,
+                    FromInclusive = new DateTime(2020, 11, 27),
+                    ToInclusive = new DateTime(2020, 12, 03),
+                    Status = HolidayStatus.Pending,
+                    RequestCreatedDate = new DateTime(2019, 10, 13)
+                },
             };
             context.Holidays.AddRange(_holidays);
 

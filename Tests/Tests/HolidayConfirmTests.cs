@@ -13,7 +13,6 @@ using XplicityApp.Services.Interfaces;
 using Xunit;
 using XplicityApp.Services.Extensions;
 using XplicityApp.Services.Validations;
-using XplicityApp.Infrastructure.Static_Files;
 
 namespace Tests.Tests
 {
@@ -205,6 +204,8 @@ namespace Tests.Tests
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
+        [InlineData(17)]
+        [InlineData(18)]
         public async void When_UpdatingParentalLeaves_Expect_UpdatesParentalLeaves(int holidayId)
         {
             var holiday = await _holidaysRepository.GetById(holidayId);
