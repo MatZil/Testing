@@ -35,11 +35,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
   getUserAndCurrentMonthHolidays() {
     this.userService.getCurrentUser().subscribe(user => {
-      let self = this;
-      setTimeout(function () {
-        self.currentUserId = user.id;
-        self.getHolidays(0);
-      }, 500);
+      this.currentUserId = user.id;
+      this.getHolidays(0);
     });
   }
   setCalendarOptions() {
