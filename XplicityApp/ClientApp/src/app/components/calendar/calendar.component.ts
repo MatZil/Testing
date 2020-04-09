@@ -22,13 +22,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     ['#547EC8', 'Annual paid, with overtime'], ['#BDA1EA', 'Science'], ['#DBC7FC', 'Day for children']];
 
   @ViewChild('fullCalendar') fullCalendar: any;
-  updateCalendarTitle() {
-    this.calendarTitle.next(this.fullCalendar?.calendar?.view?.title);
-  }
+
   constructor(
     private holidayService: HolidaysService,
     private userService: UserService) {
   }
+
   ngOnInit() {
     this.setCalendarOptions();
     this.getUserAndCurrentMonthHolidays();
@@ -101,5 +100,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
     setTimeout(() => this.updateCalendarTitle(), 100);
+  }
+  updateCalendarTitle() {
+    this.calendarTitle.next(this.fullCalendar?.calendar?.view?.title);
   }
 }
