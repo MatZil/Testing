@@ -157,7 +157,7 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   showEquipmentModal(employeeId: number) {
-    const dialogRef = this.dialog.open(EmployeeEquipmentComponent, {
+    this.dialog.open(EmployeeEquipmentComponent, {
       width: '1300px',
       data: { id: employeeId }
     });
