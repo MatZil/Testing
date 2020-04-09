@@ -16,8 +16,8 @@
     <div>
       <mat-form-field>
         <textarea matInput [(ngModel)]="data.emailTemplatesFormData.template" name="template" rows="10"
-                  placeholder="Template" required #nameInput="ngModel"></textarea>
-        <mat-error *ngIf="nameInput.invalid" class="error">
+                placeholder="Template" required #templateInput="ngModel"></textarea>
+        <mat-error *ngIf="templateInput.invalid" class="error">
           Email template cannot be empty.
         </mat-error>
       </mat-form-field>
