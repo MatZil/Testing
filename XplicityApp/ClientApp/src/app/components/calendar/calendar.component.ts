@@ -32,12 +32,14 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.setCalendarOptions();
     this.getUserAndCurrentMonthHolidays();
   }
+
   getUserAndCurrentMonthHolidays() {
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUserId = user.id;
       this.getHolidays(0);
     });
   }
+
   setCalendarOptions() {
     this.options = {
       plugins: [dayGridPlugin, interactionPlugin],
@@ -52,6 +54,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       displayEventTime: false
     };
   }
+
   getHolidays(monthsToAdd): void {
     this.viewDate = new Date(this.viewDate.setMonth(this.viewDate.getMonth() + monthsToAdd));
     this.holidayService.getConfirmedHolidaysBySelectedMonth(this.viewDate, this.currentUserId).subscribe(holidays => {
@@ -59,6 +62,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       this.getEvents();
     });
   }
+
   getEvents(): void {
     this.events = [];
     this.dataSource.data.forEach(holiday => {
@@ -68,6 +72,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       this.events.push(event);
     });
   }
+
   getColor(holiday: Holiday) {
     let holidayType: string;
     if (holiday.type === HolidayType.Annual && holiday.overtimeDays > 0) {
@@ -83,24 +88,29 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
     return holidayType;
   }
+
   addDayToEndDate(toInclusive) {
     const startDate = new Date(toInclusive);
     const day = 60 * 60 * 24 * 1000;
     return new Date(startDate.getTime() + day);
   }
+
   previousMonthButtonClick() {
     this.fullCalendar.calendar.prev();
     this.updateCalendarTitle();
     this.getHolidays(-1);
   }
+
   nextMonthButtonClick() {
     this.fullCalendar.calendar.next();
     this.updateCalendarTitle();
     this.getHolidays(1);
   }
+
   ngAfterViewInit() {
     setTimeout(() => this.updateCalendarTitle(), 100);
   }
+  
   updateCalendarTitle() {
     this.calendarTitle.next(this.fullCalendar?.calendar?.view?.title);
   }
