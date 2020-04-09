@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { InventoryItem } from 'src/app/models/inventory-item';
 import { InventoryService } from 'src/app/services/inventory.service';
 import { InventoryCategory } from 'src/app/models/inventory-category';
@@ -11,6 +11,7 @@ import { AddInventoryFormComponent } from '../inventory-add-form/inventory-add-f
 import { EditInventoryFormComponent } from '../inventory-edit-form/inventory-edit-form.component';
 import { NewInventoryItem } from '../../models/new-inventory-item';
 import { TableRowInventoryItem } from 'src/app/models/table-row-inventory-item';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-inventory-table',
@@ -40,6 +41,8 @@ export class InventoryTableComponent implements OnInit {
   employees: TableRowUserModel[] = [];
   currentUser: TableRowUserModel;
 
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
   constructor(
     private inventoryService: InventoryService,
     private categoryService: InventoryCategoryService,
@@ -62,6 +65,7 @@ export class InventoryTableComponent implements OnInit {
           row.tagTitles.push(tag.title);
         });
       });
+      this.equipmentDataSource.paginator = this.paginator;
     });
   }
 
