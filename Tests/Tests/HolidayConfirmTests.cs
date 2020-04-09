@@ -207,6 +207,8 @@ namespace Tests.Tests
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
+        [InlineData(21)]
+        [InlineData(22)]
         public async void When_UpdatingParentalLeaves_Expect_UpdatesParentalLeaves(int holidayId)
         {
             var holiday = await _holidaysRepository.GetById(holidayId);
