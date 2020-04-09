@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TableRowUserModel } from '../../models/table-row-user-model';
 import { Newuser } from '../../models/newuser';
 import { Updateuser } from '../../models/updateuser';
@@ -13,6 +13,7 @@ import { AddEmployeeFormComponent } from '../add-employee-form/add-employee-form
 import { EditEmployeeFormComponent } from '../edit-employee-form/edit-employee-form.component';
 import { EmployeeEquipmentComponent } from '../employee-equipment/employee-equipment.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-employees-table',
@@ -46,6 +47,8 @@ export class EmployeesTableComponent implements OnInit {
     'actions'];
   employeeDataSource = new MatTableDataSource(this.listOfData);
 
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  
   constructor(
     private userService: UserService,
     private clientService: ClientService,
@@ -66,6 +69,7 @@ export class EmployeesTableComponent implements OnInit {
       this.users = users;
       this.listOfData = [...this.users];
       this.employeeDataSource = new MatTableDataSource(this.listOfData);
+      this.employeeDataSource.paginator = this.paginator;
     });
   }
 
