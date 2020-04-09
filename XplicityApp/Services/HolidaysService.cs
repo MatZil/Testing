@@ -9,6 +9,7 @@ using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace XplicityApp.Services
 {
@@ -21,9 +22,7 @@ namespace XplicityApp.Services
         private readonly ITimeService _timeService;
         private readonly IOvertimeUtility _overtimeUtility;
         private readonly IUserService _userService;
-
-        const int numberOfLastMonthDays = 6;
-        const int numberOfNextMonthDays = 13;
+        private readonly IConfiguration _configuration;
 
         public HolidaysService(
             IHolidaysRepository holidaysRepository, 
@@ -32,7 +31,8 @@ namespace XplicityApp.Services
             ITimeService timeService, 
             IOvertimeUtility overtimeUtility, 
             IRepository<Client> clientsRepository,
-            IUserService userService
+            IUserService userService,
+            IConfiguration configuration
             )
         {
             _holidaysRepository = holidaysRepository;
@@ -42,6 +42,7 @@ namespace XplicityApp.Services
             _employeeRepository = employeeRepository;
             _clientsRepository = clientsRepository;
             _userService = userService;
+            _configuration = configuration;
         }
 
         public async Task<GetHolidayDto> GetById(int id)
@@ -166,6 +167,9 @@ namespace XplicityApp.Services
     
 	    public async Task<List<GetHolidayDto>> GetConfirmedByMonth(DateTime selectedDate, int currentUserId)
         {
+            var numberOfLastMonthDays = _configuration.GetValue<int>("CalendarConfig:NumberOfLastMonthDays");
+            var numberOfNextMonthDays = _configuration.GetValue<int>("CalendarConfig:NumberOfNextMonthDays");
+
             var yearFrom = selectedDate.AddMonths(-1).Year;
             var monthFrom = selectedDate.AddMonths(-1).Month;
             var daysInLastMonth = DateTime.DaysInMonth(yearFrom, monthFrom);

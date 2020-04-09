@@ -13,7 +13,6 @@ using XplicityApp.Services.Interfaces;
 using Xunit;
 using XplicityApp.Services.Extensions;
 using XplicityApp.Services.Validations;
-using XplicityApp.Infrastructure.Static_Files;
 
 namespace Tests.Tests
 {
@@ -31,7 +30,6 @@ namespace Tests.Tests
         private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
         private readonly HolidayValidationService _holidayValidationService;
         private readonly HolidaysService _holidaysService;
-        //private readonly UserService _userService;
 
         public HolidayConfirmTests()
         {
@@ -39,6 +37,7 @@ namespace Tests.Tests
             setup.Initialize();
             _context = setup.HolidayDbContext;
             _mapper = setup.Mapper;
+            var configuration = setup.GetConfiguration();
 
             _timeService = new Mock<TimeService>().Object;
             _holidaysRepository = new HolidaysRepository(_context);
@@ -52,7 +51,8 @@ namespace Tests.Tests
             _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _timeService, _mockOvertimeUtility);
 
             var mockUserService = new Mock<IUserService>().Object;
-            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, _mapper, _timeService, _mockOvertimeUtility, _clientsRepository, mockUserService);
+            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, _mapper, _timeService,
+                                                   _mockOvertimeUtility, _clientsRepository, mockUserService, configuration);
             _holidayConfirmService = new HolidayConfirmService(mockEmailService.Object, _mapper, _holidaysRepository,
                                                                _employeesRepository, clientsRepository, _holidaysService,
                                                                 mockDocxGeneratorService.Object, _mockOvertimeUtility,
