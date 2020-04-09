@@ -66,6 +66,15 @@ namespace XplicityApp.Services
                 throw new InvalidOperationException();
             }
         }
+        public async Task ChangeEmail(int id, string updatedEmail)
+        {
+            var userToUpdate = await _userManager.Users.FirstOrDefaultAsync(x => x.EmployeeId == id);
+            if (userToUpdate == null)
+            {
+                throw new InvalidOperationException();
+            }
+            await _userManager.SetEmailAsync(userToUpdate,updatedEmail);
+        }
 
         public async Task<Employee> GetCurrentUser(string email)
         {
