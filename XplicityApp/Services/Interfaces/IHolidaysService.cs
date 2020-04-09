@@ -14,8 +14,9 @@ namespace XplicityApp.Services.Interfaces
         Task<bool> Update(int id, UpdateHolidayDto updatedHoliday);
         Task<bool> Delete(int id);
         Task<ICollection<GetHolidayDto>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus);
-        Task<string> GetAdminConfirmerFullName(int confirmerId);
-        Task<string> GetClientConfirmerFullName(int confirmerId);
+        Task<string> GetEmployeeFullName(int employeeId);
+        Task<string> GetClientFullName(int clientId);
         Task<string> GetConfirmerFullName(GetHolidayDto holidayDto);
+        Task<List<GetHolidayDto>> GetConfirmedByMonth(DateTime selectedDate, int currentUserId);
     }
 }

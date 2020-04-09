@@ -41,4 +41,13 @@ export class HolidaysService {
     const dateString = date.toLocaleDateString('lt-LT');
     return this.http.get<boolean>(`${this.holidaysApiBase}/is-free-workday?date=${dateString}`);
   }
+
+  getConfirmedHolidaysBySelectedMonth(date: Date, currentUserId: number): Observable<Holiday[]> {
+    let parameters = new HttpParams();
+    parameters = parameters.append('currentUserId', currentUserId.toString());
+    const dateString = date.toLocaleDateString('lt-LT');
+    parameters = parameters.append('selectedDate', dateString);
+
+    return this.http.get<Holiday[]>(`${this.holidaysApiBase}/GetConfirmedByMonth`, { params: parameters });
+  }
 }

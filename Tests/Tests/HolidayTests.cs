@@ -10,6 +10,7 @@ using XplicityApp.Infrastructure.Enums;
 using Moq;
 using XplicityApp.Services.Interfaces;
 using XplicityApp.Infrastructure.Utils;
+using Microsoft.Extensions.Configuration;
 
 namespace Tests.Tests
 {
@@ -24,6 +25,7 @@ namespace Tests.Tests
         private readonly EmployeesRepository _employeesRepository;
         private readonly HolidaysRepository _holidaysRepository;
         private readonly ClientsRepository _clientsRepository;
+        private readonly IConfiguration _configuration;
 
         public HolidayTests(ITestOutputHelper output)
         {
@@ -34,6 +36,7 @@ namespace Tests.Tests
             var mapper = setup.Mapper;
             var userManager = setup.InitializeUserManager();
             _holidaysCount = setup.GetCount("holidays");
+            _configuration = setup.GetConfiguration();
 
             var timeService = new TimeService();
             var mockUserService = new Mock<IUserService>().Object;
@@ -42,9 +45,10 @@ namespace Tests.Tests
             _employeesRepository = new EmployeesRepository(_context, userManager);
             _clientsRepository = new ClientsRepository(_context);
             var mockNotificationSettingsService = new Mock<INotificationSettingsService>().Object;
-            _employeesService = new EmployeesService(_employeesRepository, mapper, mockOvertimeUtility, timeService, mockUserService, mockNotificationSettingsService);
-            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, timeService, mockOvertimeUtility, _clientsRepository);
-        
+            _employeesService = new EmployeesService(_employeesRepository, mapper, mockOvertimeUtility, timeService, 
+                                                     mockUserService, mockNotificationSettingsService);
+            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, timeService, 
+                                                   mockOvertimeUtility, _clientsRepository, mockUserService, _configuration);
         }
 
         [Theory]
@@ -207,5 +211,39 @@ namespace Tests.Tests
             Assert.Equal(retrievedHolidays.Count, actualHolidaysCount);
         }
 
+        [Fact]
+        public async void When_GettingConfirmedHolidaysByMonth_Expect_ReturnsHolidaysStartingFromEndOfLastMonth()
+        {
+            var currentMonthFirstDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var numberOfLastMonthDays = _configuration.GetValue<int>("CalendarConfig:NumberOfLastMonthDays");
+            var startDate = currentMonthFirstDay.AddDays(-numberOfLastMonthDays);
+            _output.WriteLine(startDate.ToString());
+            var selectedDate = DateTime.Today;
+            var selectedMonthConfirmedHolidays = await _holidaysService.GetConfirmedByMonth(selectedDate, 1);
+
+            foreach (var holiday in selectedMonthConfirmedHolidays)
+            {
+                _output.WriteLine(holiday.FromInclusive.ToString() + "  " + holiday.ToInclusive.ToString());
+                Assert.True(holiday.ToInclusive >= startDate && holiday.Status == HolidayStatus.AdminConfirmed);
+            }
+        }
+
+        [Fact]
+        public async void When_GettingConfirmedHolidaysByMonth_Expect_ReturnsHolidaysLastingToStartOfNextMonth()
+        {
+            var currentMonthFirstDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var numberOfNextMonthDays = _configuration.GetValue<int>("CalendarConfig:NumberOfNextMonthDays");
+            var endDate = currentMonthFirstDay.AddMonths(1).AddDays(numberOfNextMonthDays - 1);
+
+            _output.WriteLine(endDate.ToString());
+            var selectedDate = DateTime.Today;
+            var selectedMonthConfirmedHolidays = await _holidaysService.GetConfirmedByMonth(selectedDate, 1);
+
+            foreach (var holiday in selectedMonthConfirmedHolidays)
+            {
+                _output.WriteLine(holiday.FromInclusive.ToString() + "  " + holiday.ToInclusive.ToString());
+                Assert.True(holiday.FromInclusive <= endDate && holiday.Status == HolidayStatus.AdminConfirmed);
+            }
+        }
     }
 }

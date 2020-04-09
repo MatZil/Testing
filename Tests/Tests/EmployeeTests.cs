@@ -33,10 +33,10 @@ namespace Tests.Tests
             var mockTimeService = new Mock<ITimeService>().Object;
             var overtimeUtility = new OvertimeUtility(configuration);
             var userManager = setup.InitializeUserManager();
-            var userService = new Mock<IUserService>().Object;
+            var mockUserService = new Mock<IUserService>().Object;
             var employeesRepository = new EmployeesRepository(_context, userManager);
             var mockNotificationSettingsService = new Mock<INotificationSettingsService>().Object;
-            _employeesService = new EmployeesService(employeesRepository, mapper, overtimeUtility, mockTimeService, userService, mockNotificationSettingsService);
+            _employeesService = new EmployeesService(employeesRepository, mapper, overtimeUtility, mockTimeService, mockUserService, mockNotificationSettingsService);
         }
 
         [Theory]

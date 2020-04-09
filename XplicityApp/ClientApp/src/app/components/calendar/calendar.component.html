@@ -1,1 +1,9 @@
-<p-fullCalendar [events]="events" [options]="options"></p-fullCalendar>
+<div>
+  <p *ngFor="let holidayType of holidayTypes"><span class="dot" [ngStyle]="{'background-color':holidayType[0]}"></span> {{holidayType[1]}}  </p>
+</div>
+
+<span><button mat-raised-button color="primary" (click)="previousMonthButtonClick()"><mat-icon>keyboard_arrow_left</mat-icon></button></span>
+<span><h2>{{calendarTitle | async}}</h2></span>
+<span><button mat-raised-button color="primary" (click)="nextMonthButtonClick()"><mat-icon>keyboard_arrow_right</mat-icon></button></span>
+
+<p-fullCalendar #fullCalendar [events]="events" [options]="options"></p-fullCalendar>

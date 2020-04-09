@@ -469,13 +469,57 @@ namespace Tests
                 {
                     Employee = context.Employees.Find(3),
                     EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-6),
+                    ToInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-6),
+                    Status = HolidayStatus.AdminConfirmed,
+                    OvertimeDays = 3,
+                    RequestCreatedDate = new DateTime(2019, 12, 14)
+                },
+                new Holiday //18
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-7),
+                    ToInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-7),
+                    Status = HolidayStatus.AdminConfirmed,
+                    OvertimeDays = 3,
+                    RequestCreatedDate = new DateTime(2019, 12, 14)
+                },
+                new Holiday //19
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(12),
+                    ToInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(12),
+                    Status = HolidayStatus.AdminConfirmed,
+                    OvertimeDays = 3,
+                    RequestCreatedDate = new DateTime(2019, 12, 14)
+                },
+                new Holiday //20
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
+                    Type = HolidayType.Annual,
+                    FromInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(13),
+                    ToInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(13),
+                    Status = HolidayStatus.AdminConfirmed,
+                    OvertimeDays = 3,
+                    RequestCreatedDate = new DateTime(2019, 12, 14)
+                },
+                new Holiday //21
+                {
+                    Employee = context.Employees.Find(3),
+                    EmployeeId = 3,
                     Type = HolidayType.DayForChildren,
                     FromInclusive = DateTime.Today.AddDays(40),
                     ToInclusive = DateTime.Today.AddDays(47),
                     Status = HolidayStatus.Pending,
                     RequestCreatedDate = new DateTime(2019, 10, 13)
                 },
-                new Holiday //18
+                new Holiday //22
                 {
                     Employee = context.Employees.Find(3),
                     EmployeeId = 3,
