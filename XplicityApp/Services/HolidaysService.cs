@@ -9,6 +9,7 @@ using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace XplicityApp.Services
 {
@@ -20,6 +21,8 @@ namespace XplicityApp.Services
         private readonly IMapper _mapper;
         private readonly ITimeService _timeService;
         private readonly IOvertimeUtility _overtimeUtility;
+        private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
 
         public HolidaysService(
             IHolidaysRepository holidaysRepository, 
@@ -27,7 +30,10 @@ namespace XplicityApp.Services
             IMapper mapper, 
             ITimeService timeService, 
             IOvertimeUtility overtimeUtility, 
-            IRepository<Client> clientsRepository)
+            IRepository<Client> clientsRepository,
+            IUserService userService,
+            IConfiguration configuration
+            )
         {
             _holidaysRepository = holidaysRepository;
             _mapper = mapper;
@@ -35,6 +41,8 @@ namespace XplicityApp.Services
             _overtimeUtility = overtimeUtility;
             _employeeRepository = employeeRepository;
             _clientsRepository = clientsRepository;
+            _userService = userService;
+            _configuration = configuration;
         }
 
         public async Task<GetHolidayDto> GetById(int id)
@@ -128,18 +136,18 @@ namespace XplicityApp.Services
             return _overtimeUtility.AddOvertimeDetailsToHoliday(holiday);
         }
 
-        public async Task<string> GetAdminConfirmerFullName(int confirmerId)
+        public async Task<string> GetEmployeeFullName(int employeeId)
         {
-            var confirmer = await _employeeRepository.GetById(confirmerId);
-            var confirmerFullName = $"{confirmer.Name} {confirmer.Surname}";
-            return confirmerFullName;
+            var employee = await _employeeRepository.GetById(employeeId);
+            var employeeFullName = $"{employee.Name} {employee.Surname}";
+            return employeeFullName;
         }
 
-        public async Task<string> GetClientConfirmerFullName(int confirmerId)
+        public async Task<string> GetClientFullName(int clientId)
         {
-            var confirmer = await _clientsRepository.GetById(confirmerId);
-            var confirmerFullName = confirmer.CompanyName;
-            return confirmerFullName;
+            var client = await _clientsRepository.GetById(clientId);
+            var clientFullName = client.CompanyName;
+            return clientFullName;
         }
 
         public async Task<string> GetConfirmerFullName(GetHolidayDto holidayDto)
@@ -147,14 +155,76 @@ namespace XplicityApp.Services
             var confirmerFullName = string.Empty;
             if (holidayDto.ConfirmerAdminId > 0)
             {
-                confirmerFullName = await GetAdminConfirmerFullName(holidayDto.ConfirmerAdminId);
+                confirmerFullName = await GetEmployeeFullName(holidayDto.ConfirmerAdminId);
             }
             else if (holidayDto.ConfirmerClientId > 0)
             {
-                confirmerFullName = await GetClientConfirmerFullName(holidayDto.ConfirmerClientId);
+                confirmerFullName = await GetClientFullName(holidayDto.ConfirmerClientId);
             }
 
             return confirmerFullName;
+        }
+    
+	    public async Task<List<GetHolidayDto>> GetConfirmedByMonth(DateTime selectedDate, int currentUserId)
+        {
+            var numberOfLastMonthDays = _configuration.GetValue<int>("CalendarConfig:NumberOfLastMonthDays");
+            var numberOfNextMonthDays = _configuration.GetValue<int>("CalendarConfig:NumberOfNextMonthDays");
+
+            var yearFrom = selectedDate.AddMonths(-1).Year;
+            var monthFrom = selectedDate.AddMonths(-1).Month;
+            var daysInLastMonth = DateTime.DaysInMonth(yearFrom, monthFrom);
+            var dayFrom = daysInLastMonth - numberOfLastMonthDays;
+            var dateFrom = new DateTime(yearFrom, monthFrom, dayFrom);
+
+            var yearTo = selectedDate.AddMonths(1).Year;
+            var monthTo = selectedDate.AddMonths(1).Month;
+            var dateTo = new DateTime(yearTo, monthTo, numberOfNextMonthDays);
+
+            var holidays = await GetByRole(currentUserId);
+            var selectedMonthConfirmedHolidays = new List<GetHolidayDto>();
+
+            foreach (var holiday in holidays)
+            {
+                if (holiday.Status == HolidayStatus.AdminConfirmed)
+                {
+                    bool datesOverlap = dateFrom < holiday.ToInclusive && holiday.FromInclusive <= dateTo;
+                    if (datesOverlap)
+                        selectedMonthConfirmedHolidays.Add(holiday);
+                }
+            }
+
+            return selectedMonthConfirmedHolidays;
+        }
+
+        private async Task<ICollection<GetHolidayDto>> GetByRole(int currentUserId)
+        {
+            var employee = await _employeeRepository.GetById(currentUserId);
+            var holidays = await _holidaysRepository.GetAll();
+            var holidaysDto = _mapper.Map<GetHolidayDto[]>(holidays).OrderByDescending(h => h.RequestCreatedDate).ToList();
+
+            var holidaysFinal = new List<GetHolidayDto>();
+            var employeeRole = await _userService.GetUserRole(currentUserId);
+
+            if (employeeRole == "Admin")
+            {
+                foreach (var holidayDto in holidaysDto)
+                {
+                    holidayDto.EmployeeFullName = await GetEmployeeFullName(holidayDto.EmployeeId);
+                    holidaysFinal.Add(holidayDto);
+                }
+            }
+            else
+            {
+                foreach (var holidayDto in holidaysDto)
+                {
+                    if (holidayDto.EmployeeId == currentUserId)
+                    {
+                        holidaysFinal.Add(holidayDto);
+                    }
+                }
+            }
+
+            return holidaysFinal;
         }
     }
 }

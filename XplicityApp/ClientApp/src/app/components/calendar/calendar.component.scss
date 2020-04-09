@@ -1,11 +1,22 @@
-.alignCenter {
-    text-align: center;
+div {
+    display: flex;
+    justify-content: space-evenly;  
 }
 
-.floatLeft {
-    float: left;
+.dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 10%;
+    display: inline-block;
+  }
+
+button{
+    height:35px;
+    width:45px;
 }
 
-.floatRight {
-    float: right;
+span {
+    display: inline-block;
+    width: 100px;
 }
+      

@@ -55,6 +55,16 @@ namespace XplicityApp.Controllers
 
             return Ok(holiday);
         }
+		
+		[HttpGet]
+        [Produces(typeof(GetHolidayDto[]))]
+        [Route("GetConfirmedByMonth")]
+        public async Task<IActionResult> GetConfirmedByMonth(DateTime selectedDate, int currentUserId)
+        {
+            var selectedMonthConfirmedHolidays = await _holidaysService.GetConfirmedByMonth(selectedDate, currentUserId);
+
+            return Ok(selectedMonthConfirmedHolidays);
+        }
 
         // DELETE: api/holidays/5
         [HttpDelete("{id}")]
