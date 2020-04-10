@@ -16,8 +16,8 @@
             <input asp-for="@Model.ConfirmerId" name="confirmerId" hidden>
             <input asp-for="@Model.IsConfirmerAdmin" name="isConfirmerAdmin" hidden>
 
-            <button class="button button1" type="submit" asp-route-confirm="true">Confirm</button>
-            <button class="button button2" type="submit" asp-route-confirm="false">Reject</button>
+            <button class="button1" type="submit" asp-route-confirm="true">Confirm</button>
+            <button class="button2" type="submit" asp-route-confirm="false">Reject</button>
 
             <p>If you are rejecting this request, please provide the reason:</p>
             <input name="rejectionReason" />
