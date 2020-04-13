@@ -115,6 +115,20 @@ namespace Tests.Tests
 
             Assert.Equal("Email " + email + " is already taken", exception.Result.Message);
         }
+        [Theory]
+        [InlineData(2, "email@email")]
+        public async void When_UpdatingEmployee_Expect_EmailChanged(int id, string email)
+        {
+            var updatedEmployee = new UpdateEmployeeDto()
+            {
+                Email = email,
+            };
+            await _employeesService.Update(id, updatedEmployee);
+
+            var foundEmployee = _context.Employees.Find(id);
+
+            Assert.Equal(foundEmployee.Email, updatedEmployee.Email);
+        }
 
         [Theory]
         [InlineData(3, "available@email")]

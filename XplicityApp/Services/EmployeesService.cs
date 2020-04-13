@@ -142,6 +142,8 @@ namespace XplicityApp.Services
                 // email has changed so check if the new email is already taken
                 if (_repository.FindByEmail(updateData.Email).Result != null)
                     throw new Exception("Email " + updateData.Email + " is already taken");
+
+                await _userService.ChangeEmail(id, updateData.Email);
             }
 
             var parentalLeaveDifference = updateData.ParentalLeaveLimit - employeeToUpdate.ParentalLeaveLimit;

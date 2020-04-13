@@ -13,6 +13,7 @@ namespace XplicityApp.Services.Interfaces
 
         Task ChangePassword(int id, UpdatePasswordDto updatePasswordDto);
 
+        Task ChangeEmail(int id, string updatedEmail);
         Task<Employee> GetCurrentUser(string email);
         Task<string> GetUserRole(int id);
     }
