@@ -134,10 +134,25 @@ namespace Tests
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
             }
 
+            if (!await _roleManager.RoleExistsAsync("Employee"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("Employee"));
+            }
+
             if (!context.Users.AnyAsync(x => x.UserName == "user1").Result)
             {
                 var user = new User { UserName = "user1", Email = "user1@gmail.com", EmployeeId = 1 };
                 await _userManager.CreateAsync(user, "Pa$$W0rD!");
+
+                if (!_userManager.IsInRoleAsync(user, "Admin").Result)
+                {
+                    await _userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
+            if (!context.Users.AnyAsync(x => x.UserName == "user2").Result)
+            {
+                var user = new User { UserName = "user2", Email = "user2@gmail.com", EmployeeId = 2 };
+                await _userManager.CreateAsync(user, "testing");
 
                 if (!_userManager.IsInRoleAsync(user, "Admin").Result)
                 {

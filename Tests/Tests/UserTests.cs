@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using XplicityApp.Dtos.Employees;
+using XplicityApp.Dtos.Users;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services;
 using Xunit;
@@ -10,48 +14,82 @@ namespace Tests.Tests
     public class UserTests
     {
         private readonly UserService _usersService;
-        
+        private readonly HolidayDbContext _context;
+        private readonly EmployeesRepository _repository;
+        private readonly UserManager<User> _usermanager;
+
         public UserTests()
         {
             var setup = new SetUp();
             setup.Initialize();
-            var context = setup.HolidayDbContext;
+            _context = setup.HolidayDbContext;
 
-            var userManager = setup.InitializeUserManager();
-            
-            new EmployeesRepository(context, userManager);
-            _usersService = new UserService(userManager);
+            _usermanager = setup.InitializeUserManager();
+            _repository = new EmployeesRepository(_context, _usermanager);
+            _usersService = new UserService(_usermanager);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public async void When_UpdatingUserRole_Expect_UpdatesUserRole(int id)
+        {
+            var updateEmployeeDto = new UpdateEmployeeDto
+            {
+                Role = "Employee"
+            };
+            var expected = updateEmployeeDto.Role;
+
+            await _usersService.Update(id, updateEmployeeDto);
+            var actual = await _usersService.GetUserRole(id);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public async void When_GettingUserRole_Expect_ReturnsRole(int id)
+        {
+            var role = await _usersService.GetUserRole(id);
+
+            Assert.NotNull(role);
+        }
+
+        [Theory]
+        [InlineData("user1@gmail.com")]
+        public async void When_GettingCurrentUser_Expect_ReturnsUser(string email)
+        {
+            var user = await _usersService.GetCurrentUser(email);
+
+            Assert.NotNull(user);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public async void When_UpdatingUserEmail_Expect_UpdatesUserEmail(int id)
+        {
+            var newEmail = "updatedEmail@email.com";
+
+            await _usersService.ChangeEmail(id, newEmail);
+            var user = await _usersService.GetCurrentUser(newEmail);
+
+            Assert.Equal(newEmail, user.Email);
         }
 
         //[Theory]
-        //[InlineData(1, "pass", "available@email")]
-        //public async void When_CreatingUser_Expect_ReturnsNewUser(int clientId, string password, string email)
+        //[InlineData(2, "user2@gmail.com")]
+        //public async void When_UpdatingUserPassword_Expect_UpdatesUserPassword(int id, string email)
         //{
-        //    var newEmployeeDto = _setup.NewEmployeeDto(clientId, password, email);
-        //    var newEmployee = _setup.NewEmployee(clientId, email);
-
-        //    var createdUser = await _usersService.Create(newEmployee, newEmployeeDto);
-        //    Assert.NotNull(createdUser);
-        //}
-
-        //[Theory]
-        //[InlineData(1)]
-        //[InlineData(2)]
-        //public async void When_UpdatingUser_Expect_UpdatesUser(int id)
-        //{
-        //    var initial = _context.Employees.Find(id).Surname;
-
-        //    var updateEmployeeDto = new UpdateEmployeeDto
+        //    var updatePasswordDto = new UpdatePasswordDto
         //    {
-        //        Surname = "Updated Surname"
+        //        CurrentPassword = "testing",
+        //        NewPassword = "updatedPassword"
         //    };
-        //    var expected = updateEmployeeDto.Surname;
+        //    var expectedPassword = "updatedPassword";
 
-        //    await _usersService.Update(id, updateEmployeeDto);
-        //    var actual = _context.Employees.Find(id).Surname;
-        //    _output.WriteLine(initial + "   >>   " + actual);
-
-        //    Assert.Equal(expected, actual);
+        //    await _usersService.ChangePassword(id, updatePasswordDto);
+        //    var user = await _usermanager.FindByEmailAsync(email);
+        //    bool passwordCorrect = await _usermanager.CheckPasswordAsync(user, expectedPassword);
+        //    Assert.True(passwordCorrect);
         //}
 
         [Theory]
