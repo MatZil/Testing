@@ -84,6 +84,7 @@ namespace XplicityApp.Infrastructure.DocxGeneration
 
             return new Dictionary<string, string>
             {
+                {"{HOLIDAY_PURPOSE}", GetTitleByHolidayType(holiday.Type)},
                 {"{POSITION}", employee.Position},
                 {"{FULL_NAME}", $"{employee.Name} {employee.Surname}"},
                 {"{CREATION_DATE}", holiday.RequestCreatedDate.ToString("yyyy-MM-dd") },
@@ -103,16 +104,36 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             switch (typeToTranslate)
             {
                 case HolidayType.Annual:
-                    return "kasmetinių";
+                    return "kasmetines atostogas";
 
                 case HolidayType.DayForChildren:
-                    return "dienos vaikams";
+                    return "papildomą poilsio dieną";
 
                 case HolidayType.Science:
-                    return "mokslo";
+                    return "mokslo atostogas";
 
                 case HolidayType.Unpaid:
-                    return "neapmokamas";
+                    return "neapmokamas atostogas";
+            }
+
+            return "";
+        }
+
+        private string GetTitleByHolidayType(HolidayType holidayType)
+        {
+            switch (holidayType)
+            {
+                case HolidayType.Annual:
+                    return "ATOSTOGŲ";
+
+                case HolidayType.DayForChildren:
+                    return "PAPILDOMOS POILSIO DIENOS";
+
+                case HolidayType.Science:
+                    return "ATOSTOGŲ";
+
+                case HolidayType.Unpaid:
+                    return "ATOSTOGŲ";
             }
 
             return "";
@@ -121,7 +142,6 @@ namespace XplicityApp.Infrastructure.DocxGeneration
         private async Task ProcessTemplate(string templatePath, string generationPath, Dictionary<string, string> replacementMap)
         {
             var documentTemplateHtml = await GetHtmlTemplateString(templatePath);
-
             var documentContentHtml = GetContentFromTemplate(documentTemplateHtml, replacementMap);
 
             await CreateDocxFromHtml(documentContentHtml, generationPath);
