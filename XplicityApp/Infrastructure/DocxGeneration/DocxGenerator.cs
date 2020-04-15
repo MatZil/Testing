@@ -25,10 +25,10 @@ namespace XplicityApp.Infrastructure.DocxGeneration
         private readonly ILogger<DocxGenerator> _logger;
 
         public DocxGenerator(
-            IConfiguration configuration, 
-            ITimeService timeService, 
-            IFileUtility fileUtility, 
-            IFileService fileService, 
+            IConfiguration configuration,
+            ITimeService timeService,
+            IFileUtility fileUtility,
+            IFileService fileService,
             IOvertimeUtility overtimeUtility,
             ILogger<DocxGenerator> logger)
         {
@@ -49,7 +49,7 @@ namespace XplicityApp.Infrastructure.DocxGeneration
 
             try
             {
-                var replacementMap = GetReplacementMap(holiday, employee);
+                var replacementMap = GetReplacementMap(holiday, employee, holidayDocumentType);
 
                 var templatePath = GetTemplatePath(holidayDocumentType);
 
@@ -71,7 +71,7 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             }
         }
 
-        private Dictionary<string, string> GetReplacementMap(Holiday holiday, Employee employee)
+        private Dictionary<string, string> GetReplacementMap(Holiday holiday, Employee employee, FileTypeEnum holidayDocumentType)
         {
             var overtimeOrderString = "";
             var overtimeRequestString = "";
@@ -84,7 +84,7 @@ namespace XplicityApp.Infrastructure.DocxGeneration
 
             return new Dictionary<string, string>
             {
-                {"{HOLIDAY_PURPOSE}", GetTitleByHolidayType(holiday.Type)},
+                {"{HOLIDAY_PURPOSE}", GetTitleByHolidayType(holiday.Type, holidayDocumentType)},
                 {"{POSITION}", employee.Position},
                 {"{FULL_NAME}", $"{employee.Name} {employee.Surname}"},
                 {"{CREATION_DATE}", holiday.RequestCreatedDate.ToString("yyyy-MM-dd") },
@@ -101,42 +101,34 @@ namespace XplicityApp.Infrastructure.DocxGeneration
 
         private string TypeToLithuanian(HolidayType typeToTranslate)
         {
-            switch (typeToTranslate)
-            {
-                case HolidayType.Annual:
-                    return "kasmetines atostogas";
+            if (typeToTranslate == HolidayType.Annual)
+                return "kasmetines atostogas";
 
-                case HolidayType.DayForChildren:
-                    return "papildomą poilsio dieną";
+            if (typeToTranslate == HolidayType.DayForChildren)
+                return "papildomą poilsio dieną";
 
-                case HolidayType.Science:
-                    return "mokslo atostogas";
+            if (typeToTranslate == HolidayType.Science)
+                return "mokslo atostogas";
 
-                case HolidayType.Unpaid:
-                    return "neapmokamas atostogas";
-            }
+            else if (typeToTranslate == HolidayType.Unpaid) return "neapmokamas atostogas";
 
             return "";
         }
 
-        private string GetTitleByHolidayType(HolidayType holidayType)
+        private string GetTitleByHolidayType(HolidayType holidayType, FileTypeEnum holidayDocumentType)
         {
-            switch (holidayType)
+            if (holidayDocumentType == FileTypeEnum.Order)
             {
-                case HolidayType.Annual:
-                    return "ATOSTOGŲ";
-
-                case HolidayType.DayForChildren:
-                    return "PAPILDOMOS POILSIO DIENOS";
-
-                case HolidayType.Science:
-                    return "ATOSTOGŲ";
-
-                case HolidayType.Unpaid:
-                    return "ATOSTOGŲ";
+                return holidayType == HolidayType.DayForChildren ? "DĖL PAPILDOMOS POILSIO DIENOS SUTEIKIMO" : "DĖL ATOSTOGŲ SUTEIKIMO";
+            }
+            
+            if (holidayDocumentType == FileTypeEnum.Request)
+            {
+                return holidayType == HolidayType.DayForChildren ? "PRAŠYMAS DĖL PAPILDOMOS ATOSTOGŲ DIENOS SUTEIKIMO" : "DĖL KASMETINIŲ ATOSTOGŲ";
             }
 
             return "";
+
         }
 
         private async Task ProcessTemplate(string templatePath, string generationPath, Dictionary<string, string> replacementMap)
