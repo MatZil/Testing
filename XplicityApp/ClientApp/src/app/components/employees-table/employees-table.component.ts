@@ -40,10 +40,18 @@ export class EmployeesTableComponent implements OnInit {
   sortValue: string | null = null;
   listOfData: TableRowUserModel[] = [];
 
-  displayedColumns: string[] = ['name', 'surname', 'client', 'worksFromDate',
-    'birthdayDate', 'daysOfVacation', 'freeWorkDays', 'overtimeHours',
-    'email', 'position', 'parentalLeaveLimit', 'currentAvailableLeaves',
-    'nextMonthAvailableLeaves', 'healthCheckDate', 'employeeStatus',
+  displayedColumns: string[] = [
+    'name', 
+    'surname', 
+    'client', 
+    'worksFromDate',
+    'birthdayDate', 
+    'daysOfVacation', 
+    'freeWorkDays', 
+    'overtimeHours',
+    'email', 
+    'position', 
+    'healthCheckDate',
     'actions'];
   employeeDataSource = new MatTableDataSource(this.listOfData);
 
