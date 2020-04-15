@@ -50,13 +50,9 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             try
             {
                 var replacementMap = GetReplacementMap(holiday, employee, holidayDocumentType);
-
                 var templatePath = GetTemplatePath(holidayDocumentType);
-
                 var generationPath = await _fileUtility.GetGeneratedDocxPath(holiday.Id, holidayDocumentType);
-
                 var fileName = _fileUtility.ExtractNameFromPath(generationPath);
-
                 var fileId = await _fileService.CreateFileRecord(fileName, holidayDocumentType);
 
                 await ProcessTemplate(templatePath, generationPath, replacementMap);
@@ -75,7 +71,8 @@ namespace XplicityApp.Infrastructure.DocxGeneration
         {
             var overtimeOrderString = "";
             var overtimeRequestString = "";
-            if (holiday.OvertimeDays > 0)
+
+            if (holiday.OvertimeDays > 0 && holiday.Type == HolidayType.Annual)
             {
                 var overtimeHours = _overtimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
                 overtimeOrderString = _configuration["DocxGeneration:OvertimeOrder"].Replace("{OVERTIME_HOURS}", Math.Round(overtimeHours, 2).ToString());
@@ -99,23 +96,19 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             };
         }
 
-        private string TypeToLithuanian(HolidayType typeToTranslate)
+        private static string TypeToLithuanian(HolidayType typeToTranslate)
         {
-            if (typeToTranslate == HolidayType.Annual)
-                return "kasmetines atostogas";
-
-            if (typeToTranslate == HolidayType.DayForChildren)
-                return "papildomą poilsio dieną";
-
-            if (typeToTranslate == HolidayType.Science)
-                return "mokslo atostogas";
-
-            else if (typeToTranslate == HolidayType.Unpaid) return "neapmokamas atostogas";
-
-            return "";
+            return typeToTranslate switch
+            {
+                HolidayType.Annual => "kasmetines atostogas",
+                HolidayType.DayForChildren => "papildomą poilsio dieną",
+                HolidayType.Science => "mokslo atostogas",
+                HolidayType.Unpaid => "neapmokamas atostogas",
+                _ => "",
+            };
         }
 
-        private string GetTitleByHolidayType(HolidayType holidayType, FileTypeEnum holidayDocumentType)
+        private static string GetTitleByHolidayType(HolidayType holidayType, FileTypeEnum holidayDocumentType)
         {
             if (holidayDocumentType == FileTypeEnum.Order)
             {
