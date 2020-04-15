@@ -71,13 +71,22 @@ namespace XplicityApp.Infrastructure.DocxGeneration
         {
             var overtimeOrderString = "";
             var overtimeRequestString = "";
+            var increasedSalaryString = "";
 
-            if (holiday.OvertimeDays > 0 && holiday.Type == HolidayType.Annual)
+            if (holiday.Type == HolidayType.Annual)
             {
-                var overtimeHours = _overtimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
-                overtimeOrderString = _configuration["DocxGeneration:OvertimeOrder"].Replace("{OVERTIME_HOURS}", Math.Round(overtimeHours, 2).ToString());
-                overtimeRequestString = _configuration["DocxGeneration:OvertimeRequest"].Replace("{OVERTIME_HOURS}", Math.Round(overtimeHours, 2).ToString());
+                if (holiday.OvertimeDays > 0)
+                {
+                    var overtimeHours = _overtimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
+                    overtimeOrderString = _configuration["DocxGeneration:OvertimeOrder"]
+                        .Replace("{OVERTIME_HOURS}", Math.Round(overtimeHours, 2).ToString());
+                    overtimeRequestString = _configuration["DocxGeneration:OvertimeRequest"]
+                        .Replace("{OVERTIME_HOURS}", Math.Round(overtimeHours, 2).ToString());
+                }
+
+                increasedSalaryString = _configuration["DocxGeneration:IncreasedSalaryRequest"];
             }
+
 
             return new Dictionary<string, string>
             {
@@ -92,7 +101,8 @@ namespace XplicityApp.Infrastructure.DocxGeneration
                 {"{WORK_DAY_COUNT}", _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToInclusive).ToString()},
                 {"{HOLIDAY_TYPE}", TypeToLithuanian(holiday.Type) },
                 {"{OVERTIME_ORDER}", overtimeOrderString },
-                {"{OVERTIME_REQUEST}", overtimeRequestString }
+                {"{OVERTIME_REQUEST}", overtimeRequestString },
+                {"{INCREASED_SALARY_REQUEST}", increasedSalaryString}
             };
         }
 
