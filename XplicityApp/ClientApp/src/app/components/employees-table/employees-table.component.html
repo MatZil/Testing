@@ -6,7 +6,16 @@
     <input class="search-text-size" matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
     <mat-icon class="search-icon-size" matSuffix>search</mat-icon>
   </mat-form-field>
-  <br>
+
+  <mat-select name="status" class="statusSelect" placeholder="Employee status"
+              (selectionChange)="refreshTable(selectedEmployeeStatus)" [(value)]="selectedEmployeeStatus">
+    <mat-option [value]="1">
+      Current employees
+    </mat-option>
+    <mat-option [value]="0">
+      Former employees
+    </mat-option>
+  </mat-select>
 </div>
 
 <div class="table-wrapper">

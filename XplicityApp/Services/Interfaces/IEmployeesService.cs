@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using XplicityApp.Dtos.Employees;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 
 namespace XplicityApp.Services.Interfaces
 {
@@ -15,5 +16,6 @@ namespace XplicityApp.Services.Interfaces
         Employee AddOvertimeDays(Employee employee);
         bool HasActiveUnpaidHoliday(int id);
         Task<bool> EmailExists(string email);
+        Task<ICollection<GetEmployeeDto>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus);
     }
 }
