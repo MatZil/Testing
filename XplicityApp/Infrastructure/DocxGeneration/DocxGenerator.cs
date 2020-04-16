@@ -99,39 +99,62 @@ namespace XplicityApp.Infrastructure.DocxGeneration
                 {"{HOLIDAY_BEGIN}", holiday.FromInclusive.ToString("yyyy-MM-dd")},
                 {"{HOLIDAY_END}", holiday.ToInclusive.ToString("yyyy-MM-dd")},
                 {"{WORK_DAY_COUNT}", _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToInclusive).ToString()},
-                {"{HOLIDAY_TYPE}", TypeToLithuanian(holiday.Type) },
+                {"{HOLIDAY_TYPE}", TypeToLithuanian(holiday.Type,holidayDocumentType) },
                 {"{OVERTIME_ORDER}", overtimeOrderString },
                 {"{OVERTIME_REQUEST}", overtimeRequestString },
                 {"{INCREASED_SALARY_REQUEST}", increasedSalaryString}
             };
         }
 
-        private static string TypeToLithuanian(HolidayType typeToTranslate)
+        private static string TypeToLithuanian(HolidayType typeToTranslate, FileTypeEnum holidayDocumentType)
         {
             return typeToTranslate switch
             {
-                HolidayType.Annual => "kasmetines atostogas",
-                HolidayType.DayForChildren => "papildomą poilsio dieną",
-                HolidayType.Science => "mokslo atostogas",
-                HolidayType.Unpaid => "neapmokamas atostogas",
+                HolidayType.Annual => (holidayDocumentType == FileTypeEnum.Order ? "kasmetines atostogas" : "išleisti mane kasmetinių atostogų"),
+                HolidayType.DayForChildren => (holidayDocumentType == FileTypeEnum.Order
+                    ? "papildomą poilsio dieną"
+                    : "suteikti man papildomą poilsio dieną vaikų priežiūrai"),
+                HolidayType.Science => (holidayDocumentType == FileTypeEnum.Order ? "mokslo atostogas" : "išleisti mane mokslo atostogų"),
+                HolidayType.Unpaid => (holidayDocumentType == FileTypeEnum.Order ? "neapmokamas atostogas" : "išleisti mane neapmokamų atostogų"),
                 _ => "",
             };
         }
 
         private static string GetTitleByHolidayType(HolidayType holidayType, FileTypeEnum holidayDocumentType)
         {
-            if (holidayDocumentType == FileTypeEnum.Order)
+            switch (holidayDocumentType)
             {
-                return holidayType == HolidayType.DayForChildren ? "DĖL PAPILDOMOS POILSIO DIENOS SUTEIKIMO" : "DĖL ATOSTOGŲ SUTEIKIMO";
-            }
-            
-            if (holidayDocumentType == FileTypeEnum.Request)
-            {
-                return holidayType == HolidayType.DayForChildren ? "PRAŠYMAS DĖL PAPILDOMOS ATOSTOGŲ DIENOS SUTEIKIMO" : "DĖL KASMETINIŲ ATOSTOGŲ";
+                case FileTypeEnum.Order:
+                    if (holidayType == HolidayType.DayForChildren)
+                    {
+                        return "DĖL PAPILDOMOS POILSIO DIENOS SUTEIKIMO";
+                    }
+                    else
+                    {
+                        return "DĖL ATOSTOGŲ SUTEIKIMO";
+                    }
+                case FileTypeEnum.Request:
+                    if (holidayType == HolidayType.DayForChildren)
+                    {
+                        return "PRAŠYMAS DĖL PAPILDOMOS ATOSTOGŲ DIENOS SUTEIKIMO";
+                    }
+                    else if (holidayType == HolidayType.Annual)
+                    {
+                        return "DĖL KASMETINIŲ ATOSTOGŲ";
+                    }
+                    else if (holidayType == HolidayType.Science)
+                    {
+                        return "DĖL MOKSLO ATOSTOGŲ";
+                    }
+                    else if (holidayType == HolidayType.Unpaid)
+                    {
+                        return "DĖL NEAPMOKAMŲ ATOSTOGŲ";
+                    }
+
+                    break;
             }
 
             return "";
-
         }
 
         private async Task ProcessTemplate(string templatePath, string generationPath, Dictionary<string, string> replacementMap)
