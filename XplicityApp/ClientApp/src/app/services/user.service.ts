@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { TableRowUserModel } from '../models/table-row-user-model';
@@ -7,6 +7,7 @@ import { Updateuser } from '../models/updateuser';
 import { PasswordChangeModel } from '../models/password-change-model';
 import decode from 'jwt-decode';
 import { Newuser } from '../models/newuser';
+import { EmployeeStatus } from '../models/employee-status.enum';
 
 @Injectable({ providedIn: 'root' })
 
@@ -24,7 +25,13 @@ export class UserService {
 
     getAllUsers(): Observable<TableRowUserModel[]> {
         return this.http.get<TableRowUserModel[]>(this.userApi);
-    }
+  }
+
+  getUsersByStatus(status: EmployeeStatus): Observable<TableRowUserModel[]> {
+    let parameters = new HttpParams();
+    parameters = parameters.append('employeeStatus', status.toString());
+    return this.http.get<TableRowUserModel[]>(`${this.userApi}/GetByStatus`, { params: parameters });
+  }
 
     emailExists(email: string): Observable<boolean> {
         return this.http.get<boolean>(`${this.userApi}/${email}/exists`);
