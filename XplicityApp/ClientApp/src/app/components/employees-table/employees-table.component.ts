@@ -28,6 +28,8 @@ export class EmployeesTableComponent implements OnInit {
 
   employeeStatus = EmployeeStatus;
 
+  selectedEmployeeStatus: EmployeeStatus = EmployeeStatus.Current;
+
   employeeIdForEquipment: number;
 
   clients: Client[] = [];
@@ -65,15 +67,15 @@ export class EmployeesTableComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.refreshTable();
+    this.refreshTable(this.selectedEmployeeStatus);
     this.getAllRoles();
     this.clientService.getClient().subscribe(clients => {
       this.clients = clients;
     });
   }
 
-  refreshTable() {
-    this.userService.getAllUsers().subscribe(users => {
+  refreshTable(status: EmployeeStatus) {
+    this.userService.getUsersByStatus(status).subscribe(users => {
       this.users = users;
       this.listOfData = [...this.users];
       this.employeeDataSource = new MatTableDataSource(this.listOfData);
@@ -89,7 +91,7 @@ export class EmployeesTableComponent implements OnInit {
 
   registerUser(newUser: Newuser) {
     this.userService.registerUser(newUser).subscribe(() => {
-      this.refreshTable();
+      this.refreshTable(this.selectedEmployeeStatus);
     }, error => {
       this.showUnexpectedError();
     });
@@ -97,7 +99,7 @@ export class EmployeesTableComponent implements OnInit {
 
   editUser(user: Updateuser, id: number) {
     this.userService.editUser(user, id).subscribe(() => {
-      this.refreshTable();
+      this.refreshTable(this.selectedEmployeeStatus);
     }, error => {
       this.showUnexpectedError();
     });
@@ -139,7 +141,7 @@ export class EmployeesTableComponent implements OnInit {
     dialogRef.afterClosed().subscribe(userToUpdate => {
       if (userToUpdate) {
         this.editUser(userToUpdate, user.id);
-        this.refreshTable();
+        this.refreshTable(this.selectedEmployeeStatus);
       }
     });
   }

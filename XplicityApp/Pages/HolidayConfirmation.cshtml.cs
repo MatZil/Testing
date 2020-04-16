@@ -71,7 +71,7 @@ namespace XplicityApp.Pages
 
             await _holidayConfirmationService.UpdateHolidayConfirmationStatus(updatedHolidayStatusDto);
 
-            return RedirectToPage("/HolidayConfirmationResult");
+            return RedirectToPage("/HolidayConfirmationResult", new { confirmed = confirm });
         }
     }
 }

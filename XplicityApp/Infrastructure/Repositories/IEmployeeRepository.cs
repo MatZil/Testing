@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 
 namespace XplicityApp.Infrastructure.Repositories
 {
@@ -10,5 +11,6 @@ namespace XplicityApp.Infrastructure.Repositories
         List<Holiday> GetConfirmedHolidays(int employeeId);
         Task<ICollection<Employee>> GetAllAdmins();
         Task<bool> EmailExists(string email);
+        Task<ICollection<Employee>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus);
     }
 }
