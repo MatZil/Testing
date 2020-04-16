@@ -8,6 +8,7 @@ using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace XplicityApp.Services
 {
@@ -19,6 +20,7 @@ namespace XplicityApp.Services
         private readonly IUserService _userService;
         private readonly IOvertimeUtility _overtimeUtility;
         private readonly INotificationSettingsService _notificationSettingsService;
+        private readonly IConfiguration _configuration;
 
         public EmployeesService(
             IEmployeeRepository repository,
@@ -26,7 +28,8 @@ namespace XplicityApp.Services
             IOvertimeUtility overtimeUtility,
             ITimeService timeService,
             IUserService userService,
-            INotificationSettingsService notificationSettingsService
+            INotificationSettingsService notificationSettingsService,
+            IConfiguration configuration
             )
         {
             _repository = repository;
@@ -35,6 +38,7 @@ namespace XplicityApp.Services
             _timeService = timeService;
             _overtimeUtility = overtimeUtility;
             _notificationSettingsService = notificationSettingsService;
+            _configuration = configuration;
         }
 
         public async Task<GetEmployeeDto> GetById(int id)
@@ -180,6 +184,65 @@ namespace XplicityApp.Services
         public async Task<bool> EmailExists(string email)
         {
             return await _repository.EmailExists(email);
+        }
+
+
+        public async Task<List<GetEmployeeBirthdayDto>> GetBirthdaysByMonth(DateTime selectedDate, int currentUserId)
+        {
+            var dateFrom = _timeService.GetCalendarDateFrom(_configuration, selectedDate);
+            var dateTo = _timeService.GetCalendarDateTo(_configuration, selectedDate);
+
+            var allEmployees = await _repository.GetAll();
+            var selectedMonthBirthdays = new List<GetEmployeeBirthdayDto>();
+
+            foreach (var employee in allEmployees)
+            {
+                var birthday = await GetBirthdayInformation(employee);
+                bool datesOverlap = dateFrom < birthday.BirthdayDate && birthday.BirthdayDate <= dateTo;
+                if (datesOverlap)
+                {
+                    selectedMonthBirthdays.Add(birthday);
+                }
+            }
+
+            var selectedMonthBirthdaysByRole = await GetByRole(currentUserId, selectedMonthBirthdays);
+
+            return selectedMonthBirthdaysByRole;
+        }
+
+        public async Task<List<GetEmployeeBirthdayDto>> GetByRole(int currentUserId, List<GetEmployeeBirthdayDto> allBirthdays)
+        {
+            var employeeRole = await _userService.GetUserRole(currentUserId);
+
+            if (employeeRole != "Admin")
+            {
+                var publicBirthdays = new List<GetEmployeeBirthdayDto>();
+                foreach (var birthday in allBirthdays)
+                {
+                    if (birthday.IsPublic)
+                    {
+                        publicBirthdays.Add(birthday);
+                    }
+                }
+                return publicBirthdays;
+            }
+
+            return allBirthdays;
+        }
+
+        private async Task<GetEmployeeBirthdayDto> GetBirthdayInformation(Employee employee)
+        {
+            var notificationSettings = await _notificationSettingsService.GetByEmployeeId(employee.Id);
+
+            var birthday = new GetEmployeeBirthdayDto()
+            {
+                FullName = $"{employee.Name} {employee.Surname}",
+                BirthdayYear = employee.BirthdayDate.Year,
+                BirthdayDate = _timeService.AdjustBirthdayDateForCalendar(employee.BirthdayDate),
+                IsPublic = notificationSettings.BroadcastOwnBirthday
+            };
+
+            return birthday;
         }
     }
 }

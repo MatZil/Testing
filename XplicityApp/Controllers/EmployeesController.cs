@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using XplicityApp.Dtos.Employees;
@@ -102,6 +103,16 @@ namespace XplicityApp.Controllers
         public async Task<IActionResult> EmailExists(string email)
         {
             return Ok(await _employeesService.EmailExists(email));
+        }
+
+        [HttpGet]
+        [Produces(typeof(GetEmployeeBirthdayDto[]))]
+        [Route("GetBirthdaysByMonth")]
+        public async Task<IActionResult> GetBirthdaysByMonth(DateTime selectedDate, int currentUserId)
+        {
+            var selectedMonthBirthdays = await _employeesService.GetBirthdaysByMonth(selectedDate, currentUserId);
+
+            return Ok(selectedMonthBirthdays);
         }
     }
 }

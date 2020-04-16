@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using XplicityApp.Dtos.Employees;
 using XplicityApp.Infrastructure.Database.Models;
@@ -15,5 +16,7 @@ namespace XplicityApp.Services.Interfaces
         Employee AddOvertimeDays(Employee employee);
         bool HasActiveUnpaidHoliday(int id);
         Task<bool> EmailExists(string email);
+        Task<List<GetEmployeeBirthdayDto>> GetBirthdaysByMonth(DateTime selectedDate, int currentUserId);
+        Task<List<GetEmployeeBirthdayDto>> GetByRole(int currentUserId, List<GetEmployeeBirthdayDto> birthdays);
     }
 }

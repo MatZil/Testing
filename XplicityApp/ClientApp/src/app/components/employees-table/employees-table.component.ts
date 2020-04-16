@@ -41,7 +41,7 @@ export class EmployeesTableComponent implements OnInit {
   listOfData: TableRowUserModel[] = [];
 
   displayedColumns: string[] = ['name', 'surname', 'client', 'worksFromDate',
-    'birthdayDate', 'daysOfVacation', 'freeWorkDays', 'overtimeHours',
+    'daysOfVacation', 'freeWorkDays', 'overtimeHours',
     'email', 'position', 'parentalLeaveLimit', 'currentAvailableLeaves',
     'nextMonthAvailableLeaves', 'healthCheckDate', 'employeeStatus',
     'actions'];
