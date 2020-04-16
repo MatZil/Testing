@@ -3,15 +3,17 @@
 @{
     ViewData["Title"] = "HolidayConfirmationAbandoned";
     var imagePath = Url.Content("~/Resources/Images/requestRejected.png");
+    var styleSheetPath = Url.Content("~/Resources/Stylesheets/global.css");
 }
 
-<div class="center">
-    <img src=@imagePath height="125" width="140" />
-    <p><font size="4">@Model.UserWhoAbandoned has abandoned this holiday request.</font></p>
-</div>
-
-<style>
-    .center {
-        text-align: center;
-    }
-</style>
+<html>
+<head>
+    <link href=@styleSheetPath rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="center">
+        <img src=@imagePath height="125" width="140" />
+        <p><font size="4">@Model.UserWhoAbandoned has abandoned this holiday request.</font></p>
+    </div>
+</body>
+</html>

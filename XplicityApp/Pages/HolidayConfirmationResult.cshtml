@@ -2,16 +2,17 @@
 @model XplicityApp.HolidayConfirmationResultModel
 @{
     ViewData["Title"] = "HolidayConfirmationResult";
+    var styleSheetPath = Url.Content("~/Resources/Stylesheets/global.css");
 }
 
-<div class="center">
-    <img src=@Model.ImagePath height="125" width="140" />
-    <p><font size="4">Thank you! @Model.ConfirmationText</font></p>
-</div>
-
-
-<style>
-    .center {
-        text-align: center;
-    }
-</style>
+<html>
+<head>
+    <link href=@styleSheetPath rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="center">
+        <img src=@Model.ImagePath height="125" width="140" />
+        <p><font size="4">Thank you! @Model.ConfirmationText</font></p>
+    </div>
+</body>
+</html>

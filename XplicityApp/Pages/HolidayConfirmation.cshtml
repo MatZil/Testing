@@ -4,66 +4,35 @@
 @{
     ViewData["Title"] = "Holiday Confirmation";
     var imagePath = Url.Content("~/Resources/Images/requestConfirmed.png");
+    var styleSheetPath = Url.Content("~/Resources/Stylesheets/holidayConfirmation.css");
+    var styleSheetGlobalPath = Url.Content("~/Resources/Stylesheets/global.css");
 }
 
-<div class="center">
-    <img src=@imagePath height="125" width="140" />
-    <p><font size="4"><b>@Model.RequesterName</b> is requesting a holiday from <b>@Model.HolidayFrom.ToString("yyyy-MM-dd")</b> to <b>@Model.HolidayTo.ToString("yyyy-MM-dd")</b></font></p>
+    <html>
+    <head>
+        <link href=@styleSheetPath rel="stylesheet" type="text/css" />
+        <link href=@styleSheetGlobalPath rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <div class="center">
+            <img src=@imagePath height="125" width="140" />
+            <p><font size="4"><b>@Model.RequesterName</b> is requesting a holiday from <b>@Model.HolidayFrom.ToString("yyyy-MM-dd")</b> to <b>@Model.HolidayTo.ToString("yyyy-MM-dd")</b></font></p>
 
-    <div>
-        <form method="post">
-            <input asp-for="@Model.HolidayId" name="holidayId" hidden>
-            <input asp-for="@Model.ConfirmerId" name="confirmerId" hidden>
-            <input asp-for="@Model.IsConfirmerAdmin" name="isConfirmerAdmin" hidden>
+            <div>
+                <form method="post">
+                    <input asp-for="@Model.HolidayId" name="holidayId" hidden>
+                    <input asp-for="@Model.ConfirmerId" name="confirmerId" hidden>
+                    <input asp-for="@Model.IsConfirmerAdmin" name="isConfirmerAdmin" hidden>
 
-            <button class="button1" type="submit" asp-route-confirm="true">Confirm</button>
-            <button class="button2" type="submit" asp-route-confirm="false">Reject</button>
+                    <button class="buttonConfirm" type="submit" asp-route-confirm="true">Confirm</button>
+                    <button class="buttonReject" type="submit" asp-route-confirm="false">Reject</button>
 
-            <p>If you are rejecting this request, please provide the reason:</p>
-            <input name="rejectionReason" />
-        </form>
-    </div>
-</div>
+                    <p>If you are rejecting this request, please provide the reason:</p>
+                    <input name="rejectionReason" />
+                </form>
+            </div>
+        </div>
+    </body>
+    </html>
 
 
-<style>
-    input {
-        width: 440px;
-        padding: 12px 20px;
-        border: 2px solid #f44336;
-    }
-
-    .center {
-        text-align: center;
-    }
-
-    button {
-        border: none;
-        color: white;
-        width: 200px;
-        height: 40px;
-        font-size: 16px;
-        margin: 6px 20px;
-        cursor: pointer;
-    }
-
-    .button1 {
-        background-color: white;
-        color: black;
-        border: 2px solid #4CAF50;
-    }
-
-        .button1:hover {
-            background-color: #4CAF50
-        }
-
-    .button2 {
-        background-color: white;
-        color: black;
-        border: 2px solid #f44336;
-    }
-
-        .button2:hover {
-            background-color: #f44336
-        }
-</style>
