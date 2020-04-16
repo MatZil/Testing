@@ -9,6 +9,7 @@ using System.IO;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using Moq;
 using System.Text;
+using XplicityApp.Infrastructure.Database.Models;
 
 namespace Tests.Tests
 {
@@ -68,15 +69,19 @@ namespace Tests.Tests
             Assert.True(Directory.Exists(expectedDirectoryPath));
             Assert.True(File.Exists(expectedFilePath));
 
-
             File.Delete(expectedFilePath);
             Directory.Delete(expectedDirectoryPath);
         }
         [Fact]
         public async void When_GettingNewestPolicyPath_Expect_PathReturned()
         {
+                FileRecord expectedRecord = new FileRecord
+                {
+                    Name = "HolidayPolicy" 
+                };
+
             var actualPath = await _fileService.GetNewestPolicyPath();
-            var expectedPath = "Resources/Policy\\HolidayPolicy";
+            var expectedPath = Path.Combine("Resources/Policy", expectedRecord.Name);
             Assert.Equal(expectedPath, actualPath);
         }
         [Theory]
