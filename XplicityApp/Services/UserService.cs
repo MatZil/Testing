@@ -50,6 +50,13 @@ namespace XplicityApp.Services
                 await _userManager.AddToRoleAsync(userToUpdate, updateEmployeeDto.Role);
                 await _userManager.RemoveFromRolesAsync(userToUpdate, currentRole);
             }
+
+            var newPassword = updateEmployeeDto.Password;
+            if (!newPassword.Equals(string.Empty))
+            {
+                await _userManager.RemovePasswordAsync(userToUpdate);
+                await _userManager.AddPasswordAsync(userToUpdate, newPassword);
+            }
         }
 
         public async Task ChangePassword(int id, UpdatePasswordDto updatePasswordDto)

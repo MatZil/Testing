@@ -19,7 +19,7 @@ export class EditEmployeeFormComponent implements OnInit {
     private userService: UserService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<EditEmployeeFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EditModalData) {}
+    @Inject(MAT_DIALOG_DATA) public data: EditModalData) { }
 
   ngOnInit() {
     this.saveInitialValues();
@@ -74,22 +74,31 @@ export class EditEmployeeFormComponent implements OnInit {
       overtimeHours: [this.data.userToUpdate.overtimeHours, [
         Validators.required
       ]],
-      status: [{value: this.data.userToUpdate.status, disabled: this.data.isEditingSelf}]
+      password: [this.data.userToUpdate.password, [
+        Validators.minLength(6)
+      ]],
+      status: [{ value: this.data.userToUpdate.status, disabled: this.data.isEditingSelf }]
     });
   }
 
   isFormInvalid(baseForm: FormGroup): boolean {
     return !(baseForm.valid && this.editEmployeeForm.valid);
   }
+
   deleteUserById(id: number) {
     this.userService.deleteUser(id).subscribe(() => {
     });
   }
+
   showDeleteConfirm(userToDelete: Updateuser, employeeId: number): void {
     const userToUpdate = this.getFormUser();
-      if(confirm('If you confirm,' + userToDelete.name + ' ' + userToDelete.surname + ' will be permanently deleted.')) {
+    if (confirm('If you confirm,' + userToDelete.name + ' ' + userToDelete.surname + ' will be permanently deleted.')) {
       this.deleteUserById(employeeId);
       this.closeModal(userToUpdate);
     }
+  }
+
+  isStatusCurrent(): boolean {
+    return this.editEmployeeForm.controls.status.value === EmployeeStatus.Current;
   }
 }
