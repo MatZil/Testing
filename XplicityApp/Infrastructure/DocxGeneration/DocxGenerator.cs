@@ -87,7 +87,6 @@ namespace XplicityApp.Infrastructure.DocxGeneration
                 increasedSalaryString = _configuration["DocxGeneration:IncreasedSalaryRequest"];
             }
 
-
             return new Dictionary<string, string>
             {
                 {"{HOLIDAY_PURPOSE}", GetTitleByHolidayType(holiday.Type, holidayDocumentType)},
@@ -169,6 +168,7 @@ namespace XplicityApp.Infrastructure.DocxGeneration
         {
             using var reader = new StreamReader(templatePath, Encoding.GetEncoding(1252));
             var htmlTemplateString = await reader.ReadToEndAsync();
+
             return htmlTemplateString;
         }
 
