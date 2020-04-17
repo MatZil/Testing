@@ -13,6 +13,12 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+            <mat-form-field *ngIf="isStatusCurrent()">
+                <input matInput type="password" placeholder="New password" formControlName="password" autocomplete="new-password">
+                <mat-error *ngIf="editEmployeeForm.controls.password.errors?.minlength" class="error">
+                    Enter at least 6 symbols.
+                </mat-error>
+            </mat-form-field>
         </div>
         <div class="divider">
             <div>

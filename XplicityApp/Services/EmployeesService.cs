@@ -62,6 +62,19 @@ namespace XplicityApp.Services
             return employeesDto;
         }
 
+        public async Task<ICollection<GetEmployeeDto>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus)
+        {
+            var employees = await _repository.GetByEmployeeStatus(employeeStatus);
+            var employeesDto = _mapper.Map<GetEmployeeDto[]>(employees);
+
+            foreach (var employee in employeesDto)
+            {
+                employee.Role = await _userService.GetUserRole(employee.Id);
+            }
+
+            return employeesDto;
+        }
+
         public async Task<NewEmployeeDto> Create(NewEmployeeDto newEmployeeDto)
         {
             if (newEmployeeDto == null)

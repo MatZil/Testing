@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using XplicityApp.Dtos.Employees;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 
 namespace XplicityApp.Services.Interfaces
 {
@@ -18,5 +19,6 @@ namespace XplicityApp.Services.Interfaces
         Task<bool> EmailExists(string email);
         Task<List<GetEmployeeBirthdayDto>> GetBirthdaysByMonth(DateTime selectedDate, int currentUserId);
         Task<List<GetEmployeeBirthdayDto>> GetByRole(int currentUserId, List<GetEmployeeBirthdayDto> birthdays);
+        Task<ICollection<GetEmployeeDto>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus);
     }
 }

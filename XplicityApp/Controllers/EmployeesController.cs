@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using XplicityApp.Dtos.Employees;
 using XplicityApp.Dtos.Users;
+using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Controllers
@@ -29,6 +30,16 @@ namespace XplicityApp.Controllers
         {
             var clients = await _employeesService.GetAll();
             return Ok(clients);
+        }
+
+        [HttpGet]
+        [Produces(typeof(GetEmployeeDto[]))]
+        [Route("GetByStatus")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus)
+        {
+            var employees = await _employeesService.GetByEmployeeStatus(employeeStatus);
+            return Ok(employees);
         }
 
         [HttpGet]

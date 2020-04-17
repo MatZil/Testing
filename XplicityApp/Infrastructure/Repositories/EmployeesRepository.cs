@@ -26,6 +26,13 @@ namespace XplicityApp.Infrastructure.Repositories
             return employees;
         }
 
+        public async Task<ICollection<Employee>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus)
+        {
+            var employees = await Context.Employees.Where(x => x.Status == employeeStatus).ToArrayAsync();
+
+            return employees;
+        }
+
         public async Task<Employee> GetById(int id)
         {
             var employee = await Context.Employees.FindAsync(id);

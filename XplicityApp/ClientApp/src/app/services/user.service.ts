@@ -7,6 +7,7 @@ import { Updateuser } from '../models/updateuser';
 import { PasswordChangeModel } from '../models/password-change-model';
 import decode from 'jwt-decode';
 import { Newuser } from '../models/newuser';
+import { EmployeeStatus } from '../models/employee-status.enum';
 import { Birthday } from 'src/app/models/birthday';
 
 @Injectable({ providedIn: 'root' })
@@ -25,7 +26,13 @@ export class UserService {
 
     getAllUsers(): Observable<TableRowUserModel[]> {
         return this.http.get<TableRowUserModel[]>(this.userApi);
-    }
+  }
+
+  getUsersByStatus(status: EmployeeStatus): Observable<TableRowUserModel[]> {
+    let parameters = new HttpParams();
+    parameters = parameters.append('employeeStatus', status.toString());
+    return this.http.get<TableRowUserModel[]>(`${this.userApi}/GetByStatus`, { params: parameters });
+  }
 
     emailExists(email: string): Observable<boolean> {
         return this.http.get<boolean>(`${this.userApi}/${email}/exists`);
