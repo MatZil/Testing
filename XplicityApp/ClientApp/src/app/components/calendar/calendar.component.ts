@@ -71,7 +71,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   getHolidayEvents(): void {
-    this.events = [];
     this.dataHolidays.data.forEach(holiday => {
       const color = this.getColor(holiday);
       const endDate = this.addDayToEndDate(holiday.toInclusive);
@@ -88,6 +87,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   getBirthdayEvents(): void {
+    this.events = [];
     this.dataBirthdays.data.forEach(birthday => {
       const color = this.holidayTypes[5][0];
       const endDate = this.addDayToEndDate(birthday.birthdayDate);
@@ -130,7 +130,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   previousMonthButtonClick() {
     this.fullCalendar.calendar.prev();
     this.updateCalendarTitle();
-    this.addMontsToCurrentDate(0);
+    this.addMontsToCurrentDate(-1);
     this.getHolidays();
     this.getBirthdays();
   }
@@ -138,7 +138,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   nextMonthButtonClick() {
     this.fullCalendar.calendar.next();
     this.updateCalendarTitle();
-    this.addMontsToCurrentDate(0);
+    this.addMontsToCurrentDate(1);
     this.getHolidays();
     this.getBirthdays();
   }
