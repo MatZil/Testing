@@ -52,7 +52,7 @@ namespace XplicityApp.Services
             }
 
             var newPassword = updateEmployeeDto.Password;
-            if (!newPassword.Equals(string.Empty))
+            if (!string.IsNullOrEmpty(newPassword))
             {
                 await _userManager.RemovePasswordAsync(userToUpdate);
                 await _userManager.AddPasswordAsync(userToUpdate, newPassword);
