@@ -3,6 +3,9 @@ using XplicityApp.Dtos.Employees;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services;
 using Xunit;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using XplicityApp.Infrastructure.Database.Models;
 
 namespace Tests.Tests
 {
@@ -10,17 +13,18 @@ namespace Tests.Tests
     public class UserTests
     {
         private readonly UserService _usersService;
-        
+        private readonly UserManager<User> _userManager;
+
         public UserTests()
         {
             var setup = new SetUp();
             setup.Initialize();
             var context = setup.HolidayDbContext;
 
-            var userManager = setup.InitializeUserManager();
+            _userManager = setup.InitializeUserManager();
             
-            new EmployeesRepository(context, userManager);
-            _usersService = new UserService(userManager);
+            new EmployeesRepository(context, _userManager);
+            _usersService = new UserService(_userManager);
         }
 
         //[Theory]
@@ -65,5 +69,28 @@ namespace Tests.Tests
 
             Assert.ThrowsAsync<InvalidOperationException>(async () => await _usersService.Update(id, updateEmployeeDto));
         }
+
+        //[Fact]
+        //public async void When_ResettingPassword_Expect_PasswordUpdated()
+        //{
+        //    //var updateEmployeeDto = new UpdateEmployeeDto
+        //    //{
+        //    //    Role = "Admin",
+        //    //    Password = "NewPassword"
+        //    //};
+
+        //    //int id = 1;
+        //    //await _usersService.Update(id, updateEmployeeDto);
+        //    //var updatedUser = await _userManager.Users.FirstOrDefaultAsync(x => x.EmployeeId == id);
+        //    //var isPasswordUpdated = await _userManager.CheckPasswordAsync(updatedUser, updateEmployeeDto.Password);
+
+        //    //Assert.True(isPasswordUpdated, "Failed to update password");
+
+        //    var newUser = new User { UserName = "userNew", Email = "userNew@gmail.com", EmployeeId = 1 };
+        //    var result = await _userManager.CreateAsync(newUser, "Pa$$W0rD!");
+        //    var isPasswordValid = await _userManager.CheckPasswordAsync(newUser, "Pa$$W0rD!");
+
+        //    Assert.True(isPasswordValid);
+        //}
     }
 }
