@@ -68,7 +68,7 @@ namespace XplicityApp.Services
                     return _configuration["FileConfig:OrdersFolder"];
             }
 
-            return "";
+            return _configuration["FileConfig:UnknownFolder"];
         }
         public async Task<string> GetNewestPolicyPath()
         {
