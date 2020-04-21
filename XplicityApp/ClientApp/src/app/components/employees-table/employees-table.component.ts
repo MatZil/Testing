@@ -167,7 +167,7 @@ export class EmployeesTableComponent implements OnInit {
     this.employeeDataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  filterTable(user: TableRowUserModel, filterText: string): boolean {
+  private filterTable(user: TableRowUserModel, filterText: string): boolean {
     return (user.name && user.name.toLowerCase().indexOf(filterText) >= 0) ||
       (user.surname && user.surname.toLowerCase().indexOf(filterText) >= 0) ||
       (user.email && user.email.toLowerCase().indexOf(filterText) >= 0) ||
