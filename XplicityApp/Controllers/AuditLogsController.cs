@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using XplicityApp.Services.Interfaces;
 
@@ -6,6 +7,7 @@ namespace XplicityApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class AuditLogsController : ControllerBase
     {
         private readonly IAuditLogsService _auditLogsService;
