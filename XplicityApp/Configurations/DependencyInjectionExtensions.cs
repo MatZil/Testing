@@ -48,6 +48,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<ITagsRepository, TagsRepository>()
                 .AddScoped<IInventoryItemTagsRepository, InventoryItemTagsRepository>()
                 .AddScoped<INotificationSettingsRepository, NotificationSettingsRepository>()
+                .AddScoped<IAuditLogsRepository, AuditLogsRepository>()
                 .AddSingleton<ITimeService, TimeService>()
                 .AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }
@@ -72,6 +73,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<IBackgroundService, BackgroundService>()
                 .AddScoped<ITagsService, TagsService>()
                 .AddScoped<INotificationSettingsService, NotificationSettingsService>()
+                .AddScoped<IAuditLogsService, AuditLogsService>()
                 .AddHostedService<TimedDailyTaskHostedService>();
         }
     }
