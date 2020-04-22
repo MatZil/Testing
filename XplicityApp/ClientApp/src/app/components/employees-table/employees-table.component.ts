@@ -23,42 +23,31 @@ import { MatPaginator } from '@angular/material/paginator';
 export class EmployeesTableComponent implements OnInit {
   users: TableRowUserModel[];
   roles: Role[];
-
   userToUpdate: Updateuser;
-
   employeeStatus = EmployeeStatus;
-
   selectedEmployeeStatus: EmployeeStatus = EmployeeStatus.Current;
-
-  employeeIdForEquipment: number;
-
   clients: Client[] = [];
-
   isVisibleEquipmentModal = false;
-
-  searchValue = '';
-  listOfSearchAddress: string[] = [];
-  sortName: string | null = null;
-  sortValue: string | null = null;
   listOfData: TableRowUserModel[] = [];
 
   displayedColumns: string[] = [
-    'name', 
-    'surname', 
-    'client', 
+    'name',
+    'surname',
+    'client',
     'worksFromDate',
-    'birthdayDate', 
-    'daysOfVacation', 
-    'freeWorkDays', 
+    'birthdayDate',
+    'daysOfVacation',
+    'freeWorkDays',
     'overtimeHours',
-    'email', 
-    'position', 
+    'email',
+    'position',
     'healthCheckDate',
-    'actions'];
+    'actions'
+  ];
   employeeDataSource = new MatTableDataSource(this.listOfData);
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  
+
   constructor(
     private userService: UserService,
     private clientService: ClientService,
@@ -80,6 +69,7 @@ export class EmployeesTableComponent implements OnInit {
       this.listOfData = [...this.users];
       this.employeeDataSource = new MatTableDataSource(this.listOfData);
       this.employeeDataSource.paginator = this.paginator;
+      this.employeeDataSource.filterPredicate = this.filterTable;
     });
   }
 
@@ -103,10 +93,6 @@ export class EmployeesTableComponent implements OnInit {
     }, error => {
       this.showUnexpectedError();
     });
-  }
-
-  closeModal() {
-    this.dialog.closeAll();
   }
 
   openAddForm(): void {
@@ -150,7 +136,7 @@ export class EmployeesTableComponent implements OnInit {
     return this.authenticationService.getUserId();
   }
 
-  getClientName(id: number) {
+  getClientName(id: number): string {
     for (const client of this.clients) {
       if (id != null && client.id === id) {
         return client.companyName;
@@ -177,23 +163,14 @@ export class EmployeesTableComponent implements OnInit {
     this.isVisibleEquipmentModal = false;
   }
 
-  formatDate(date: Date) {
-    const d = new Date(date);
-    let month = '' + (d.getMonth() + 1);
-    let day = '' + d.getDate();
-    const year = d.getFullYear();
-
-    if (month.length < 2) {
-      month = '0' + month;
-    }
-    if (day.length < 2) {
-      day = '0' + day;
-    }
-
-    return [year, month, day].join('-');
-  }
-
   applyFilter(filterValue: string) {
     this.employeeDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  private filterTable(user: TableRowUserModel, filterText: string): boolean {
+    return (user.name && user.name.toLowerCase().indexOf(filterText) >= 0) ||
+      (user.surname && user.surname.toLowerCase().indexOf(filterText) >= 0) ||
+      (user.email && user.email.toLowerCase().indexOf(filterText) >= 0) ||
+      (user.position && user.position.toLowerCase().indexOf(filterText) >= 0);
   }
 }
