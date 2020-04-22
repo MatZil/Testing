@@ -87,5 +87,19 @@ namespace Tests.Tests.BackgroundTests
 
             Assert.True(priceAfterFullDepreciation == 1, "Failed to apply full depreciation.");
         }
+
+        [Theory]
+        [InlineData(1, 30, 92)]
+        [InlineData(1, 90, 76)]
+        [InlineData(1, 180, 51)]
+        public async void When_PartialDepreciationIsApplied_Expect_CurrentPriceIsChanged(int id, int deprecationTimeInDays, decimal expectedPrice)
+        {
+            for (int i = 0; i < deprecationTimeInDays; i++)
+                await _backgroundInventoryUpdater.ApplyDepreciationToInventoryItems();
+
+            var priceAfterDepreciation = Math.Round((await _inventoryItemRepository.GetById(id)).CurrentPrice);
+
+            Assert.True(priceAfterDepreciation == expectedPrice);
+        }
     }
 }
