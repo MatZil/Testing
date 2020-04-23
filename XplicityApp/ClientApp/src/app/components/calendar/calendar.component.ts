@@ -22,7 +22,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   options: any;
   currentUsersId: number;
   currentUsersClientId: number;
-  currentUsersClientsCompany: string;
   dataSource = new MatTableDataSource<Holiday>();
   holidayTypes = [['#99ccff', 'Annual unpaid'], ['#0099ff', 'Annual paid'],
     ['#006699', 'Annual paid, with overtime'], ['#9933ff', 'Science'], ['#cc99ff', 'Day for children']];
