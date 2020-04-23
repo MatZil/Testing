@@ -20,6 +20,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   events: any[];
   calendarTitle = new BehaviorSubject<string>(null);
   options: any;
+  filter: number = 0;
   currentUsersId: number;
   currentUsersClientId: number;
   dataSource = new MatTableDataSource<Holiday>();
