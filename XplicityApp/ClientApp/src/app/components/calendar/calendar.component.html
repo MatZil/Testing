@@ -1,9 +1,30 @@
 <div>
-  <p *ngFor="let holidayType of holidayTypes"><span class="dot" [ngStyle]="{'background-color':holidayType[0]}"></span> {{holidayType[1]}}  </p>
+  <p *ngFor="let holidayType of holidayTypes"><span class="dot" [ngStyle]="{'background-color':holidayType[0]}"></span>
+    {{holidayType[1]}} </p>
 </div>
-
-<span><button mat-raised-button color="primary" (click)="previousMonthButtonClick()"><mat-icon>keyboard_arrow_left</mat-icon></button></span>
-<span><h2>{{calendarTitle | async}}</h2></span>
-<span><button mat-raised-button color="primary" (click)="nextMonthButtonClick()"><mat-icon>keyboard_arrow_right</mat-icon></button></span>
-
+<span><button mat-raised-button color="primary" (click)="previousMonthButtonClick(filter)">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+</span>
+<span>
+  <h2>{{calendarTitle | async}}</h2>
+</span>
+<span><button mat-raised-button color="primary" (click)="nextMonthButtonClick(filter)">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button></span>
+<mat-form-field>
+  <mat-label>Select a filter</mat-label>
+  <mat-select [(value)]="filter" (selectionChange)="getUserAndFilteredCurrentMonthHolidays(filter)">
+    <mat-option *ngIf="isAdmin()" [value]="0">All holidays</mat-option>
+    <mat-option [value]="-1">My holidays</mat-option>
+    <mat-optgroup *ngIf="isAdmin()" label="Clients">
+      <mat-option *ngFor="let client of clients" [value]="client.id">
+        {{client.companyName}}
+      </mat-option>
+    </mat-optgroup>
+    <mat-option *ngIf="isEmployee()" [value]="currentUserClientId">
+      My client
+    </mat-option>
+  </mat-select>
+</mat-form-field>
 <p-fullCalendar #fullCalendar [events]="events" [options]="options"></p-fullCalendar>

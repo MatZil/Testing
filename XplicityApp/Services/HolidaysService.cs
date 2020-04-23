@@ -25,11 +25,11 @@ namespace XplicityApp.Services
         private readonly IConfiguration _configuration;
 
         public HolidaysService(
-            IHolidaysRepository holidaysRepository, 
-            IEmployeeRepository employeeRepository, 
-            IMapper mapper, 
-            ITimeService timeService, 
-            IOvertimeUtility overtimeUtility, 
+            IHolidaysRepository holidaysRepository,
+            IEmployeeRepository employeeRepository,
+            IMapper mapper,
+            ITimeService timeService,
+            IOvertimeUtility overtimeUtility,
             IRepository<Client> clientsRepository,
             IUserService userService,
             IConfiguration configuration
@@ -125,7 +125,7 @@ namespace XplicityApp.Services
             holidaysDto.ForEach(holidayDto => AddOvertimeDetails(holidayDto));
             foreach (var holidayDto in holidaysDto)
             {
-               holidayDto.ConfirmerFullName = await GetConfirmerFullName(holidayDto);
+                holidayDto.ConfirmerFullName = await GetConfirmerFullName(holidayDto);
             }
 
             return holidaysDto;
@@ -164,8 +164,7 @@ namespace XplicityApp.Services
 
             return confirmerFullName;
         }
-    
-	    public async Task<List<GetHolidayDto>> GetConfirmedByMonth(DateTime selectedDate, int currentUserId)
+        public async Task<List<GetHolidayDto>> GetFilteredConfirmedByMonth(DateTime selectedDate, int currentUserId, int filter)
         {
             var numberOfLastMonthDays = _configuration.GetValue<int>("CalendarConfig:NumberOfLastMonthDays");
             var numberOfNextMonthDays = _configuration.GetValue<int>("CalendarConfig:NumberOfNextMonthDays");
@@ -189,10 +188,22 @@ namespace XplicityApp.Services
                 {
                     bool datesOverlap = dateFrom < holiday.ToInclusive && holiday.FromInclusive <= dateTo;
                     if (datesOverlap)
-                        selectedMonthConfirmedHolidays.Add(holiday);
+                    {
+                        if (filter == -1)
+                        {
+                            if (holiday.EmployeeId == currentUserId)
+                                selectedMonthConfirmedHolidays.Add(holiday);
+                        }
+                        else if (filter > 0)
+                        {
+                            if (filter == holiday.ConfirmerClientId)
+                                selectedMonthConfirmedHolidays.Add(holiday);
+                        }
+                        else
+                            selectedMonthConfirmedHolidays.Add(holiday);
+                    }
                 }
             }
-
             return selectedMonthConfirmedHolidays;
         }
 
@@ -217,9 +228,10 @@ namespace XplicityApp.Services
             {
                 foreach (var holidayDto in holidaysDto)
                 {
-                    if (holidayDto.EmployeeId == currentUserId)
+                    if (holidayDto.EmployeeId == currentUserId || holidayDto.ConfirmerClientId == employee.ClientId)
                     {
                         holidaysFinal.Add(holidayDto);
+                        holidayDto.EmployeeFullName = await GetEmployeeFullName(holidayDto.EmployeeId);
                     }
                 }
             }
