@@ -20,8 +20,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   events: any[];
   calendarTitle = new BehaviorSubject<string>(null);
   options: any;
-  currentUserId: number;
-  currentUserClientId: number;
+  currentUsersId: number;
+  currentUsersClientId: number;
   currentUsersClientsCompany: string;
   dataSource = new MatTableDataSource<Holiday>();
   holidayTypes = [['#99ccff', 'Annual unpaid'], ['#0099ff', 'Annual paid'],
@@ -44,8 +44,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
   getUserAndFilteredCurrentMonthHolidays(filter) {
     this.userService.getCurrentUser().subscribe(user => {
-      this.currentUserId = user.id;
-      this.currentUserClientId = user.clientId;
+      this.currentUsersId = user.id;
+      this.currentUsersClientId = user.clientId;
       this.getHolidays(0,filter);
     });
   }
@@ -66,7 +66,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
   getHolidays(monthsToAdd, filter): void {
     this.viewDate = new Date(this.viewDate.setMonth(this.viewDate.getMonth() + monthsToAdd));
-      this.holidayService.getFilteredConfirmedHolidaysBySelectedMonth(this.viewDate, this.currentUserId, filter).subscribe(holidays => {
+      this.holidayService.getFilteredConfirmedHolidaysBySelectedMonth(this.viewDate, this.currentUsersId, filter).subscribe(holidays => {
         this.dataSource.data = holidays;
         this.getEvents();
       });
