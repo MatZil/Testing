@@ -12,7 +12,6 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./edit-employee-form.component.css']
 })
 export class EditEmployeeFormComponent implements OnInit {
-  initialStatusValue: EmployeeStatus;
   editEmployeeForm: FormGroup;
 
   constructor(
@@ -22,13 +21,8 @@ export class EditEmployeeFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: EditModalData) { }
 
   ngOnInit() {
-    this.saveInitialValues();
     this.adjustClientId();
     this.initializeFormGroup();
-  }
-
-  saveInitialValues() {
-    this.initialStatusValue = this.data.userToUpdate.status;
   }
 
   closeModal(returnValue: any): void {
@@ -38,8 +32,9 @@ export class EditEmployeeFormComponent implements OnInit {
   confirmEdit(): void {
     const userToUpdate = this.getFormUser();
 
-    if (this.initialStatusValue !== userToUpdate.status) {
+    if (this.data.userToUpdate.status !== this.editEmployeeForm.value.status) {
       if (confirm('Do you really want to change this employee\'s status?')) {
+        userToUpdate.status = this.editEmployeeForm.value.status;
         this.closeModal(userToUpdate);
       }
     } else {
@@ -48,8 +43,8 @@ export class EditEmployeeFormComponent implements OnInit {
   }
 
   getFormUser(): Updateuser {
-    this.editEmployeeForm.controls.baseForm.value['overtimeHours'] = this.editEmployeeForm.value['overtimeHours'];
-    this.editEmployeeForm.controls.baseForm.value['freeWorkDays'] = this.editEmployeeForm.value['freeWorkDays'];
+    this.editEmployeeForm.controls.baseForm.value.overtimeHours = this.editEmployeeForm.value.overtimeHours;
+    this.editEmployeeForm.controls.baseForm.value.freeWorkDays = this.editEmployeeForm.value.freeWorkDays;
     const formUser = Object.assign({}, this.editEmployeeForm.value, this.editEmployeeForm.controls.baseForm.value);
 
     if (formUser.clientId === 0) {
