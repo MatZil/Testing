@@ -70,27 +70,10 @@ namespace Tests.Tests
             var newEmail = "updatedEmail@email.com";
 
             await _usersService.ChangeEmail(id, newEmail);
-            var user = await _usersService.GetCurrentUser(newEmail);
+            var user = await _usermanager.FindByEmailAsync(newEmail);
 
-            Assert.Equal(newEmail, user.Email);
+            Assert.NotNull(user);
         }
-
-        //[Theory]
-        //[InlineData(2, "user2@gmail.com")]
-        //public async void When_UpdatingUserPassword_Expect_UpdatesUserPassword(int id, string email)
-        //{
-        //    var updatePasswordDto = new UpdatePasswordDto
-        //    {
-        //        CurrentPassword = "testing",
-        //        NewPassword = "updatedPassword"
-        //    };
-        //    var expectedPassword = "updatedPassword";
-
-        //    await _usersService.ChangePassword(id, updatePasswordDto);
-        //    var user = await _usermanager.FindByEmailAsync(email);
-        //    bool passwordCorrect = await _usermanager.CheckPasswordAsync(user, expectedPassword);
-        //    Assert.True(passwordCorrect);
-        //}
 
         [Theory]
         [InlineData(3)]
