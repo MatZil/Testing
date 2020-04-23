@@ -91,7 +91,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.dataBirthdays.data.forEach(birthday => {
       const color = this.holidayTypes[5][0];
       const endDate = this.addDayToEndDate(birthday.birthdayDate);
-      let title = birthday.fullName + ' (year ' + birthday.birthdayYear + ')';
+      let title = birthday.fullName;
       //let icon = 
 
       if (!birthday.isPublic) {

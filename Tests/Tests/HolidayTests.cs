@@ -46,7 +46,7 @@ namespace Tests.Tests
             _clientsRepository = new ClientsRepository(_context);
             var mockNotificationSettingsService = new Mock<INotificationSettingsService>().Object;
             _employeesService = new EmployeesService(_employeesRepository, mapper, mockOvertimeUtility, timeService, 
-                                                     mockUserService, mockNotificationSettingsService);
+                                                     mockUserService, mockNotificationSettingsService, _configuration);
             _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, timeService, 
                                                    mockOvertimeUtility, _clientsRepository, mockUserService, _configuration);
         }

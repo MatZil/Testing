@@ -250,7 +250,6 @@ namespace XplicityApp.Services
             var birthday = new GetEmployeeBirthdayDto()
             {
                 FullName = $"{employee.Name} {employee.Surname}",
-                BirthdayYear = employee.BirthdayDate.Year,
                 BirthdayDate = _timeService.AdjustBirthdayDateForCalendar(employee.BirthdayDate),
                 IsPublic = notificationSettings.BroadcastOwnBirthday
             };
