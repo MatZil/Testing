@@ -1,0 +1,35 @@
+﻿input {
+    width: 440px;
+    padding: 12px 20px;
+    border: 2px solid #f44336;
+}
+
+button {
+    border: none;
+    color: white;
+    width: 200px;
+    height: 40px;
+    font-size: 16px;
+    margin: 6px 20px;
+    cursor: pointer;
+}
+
+.buttonConfirm {
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50;
+}
+
+    .buttonConfirm:hover {
+        background-color: #4CAF50
+    }
+
+.buttonReject {
+    background-color: white;
+    color: black;
+    border: 2px solid #f44336;
+}
+
+    .buttonReject:hover {
+        background-color: #f44336
+    }

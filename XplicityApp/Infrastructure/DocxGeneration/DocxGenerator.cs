@@ -25,10 +25,10 @@ namespace XplicityApp.Infrastructure.DocxGeneration
         private readonly ILogger<DocxGenerator> _logger;
 
         public DocxGenerator(
-            IConfiguration configuration, 
-            ITimeService timeService, 
-            IFileUtility fileUtility, 
-            IFileService fileService, 
+            IConfiguration configuration,
+            ITimeService timeService,
+            IFileUtility fileUtility,
+            IFileService fileService,
             IOvertimeUtility overtimeUtility,
             ILogger<DocxGenerator> logger)
         {
@@ -49,14 +49,10 @@ namespace XplicityApp.Infrastructure.DocxGeneration
 
             try
             {
-                var replacementMap = GetReplacementMap(holiday, employee);
-
+                var replacementMap = GetReplacementMap(holiday, employee, holidayDocumentType);
                 var templatePath = GetTemplatePath(holidayDocumentType);
-
                 var generationPath = await _fileUtility.GetGeneratedDocxPath(holiday.Id, holidayDocumentType);
-
                 var fileName = _fileUtility.ExtractNameFromPath(generationPath);
-
                 var fileId = await _fileService.CreateFileRecord(fileName, holidayDocumentType);
 
                 await ProcessTemplate(templatePath, generationPath, replacementMap);
@@ -71,19 +67,29 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             }
         }
 
-        private Dictionary<string, string> GetReplacementMap(Holiday holiday, Employee employee)
+        private Dictionary<string, string> GetReplacementMap(Holiday holiday, Employee employee, FileTypeEnum holidayDocumentType)
         {
             var overtimeOrderString = "";
             var overtimeRequestString = "";
-            if (holiday.OvertimeDays > 0)
+            var increasedSalaryString = "";
+
+            if (holiday.Type == HolidayType.Annual)
             {
-                var overtimeHours = _overtimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
-                overtimeOrderString = _configuration["DocxGeneration:OvertimeOrder"].Replace("{OVERTIME_HOURS}", Math.Round(overtimeHours, 2).ToString());
-                overtimeRequestString = _configuration["DocxGeneration:OvertimeRequest"].Replace("{OVERTIME_HOURS}", Math.Round(overtimeHours, 2).ToString());
+                if (holiday.OvertimeDays > 0)
+                {
+                    var overtimeHours = _overtimeUtility.ConvertOvertimeDaysToHours(holiday.OvertimeDays);
+                    overtimeOrderString = _configuration["DocxGeneration:OvertimeOrder"]
+                        .Replace("{OVERTIME_HOURS}", Math.Round(overtimeHours, 2).ToString());
+                    overtimeRequestString = _configuration["DocxGeneration:OvertimeRequest"]
+                        .Replace("{OVERTIME_HOURS}", Math.Round(overtimeHours, 2).ToString());
+                }
+
+                increasedSalaryString = _configuration["DocxGeneration:IncreasedSalaryRequest"];
             }
 
             return new Dictionary<string, string>
             {
+                {"{HOLIDAY_PURPOSE}", GetTitleByHolidayType(holiday.Type, holidayDocumentType)},
                 {"{POSITION}", employee.Position},
                 {"{FULL_NAME}", $"{employee.Name} {employee.Surname}"},
                 {"{CREATION_DATE}", holiday.RequestCreatedDate.ToString("yyyy-MM-dd") },
@@ -92,27 +98,59 @@ namespace XplicityApp.Infrastructure.DocxGeneration
                 {"{HOLIDAY_BEGIN}", holiday.FromInclusive.ToString("yyyy-MM-dd")},
                 {"{HOLIDAY_END}", holiday.ToInclusive.ToString("yyyy-MM-dd")},
                 {"{WORK_DAY_COUNT}", _timeService.GetWorkDays(holiday.FromInclusive, holiday.ToInclusive).ToString()},
-                {"{HOLIDAY_TYPE}", TypeToLithuanian(holiday.Type) },
+                {"{HOLIDAY_TYPE}", TypeToLithuanian(holiday.Type,holidayDocumentType) },
                 {"{OVERTIME_ORDER}", overtimeOrderString },
-                {"{OVERTIME_REQUEST}", overtimeRequestString }
+                {"{OVERTIME_REQUEST}", overtimeRequestString },
+                {"{INCREASED_SALARY_REQUEST}", increasedSalaryString}
             };
         }
 
-        private string TypeToLithuanian(HolidayType typeToTranslate)
+        private static string TypeToLithuanian(HolidayType typeToTranslate, FileTypeEnum holidayDocumentType)
         {
-            switch (typeToTranslate)
+            return typeToTranslate switch
             {
-                case HolidayType.Annual:
-                    return "kasmetinių";
+                HolidayType.Annual => (holidayDocumentType == FileTypeEnum.Order ? "kasmetines atostogas" : "išleisti mane kasmetinių atostogų"),
+                HolidayType.DayForChildren => (holidayDocumentType == FileTypeEnum.Order
+                    ? "papildomą poilsio dieną"
+                    : "suteikti man papildomą poilsio dieną vaikų priežiūrai"),
+                HolidayType.Science => (holidayDocumentType == FileTypeEnum.Order ? "mokslo atostogas" : "išleisti mane mokslo atostogų"),
+                HolidayType.Unpaid => (holidayDocumentType == FileTypeEnum.Order ? "neapmokamas atostogas" : "išleisti mane neapmokamų atostogų"),
+                _ => "",
+            };
+        }
 
-                case HolidayType.DayForChildren:
-                    return "dienos vaikams";
+        private static string GetTitleByHolidayType(HolidayType holidayType, FileTypeEnum holidayDocumentType)
+        {
+            switch (holidayDocumentType)
+            {
+                case FileTypeEnum.Order:
+                    if (holidayType == HolidayType.DayForChildren)
+                    {
+                        return "DĖL PAPILDOMOS POILSIO DIENOS SUTEIKIMO";
+                    }
+                    else
+                    {
+                        return "DĖL ATOSTOGŲ SUTEIKIMO";
+                    }
+                case FileTypeEnum.Request:
+                    if (holidayType == HolidayType.DayForChildren)
+                    {
+                        return "PRAŠYMAS DĖL PAPILDOMOS ATOSTOGŲ DIENOS SUTEIKIMO";
+                    }
+                    else if (holidayType == HolidayType.Annual)
+                    {
+                        return "DĖL KASMETINIŲ ATOSTOGŲ";
+                    }
+                    else if (holidayType == HolidayType.Science)
+                    {
+                        return "DĖL MOKSLO ATOSTOGŲ";
+                    }
+                    else if (holidayType == HolidayType.Unpaid)
+                    {
+                        return "DĖL NEAPMOKAMŲ ATOSTOGŲ";
+                    }
 
-                case HolidayType.Science:
-                    return "mokslo";
-
-                case HolidayType.Unpaid:
-                    return "neapmokamas";
+                    break;
             }
 
             return "";
@@ -121,7 +159,6 @@ namespace XplicityApp.Infrastructure.DocxGeneration
         private async Task ProcessTemplate(string templatePath, string generationPath, Dictionary<string, string> replacementMap)
         {
             var documentTemplateHtml = await GetHtmlTemplateString(templatePath);
-
             var documentContentHtml = GetContentFromTemplate(documentTemplateHtml, replacementMap);
 
             await CreateDocxFromHtml(documentContentHtml, generationPath);
@@ -131,6 +168,7 @@ namespace XplicityApp.Infrastructure.DocxGeneration
         {
             using var reader = new StreamReader(templatePath, Encoding.GetEncoding(1252));
             var htmlTemplateString = await reader.ReadToEndAsync();
+
             return htmlTemplateString;
         }
 

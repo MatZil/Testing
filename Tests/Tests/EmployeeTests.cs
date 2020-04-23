@@ -9,6 +9,7 @@ using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
 using Moq;
 using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Infrastructure.Enums;
 
 namespace Tests.Tests
 {
@@ -73,6 +74,25 @@ namespace Tests.Tests
             }
 
             Assert.Equal(retrievedEmployees.Count, _employeesCount);
+        }
+
+        [Theory]
+        [InlineData(EmployeeStatusEnum.Current)]
+        [InlineData(EmployeeStatusEnum.Former)]
+        public async void When_GettingEmployeesByEmployeeStatus_Expect_ReturnsEmployees(EmployeeStatusEnum employeeStatus)
+        {
+            var retrievedEmployees = await _employeesService.GetByEmployeeStatus(employeeStatus);
+            int actualEmployeesCount = 0;
+
+            var allEmployees = await _employeesService.GetAll();
+            foreach (var employee in allEmployees)
+            {
+                if (employee.Status == employeeStatus)
+                {
+                    actualEmployeesCount++;
+                }
+            }
+            Assert.Equal(retrievedEmployees.Count, actualEmployeesCount);
         }
 
         [Theory]

@@ -18,8 +18,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   options: any;
   currentUserId: number;
   dataSource = new MatTableDataSource<Holiday>();
-  holidayTypes = [['#B7CEF5', 'Annual unpaid'], ['#88B0F5', 'Annual paid'],
-    ['#547EC8', 'Annual paid, with overtime'], ['#BDA1EA', 'Science'], ['#DBC7FC', 'Day for children']];
+  holidayTypes = [['#99ccff', 'Annual unpaid'], ['#0099ff', 'Annual paid'],
+    ['#006699', 'Annual paid, with overtime'], ['#9933ff', 'Science'], ['#cc99ff', 'Day for children']];
 
   @ViewChild('fullCalendar') fullCalendar: any;
 
@@ -110,7 +110,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => this.updateCalendarTitle(), 100);
   }
-  
+
   updateCalendarTitle() {
     this.calendarTitle.next(this.fullCalendar?.calendar?.view?.title);
   }

@@ -47,10 +47,12 @@ namespace XplicityApp.Services
             if (await _userManager.CheckPasswordAsync(userToVerify, password))
             {
                 var user = await _userManager.Users.Include(e => e.Employee).SingleAsync(x => x.Email == email);
+                
                 if(user.Employee.Status == EmployeeStatusEnum.Former)
                 {
                     throw new InvalidOperationException();
                 }
+
                 user.Employee.Token = await CreateJwt(user);
                 return user;
             }
