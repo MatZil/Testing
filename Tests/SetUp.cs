@@ -730,6 +730,13 @@ namespace Tests
                     Name = "Request",
                     Type = FileTypeEnum.Request,
                     CreatedAt = DateTime.Today
+                },
+                new FileRecord
+                {
+                    Id = 3,
+                    Name = "HolidayPolicy",
+                    Type = FileTypeEnum.HolidayPolicy,
+                    CreatedAt = DateTime.Today
                 }
             };
             context.FileRecords.AddRange(_fileRecords);
