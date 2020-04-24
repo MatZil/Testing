@@ -33,6 +33,7 @@ namespace Tests
         private InventoryItemTag[] _inventoryItemTags;
         private FileRecord[] _fileRecords;
         private NotificationSettings[] _notificationSettings;
+        private AuditLog[] _auditLogs;
         private TimeService _timeService = new TimeService();
 
         private HolidayDbContext _context;
@@ -134,10 +135,25 @@ namespace Tests
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
             }
 
+            if (!await _roleManager.RoleExistsAsync("Employee"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("Employee"));
+            }
+
             if (!context.Users.AnyAsync(x => x.UserName == "user1").Result)
             {
                 var user = new User { UserName = "user1", Email = "user1@gmail.com", EmployeeId = 1 };
                 await _userManager.CreateAsync(user, "Pa$$W0rD!");
+
+                if (!_userManager.IsInRoleAsync(user, "Admin").Result)
+                {
+                    await _userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
+            if (!context.Users.AnyAsync(x => x.UserName == "user2").Result)
+            {
+                var user = new User { UserName = "user2", Email = "user2@gmail.com", EmployeeId = 2 };
+                await _userManager.CreateAsync(user, "testing");
 
                 if (!_userManager.IsInRoleAsync(user, "Admin").Result)
                 {
@@ -772,6 +788,52 @@ namespace Tests
             };
             context.NotificationSettings.AddRange(_notificationSettings);
             context.SaveChanges();
+
+            _auditLogs = new[]
+            {
+                new AuditLog
+                {
+                    Id = 1,
+                    Data = "User was updated",
+                    EntityType = "Employee",
+                    Date = DateTime.Today.AddHours(1),
+                    User = "User1"
+                },
+                new AuditLog
+                {
+                    Id = 2,
+                    Data = "User was updated",
+                    EntityType = "Employee",
+                    Date = DateTime.Today.AddHours(2),
+                    User = "User1"
+                },
+                new AuditLog
+                {
+                    Id = 3,
+                    Data = "Item was created",
+                    EntityType = "InventoryItem",
+                    Date = DateTime.Today.AddHours(3),
+                    User = "User1"
+                },
+                new AuditLog
+                {
+                    Id = 4,
+                    Data = "Item was created",
+                    EntityType = "InventoryItem",
+                    Date = DateTime.Today.AddHours(4),
+                    User = "User1"
+                },
+                new AuditLog
+                {
+                    Id = 5,
+                    Data = "User was updated",
+                    EntityType = "Employee",
+                    Date = DateTime.Today.AddHours(5),
+                    User = "User1"
+                },
+            };
+            context.AuditLogs.AddRange(_auditLogs);
+            context.SaveChanges();
         }
 
         public int GetCount(string type)
@@ -798,6 +860,8 @@ namespace Tests
                     return _tags.Length;
                 case "notificationSettings":
                     return _notificationSettings.Length;
+                case "auditLogs":
+                    return _auditLogs.Length;
                 default:
                     return 0;
             }
