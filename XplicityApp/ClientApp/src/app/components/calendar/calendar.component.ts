@@ -127,7 +127,4 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   isAdmin(): boolean {
     return this.userService.isAdmin();
   }
-  isEmployee(): boolean {
-    return !this.userService.isAdmin();
-  }
 }

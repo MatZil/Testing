@@ -22,7 +22,7 @@
         {{client.companyName}}
       </mat-option>
     </mat-optgroup>
-    <mat-option *ngIf="isEmployee()" [value]="currentUsersClientId">
+    <mat-option *ngIf="!isAdmin()" [value]="currentUsersClientId">
       My client
     </mat-option>
   </mat-select>

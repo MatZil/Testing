@@ -189,17 +189,15 @@ namespace XplicityApp.Services
                     bool datesOverlap = dateFrom < holiday.ToInclusive && holiday.FromInclusive <= dateTo;
                     if (datesOverlap)
                     {
-                        if (filter == -1)
+                        if (filter == -1 && holiday.EmployeeId == currentUserId)
                         {
-                            if (holiday.EmployeeId == currentUserId)
-                                selectedMonthConfirmedHolidays.Add(holiday);
+                            selectedMonthConfirmedHolidays.Add(holiday);
                         }
-                        else if (filter > 0)
+                        else if (filter > 0 && filter == holiday.ConfirmerClientId)
                         {
-                            if (filter == holiday.ConfirmerClientId)
-                                selectedMonthConfirmedHolidays.Add(holiday);
+                            selectedMonthConfirmedHolidays.Add(holiday);
                         }
-                        else
+                        else if (filter == 0)
                             selectedMonthConfirmedHolidays.Add(holiday);
                     }
                 }
