@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HolidayType } from '../enums/holidayType';
 import { HolidayStatus } from '../enums/holidayStatus';
+import { SurveyType } from '../enums/surveyType';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,22 @@ import { HolidayStatus } from '../enums/holidayStatus';
 export class EnumToStringConverterService {
 
   constructor() { }
+
+  determineSurveyType(type: number): string {
+    switch (type) {
+      case SurveyType.Multiple_choice:
+        return 'Multiple choice';
+
+      case SurveyType.Likert_scale:
+        return 'Likert scale';
+
+      case SurveyType.Ranking:
+        return 'Ranking';
+
+      case SurveyType.Text_entry:
+        return 'Text entry';
+    }
+  }
 
   determineHolidayType(type: number): string {
     switch (type) {

@@ -28,6 +28,9 @@
         <a mat-list-item routerLink="/inventory-items" routerLinkActive="active" *ngIf="isAdmin()">
           <mat-icon>devices</mat-icon>&nbsp;Inventory</a>
 
+        <a mat-list-item routerLink="/surveys" routerLinkActive="active">
+          <mat-icon>record_voice_over</mat-icon>&nbsp;Surveys</a>
+
           <mat-list-item [matMenuTriggerFor]="menu" routerLinkActive="active"><mat-icon>face</mat-icon>&nbsp;{{currentUser.name}}
           <mat-menu #menu="matMenu" [overlapTrigger]="true">
             <button style="width: 250px;" mat-menu-item routerLink="/profile" routerLinkActive="active"><mat-icon>reorder</mat-icon>Profile</button>

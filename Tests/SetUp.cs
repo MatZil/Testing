@@ -33,6 +33,7 @@ namespace Tests
         private InventoryItemTag[] _inventoryItemTags;
         private FileRecord[] _fileRecords;
         private NotificationSettings[] _notificationSettings;
+        private Survey[] _surveys;
         private TimeService _timeService = new TimeService();
 
         private HolidayDbContext _context;
@@ -772,6 +773,19 @@ namespace Tests
             };
             context.NotificationSettings.AddRange(_notificationSettings);
             context.SaveChanges();
+
+            _surveys = new[] {
+                new Survey
+                {
+                    Title = "survey1"
+                },
+                new Survey
+                {
+                    Title = "survey2"
+                },
+            };
+            context.Surveys.AddRange(_surveys);
+            context.SaveChanges();
         }
 
         public int GetCount(string type)
@@ -798,6 +812,8 @@ namespace Tests
                     return _tags.Length;
                 case "notificationSettings":
                     return _notificationSettings.Length;
+                case "surveys":
+                    return _surveys.Length;
                 default:
                     return 0;
             }
