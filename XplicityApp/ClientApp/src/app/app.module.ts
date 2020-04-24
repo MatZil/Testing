@@ -66,6 +66,7 @@ import { HolidayRequestFormComponent } from './components/holiday-request-form/h
 import { UserPasswordFormComponent } from './components/user-password-form/user-password-form.component';
 import { HolidayRequestButtonComponent } from './components/holiday-request-button/holiday-request-button.component';
 import { EmployeeEquipmentComponent } from './components/employee-equipment/employee-equipment.component';
+import { AuditLogsComponent } from './components/audit-logs/audit-logs.component';
 registerLocaleData(en);
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -101,7 +102,8 @@ export function tokenGetter() {
     EmailTemplatesFormComponent,
     UserPasswordFormComponent,
     HolidayRequestButtonComponent,
-    EmployeeEquipmentComponent
+    EmployeeEquipmentComponent,
+    AuditLogsComponent
   ],
   imports: [
     BrowserModule,
