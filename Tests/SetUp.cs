@@ -699,6 +699,7 @@ namespace Tests
                 new FileRecord
                 {
                     Id = 1,
+                    Guid = "1",
                     Name = "Order",
                     Type = FileTypeEnum.Order,
                     CreatedAt = DateTime.Today
@@ -706,6 +707,7 @@ namespace Tests
                 new FileRecord
                 {
                     Id = 2,
+                    Guid = "2",
                     Name = "Request",
                     Type = FileTypeEnum.Request,
                     CreatedAt = DateTime.Today
@@ -713,6 +715,7 @@ namespace Tests
                 new FileRecord
                 {
                     Id = 3,
+                    Guid = "3",
                     Name = "HolidayPolicy",
                     Type = FileTypeEnum.HolidayPolicy,
                     CreatedAt = DateTime.Today
