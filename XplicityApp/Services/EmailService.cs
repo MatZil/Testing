@@ -148,7 +148,7 @@ namespace XplicityApp.Services
 
             var messageString = template.Template
                                         .Replace("{employee.fullName}", $"{employee.Name} {employee.Surname}")
-                                        .Replace("{download.link}", _fileService.GetDownloadLink(fileId));
+                                        .Replace("{download.link}", await _fileService.GetDownloadLink(fileId));
 
             _emailer.SendMail(receiver, template.Subject, messageString);
         }
@@ -164,7 +164,7 @@ namespace XplicityApp.Services
 
             var messageString = template.Template
                                         .Replace("{confirmer.fullName}", confirmerFullName)
-                                        .Replace("{download.link}", _fileService.GetDownloadLink(fileId));
+                                        .Replace("{download.link}", await _fileService.GetDownloadLink(fileId));
 
             _emailer.SendMail(receiver, template.Subject, messageString);
 
