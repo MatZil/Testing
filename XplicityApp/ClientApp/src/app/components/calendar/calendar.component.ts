@@ -7,16 +7,22 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import {HolidayType} from 'src/app/enums/holidayType';
 import {BehaviorSubject} from 'rxjs';
+import {Client} from 'src/app/models/client';
+import {ClientService} from 'src/app/services/client.service';
+
 @Component({
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit, AfterViewInit {
+  clients: Client[];
   viewDate: Date = new Date();
   events: any[];
   calendarTitle = new BehaviorSubject<string>(null);
   options: any;
-  currentUserId: number;
+  filter: number = 0;
+  currentUsersId: number;
+  currentUsersClientId: number;
   dataSource = new MatTableDataSource<Holiday>();
   holidayTypes = [['#99ccff', 'Annual unpaid'], ['#0099ff', 'Annual paid'],
     ['#006699', 'Annual paid, with overtime'], ['#9933ff', 'Science'], ['#cc99ff', 'Day for children']];
@@ -25,18 +31,22 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   constructor(
     private holidayService: HolidaysService,
+    private clientService: ClientService,
     private userService: UserService) {
   }
 
   ngOnInit() {
+    this.clientService.getClient().subscribe(clients => {
+      this.clients = clients;
+    });
     this.setCalendarOptions();
-    this.getUserAndCurrentMonthHolidays();
+    this.getUserAndFilteredCurrentMonthHolidays(0);
   }
-
-  getUserAndCurrentMonthHolidays() {
+  getUserAndFilteredCurrentMonthHolidays(filter) {
     this.userService.getCurrentUser().subscribe(user => {
-      this.currentUserId = user.id;
-      this.getHolidays(0);
+      this.currentUsersId = user.id;
+      this.currentUsersClientId = user.clientId;
+      this.getHolidays(0,filter);
     });
   }
 
@@ -54,13 +64,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       displayEventTime: false
     };
   }
-
-  getHolidays(monthsToAdd): void {
+  getHolidays(monthsToAdd, filter): void {
     this.viewDate = new Date(this.viewDate.setMonth(this.viewDate.getMonth() + monthsToAdd));
-    this.holidayService.getConfirmedHolidaysBySelectedMonth(this.viewDate, this.currentUserId).subscribe(holidays => {
-      this.dataSource.data = holidays;
-      this.getEvents();
-    });
+      this.holidayService.getFilteredConfirmedHolidaysBySelectedMonth(this.viewDate, this.currentUsersId, filter).subscribe(holidays => {
+        this.dataSource.data = holidays;
+        this.getEvents();
+      });
+
   }
 
   getEvents(): void {
@@ -95,16 +105,16 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     return new Date(startDate.getTime() + day);
   }
 
-  previousMonthButtonClick() {
+  previousMonthButtonClick(filter) {
     this.fullCalendar.calendar.prev();
     this.updateCalendarTitle();
-    this.getHolidays(-1);
+    this.getHolidays(-1, filter);
   }
 
-  nextMonthButtonClick() {
+  nextMonthButtonClick(filter) {
     this.fullCalendar.calendar.next();
     this.updateCalendarTitle();
-    this.getHolidays(1);
+    this.getHolidays(1, filter);
   }
 
   ngAfterViewInit() {
@@ -113,5 +123,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   updateCalendarTitle() {
     this.calendarTitle.next(this.fullCalendar?.calendar?.view?.title);
+  }
+  isAdmin(): boolean {
+    return this.userService.isAdmin();
   }
 }

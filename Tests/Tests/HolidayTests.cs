@@ -219,7 +219,7 @@ namespace Tests.Tests
             var startDate = currentMonthFirstDay.AddDays(-numberOfLastMonthDays);
             _output.WriteLine(startDate.ToString());
             var selectedDate = DateTime.Today;
-            var selectedMonthConfirmedHolidays = await _holidaysService.GetConfirmedByMonth(selectedDate, 1);
+            var selectedMonthConfirmedHolidays = await _holidaysService.GetFilteredConfirmedByMonth(selectedDate, 1, 0);
 
             foreach (var holiday in selectedMonthConfirmedHolidays)
             {
@@ -237,7 +237,7 @@ namespace Tests.Tests
 
             _output.WriteLine(endDate.ToString());
             var selectedDate = DateTime.Today;
-            var selectedMonthConfirmedHolidays = await _holidaysService.GetConfirmedByMonth(selectedDate, 1);
+            var selectedMonthConfirmedHolidays = await _holidaysService.GetFilteredConfirmedByMonth(selectedDate, 1, 0);
 
             foreach (var holiday in selectedMonthConfirmedHolidays)
             {

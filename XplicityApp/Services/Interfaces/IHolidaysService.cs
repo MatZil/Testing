@@ -17,6 +17,6 @@ namespace XplicityApp.Services.Interfaces
         Task<string> GetEmployeeFullName(int employeeId);
         Task<string> GetClientFullName(int clientId);
         Task<string> GetConfirmerFullName(GetHolidayDto holidayDto);
-        Task<List<GetHolidayDto>> GetConfirmedByMonth(DateTime selectedDate, int currentUserId);
+        Task<List<GetHolidayDto>> GetFilteredConfirmedByMonth(DateTime selectedDate, int currentUserId, int filter);
     }
 }
