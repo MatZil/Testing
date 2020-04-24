@@ -26,6 +26,7 @@ namespace Tests.Tests
         private readonly HolidaysRepository _holidaysRepository;
         private readonly ClientsRepository _clientsRepository;
         private readonly IConfiguration _configuration;
+        private readonly TimeService _timeService;
 
         public HolidayTests(ITestOutputHelper output)
         {
@@ -38,16 +39,16 @@ namespace Tests.Tests
             _holidaysCount = setup.GetCount("holidays");
             _configuration = setup.GetConfiguration();
 
-            var timeService = new TimeService();
+            _timeService = new TimeService();
             var mockUserService = new Mock<IUserService>().Object;
             var mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
             _holidaysRepository = new HolidaysRepository(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
             _clientsRepository = new ClientsRepository(_context);
             var mockNotificationSettingsService = new Mock<INotificationSettingsService>().Object;
-            _employeesService = new EmployeesService(_employeesRepository, mapper, mockOvertimeUtility, timeService, 
+            _employeesService = new EmployeesService(_employeesRepository, mapper, mockOvertimeUtility, _timeService, 
                                                      mockUserService, mockNotificationSettingsService, _configuration);
-            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, timeService, 
+            _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, _timeService, 
                                                    mockOvertimeUtility, _clientsRepository, mockUserService, _configuration);
         }
 
@@ -214,16 +215,12 @@ namespace Tests.Tests
         [Fact]
         public async void When_GettingConfirmedHolidaysByMonth_Expect_ReturnsHolidaysStartingFromEndOfLastMonth()
         {
-            var currentMonthFirstDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-            var numberOfLastMonthDays = _configuration.GetValue<int>("CalendarConfig:NumberOfLastMonthDays");
-            var startDate = currentMonthFirstDay.AddDays(-numberOfLastMonthDays);
-            _output.WriteLine(startDate.ToString());
             var selectedDate = DateTime.Today;
+            var startDate = _timeService.GetCalendarDateFrom(_configuration, selectedDate);
             var selectedMonthConfirmedHolidays = await _holidaysService.GetConfirmedByMonth(selectedDate, 1);
 
             foreach (var holiday in selectedMonthConfirmedHolidays)
             {
-                _output.WriteLine(holiday.FromInclusive.ToString() + "  " + holiday.ToInclusive.ToString());
                 Assert.True(holiday.ToInclusive >= startDate && holiday.Status == HolidayStatus.AdminConfirmed);
             }
         }
@@ -231,17 +228,12 @@ namespace Tests.Tests
         [Fact]
         public async void When_GettingConfirmedHolidaysByMonth_Expect_ReturnsHolidaysLastingToStartOfNextMonth()
         {
-            var currentMonthFirstDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-            var numberOfNextMonthDays = _configuration.GetValue<int>("CalendarConfig:NumberOfNextMonthDays");
-            var endDate = currentMonthFirstDay.AddMonths(1).AddDays(numberOfNextMonthDays - 1);
-
-            _output.WriteLine(endDate.ToString());
             var selectedDate = DateTime.Today;
+            var endDate = _timeService.GetCalendarDateTo(_configuration, selectedDate);
             var selectedMonthConfirmedHolidays = await _holidaysService.GetConfirmedByMonth(selectedDate, 1);
 
             foreach (var holiday in selectedMonthConfirmedHolidays)
             {
-                _output.WriteLine(holiday.FromInclusive.ToString() + "  " + holiday.ToInclusive.ToString());
                 Assert.True(holiday.FromInclusive <= endDate && holiday.Status == HolidayStatus.AdminConfirmed);
             }
         }

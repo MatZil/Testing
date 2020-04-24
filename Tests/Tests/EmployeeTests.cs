@@ -10,6 +10,7 @@ using XplicityApp.Services.Interfaces;
 using Moq;
 using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Infrastructure.Enums;
+using Microsoft.Extensions.Configuration;
 
 namespace Tests.Tests
 {
@@ -20,6 +21,8 @@ namespace Tests.Tests
         private readonly int _employeesCount;
         private readonly ITestOutputHelper _output;
         private readonly EmployeesService _employeesService;
+        private readonly ITimeService _mockTimeService;
+        private readonly IConfiguration _configuration;
 
         public EmployeeTests(ITestOutputHelper output)
         {
@@ -30,14 +33,15 @@ namespace Tests.Tests
             var mapper = setup.Mapper;
             _employeesCount = setup.GetCount("employees");
 
-            var configuration = setup.GetConfiguration();
-            var mockTimeService = new Mock<ITimeService>().Object;
-            var overtimeUtility = new OvertimeUtility(configuration);
+            _configuration = setup.GetConfiguration();
+            _mockTimeService = new Mock<ITimeService>().Object;
+            var overtimeUtility = new OvertimeUtility(_configuration);
             var userManager = setup.InitializeUserManager();
             var mockUserService = new Mock<IUserService>().Object;
             var employeesRepository = new EmployeesRepository(_context, userManager);
-            var mockNotificationSettingsService = new Mock<INotificationSettingsService>().Object;
-            _employeesService = new EmployeesService(employeesRepository, mapper, overtimeUtility, mockTimeService, mockUserService, mockNotificationSettingsService, configuration);
+            var notificationSettingsRepository = new NotificationSettingsRepository(_context);
+            var notificationSettingsService = new NotificationSettingsService(notificationSettingsRepository, mapper);
+            _employeesService = new EmployeesService(employeesRepository, mapper, overtimeUtility, _mockTimeService, mockUserService, notificationSettingsService, _configuration);
         }
 
         [Theory]
@@ -247,6 +251,32 @@ namespace Tests.Tests
         public async void When_CreatingNullEmployee_Expect_ThrowsArgumentNullException()
         {
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await _employeesService.Create(null));
+        }
+
+        [Fact]
+        public async void When_GettingConfirmedHolidaysByMonth_Expect_ReturnsHolidaysStartingFromEndOfLastMonth()
+        {
+            var selectedDate = DateTime.Today;
+            var startDate = _mockTimeService.GetCalendarDateFrom(_configuration, selectedDate);
+            var selectedMonthBirthdays = await _employeesService.GetBirthdaysByMonth(selectedDate, 1);
+
+            foreach (var holiday in selectedMonthBirthdays)
+            {
+                Assert.True(holiday.BirthdayDate >= startDate);
+            }
+        }
+
+        [Fact]
+        public async void When_GettingConfirmedHolidaysByMonth_Expect_ReturnsHolidaysLastingToStartOfNextMonth()
+        {
+            var selectedDate = DateTime.Today;
+            var endDate = _mockTimeService.GetCalendarDateTo(_configuration, selectedDate);
+            var selectedMonthBirthdays = await _employeesService.GetBirthdaysByMonth(selectedDate, 1);
+
+            foreach (var holiday in selectedMonthBirthdays)
+            {
+                Assert.True(holiday.BirthdayDate <= endDate);
+            }
         }
     }
 }

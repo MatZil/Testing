@@ -71,6 +71,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   getHolidayEvents(): void {
+    this.events = [];
     this.dataHolidays.data.forEach(holiday => {
       const color = this.getColor(holiday);
       const endDate = this.addDayToEndDate(holiday.toInclusive);
@@ -92,7 +93,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       const color = this.holidayTypes[5][0];
       const endDate = this.addDayToEndDate(birthday.birthdayDate);
       let title = birthday.fullName;
-      //let icon = 
 
       if (!birthday.isPublic) {
         title = "(private) " + title;
@@ -100,7 +100,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
       const event = { 'title': title, 'start': birthday.birthdayDate, 'end': endDate, 'color': color };
 
-      // this.fullCalendar.calendar.ad .n ( 'renderEvent', event );
       this.events.push(event);
     });
   }
