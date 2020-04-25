@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using XplicityApp.Infrastructure.Database.Models;
@@ -25,8 +26,11 @@ namespace XplicityApp.Services
 
         public async Task<int> CreateFileRecord(string fileName, FileTypeEnum fileType)
         {
+            var guid = Guid.NewGuid().ToString() + '-' + Guid.NewGuid().ToString();
+
             var fileRecordToCreate = new FileRecord
             {
+                Guid = guid,
                 Name = fileName,
                 Type = fileType,
                 CreatedAt = _timeService.GetCurrentTime()
@@ -81,9 +85,15 @@ namespace XplicityApp.Services
             return await _fileRepository.GetById(fileId);
         }
 
-        public string GetDownloadLink(int fileId)
+        public async Task<FileRecord> GetByGuid(string guid)
         {
-            return $"{_configuration["AppSettings:RootUrl"]}/api/files/{fileId}/download";
+            return await _fileRepository.GetByGuid(guid);
+        }
+
+        public async Task<string> GetDownloadLink(int fileId)
+        {
+            var file = await GetById(fileId);
+            return $"{_configuration["AppSettings:RootUrl"]}/api/files/{file.Guid}/download";
         }
     }
 }

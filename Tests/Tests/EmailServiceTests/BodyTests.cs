@@ -140,7 +140,7 @@ namespace Tests.Tests.EmailServiceTests
             await _emailService.SendOrderNotification(1, _employee, _admins.FirstOrDefault().Email);
             var expectedBody =
                 $"A holiday order for {_employee.Name} {_employee.Surname} has been generated. " +
-                $"Click this link to download it: {_fileService.GetDownloadLink(1)}";
+                $"Click this link to download it: {await _fileService.GetDownloadLink(1)}";
             Assert.Equal(expectedBody, _actualBodyList.FirstOrDefault());
         }
 
@@ -150,7 +150,7 @@ namespace Tests.Tests.EmailServiceTests
             var confirmerFullName = "ConfirmerName ConfirmerSurname";
             _actualBodyList = new List<string>();
             await _emailService.SendRequestNotification(2, _employee.Email, confirmerFullName);
-            var expectedBody = $"Your holiday request has been confirmed by {confirmerFullName}. You can download your holiday request document by clicking this link: {_fileService.GetDownloadLink(2)}";
+            var expectedBody = $"Your holiday request has been confirmed by {confirmerFullName}. You can download your holiday request document by clicking this link: {await _fileService.GetDownloadLink(2)}";
             Assert.Equal(expectedBody, _actualBodyList.FirstOrDefault());
         }
     }
