@@ -43,7 +43,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.getUserAndFilteredCurrentMonthHolidays(0);
   }
 
-    private getUserAndFilteredCurrentMonthHolidays(filter) {
+    getUserAndFilteredCurrentMonthHolidays(filter) {
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUsersId = user.id;
       this.addMonthsToCurrentDate(0);
