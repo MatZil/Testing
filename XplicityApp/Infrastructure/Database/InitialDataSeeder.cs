@@ -29,9 +29,11 @@ namespace XplicityApp.Infrastructure.Database
 
         public static void CreateInitialPolicyRecord(ModelBuilder builder)
         {
+            var guid = Guid.NewGuid().ToString() + '-' + Guid.NewGuid().ToString();
             builder.Entity<FileRecord>().HasData(
                 new FileRecord
                 {
+                    Guid = guid,
                     Id = 1,
                     Name = "Holiday Policy.pdf",
                     Type = FileTypeEnum.HolidayPolicy,

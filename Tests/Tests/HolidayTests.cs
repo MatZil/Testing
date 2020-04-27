@@ -217,7 +217,7 @@ namespace Tests.Tests
         {
             var selectedDate = DateTime.Today;
             var startDate = _timeService.GetCalendarDateFrom(_configuration, selectedDate);
-            var selectedMonthConfirmedHolidays = await _holidaysService.GetConfirmedByMonth(selectedDate, 1);
+            var selectedMonthConfirmedHolidays = await _holidaysService.GetFilteredConfirmedByMonth(selectedDate, 1, 0);
 
             foreach (var holiday in selectedMonthConfirmedHolidays)
             {
@@ -230,7 +230,7 @@ namespace Tests.Tests
         {
             var selectedDate = DateTime.Today;
             var endDate = _timeService.GetCalendarDateTo(_configuration, selectedDate);
-            var selectedMonthConfirmedHolidays = await _holidaysService.GetConfirmedByMonth(selectedDate, 1);
+            var selectedMonthConfirmedHolidays = await _holidaysService.GetFilteredConfirmedByMonth(selectedDate, 1, 0);
 
             foreach (var holiday in selectedMonthConfirmedHolidays)
             {

@@ -7,38 +7,47 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { HolidayType } from 'src/app/enums/holidayType';
 import {BehaviorSubject, of, zip} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
+import { Client } from 'src/app/models/client';
+import { ClientService } from 'src/app/services/client.service';
 
 @Component({
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit, AfterViewInit {
+  clients: Client[];
   viewDate: Date = new Date();
   events: any[];
   calendarTitle = new BehaviorSubject<string>(null);
   options: any;
-  currentUserId: number;
-  holidayTypes = [['#B7CEF5', 'Annual unpaid'], ['#88B0F5', 'Annual paid'], ['#547EC8', 'Annual paid, with overtime'],
+  filter: number = 0;
+  currentUsersId: number;
+  currentUsersClientId: number;
+    holidayTypes = [['#B7CEF5', 'Annual unpaid'], ['#88B0F5', 'Annual paid'], ['#547EC8', 'Annual paid, with overtime'],
     ['#DBC7FC', 'Science'], ['#BDA1EA', 'Day for children'], ['#FF93AC', 'Birthday']];
 
   @ViewChild('fullCalendar') fullCalendar: any;
 
   constructor(
     private holidayService: HolidaysService,
+    private clientService: ClientService,
     private userService: UserService) {
   }
 
   ngOnInit() {
+    this.clientService.getClient().subscribe(clients => {
+      this.clients = clients;
+    });
     this.setCalendarOptions();
-    this.getUserAndCurrentMonthHolidays();
+    this.getUserAndFilteredCurrentMonthHolidays(0);
   }
 
-  private getUserAndCurrentMonthHolidays() {
+    private getUserAndFilteredCurrentMonthHolidays(filter) {
     this.userService.getCurrentUser().subscribe(user => {
-      this.currentUserId = user.id;
+      this.currentUsersId = user.id;
       this.addMonthsToCurrentDate(0);
-      this.getEvents();
+      this.getEvents(filter);
     });
   }
 
@@ -61,9 +70,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.viewDate = new Date(this.viewDate.setMonth(this.viewDate.getMonth() + monthsToAdd));
   }
 
-  private getEvents() {
-    return zip(this.holidayService.getConfirmedHolidaysBySelectedMonth(this.viewDate, this.currentUserId),
-      this.userService.getBirthdaysBySelectedMonth(this.viewDate, this.currentUserId)).pipe(switchMap(val => {
+  private getEvents(filter) {
+    return zip(this.holidayService.getFilteredConfirmedHolidaysBySelectedMonth(this.viewDate, this.currentUsersId, filter),
+      this.userService.getBirthdaysBySelectedMonth(this.viewDate, this.currentUsersId)).pipe(switchMap(val => {
         const holidayEvents = this.getHolidayEvents(val[0]);
         const birthdayEvents = this.getBirthdayEvents(val[1]);
         const allEvents = holidayEvents.concat(birthdayEvents);
@@ -124,18 +133,18 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     return new Date(startDate.getTime() + day);
   }
 
-  previousMonthButtonClick() {
+  previousMonthButtonClick(filter) {
     this.fullCalendar.calendar.prev();
     this.updateCalendarTitle();
     this.addMonthsToCurrentDate(-1);
-    this.getEvents();
+    this.getEvents(filter);
   }
 
-  nextMonthButtonClick() {
+  nextMonthButtonClick(filter) {
     this.fullCalendar.calendar.next();
     this.updateCalendarTitle();
     this.addMonthsToCurrentDate(1);
-    this.getEvents();
+    this.getEvents(filter);
   }
 
   ngAfterViewInit() {
@@ -144,5 +153,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   updateCalendarTitle() {
     this.calendarTitle.next(this.fullCalendar?.calendar?.view?.title);
+  }
+  isAdmin(): boolean {
+    return this.userService.isAdmin();
   }
 }

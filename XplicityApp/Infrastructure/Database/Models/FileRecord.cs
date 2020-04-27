@@ -7,6 +7,8 @@ namespace XplicityApp.Infrastructure.Database.Models
     public class FileRecord : BaseEntity
     {
         [Required]
+        public string Guid { get; set; }
+        [Required]
         public string Name { get; set; }
         [Required]
         public FileTypeEnum Type { get; set; }

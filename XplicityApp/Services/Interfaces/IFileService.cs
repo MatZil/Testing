@@ -11,7 +11,8 @@ namespace XplicityApp.Services.Interfaces
         Task Upload(IFormFile fomFile, FileTypeEnum fileType);
         Task<string> GetNewestPolicyPath();
         Task<FileRecord> GetById(int fileId);
+        Task<FileRecord> GetByGuid(string guid);
         string GetRelativeDirectory(FileTypeEnum fileType);
-        string GetDownloadLink(int fileId);
+        Task<string> GetDownloadLink(int fileId);
     }
 }

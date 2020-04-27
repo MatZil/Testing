@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using XplicityApp.Dtos.Employees;
+using XplicityApp.Dtos.Users;
+using XplicityApp.Infrastructure.Database;
+using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services;
 using Xunit;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using XplicityApp.Infrastructure.Database.Models;
 
 namespace Tests.Tests
 {
@@ -13,50 +14,66 @@ namespace Tests.Tests
     public class UserTests
     {
         private readonly UserService _usersService;
-        private readonly UserManager<User> _userManager;
+        private readonly HolidayDbContext _context;
+        private readonly EmployeesRepository _repository;
+        private readonly UserManager<User> _usermanager;
 
         public UserTests()
         {
             var setup = new SetUp();
             setup.Initialize();
-            var context = setup.HolidayDbContext;
+            _context = setup.HolidayDbContext;
 
-            _userManager = setup.InitializeUserManager();
-            
-            new EmployeesRepository(context, _userManager);
-            _usersService = new UserService(_userManager);
+            _usermanager = setup.InitializeUserManager();
+            _repository = new EmployeesRepository(_context, _usermanager);
+            _usersService = new UserService(_usermanager);
         }
 
-        //[Theory]
-        //[InlineData(1, "pass", "available@email")]
-        //public async void When_CreatingUser_Expect_ReturnsNewUser(int clientId, string password, string email)
-        //{
-        //    var newEmployeeDto = _setup.NewEmployeeDto(clientId, password, email);
-        //    var newEmployee = _setup.NewEmployee(clientId, email);
+        [Theory]
+        [InlineData(1)]
+        public async void When_UpdatingUserRole_Expect_UpdatesUserRole(int id)
+        {
+            var updateEmployeeDto = new UpdateEmployeeDto
+            {
+                Role = "Employee"
+            };
+            var expected = updateEmployeeDto.Role;
 
-        //    var createdUser = await _usersService.Create(newEmployee, newEmployeeDto);
-        //    Assert.NotNull(createdUser);
-        //}
+            await _usersService.Update(id, updateEmployeeDto);
+            var actual = await _usersService.GetUserRole(id);
 
-        //[Theory]
-        //[InlineData(1)]
-        //[InlineData(2)]
-        //public async void When_UpdatingUser_Expect_UpdatesUser(int id)
-        //{
-        //    var initial = _context.Employees.Find(id).Surname;
+            Assert.Equal(expected, actual);
+        }
 
-        //    var updateEmployeeDto = new UpdateEmployeeDto
-        //    {
-        //        Surname = "Updated Surname"
-        //    };
-        //    var expected = updateEmployeeDto.Surname;
+        [Theory]
+        [InlineData(1)]
+        public async void When_GettingUserRole_Expect_ReturnsRole(int id)
+        {
+            var role = await _usersService.GetUserRole(id);
 
-        //    await _usersService.Update(id, updateEmployeeDto);
-        //    var actual = _context.Employees.Find(id).Surname;
-        //    _output.WriteLine(initial + "   >>   " + actual);
+            Assert.NotNull(role);
+        }
 
-        //    Assert.Equal(expected, actual);
-        //}
+        [Theory]
+        [InlineData("user1@gmail.com")]
+        public async void When_GettingCurrentUser_Expect_ReturnsUser(string email)
+        {
+            var user = await _usersService.GetCurrentUser(email);
+
+            Assert.NotNull(user);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public async void When_UpdatingUserEmail_Expect_UpdatesUserEmail(int id)
+        {
+            var newEmail = "updatedEmail@email.com";
+
+            await _usersService.ChangeEmail(id, newEmail);
+            var user = await _usermanager.FindByEmailAsync(newEmail);
+
+            Assert.NotNull(user);
+        }
 
         [Theory]
         [InlineData(3)]
@@ -69,28 +86,5 @@ namespace Tests.Tests
 
             Assert.ThrowsAsync<InvalidOperationException>(async () => await _usersService.Update(id, updateEmployeeDto));
         }
-
-        //[Fact]
-        //public async void When_ResettingPassword_Expect_PasswordUpdated()
-        //{
-        //    //var updateEmployeeDto = new UpdateEmployeeDto
-        //    //{
-        //    //    Role = "Admin",
-        //    //    Password = "NewPassword"
-        //    //};
-
-        //    //int id = 1;
-        //    //await _usersService.Update(id, updateEmployeeDto);
-        //    //var updatedUser = await _userManager.Users.FirstOrDefaultAsync(x => x.EmployeeId == id);
-        //    //var isPasswordUpdated = await _userManager.CheckPasswordAsync(updatedUser, updateEmployeeDto.Password);
-
-        //    //Assert.True(isPasswordUpdated, "Failed to update password");
-
-        //    var newUser = new User { UserName = "userNew", Email = "userNew@gmail.com", EmployeeId = 1 };
-        //    var result = await _userManager.CreateAsync(newUser, "Pa$$W0rD!");
-        //    var isPasswordValid = await _userManager.CheckPasswordAsync(newUser, "Pa$$W0rD!");
-
-        //    Assert.True(isPasswordValid);
-        //}
     }
 }
