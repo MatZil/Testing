@@ -17,10 +17,10 @@ namespace XplicityApp.Controllers
             _fileService = fileService;
         }
 
-        [HttpGet("{fileId}/download")]
-        public async Task<IActionResult> GetFile(int fileId)
+        [HttpGet("{fileGuid}/download")]
+        public async Task<IActionResult> GetFile(string fileGuid)
         {
-            var file = await _fileService.GetById(fileId);
+            var file = await _fileService.GetByGuid(fileGuid);
 
             if (file is null)
             {

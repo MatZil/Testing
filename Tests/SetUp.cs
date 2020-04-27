@@ -33,6 +33,7 @@ namespace Tests
         private InventoryItemTag[] _inventoryItemTags;
         private FileRecord[] _fileRecords;
         private NotificationSettings[] _notificationSettings;
+        private AuditLog[] _auditLogs;
         private Survey[] _surveys;
         private TimeService _timeService = new TimeService();
 
@@ -135,10 +136,25 @@ namespace Tests
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
             }
 
+            if (!await _roleManager.RoleExistsAsync("Employee"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("Employee"));
+            }
+
             if (!context.Users.AnyAsync(x => x.UserName == "user1").Result)
             {
                 var user = new User { UserName = "user1", Email = "user1@gmail.com", EmployeeId = 1 };
                 await _userManager.CreateAsync(user, "Pa$$W0rD!");
+
+                if (!_userManager.IsInRoleAsync(user, "Admin").Result)
+                {
+                    await _userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
+            if (!context.Users.AnyAsync(x => x.UserName == "user2").Result)
+            {
+                var user = new User { UserName = "user2", Email = "user2@gmail.com", EmployeeId = 2 };
+                await _userManager.CreateAsync(user, "testing");
 
                 if (!_userManager.IsInRoleAsync(user, "Admin").Result)
                 {
@@ -700,6 +716,7 @@ namespace Tests
                 new FileRecord
                 {
                     Id = 1,
+                    Guid = "1",
                     Name = "Order",
                     Type = FileTypeEnum.Order,
                     CreatedAt = DateTime.Today
@@ -707,6 +724,7 @@ namespace Tests
                 new FileRecord
                 {
                     Id = 2,
+                    Guid = "2",
                     Name = "Request",
                     Type = FileTypeEnum.Request,
                     CreatedAt = DateTime.Today
@@ -714,6 +732,7 @@ namespace Tests
                 new FileRecord
                 {
                     Id = 3,
+                    Guid = "3",
                     Name = "HolidayPolicy",
                     Type = FileTypeEnum.HolidayPolicy,
                     CreatedAt = DateTime.Today
@@ -774,6 +793,52 @@ namespace Tests
             context.NotificationSettings.AddRange(_notificationSettings);
             context.SaveChanges();
 
+            _auditLogs = new[]
+            {
+                new AuditLog
+                {
+                    Id = 1,
+                    Data = "User was updated",
+                    EntityType = "Employee",
+                    Date = DateTime.Today.AddHours(1),
+                    User = "User1"
+                },
+                new AuditLog
+                {
+                    Id = 2,
+                    Data = "User was updated",
+                    EntityType = "Employee",
+                    Date = DateTime.Today.AddHours(2),
+                    User = "User1"
+                },
+                new AuditLog
+                {
+                    Id = 3,
+                    Data = "Item was created",
+                    EntityType = "InventoryItem",
+                    Date = DateTime.Today.AddHours(3),
+                    User = "User1"
+                },
+                new AuditLog
+                {
+                    Id = 4,
+                    Data = "Item was created",
+                    EntityType = "InventoryItem",
+                    Date = DateTime.Today.AddHours(4),
+                    User = "User1"
+                },
+                new AuditLog
+                {
+                    Id = 5,
+                    Data = "User was updated",
+                    EntityType = "Employee",
+                    Date = DateTime.Today.AddHours(5),
+                    User = "User1"
+                },
+            };
+            context.AuditLogs.AddRange(_auditLogs);
+            context.SaveChanges();
+
             _surveys = new[] {
                 new Survey
                 {
@@ -812,6 +877,8 @@ namespace Tests
                     return _tags.Length;
                 case "notificationSettings":
                     return _notificationSettings.Length;
+                case "auditLogs":
+                    return _auditLogs.Length;
                 case "surveys":
                     return _surveys.Length;
                 default:
