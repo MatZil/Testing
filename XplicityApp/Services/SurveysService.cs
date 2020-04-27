@@ -39,7 +39,9 @@ namespace XplicityApp.Services
         public async Task<NewSurveyDto> Create(NewSurveyDto newSurveyDto)
         {
             if (newSurveyDto == null)
+            {
                 throw new ArgumentNullException(nameof(newSurveyDto));
+            }
 
             var newSurvey = _mapper.Map<Survey>(newSurveyDto);
             await _repository.Create(newSurvey);
@@ -53,7 +55,9 @@ namespace XplicityApp.Services
             var item = await _repository.GetById(id);
 
             if (item == null)
+            {
                 return false;
+            }
 
             var deleted = await _repository.Delete(item);
             return deleted;
@@ -61,13 +65,17 @@ namespace XplicityApp.Services
 
         public async Task Update(int id, UpdateSurveyDto updateData)
         {
-            if(updateData == null)
+            if (updateData == null)
+            {
                 throw new ArgumentNullException(nameof(updateData));
+            }
 
             var itemToUpdate = await _repository.GetById(id);
 
             if (itemToUpdate == null)
+            {
                 throw new InvalidOperationException();
+            }
 
             _mapper.Map(updateData, itemToUpdate);
             await _repository.Update(itemToUpdate);

@@ -50,11 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200424061656_Surveys.cs" />
-    <Compile Remove="Migrations\20200424061656_Surveys.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
       <Folder Include="Templates\GeneratedTemplates\" />
   </ItemGroup>
 

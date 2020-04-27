@@ -38,7 +38,7 @@ export class SurveysTableComponent implements OnInit {
   }
 
   refreshTable(): void {
-    this.surveyService.getSurvey().subscribe(surveys => {
+    this.surveyService.getAllSurveys().subscribe(surveys => {
       this.dataSource.data = surveys;
     });
   }

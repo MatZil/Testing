@@ -19,7 +19,7 @@ export class SurveyService {
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
-  getSurvey(): Observable<Survey[]> {
+  getAllSurveys(): Observable<Survey[]> {
     return this.http.get<Survey[]>(this.surveyApi);
   }
 
