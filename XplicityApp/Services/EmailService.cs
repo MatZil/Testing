@@ -12,6 +12,8 @@ using XplicityApp.Infrastructure.Static_Files;
 using XplicityApp.Services.EntityBehavior;
 using XplicityApp.Services.Interfaces;
 using XplicityApp.Infrastructure.Utils.Interfaces;
+using XplicityApp.Dtos.Holidays;
+using XplicityApp.Infrastructure.Enums;
 
 namespace XplicityApp.Services
 {
@@ -169,6 +171,34 @@ namespace XplicityApp.Services
             _emailer.SendMail(receiver, template.Subject, messageString);
 
             return true;
+        }
+
+
+        public async Task NotifyAboutRejectedRequest(GetHolidayDto holiday, string receiver)
+        {
+            var template = await _repository.GetByPurpose(EmailPurposes.REJECTION_NOTIFICATION);
+
+            if (template is null)
+            {
+                throw new InvalidOperationException($"{EmailPurposes.REJECTION_NOTIFICATION} template was not found.");
+            }
+
+            var rejecterStatus = "client";
+            if (holiday.Status == HolidayStatus.AdminRejected)
+            {
+                rejecterStatus = "administrator";
+            }
+
+            var rejectionReason = "No rejection reason has been provided.";
+            if (!String.IsNullOrEmpty(holiday.RejectionReason))
+                rejectionReason = "The provided rejection reason: " + holiday.RejectionReason;
+
+            var messageString = template.Template
+                                        .Replace("{rejecter.status}", rejecterStatus)
+                                        .Replace("{rejecter.fullName}", holiday.ConfirmerFullName)
+                                        .Replace("{rejection.reason}", rejectionReason);
+
+            _emailer.SendMail(receiver, template.Subject, messageString);
         }
     }
 }

@@ -219,6 +219,14 @@ namespace Tests
                         Subject = config["EmailTemplates:OrderNotification:Subject"],
                         Template = config["EmailTemplates:OrderNotification:Template"],
                         Instructions = config["EmailTemplates:OrderNotification:Instructions"]
+                    },
+                    new EmailTemplate
+                    {
+                        Id = 8,
+                        Purpose = EmailPurposes.REJECTION_NOTIFICATION,
+                        Subject = config["EmailTemplates:RejectionNotification:Subject"],
+                        Template = config["EmailTemplates:RejectionNotification:Template"],
+                        Instructions = config["EmailTemplates:RejectionNotification:Instructions"]
                     }
             };
             context.EmailTemplates.AddRange(_emailTemplates);

@@ -10,6 +10,8 @@ using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services;
 using Xunit;
+using XplicityApp.Dtos.Holidays;
+using XplicityApp.Infrastructure.Enums;
 
 namespace Tests.Tests.EmailServiceTests
 {
@@ -151,6 +153,26 @@ namespace Tests.Tests.EmailServiceTests
             _actualBodyList = new List<string>();
             await _emailService.SendRequestNotification(2, _employee.Email, confirmerFullName);
             var expectedBody = $"Your holiday request has been confirmed by {confirmerFullName}. You can download your holiday request document by clicking this link: {await _fileService.GetDownloadLink(2)}";
+            Assert.Equal(expectedBody, _actualBodyList.FirstOrDefault());
+        }
+
+        [Theory]
+        [InlineData(HolidayStatus.AdminRejected, "administrator", "", "No rejection reason has been provided.")]
+        [InlineData(HolidayStatus.ClientRejected, "client", "Provided rejection reason.", "The provided rejection reason: ")]
+        public async void When_SendingRejectionNotification_Expect_CorrectBody(HolidayStatus status, string statusForEmail, string rejectionReason, string rejectionReasonForEmail)
+        {
+            _actualBodyList = new List<string>();
+
+            var getHolidayDto = new GetHolidayDto()
+            {
+                ConfirmerFullName = "Confirmer",
+                Status = status,
+                RejectionReason = rejectionReason
+            };
+
+            rejectionReasonForEmail += rejectionReason;
+            await _emailService.NotifyAboutRejectedRequest(getHolidayDto, _employee.Email);
+            var expectedBody = $"Your holiday request has been rejected by your {statusForEmail} {getHolidayDto.ConfirmerFullName}. {rejectionReasonForEmail}";
             Assert.Equal(expectedBody, _actualBodyList.FirstOrDefault());
         }
     }

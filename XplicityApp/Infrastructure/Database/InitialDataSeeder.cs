@@ -49,8 +49,8 @@ namespace XplicityApp.Infrastructure.Database
             CreateBirthdayReminder(builder, configuration);
             CreateHolidayNotification(builder, configuration);
             CreateOrderNotification(builder, configuration);
+            CreateRejectedRequestNotification(builder, configuration);
             CreateRequestNotification(builder, configuration);
-
         }
 
         private static void CreateAdminConfirmation(ModelBuilder builder, IConfiguration configuration)
@@ -147,6 +147,20 @@ namespace XplicityApp.Infrastructure.Database
                     Subject = configuration["EmailTemplates:OrderNotification:Subject"],
                     Template = configuration["EmailTemplates:OrderNotification:Template"],
                     Instructions = configuration["EmailTemplates:OrderNotification:Instructions"]
+                }
+            );
+        }
+
+        private static void CreateRejectedRequestNotification(ModelBuilder builder, IConfiguration configuration)
+        {
+            builder.Entity<EmailTemplate>().HasData(
+                new EmailTemplate
+                {
+                    Id = 8,
+                    Purpose = EmailPurposes.REJECTION_NOTIFICATION,
+                    Subject = configuration["EmailTemplates:RejectionNotification:Subject"],
+                    Template = configuration["EmailTemplates:RejectionNotification:Template"],
+                    Instructions = configuration["EmailTemplates:RejectionNotification:Instructions"]
                 }
             );
         }
