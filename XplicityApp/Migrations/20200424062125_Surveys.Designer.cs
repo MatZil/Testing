@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XplicityApp.Infrastructure.Database;
 
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    partial class HolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200424062125_Surveys")]
+    partial class Surveys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -437,10 +439,6 @@ Please use the first line for team's title, second line for individual employee'
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Guid")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -457,7 +455,6 @@ Please use the first line for team's title, second line for individual employee'
                         {
                             Id = 1,
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Guid = "29fe0e74-eb8c-4b3c-a7ac-66a031fc2653-321a6858-a955-4961-96b2-ada0b1fcce9b",
                             Name = "Holiday Policy.pdf",
                             Type = 1
                         });

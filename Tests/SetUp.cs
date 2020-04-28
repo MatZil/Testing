@@ -34,6 +34,7 @@ namespace Tests
         private FileRecord[] _fileRecords;
         private NotificationSettings[] _notificationSettings;
         private AuditLog[] _auditLogs;
+        private Survey[] _surveys;
         private TimeService _timeService = new TimeService();
         private IConfiguration _configuration;
 
@@ -865,6 +866,19 @@ namespace Tests
             };
             context.AuditLogs.AddRange(_auditLogs);
             context.SaveChanges();
+
+            _surveys = new[] {
+                new Survey
+                {
+                    Title = "survey1"
+                },
+                new Survey
+                {
+                    Title = "survey2"
+                },
+            };
+            context.Surveys.AddRange(_surveys);
+            context.SaveChanges();
         }
 
         public int GetCount(string type)
@@ -893,6 +907,8 @@ namespace Tests
                     return _notificationSettings.Length;
                 case "auditLogs":
                     return _auditLogs.Length;
+                case "surveys":
+                    return _surveys.Length;
                 default:
                     return 0;
             }

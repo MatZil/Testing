@@ -18,6 +18,7 @@ namespace XplicityApp.Infrastructure.Database
         public DbSet<InventoryItemTag> InventoryItemsTags { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<NotificationSettings> NotificationSettings { get; set; }
+        public DbSet<Survey> Surveys { get; set; }
         private readonly IConfiguration _configuration;
 
 

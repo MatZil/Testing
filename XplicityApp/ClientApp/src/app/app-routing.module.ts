@@ -13,6 +13,7 @@ import { AuthGuard } from './helpers/auth-guard';
 import { RoleGuardService } from './helpers/role-guard';
 import { ProfileComponent } from './components/profile/profile.component';
 import { InventoryTableComponent } from './components/inventory-table/inventory-table.component';
+import { SurveysTableComponent } from './components/surveys-table/surveys-table.component';
 
 
 const routes: Routes = [
@@ -75,6 +76,12 @@ const routes: Routes = [
           expectedRole: 'Admin'
         }
       }
+    ]
+  },
+  {
+    path: 'surveys', component: SidebarComponent, canActivate: [AuthGuard],
+    children: [
+      { path: '', component: SurveysTableComponent, canActivate: [AuthGuard] }
     ]
   },
   {
