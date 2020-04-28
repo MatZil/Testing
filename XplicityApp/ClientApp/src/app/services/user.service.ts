@@ -8,6 +8,7 @@ import { PasswordChangeModel } from '../models/password-change-model';
 import decode from 'jwt-decode';
 import { Newuser } from '../models/newuser';
 import { EmployeeStatus } from '../models/employee-status.enum';
+import { Birthday } from 'src/app/models/birthday';
 
 @Injectable({ providedIn: 'root' })
 
@@ -71,4 +72,13 @@ export class UserService {
     isAdmin(): boolean {
       return this.getRole() === 'Admin';
     }
+
+    getBirthdaysBySelectedMonth(date: Date, currentUserId: number): Observable<Birthday[]> {
+        let parameters = new HttpParams();
+        parameters = parameters.append('currentUserId', currentUserId.toString());
+        const dateString = date.toLocaleDateString('lt-LT');
+        parameters = parameters.append('selectedDate', dateString);
+    
+        return this.http.get<Birthday[]>(`${this.userApi}/GetBirthdaysByMonth`, { params: parameters });
+      }
 }

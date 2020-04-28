@@ -166,18 +166,8 @@ namespace XplicityApp.Services
         }
         public async Task<List<GetHolidayDto>> GetFilteredConfirmedByMonth(DateTime selectedDate, int currentUserId, int filter)
         {
-            var numberOfLastMonthDays = _configuration.GetValue<int>("CalendarConfig:NumberOfLastMonthDays");
-            var numberOfNextMonthDays = _configuration.GetValue<int>("CalendarConfig:NumberOfNextMonthDays");
-
-            var yearFrom = selectedDate.AddMonths(-1).Year;
-            var monthFrom = selectedDate.AddMonths(-1).Month;
-            var daysInLastMonth = DateTime.DaysInMonth(yearFrom, monthFrom);
-            var dayFrom = daysInLastMonth - numberOfLastMonthDays;
-            var dateFrom = new DateTime(yearFrom, monthFrom, dayFrom);
-
-            var yearTo = selectedDate.AddMonths(1).Year;
-            var monthTo = selectedDate.AddMonths(1).Month;
-            var dateTo = new DateTime(yearTo, monthTo, numberOfNextMonthDays);
+            var dateFrom = _timeService.GetCalendarDateFrom(_configuration, selectedDate);
+            var dateTo = _timeService.GetCalendarDateTo(_configuration, selectedDate);
 
             var holidays = await GetByRole(currentUserId);
             var selectedMonthConfirmedHolidays = new List<GetHolidayDto>();

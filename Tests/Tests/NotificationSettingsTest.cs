@@ -27,6 +27,7 @@ namespace Tests.Tests
             _context = setup.HolidayDbContext;
             var mapper = setup.Mapper;
             _notificationSettingsCount = setup.GetCount("notificationSettings");
+            var configuration = setup.GetConfiguration();
 
             var notificationSettingsRepository = new NotificationSettingsRepository(_context);
             var mockEmployeeRepository = new Mock<IEmployeeRepository>().Object;
@@ -35,7 +36,7 @@ namespace Tests.Tests
             var mockUserService = new Mock<IUserService>().Object;
 
             _notificationSettingsService = new NotificationSettingsService(notificationSettingsRepository, mapper);
-            _employeesService = new EmployeesService(mockEmployeeRepository, mapper, mockOvertimeUtility, mockTimeService, mockUserService, _notificationSettingsService);
+            _employeesService = new EmployeesService(mockEmployeeRepository, mapper, mockOvertimeUtility, mockTimeService, mockUserService, _notificationSettingsService, configuration);
         }
 
         [Theory]
