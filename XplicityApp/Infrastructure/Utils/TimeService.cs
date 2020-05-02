@@ -1,4 +1,5 @@
-﻿using Nager.Date;
+﻿using Microsoft.Extensions.Configuration;
+using Nager.Date;
 using System;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 
@@ -69,6 +70,37 @@ namespace XplicityApp.Infrastructure.Utils
         {
             int daysInYear = 365;
             return years * daysInYear;
+        }
+
+        public DateTime GetCalendarDateFrom(IConfiguration configuration, DateTime selectedDate)
+        {
+            var numberOfLastMonthDays = configuration.GetValue<int>("CalendarConfig:NumberOfLastMonthDays");
+
+            var yearFrom = selectedDate.AddMonths(-1).Year;
+            var monthFrom = selectedDate.AddMonths(-1).Month;
+            var daysInLastMonth = DateTime.DaysInMonth(yearFrom, monthFrom);
+            var dayFrom = daysInLastMonth - numberOfLastMonthDays;
+            var dateFrom = new DateTime(yearFrom, monthFrom, dayFrom);
+
+            return dateFrom;
+        }
+
+        public DateTime GetCalendarDateTo(IConfiguration configuration, DateTime selectedDate)
+        {
+            var numberOfNextMonthDays = configuration.GetValue<int>("CalendarConfig:NumberOfNextMonthDays");
+
+            var yearTo = selectedDate.AddMonths(1).Year;
+            var monthTo = selectedDate.AddMonths(1).Month;
+            var dateTo = new DateTime(yearTo, monthTo, numberOfNextMonthDays);
+
+            return dateTo;
+        }
+
+        public DateTime AdjustBirthdayDateForCalendar(DateTime date)
+        {
+            var currentYear = DateTime.Now.Year;
+            var adjustedBirthdayDate = new DateTime(currentYear, date.Month, date.Day);
+            return adjustedBirthdayDate;
         }
     }
 }
