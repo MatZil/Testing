@@ -12,6 +12,7 @@ using XplicityApp.Services;
 using Xunit;
 using XplicityApp.Dtos.Holidays;
 using XplicityApp.Infrastructure.Enums;
+using XplicityApp.Infrastructure.Static_Files;
 
 namespace Tests.Tests.EmailServiceTests
 {
@@ -157,8 +158,8 @@ namespace Tests.Tests.EmailServiceTests
         }
 
         [Theory]
-        [InlineData(HolidayStatus.AdminRejected, "administrator", "", "No rejection reason has been provided.")]
-        [InlineData(HolidayStatus.ClientRejected, "client", "Provided rejection reason.", "The provided rejection reason: ")]
+        [InlineData(HolidayStatus.AdminRejected, "administrator", "", RejectionEmail.WITHOUT_REASON)]
+        [InlineData(HolidayStatus.ClientRejected, "client", "Rejection reason text.", RejectionEmail.WITH_REASON)]
         public async void When_SendingRejectionNotification_Expect_CorrectBody(HolidayStatus status, string statusForEmail, string rejectionReason, string rejectionReasonForEmail)
         {
             _actualBodyList = new List<string>();

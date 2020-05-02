@@ -24,8 +24,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   currentUsersId: number;
   currentUsersClientId: number;
   dataSource = new MatTableDataSource<Holiday>();
-  holidayTypes = [['#99ccff', 'Annual unpaid'], ['#0099ff', 'Annual paid'],
-    ['#006699', 'Annual paid, with overtime'], ['#9933ff', 'Science'], ['#cc99ff', 'Day for children']];
+  holidayTypes = [['#99ccff', 'Annual unpaid'], ['#0099ff', 'Annual paid'], ['#006699', 'Annual paid, with overtime'],
+                  ['#9933ff', 'Science'], ['#cc99ff', 'Day for children']];
 
   @ViewChild('fullCalendar') fullCalendar: any;
 

@@ -189,9 +189,9 @@ namespace XplicityApp.Services
                 rejecterStatus = "administrator";
             }
 
-            var rejectionReason = "No rejection reason has been provided.";
+            var rejectionReason = RejectionEmail.WITHOUT_REASON;
             if (!String.IsNullOrEmpty(holiday.RejectionReason))
-                rejectionReason = "The provided rejection reason: " + holiday.RejectionReason;
+                rejectionReason = RejectionEmail.WITH_REASON + holiday.RejectionReason;
 
             var messageString = template.Template
                                         .Replace("{rejecter.status}", rejecterStatus)
