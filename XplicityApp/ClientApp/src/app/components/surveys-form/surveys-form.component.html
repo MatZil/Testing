@@ -1,1 +1,33 @@
-<p>surveys-form works!</p>
+<div class="alignCenter" >
+    <h1 mat-dialog-title>Add a new survey</h1>
+    <div><input type="text" placeholder="Question title" /></div>
+    <div><mat-checkbox>Anonymous answers</mat-checkbox></div>
+    <div><input type="number" min="1" (change)="fillArray($event.target.value)" placeholder="Number of questions" /></div>
+<form class="alignCenter" [formGroup]="surveyForm">
+    <div class="kk">
+        <div *ngFor="let i of hhhh; trackBy: trackByFn">
+            <h3>Question {{i}}</h3>
+            <input type="text" placeholder="Question text" />
+            <mat-select name="type" class="answerType" placeholder="Answer type" (selectionChange)="refreshAnswerType(selectedSurveyType[i-1], i-1)" [(value)]="selectedSurveyType[i-1]">
+                <mat-option [value]="0">
+                    Multiple choice
+                </mat-option>
+                <mat-option [value]="1">
+                    Likert scale
+                </mat-option>
+                <mat-option [value]="2">
+                    Ranking
+                </mat-option>
+                <mat-option [value]="3">
+                    Text entry
+                </mat-option>
+            </mat-select>
+            <div *ngIf="surveyType[i-1] == typee.Multiple_choice">
+                <input type="number" min="1" (change)="fillArrayChoices($event.target.value, i)" placeholder="Number of choices" />
+                <div *ngFor="let e of aaa[i]; trackBy: trackByFn">
+                    hyyh
+                </div>
+            </div>
+        </div>
+    </div>
+</form></div>
