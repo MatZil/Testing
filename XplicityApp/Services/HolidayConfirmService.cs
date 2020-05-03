@@ -197,6 +197,8 @@ namespace XplicityApp.Services
             }
 
             var successful = await _holidaysService.Update(holidayId, updatedHolidayDto);
+            var getHolidayDto = await _holidaysService.GetById(holidayId);
+            await _emailService.NotifyAboutRejectedRequest(getHolidayDto, employee.Email);
 
             return successful;
         }

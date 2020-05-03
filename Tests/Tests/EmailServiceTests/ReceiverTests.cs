@@ -8,7 +8,7 @@ using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services;
 using XplicityApp.Services.Interfaces;
 using Xunit;
-using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Dtos.Holidays;
 
 namespace Tests.Tests.EmailServiceTests
 {
@@ -155,6 +155,17 @@ namespace Tests.Tests.EmailServiceTests
         {
             _actualReceiverList = new List<string>();
             await _emailService.SendRequestNotification(2, _employee.Email, "ConfirmerName ConfirmerSurname");
+            Assert.Equal(_employee.Email, _actualReceiverList.FirstOrDefault());
+        }
+
+        [Fact]
+        public async void When_SendingRejectionNotification_Expect_CorrectReceiver()
+        {
+            _actualReceiverList = new List<string>();
+
+            var getHolidayDto = new GetHolidayDto();
+
+            await _emailService.NotifyAboutRejectedRequest(getHolidayDto, _employee.Email);
             Assert.Equal(_employee.Email, _actualReceiverList.FirstOrDefault());
         }
     }
