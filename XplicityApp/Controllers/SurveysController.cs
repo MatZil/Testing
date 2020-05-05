@@ -39,6 +39,19 @@ namespace XplicityApp.Controllers
             return Ok(survey);
         }
 
+        // GET: api/Surveys/byguid/5
+        [HttpGet("byguid/{guid}")]
+        [Produces(typeof(GetSurveyDto))]
+        public async Task<IActionResult> GetByGuid(string guid)
+        {
+            var survey = await _surveysService.GetByGuid(guid);
+
+            if (survey == null)
+                return NotFound();
+
+            return Ok(survey);
+        }
+
         // PUT: api/Surveys/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] UpdateSurveyDto newSurvey)

@@ -878,11 +878,13 @@ namespace Tests
             _surveys = new[] {
                 new Survey
                 {
-                    Title = "survey1"
+                    Title = "survey1",
+                    Guid = "1"
                 },
                 new Survey
                 {
-                    Title = "survey2"
+                    Title = "survey2",
+                    Guid = "2"
                 },
             };
             context.Surveys.AddRange(_surveys);

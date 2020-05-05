@@ -15,6 +15,7 @@ import { SurveysFormComponent } from '../surveys-form/surveys-form.component';
 export class SurveysTableComponent implements OnInit {
 
   survey: Survey = new Survey();
+  url: string;
 
   displayedColumns: string[] = [
     'title',
@@ -49,7 +50,9 @@ export class SurveysTableComponent implements OnInit {
     });
   }
 
-  onApproveButtonClick(id: number) {}
+  onApproveButtonClick(id: string) {
+    this.url = this.surveyService.createUrl(id);
+  }
 
   showDeleteConfirm(id: number): void {
     if (confirm('When clicked the OK button this section will be deleted')) {
@@ -58,11 +61,12 @@ export class SurveysTableComponent implements OnInit {
     }
   }
 
-  showApproveConfirm(id: number): void {
+  showApproveConfirm(id: string): void {
     if (confirm('Click OK to approve and get a shareable link. Editing of this survey will no longer be allowed.')) {
       this.onApproveButtonClick(id);
       this.closeModal();
     }
+    alert(this.url);
   }
 
   closeModal() {

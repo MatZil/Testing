@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using XplicityApp.Dtos.Surveys;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
@@ -14,16 +15,18 @@ namespace Tests.Tests
         private readonly HolidayDbContext _context;
         private readonly int _surveysCount;
         private readonly SurveysService _surveysService;
+        private readonly IConfiguration _configuration;
 
         public SurveyTests()
         {
             var setup = new SetUp();
             setup.Initialize();
+            _configuration = setup.GetConfiguration();
             _context = setup.HolidayDbContext;
             var mapper = setup.Mapper;
             _surveysCount = setup.GetCount("surveys");
-            IRepository<Survey> surveysRepository = new SurveysRepository(_context);
-            _surveysService = new SurveysService(surveysRepository, mapper);
+            ISurveysRepository surveysRepository = new SurveysRepository(_context);
+            _surveysService = new SurveysService(surveysRepository, _configuration, mapper);
         }
 
         [Theory]
@@ -129,6 +132,16 @@ namespace Tests.Tests
             };
 
             Assert.ThrowsAsync<InvalidOperationException>(async () => await _surveysService.Update(id, updatedSurvey));
+        }
+
+        [Theory]
+        [InlineData("1")]
+        [InlineData("2")]
+        public async void When_GettingExistingSurveyByGuid_Expect_ReturnsSurvey(string id)
+        {
+            var retrievedSurvey = await _surveysService.GetByGuid(id);
+
+            Assert.NotNull(retrievedSurvey);
         }
     }
 }

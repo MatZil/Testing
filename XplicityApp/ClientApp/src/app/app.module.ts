@@ -68,6 +68,7 @@ import { HolidayRequestButtonComponent } from './components/holiday-request-butt
 import { EmployeeEquipmentComponent } from './components/employee-equipment/employee-equipment.component';
 import { SurveysTableComponent } from './components/surveys-table/surveys-table.component';
 import { SurveysFormComponent } from './components/surveys-form/surveys-form.component';
+import { SurveysAnswersFormComponent } from './components/surveys-answers-form/surveys-answers-form.component';
 
 registerLocaleData(en);
 export function tokenGetter() {
@@ -106,7 +107,8 @@ export function tokenGetter() {
     HolidayRequestButtonComponent,
     EmployeeEquipmentComponent,
     SurveysTableComponent,
-    SurveysFormComponent
+    SurveysFormComponent,
+    SurveysAnswersFormComponent
   ],
   imports: [
     BrowserModule,
@@ -157,6 +159,7 @@ export function tokenGetter() {
     EmailTemplatesFormComponent,
     UserPasswordFormComponent,
     SurveysFormComponent,
+    SurveysAnswersFormComponent,
     UploadComponent
   ],
   providers: [
