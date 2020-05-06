@@ -11,5 +11,6 @@ namespace XplicityApp.Services.Interfaces
         Task<NewSurveyDto> Create(NewSurveyDto newSurvey);
         Task Update(int id, UpdateSurveyDto updateData);
         Task<bool> Delete(int id);
+        Task<GetSurveyDto> GetByGuid(string guid);
     }
 }

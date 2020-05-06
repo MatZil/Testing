@@ -27,7 +27,16 @@ export class SurveyService {
     return this.http.get<Survey>(`${this.surveyApi}/${id}`);
   }
 
+  getSurveyByGuid(guid: string): Observable<Survey> {
+    return this.http.get<Survey>(`${this.surveyApi}/byguid/${guid}`);
+  }
+
   deleteSurvey(surveyId: number): Observable<Survey> {
     return this.http.delete<Survey>(`${this.surveyApi}/${surveyId}`);
+  }
+
+  createUrl(id: string): string {
+    return `${this.baseUrl}SurveyAnswerForm/${id}`;
+
   }
 }

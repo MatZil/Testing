@@ -8,5 +8,6 @@ namespace XplicityApp.Dtos.Surveys
         public int AuthorId { get; set; }
         public string Title { get; set; }
         public SurveyTypeEnum Type { get; set; }
+        public string Guid { get; set; }
     }
 }
