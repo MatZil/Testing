@@ -8,6 +8,7 @@ using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
+using Azure.Storage.Blobs;
 
 namespace XplicityApp.Services
 {
@@ -45,10 +46,27 @@ namespace XplicityApp.Services
         {
             if (formFile.Length > 0)
             {
-                await CreateFileRecord(formFile.FileName, fileType);
-                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
-                using var fileStream = new FileStream(fullPath, FileMode.Create);
-                formFile.CopyTo(fileStream);
+            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            //string containerName = GetRelativeDirectory(fileType);
+            string containerName = "policy";
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+
+            await CreateFileRecord(formFile.FileName, fileType);
+            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
+
+            BlobClient blobClient = containerClient.GetBlobClient(formFile.FileName);
+
+            using FileStream uploadFileStream = File.OpenRead(fullPath);
+            await blobClient.UploadAsync(uploadFileStream, true);
+            uploadFileStream.Close();
+
+            //await CreateFileRecord(formFile.FileName, fileType);
+            //var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
+            //using var fileStream = new FileStream(fullPath, FileMode.Create);
+            //formFile.CopyTo(fileStream);
             }
         }
 

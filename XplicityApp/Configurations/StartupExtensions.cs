@@ -18,6 +18,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Audit.Core;
 using Audit.EntityFramework.Providers;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Microsoft.Azure.Storage.Blob;
+using Microsoft.Azure.Storage;
+
 
 namespace XplicityApp.Configurations
 {
@@ -141,6 +146,27 @@ namespace XplicityApp.Configurations
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), baseFolder)),
                 RequestPath = new PathString(string.Concat("/", baseFolder))
             });
+        }
+        public static async void SetUpAzureStorage(this IApplicationBuilder app)
+        {
+                string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+
+                BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+
+                string[] directories = { "documents", "images", "orders", "policy", "requests", "stylesheets", "unknown"};
+
+                foreach (var dir in directories)
+                {
+                    CloudBlobContainer container = blobClient.GetContainerReference(dir);
+                    if (!container.Exists())
+                    {
+                        BlobContainerClient containerClient = await blobServiceClient.CreateBlobContainerAsync(dir);
+                    }
+                }
         }
 
         public static IServiceCollection SetupJtwAuthentication(this IServiceCollection services, IConfiguration configuration)

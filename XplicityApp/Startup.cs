@@ -60,6 +60,7 @@ namespace XplicityApp
             app.UseHttpsRedirection();
 
             app.SetUpStaticFiles(Configuration);
+            app.SetUpAzureStorage();
 
             if (!env.IsDevelopment())
             {
