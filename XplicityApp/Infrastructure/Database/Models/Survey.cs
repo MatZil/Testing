@@ -13,6 +13,8 @@ namespace XplicityApp.Infrastructure.Database.Models
         public int AuthorId { get; set; }
         [Required]
         public SurveyTypeEnum Type { get; set; }
+        [Required]
+        public string Guid { get; set; }
     }
 }
 

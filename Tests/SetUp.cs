@@ -219,6 +219,14 @@ namespace Tests
                         Subject = _configuration["EmailTemplates:OrderNotification:Subject"],
                         Template = _configuration["EmailTemplates:OrderNotification:Template"],
                         Instructions = _configuration["EmailTemplates:OrderNotification:Instructions"]
+                    },
+                    new EmailTemplate
+                    {
+                        Id = 8,
+                        Purpose = EmailPurposes.REJECTION_NOTIFICATION,
+                        Subject = _configuration["EmailTemplates:RejectionNotification:Subject"],
+                        Template = _configuration["EmailTemplates:RejectionNotification:Template"],
+                        Instructions = _configuration["EmailTemplates:RejectionNotification:Instructions"]
                     }
             };
             context.EmailTemplates.AddRange(_emailTemplates);
@@ -870,11 +878,13 @@ namespace Tests
             _surveys = new[] {
                 new Survey
                 {
-                    Title = "survey1"
+                    Title = "survey1",
+                    Guid = "1"
                 },
                 new Survey
                 {
-                    Title = "survey2"
+                    Title = "survey2",
+                    Guid = "2"
                 },
             };
             context.Surveys.AddRange(_surveys);

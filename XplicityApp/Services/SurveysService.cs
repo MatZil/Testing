@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using XplicityApp.Dtos.Surveys;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
@@ -11,13 +12,15 @@ namespace XplicityApp.Services
 {
     public class SurveysService : ISurveysService
     {
-        private readonly IRepository<Survey> _repository;
+        private readonly ISurveysRepository _repository;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public SurveysService(IRepository<Survey> repository, IMapper mapper)
+        public SurveysService(ISurveysRepository repository, IConfiguration configuration, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
         public async Task<GetSurveyDto> GetById(int id)
@@ -43,7 +46,9 @@ namespace XplicityApp.Services
                 throw new ArgumentNullException(nameof(newSurveyDto));
             }
 
+            var guid = Guid.NewGuid().ToString();
             var newSurvey = _mapper.Map<Survey>(newSurveyDto);
+            newSurvey.Guid = guid;
             await _repository.Create(newSurvey);
             var surveyDto = _mapper.Map<NewSurveyDto>(newSurvey);
 
@@ -79,6 +84,14 @@ namespace XplicityApp.Services
 
             _mapper.Map(updateData, itemToUpdate);
             await _repository.Update(itemToUpdate);
+        }
+
+        public async Task<GetSurveyDto> GetByGuid(string guid)
+        {
+            var survey = await _repository.GetByGuid(guid);
+            var surveyDto = _mapper.Map<GetSurveyDto>(survey);
+
+            return surveyDto;
         }
     }
 }
