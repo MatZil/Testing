@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
@@ -12,61 +13,58 @@ namespace Tests.Tests
     {
         private readonly HolidayDbContext _context;
         private readonly AuditLogsService _auditLogsService;
-        private readonly int _auditLogsCount;
         public AuditLogsTests()
         {
             var setup = new SetUp();
             setup.Initialize();
             _context = setup.HolidayDbContext;
-            _auditLogsCount = setup.GetCount("auditLogs");
 
-            var mapper = setup.Mapper;
             var auditLogsRepository = new AuditLogsRepository(_context);
             _auditLogsService = new AuditLogsService(auditLogsRepository);
-        }
-
-        [Fact]
-        public async Task When_GettingAllAuditLogs_Expect_ReturnsAuditLogs()
-        {
-            var auditLogsCount = (await _auditLogsService.GetAll()).Count;
-
-            Assert.Equal(auditLogsCount, _auditLogsCount);
         }
 
         [Theory]
         [InlineData("Employee")]
         [InlineData("NotExisting")]
-        public async Task When_GettingAuditLogsByEntityType_Expect_ReturnsAuditLogs(string entityType)
+        [InlineData(null)]
+        public async Task When_GettingAuditLogsByEntityType_Expect_ReturnedAuditLogsCountIsCorrect(string entityType)
         {
-            var auditLogsCount = (await _auditLogsService.GetByEntityType(entityType, 1, 100)).Count;
+            var auditLogsCount = (await _auditLogsService.GetByType(entityType, 1, 100)).Logs.Count;
+
+            var auditLogsCountInJSON = (await _auditLogsService.GetByType(entityType, 1, 100)).TotalCount;
 
             int actualCount = 0;
-            var allAuditLogs = await _auditLogsService.GetAll();
-            foreach (var auditLog in allAuditLogs)
+            var allAuditLogs = await _context.AuditLogs.ToArrayAsync();
+            if(entityType == null)
             {
-                if(auditLog.EntityType == entityType)
+                actualCount = allAuditLogs.Length;
+            }
+            else
+            {
+                foreach (var auditLog in allAuditLogs)
                 {
-                    actualCount++;
+                    if (auditLog.EntityType == entityType)
+                    {
+                        actualCount++;
+                    }
                 }
             }
 
             Assert.Equal(auditLogsCount, actualCount);
+            Assert.Equal(auditLogsCountInJSON, actualCount);
         }
 
         [Theory]
-        [InlineData(1, 20)]
-        [InlineData(2, 3)]
-        [InlineData(3, 1)]
-        public async Task When_GettingAuditLogsPage_Expect_ReturnsAuditLogs(int page, int pageSize)
+        [InlineData(null, 1, 20)]
+        [InlineData(null, 2, 3)]
+        [InlineData(null, 3, 1)]
+        public async Task When_GettingAuditLogsPage_Expect_ReturnedAuditLogsCountIsCorrect(string entityType, int page, int pageSize)
         {
-            var auditLogsCount = (await _auditLogsService.GetPage(page, pageSize)).Count;
+            var auditLogsCount = (await _auditLogsService.GetByType(entityType , page, pageSize)).Logs.Count;
 
             int actualCount = 0;
 
-            var allAuditLogs = await _auditLogsService.GetAll();
-
-            AuditLog[] AuditLogsArray = new AuditLog[allAuditLogs.Count];
-            allAuditLogs.CopyTo(AuditLogsArray, 0);
+            var allAuditLogs = await _context.AuditLogs.ToArrayAsync();
 
             int startFrom = (page - 1) * pageSize;
             int countTo = startFrom + pageSize;
@@ -74,7 +72,7 @@ namespace Tests.Tests
             {
                 try
                 {
-                    if (AuditLogsArray[i] != null)
+                    if (allAuditLogs[i] != null)
                     {
                         actualCount++;
                     }

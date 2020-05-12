@@ -16,13 +16,6 @@ namespace XplicityApp.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<ICollection<AuditLog>> GetAll()
-        {
-            var auditLogs = await _context.AuditLogs.ToArrayAsync();
-
-            return auditLogs;
-        }
-
         public async Task<ICollection<AuditLog>> GetPage(int page, int pageSize)
         {
             var auditLogs = await _context.AuditLogs.Skip(page * pageSize).Take(pageSize).ToArrayAsync();
@@ -30,12 +23,26 @@ namespace XplicityApp.Infrastructure.Repositories
             return auditLogs;
         }
 
-        public async Task<ICollection<AuditLog>> GetByEntityType(string entityType, int page, int pageSize)
+        public async Task<ICollection<AuditLog>> GetPageByType(string entityType, int page, int pageSize)
         {
             var auditLogs = await _context.AuditLogs.Where(x => x.EntityType == entityType).
                 Skip(page * pageSize).Take(pageSize).ToArrayAsync();
 
             return auditLogs;
+        }
+
+        public async Task<int> GetItemsCountByType(string entityType)
+        {
+            var logsCount = await _context.AuditLogs.Where(x => x.EntityType == entityType).CountAsync();
+
+            return logsCount;
+        }
+
+        public async Task<int> GetAllItemsCount()
+        {
+            var logsCount = await _context.AuditLogs.CountAsync();
+
+            return logsCount;
         }
     }
 }
