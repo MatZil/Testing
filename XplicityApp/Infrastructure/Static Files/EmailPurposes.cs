@@ -9,5 +9,6 @@
         public const string BIRTHDAY_REMINDER = "Birthday Reminder";
         public const string ORDER_NOTIFICATION = "Order Notification";
         public const string REQUEST_NOTIFICATION = "Request Notification";
+        public const string REJECTION_NOTIFICATION = "Rejection Notification";
     }
 }

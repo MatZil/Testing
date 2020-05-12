@@ -13,6 +13,8 @@ import { AuthGuard } from './helpers/auth-guard';
 import { RoleGuardService } from './helpers/role-guard';
 import { ProfileComponent } from './components/profile/profile.component';
 import { InventoryTableComponent } from './components/inventory-table/inventory-table.component';
+import { SurveysTableComponent } from './components/surveys-table/surveys-table.component';
+import { SurveysAnswersFormComponent } from './components/surveys-answers-form/surveys-answers-form.component';
 
 
 const routes: Routes = [
@@ -76,6 +78,15 @@ const routes: Routes = [
         }
       }
     ]
+  },
+  {
+    path: 'surveys', component: SidebarComponent, canActivate: [AuthGuard],
+    children: [
+      { path: '', component: SurveysTableComponent, canActivate: [AuthGuard] }
+    ]
+  },
+  {
+    path: 'SurveyAnswerForm/:id', component: SurveysAnswersFormComponent, canActivate: [AuthGuard],
   },
   {
     path: 'profile', component: SidebarComponent, canActivate: [AuthGuard],

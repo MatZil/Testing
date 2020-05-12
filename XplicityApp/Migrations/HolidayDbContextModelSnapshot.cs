@@ -331,6 +331,16 @@ Please use the first line for team's title, second line for individual employee'
                         },
                         new
                         {
+                            Id = 8,
+                            Instructions = @"{rejecter.status} - Status of the rejecter (administrator or client).
+{rejecter.fullName} - Full name of the rejecter.
+{rejection.reason} - The provided rejection reason.",
+                            Purpose = "Rejection Notification",
+                            Subject = "Your holiday request has been rejected",
+                            Template = "Your holiday request has been rejected by your {rejecter.status} {rejecter.fullName}. {rejection.reason}"
+                        },
+                        new
+                        {
                             Id = 6,
                             Instructions = @"{confirmer.fullName} - Full name of the administrator who confirmed the request.
 {download.link} - A link to download request document.",
@@ -437,6 +447,10 @@ Please use the first line for team's title, second line for individual employee'
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -453,6 +467,7 @@ Please use the first line for team's title, second line for individual employee'
                         {
                             Id = 1,
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Guid = "973726ae-47f7-4190-b46b-92a6fa33e889-2a4d646c-7581-413a-a55e-8cc7387db3c0",
                             Name = "Holiday Policy.pdf",
                             Type = 1
                         });
@@ -636,6 +651,33 @@ Please use the first line for team's title, second line for individual employee'
                         .IsUnique();
 
                     b.ToTable("NotificationSettings");
+                });
+
+            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Survey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Surveys");
                 });
 
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Tag", b =>

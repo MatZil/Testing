@@ -40,6 +40,12 @@
       "Subject": "A holiday order has been generated!",
       "Template": "A holiday order for {employee.fullName} has been generated. Click this link to download it: {download.link}",
       "Instructions": "{employee.fullName} - Employee's full name.\n{download.link} - A link to download order document."
+    },
+
+    "RejectionNotification": {
+      "Subject": "Your holiday request has been rejected",
+      "Template": "Your holiday request has been rejected by your {rejecter.status} {rejecter.fullName}. {rejection.reason}",
+      "Instructions": "{rejecter.status} - Status of the rejecter (administrator or client).\n{rejecter.fullName} - Full name of the rejecter.\n{rejection.reason} - The provided rejection reason."
     }
   }
 }

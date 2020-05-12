@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Dtos.Holidays;
 
 namespace XplicityApp.Services.Interfaces
 {
@@ -13,5 +14,6 @@ namespace XplicityApp.Services.Interfaces
         Task SendBirthDayReminder(ICollection<Employee> employeesWithBirthdays, ICollection<Employee> employees);
         Task SendOrderNotification(int fileId, Employee employee, string receiver);
         Task<bool> SendRequestNotification(int fileId, string receiver, string confirmerFullName);
+        Task NotifyAboutRejectedRequest(GetHolidayDto holiday, string receiver);
     }
 }

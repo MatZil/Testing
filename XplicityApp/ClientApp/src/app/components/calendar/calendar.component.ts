@@ -1,46 +1,57 @@
-import {Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, AfterViewChecked} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {HolidaysService} from 'src/app/services/holidays.service';
-import {Holiday} from 'src/app/models/holiday';
-import {UserService} from '../../services/user.service';
+import { Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import { HolidaysService } from 'src/app/services/holidays.service';
+import { Holiday } from 'src/app/models/holiday';
+import { Birthday } from 'src/app/models/birthday';
+import { UserService } from '../../services/user.service';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import {HolidayType} from 'src/app/enums/holidayType';
-import {BehaviorSubject} from 'rxjs';
+import { HolidayType } from 'src/app/enums/holidayType';
+import {BehaviorSubject, of, zip} from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { Client } from 'src/app/models/client';
+import { ClientService } from 'src/app/services/client.service';
+
 @Component({
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit, AfterViewInit {
+  clients: Client[];
   viewDate: Date = new Date();
   events: any[];
   calendarTitle = new BehaviorSubject<string>(null);
   options: any;
-  currentUserId: number;
-  dataSource = new MatTableDataSource<Holiday>();
-  holidayTypes = [['#99ccff', 'Annual unpaid'], ['#0099ff', 'Annual paid'],
-    ['#006699', 'Annual paid, with overtime'], ['#9933ff', 'Science'], ['#cc99ff', 'Day for children']];
+  filter: number = 0;
+  currentUsersId: number;
+  currentUsersClientId: number;
+  holidayTypes = [['#99ccff', 'Annual unpaid'], ['#0099ff', 'Annual paid'], ['#006699', 'Annual paid, with overtime'],
+                  ['#9933ff', 'Science'], ['#cc99ff', 'Day for children'], ['#FF93AC', 'Birthday']];
 
   @ViewChild('fullCalendar') fullCalendar: any;
 
   constructor(
     private holidayService: HolidaysService,
+    private clientService: ClientService,
     private userService: UserService) {
   }
 
   ngOnInit() {
+    this.clientService.getClient().subscribe(clients => {
+      this.clients = clients;
+    });
     this.setCalendarOptions();
-    this.getUserAndCurrentMonthHolidays();
+    this.getUserAndFilteredCurrentMonthHolidays(0);
   }
 
-  getUserAndCurrentMonthHolidays() {
+    getUserAndFilteredCurrentMonthHolidays(filter) {
     this.userService.getCurrentUser().subscribe(user => {
-      this.currentUserId = user.id;
-      this.getHolidays(0);
+      this.currentUsersId = user.id;
+      this.addMonthsToCurrentDate(0);
+      this.getEvents(filter);
     });
   }
 
-  setCalendarOptions() {
+  private setCalendarOptions() {
     this.options = {
       plugins: [dayGridPlugin, interactionPlugin],
       defaultDate: new Date(),
@@ -55,56 +66,85 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     };
   }
 
-  getHolidays(monthsToAdd): void {
+  private addMonthsToCurrentDate(monthsToAdd): void {
     this.viewDate = new Date(this.viewDate.setMonth(this.viewDate.getMonth() + monthsToAdd));
-    this.holidayService.getConfirmedHolidaysBySelectedMonth(this.viewDate, this.currentUserId).subscribe(holidays => {
-      this.dataSource.data = holidays;
-      this.getEvents();
+  }
+
+  private getEvents(filter) {
+    return zip(this.holidayService.getFilteredConfirmedHolidaysBySelectedMonth(this.viewDate, this.currentUsersId, filter),
+      this.userService.getBirthdaysBySelectedMonth(this.viewDate, this.currentUsersId)).pipe(switchMap(val => {
+        const holidayEvents = this.getHolidayEvents(val[0]);
+        const birthdayEvents = this.getBirthdayEvents(val[1]);
+        const allEvents = holidayEvents.concat(birthdayEvents);
+        return of(allEvents);
+    })).subscribe(events => {
+      this.events = events;
     });
   }
 
-  getEvents(): void {
-    this.events = [];
-    this.dataSource.data.forEach(holiday => {
+  private getHolidayEvents(holidays: Holiday[]): any[] {
+    const holidayEvents = [];
+    holidays.forEach(holiday => {
       const color = this.getColor(holiday);
       const endDate = this.addDayToEndDate(holiday.toInclusive);
-      const event = {'title': holiday.employeeFullName, 'start': holiday.fromInclusive, 'end': endDate, 'color': color};
-      this.events.push(event);
+      const event = { 'title': holiday.employeeFullName, 'start': holiday.fromInclusive, 'end': endDate, 'color': color };
+      holidayEvents.push(event);
     });
+    return holidayEvents;
   }
 
-  getColor(holiday: Holiday) {
+  private getBirthdayEvents(birthdays: Birthday[]): any[] {
+    const birthdayEvents = [];
+    birthdays.forEach(birthday => {
+      const color = this.holidayTypes[5][0];
+      const endDate = this.addDayToEndDate(birthday.birthdayDate);
+      let title = birthday.fullName;
+
+      if (!birthday.isPublic) {
+        title = `(private) ${title}`;
+      }
+
+      const event = { 'title': title, 'start': birthday.birthdayDate, 'end': endDate, 'color': color };
+
+      birthdayEvents.push(event);
+    });
+    return birthdayEvents;
+  }
+
+  private getColor(holiday: Holiday) {
     let holidayType: string;
     if (holiday.type === HolidayType.Annual && holiday.overtimeDays > 0) {
-        holidayType = this.holidayTypes[2][0];
+      holidayType = this.holidayTypes[2][0];
     } else if (holiday.type === HolidayType.Unpaid) {
-        holidayType = this.holidayTypes[0][0];
+      holidayType = this.holidayTypes[0][0];
     } else if (holiday.type === HolidayType.Annual) {
-        holidayType = this.holidayTypes[1][0];
+      holidayType = this.holidayTypes[1][0];
     } else if (holiday.type === HolidayType.Science) {
-        holidayType = this.holidayTypes[3][0];
+      holidayType = this.holidayTypes[3][0];
     } else if (holiday.type === HolidayType.DayForChildren) {
-        holidayType = this.holidayTypes[4][0];
+      holidayType = this.holidayTypes[4][0];
     }
     return holidayType;
   }
 
-  addDayToEndDate(toInclusive) {
+  private addDayToEndDate(toInclusive) {
     const startDate = new Date(toInclusive);
     const day = 60 * 60 * 24 * 1000;
     return new Date(startDate.getTime() + day);
   }
 
-  previousMonthButtonClick() {
+  previousMonthButtonClick(filter) {
     this.fullCalendar.calendar.prev();
     this.updateCalendarTitle();
-    this.getHolidays(-1);
+    this.addMonthsToCurrentDate(-1);
+    this.getEvents(filter);
   }
 
-  nextMonthButtonClick() {
+  nextMonthButtonClick(filter) {
     this.fullCalendar.calendar.next();
     this.updateCalendarTitle();
-    this.getHolidays(1);
+    this.addMonthsToCurrentDate(1);
+    this.getEvents(filter);
   }
 
   ngAfterViewInit() {
@@ -113,5 +153,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   updateCalendarTitle() {
     this.calendarTitle.next(this.fullCalendar?.calendar?.view?.title);
+  }
+  isAdmin(): boolean {
+    return this.userService.isAdmin();
   }
 }

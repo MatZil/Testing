@@ -34,7 +34,9 @@ namespace Tests
         private FileRecord[] _fileRecords;
         private NotificationSettings[] _notificationSettings;
         private AuditLog[] _auditLogs;
+        private Survey[] _surveys;
         private TimeService _timeService = new TimeService();
+        private IConfiguration _configuration;
 
         private HolidayDbContext _context;
         public HolidayDbContext HolidayDbContext =>
@@ -67,8 +69,8 @@ namespace Tests
                 .UseInternalServiceProvider(serviceProvider)
                 .Options;
 
-            var configuration = GetConfiguration();
-            _context = new HolidayDbContext(options, configuration);
+            _configuration = GetConfiguration();
+            _context = new HolidayDbContext(options, _configuration);
             Seed(_context);
 
             var config = new AutoMapper.MapperConfiguration(cfg =>
@@ -122,8 +124,6 @@ namespace Tests
 
         private async void Seed(HolidayDbContext context)
         {
-            var config = GetConfiguration();
-
             var userStore = new UserStore<User>(context);
             _userManager = InitializeUserManager();
 
@@ -167,65 +167,77 @@ namespace Tests
                     {
                         Id = 1,
                         Purpose = EmailPurposes.ADMIN_CONFIRMATION,
-                        Subject = config["EmailTemplates:AdminConfirmation:Subject"],
-                        Template = config["EmailTemplates:AdminConfirmation:Template"],
-                        Instructions = config["EmailTemplates:AdminConfirmation:Instructions"]
+                        Subject = _configuration["EmailTemplates:AdminConfirmation:Subject"],
+                        Template = _configuration["EmailTemplates:AdminConfirmation:Template"],
+                        Instructions = _configuration["EmailTemplates:AdminConfirmation:Instructions"]
                     },
                     new EmailTemplate
                     {
                         Id = 2,
                         Purpose = EmailPurposes.CLIENT_CONFIRMATION,
-                        Subject = config["EmailTemplates:ClientConfirmation:Subject"],
-                        Template = config["EmailTemplates:ClientConfirmation:Template"],
-                        Instructions = config["EmailTemplates:ClientConfirmation:Instructions"]
+                        Subject = _configuration["EmailTemplates:ClientConfirmation:Subject"],
+                        Template = _configuration["EmailTemplates:ClientConfirmation:Template"],
+                        Instructions = _configuration["EmailTemplates:ClientConfirmation:Instructions"]
                     },
 
                     new EmailTemplate
                     {
                         Id = 3,
                         Purpose = EmailPurposes.MONTHLY_HOLIDAYS_REPORT,
-                        Subject = config["EmailTemplates:MonthlyReport:Subject"],
-                        Template = config["EmailTemplates:MonthlyReport:Template"],
-                        Instructions = config["EmailTemplates:MonthlyReport:Instructions"]
+                        Subject = _configuration["EmailTemplates:MonthlyReport:Subject"],
+                        Template = _configuration["EmailTemplates:MonthlyReport:Template"],
+                        Instructions = _configuration["EmailTemplates:MonthlyReport:Instructions"]
                     },
                     new EmailTemplate
                     {
                         Id = 4,
                         Purpose = EmailPurposes.HOLIDAY_REMINDER,
-                        Subject = config["EmailTemplates:HolidayNotification:Subject"],
-                        Template = config["EmailTemplates:HolidayNotification:Template"],
-                        Instructions = config["EmailTemplates:HolidayNotification:Instructions"]
+                        Subject = _configuration["EmailTemplates:HolidayNotification:Subject"],
+                        Template = _configuration["EmailTemplates:HolidayNotification:Template"],
+                        Instructions = _configuration["EmailTemplates:HolidayNotification:Instructions"]
                     },
                     new EmailTemplate
                     {
                         Id = 5,
                         Purpose = EmailPurposes.BIRTHDAY_REMINDER,
-                        Subject = config["EmailTemplates:BirthdayReminder:Subject"],
-                        Template = config["EmailTemplates:BirthdayReminder:Template"],
-                        Instructions = config["EmailTemplates:BirthdayReminder:Instructions"]
+                        Subject = _configuration["EmailTemplates:BirthdayReminder:Subject"],
+                        Template = _configuration["EmailTemplates:BirthdayReminder:Template"],
+                        Instructions = _configuration["EmailTemplates:BirthdayReminder:Instructions"]
                     },
                     new EmailTemplate
                     {
                         Id = 6,
                         Purpose = EmailPurposes.REQUEST_NOTIFICATION,
-                        Subject = config["EmailTemplates:RequestNotification:Subject"],
-                        Template = config["EmailTemplates:RequestNotification:Template"],
-                        Instructions = config["EmailTemplates:RequestNotification:Instructions"]
+                        Subject = _configuration["EmailTemplates:RequestNotification:Subject"],
+                        Template = _configuration["EmailTemplates:RequestNotification:Template"],
+                        Instructions = _configuration["EmailTemplates:RequestNotification:Instructions"]
                     },
                     new EmailTemplate
                     {
                         Id = 7,
                         Purpose = EmailPurposes.ORDER_NOTIFICATION,
-                        Subject = config["EmailTemplates:OrderNotification:Subject"],
-                        Template = config["EmailTemplates:OrderNotification:Template"],
-                        Instructions = config["EmailTemplates:OrderNotification:Instructions"]
+                        Subject = _configuration["EmailTemplates:OrderNotification:Subject"],
+                        Template = _configuration["EmailTemplates:OrderNotification:Template"],
+                        Instructions = _configuration["EmailTemplates:OrderNotification:Instructions"]
+                    },
+                    new EmailTemplate
+                    {
+                        Id = 8,
+                        Purpose = EmailPurposes.REJECTION_NOTIFICATION,
+                        Subject = _configuration["EmailTemplates:RejectionNotification:Subject"],
+                        Template = _configuration["EmailTemplates:RejectionNotification:Template"],
+                        Instructions = _configuration["EmailTemplates:RejectionNotification:Instructions"]
                     }
             };
             context.EmailTemplates.AddRange(_emailTemplates);
 
+            var calendarDateFrom = _timeService.GetCalendarDateFrom(_configuration, DateTime.Today);
+            var calendarDateTo = _timeService.GetCalendarDateTo(_configuration, DateTime.Today);
+
             _employees = new[] {
                 new Employee
                 {
+                    Id = 1,
                     ClientId = 1,
                     Name = "EmployeeName1",
                     Surname = "EmployeeSurname1",
@@ -242,6 +254,7 @@ namespace Tests
                 },
                 new Employee
                 {
+                    Id = 2,
                     ClientId = 2,
                     Client = context.Clients.Find(1),
                     Name = "EmployeeName2",
@@ -249,7 +262,7 @@ namespace Tests
                     Email = "taken2@email",
                     WorksFromDate = new DateTime(2018,01,06),
                     DaysOfVacation = 20,
-                    BirthdayDate = DateTime.Today,
+                    BirthdayDate = calendarDateFrom,
                     FreeWorkDays = 15,
                     ParentalLeaveLimit = 4,
                     CurrentAvailableLeaves = 2,
@@ -257,12 +270,13 @@ namespace Tests
                 },
                 new Employee
                 {
+                    Id = 3,
                     Name = "EmployeeName3",
                     Surname = "EmployeeSurname3",
                     Email = "taken3@email",
                     WorksFromDate = new DateTime(2019,01,06),
                     DaysOfVacation = 20,
-                    BirthdayDate = new DateTime(1987,07,06),
+                    BirthdayDate = calendarDateFrom.AddDays(-1),
                     FreeWorkDays = 15,
                     OvertimeHours = 32,
                     ParentalLeaveLimit = 4,
@@ -271,18 +285,34 @@ namespace Tests
                 },
                 new Employee
                 {
+                    Id = 4,
                     Name = "EmployeeName4",
                     Surname = "EmployeeSurname4",
                     Email = "taken4@email",
                     WorksFromDate = new DateTime(2019,01,06),
                     DaysOfVacation = 20,
-                    BirthdayDate = new DateTime(1987,07,06),
+                    BirthdayDate = calendarDateTo,
                     FreeWorkDays = 15,
                     OvertimeHours = 24,
                     ParentalLeaveLimit = 4,
                     CurrentAvailableLeaves = 2,
                     NextMonthAvailableLeaves = 1
                 },
+                new Employee
+                {
+                    Id = 5,
+                    Name = "EmployeeName5",
+                    Surname = "EmployeeSurname5",
+                    Email = "taken5@email",
+                    WorksFromDate = new DateTime(2019,01,06),
+                    DaysOfVacation = 20,
+                    BirthdayDate = calendarDateTo.AddDays(1),
+                    FreeWorkDays = 15,
+                    OvertimeHours = 24,
+                    ParentalLeaveLimit = 4,
+                    CurrentAvailableLeaves = 2,
+                    NextMonthAvailableLeaves = 1
+                }
             };
             context.Employees.AddRange(_employees);
 
@@ -486,8 +516,8 @@ namespace Tests
                     Employee = context.Employees.Find(3),
                     EmployeeId = 3,
                     Type = HolidayType.Annual,
-                    FromInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-6),
-                    ToInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-6),
+                    FromInclusive = calendarDateFrom,
+                    ToInclusive = calendarDateFrom,
                     Status = HolidayStatus.AdminConfirmed,
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 12, 14)
@@ -497,8 +527,8 @@ namespace Tests
                     Employee = context.Employees.Find(3),
                     EmployeeId = 3,
                     Type = HolidayType.Annual,
-                    FromInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-7),
-                    ToInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-7),
+                    FromInclusive = calendarDateFrom.AddDays(-1),
+                    ToInclusive = calendarDateFrom.AddDays(-1),
                     Status = HolidayStatus.AdminConfirmed,
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 12, 14)
@@ -508,8 +538,8 @@ namespace Tests
                     Employee = context.Employees.Find(3),
                     EmployeeId = 3,
                     Type = HolidayType.Annual,
-                    FromInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(12),
-                    ToInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(12),
+                    FromInclusive = calendarDateTo,
+                    ToInclusive = calendarDateTo,
                     Status = HolidayStatus.AdminConfirmed,
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 12, 14)
@@ -519,8 +549,8 @@ namespace Tests
                     Employee = context.Employees.Find(3),
                     EmployeeId = 3,
                     Type = HolidayType.Annual,
-                    FromInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(13),
-                    ToInclusive = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(13),
+                    FromInclusive = calendarDateTo.AddDays(1),
+                    ToInclusive = calendarDateTo.AddDays(1),
                     Status = HolidayStatus.AdminConfirmed,
                     OvertimeDays = 3,
                     RequestCreatedDate = new DateTime(2019, 12, 14)
@@ -715,6 +745,7 @@ namespace Tests
                 new FileRecord
                 {
                     Id = 1,
+                    Guid = "1",
                     Name = "Order",
                     Type = FileTypeEnum.Order,
                     CreatedAt = DateTime.Today
@@ -722,6 +753,7 @@ namespace Tests
                 new FileRecord
                 {
                     Id = 2,
+                    Guid = "2",
                     Name = "Request",
                     Type = FileTypeEnum.Request,
                     CreatedAt = DateTime.Today
@@ -729,6 +761,7 @@ namespace Tests
                 new FileRecord
                 {
                     Id = 3,
+                    Guid = "3",
                     Name = "HolidayPolicy",
                     Type = FileTypeEnum.HolidayPolicy,
                     CreatedAt = DateTime.Today
@@ -784,6 +817,13 @@ namespace Tests
                     EmployeeId = 4,
                     BroadcastOwnBirthday = false,
                     ReceiveBirthdayNotifications = false
+                },
+                new NotificationSettings
+                {
+                    Id = 5,
+                    EmployeeId = 5,
+                    BroadcastOwnBirthday = false,
+                    ReceiveBirthdayNotifications = false
                 }
             };
             context.NotificationSettings.AddRange(_notificationSettings);
@@ -834,6 +874,21 @@ namespace Tests
             };
             context.AuditLogs.AddRange(_auditLogs);
             context.SaveChanges();
+
+            _surveys = new[] {
+                new Survey
+                {
+                    Title = "survey1",
+                    Guid = "1"
+                },
+                new Survey
+                {
+                    Title = "survey2",
+                    Guid = "2"
+                },
+            };
+            context.Surveys.AddRange(_surveys);
+            context.SaveChanges();
         }
 
         public int GetCount(string type)
@@ -862,6 +917,8 @@ namespace Tests
                     return _notificationSettings.Length;
                 case "auditLogs":
                     return _auditLogs.Length;
+                case "surveys":
+                    return _surveys.Length;
                 default:
                     return 0;
             }

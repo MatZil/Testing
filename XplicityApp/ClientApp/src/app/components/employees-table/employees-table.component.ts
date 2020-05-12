@@ -35,7 +35,6 @@ export class EmployeesTableComponent implements OnInit {
     'surname',
     'client',
     'worksFromDate',
-    'birthdayDate',
     'daysOfVacation',
     'freeWorkDays',
     'overtimeHours',

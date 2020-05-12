@@ -29,6 +29,12 @@ namespace XplicityApp.Infrastructure.Repositories
             return fileRecord;
         }
 
+        public async Task<FileRecord> GetByGuid(string guid)
+        {
+            var fileRecord = await _context.FileRecords.Where(file => file.Guid.Equals(guid)).Select(file => file).FirstAsync();
+            return fileRecord;
+        }
+
         public async Task<int> Create(FileRecord newFileRecord)
         {
             await _context.FileRecords.AddAsync(newFileRecord);

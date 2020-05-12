@@ -6,6 +6,7 @@ using XplicityApp.Dtos.Holidays;
 using XplicityApp.Dtos.Inventory;
 using XplicityApp.Dtos.NotificationSettings;
 using XplicityApp.Dtos.Tags;
+using XplicityApp.Dtos.Surveys;
 using XplicityApp.Infrastructure.Database.Models;
 
 namespace XplicityApp.Configurations
@@ -70,6 +71,15 @@ namespace XplicityApp.Configurations
             
             CreateMap<NotificationSettingsDto, NotificationSettings>(MemberList.None);
             CreateMap<NotificationSettings, NotificationSettingsDto>(MemberList.None);
+
+            CreateMap<NewSurveyDto, Survey>(MemberList.None);
+            CreateMap<Survey, NewSurveyDto>(MemberList.None);
+
+            CreateMap<GetSurveyDto, Survey>(MemberList.None);
+            CreateMap<Survey, GetSurveyDto>(MemberList.None);
+
+            CreateMap<UpdateSurveyDto, Survey>(MemberList.None);
+            CreateMap<Survey, UpdateSurveyDto>(MemberList.None);
         }
     }
 }
