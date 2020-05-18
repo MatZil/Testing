@@ -1,0 +1,11 @@
+.mat-cell,
+.mat-header-cell {
+  padding: 0px 5px;
+  width: 100%;
+  vertical-align: middle;
+}
+
+td , th {
+    word-wrap: break-word;
+    max-width: 200px;
+}

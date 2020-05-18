@@ -66,6 +66,7 @@ import { HolidayRequestFormComponent } from './components/holiday-request-form/h
 import { UserPasswordFormComponent } from './components/user-password-form/user-password-form.component';
 import { HolidayRequestButtonComponent } from './components/holiday-request-button/holiday-request-button.component';
 import { EmployeeEquipmentComponent } from './components/employee-equipment/employee-equipment.component';
+import { AuditLogsComponent } from './components/audit-logs/audit-logs.component';
 import { SurveysTableComponent } from './components/surveys-table/surveys-table.component';
 import { SurveysFormComponent } from './components/surveys-form/surveys-form.component';
 import { SurveysAnswersFormComponent } from './components/surveys-answers-form/surveys-answers-form.component';
@@ -106,6 +107,7 @@ export function tokenGetter() {
     UserPasswordFormComponent,
     HolidayRequestButtonComponent,
     EmployeeEquipmentComponent,
+    AuditLogsComponent,
     SurveysTableComponent,
     SurveysFormComponent,
     SurveysAnswersFormComponent
