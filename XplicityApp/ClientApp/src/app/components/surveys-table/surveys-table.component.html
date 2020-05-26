@@ -20,7 +20,7 @@
 
   <ng-container matColumnDef="author">
     <th mat-header-cell *matHeaderCellDef> Author </th>
-    <td mat-cell *matCellDef="let survey"> {{survey.authorId}} </td>
+    <td mat-cell *matCellDef="let survey"> {{getAuthorsName(survey.authorId)}} </td>
   </ng-container>
 
   <ng-container matColumnDef="surveyType">

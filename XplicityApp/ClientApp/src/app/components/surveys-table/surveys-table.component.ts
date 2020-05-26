@@ -6,6 +6,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { EnumToStringConverterService } from 'src/app/services/enum-to-string-converter.service';
 import { SurveysFormComponent } from '../surveys-form/surveys-form.component';
+import { TableRowUserModel } from 'src/app/models/table-row-user-model';
+import { UserService } from 'src/app/services/user.service';
+import { EmployeeStatus } from 'src/app/models/employee-status.enum';
 
 @Component({
   selector: 'app-surveys-table',
@@ -16,6 +19,7 @@ export class SurveysTableComponent implements OnInit {
 
   survey: Survey = new Survey();
   url: string;
+  users: TableRowUserModel[] = [];
 
   displayedColumns: string[] = [
     'title',
@@ -24,20 +28,22 @@ export class SurveysTableComponent implements OnInit {
     'creationDate',
     'actions'
   ];
-  dataSource = new MatTableDataSource<Survey>();
 
+  dataSource = new MatTableDataSource<Survey>();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private surveyService: SurveyService,
     public dialog: MatDialog,
-    public enumConverter: EnumToStringConverterService
+    public enumConverter: EnumToStringConverterService,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
     this.refreshTable();
     this.dataSource.paginator = this.paginator;
+    this.getUsers();
   }
 
   refreshTable(): void {
@@ -93,5 +99,19 @@ export class SurveysTableComponent implements OnInit {
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  getAuthorsName(id: number) {
+    for (const user of this.users) {
+      if (user.id === id) {
+        return user.name;
+      }
+    }
+  }
+
+  getUsers() {
+    this.userService.getAllUsers().subscribe(users => {
+      this.users = users;
+    });
   }
 }
