@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using XplicityApp.Infrastructure.Enums;
 
 namespace XplicityApp.Infrastructure.Database.Models
@@ -15,6 +16,8 @@ namespace XplicityApp.Infrastructure.Database.Models
         public SurveyTypeEnum Type { get; set; }
         [Required]
         public string Guid { get; set; }
+        [Required]
+        public DateTime CreationDate { get; set; }
     }
 }
 

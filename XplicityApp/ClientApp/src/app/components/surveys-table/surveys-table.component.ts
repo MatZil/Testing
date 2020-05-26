@@ -21,7 +21,9 @@ export class SurveysTableComponent implements OnInit {
     'title',
     'author',
     'surveyType',
-    'actions'];
+    'creationDate',
+    'actions'
+  ];
   dataSource = new MatTableDataSource<Survey>();
 
 
