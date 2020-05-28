@@ -6,4 +6,5 @@ export class Survey {
     authorId: number;
     guid: string;
     type: SurveyType;
+    creationDate: Date;
 }

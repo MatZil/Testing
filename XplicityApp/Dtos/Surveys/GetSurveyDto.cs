@@ -1,4 +1,5 @@
-﻿using XplicityApp.Infrastructure.Enums;
+﻿using System;
+using XplicityApp.Infrastructure.Enums;
 
 namespace XplicityApp.Dtos.Surveys
 {
@@ -9,5 +10,6 @@ namespace XplicityApp.Dtos.Surveys
         public string Title { get; set; }
         public SurveyTypeEnum Type { get; set; }
         public string Guid { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }
