@@ -32,7 +32,8 @@
                                 "glob": "**/*",
                                 "input": "node_modules/ng2-pdfjs-viewer/pdfjs",
                                 "output": "/assets/pdfjs"
-                            }
+                            },
+                            "src/manifest.webmanifest"
                         ],
                         "styles": [
                             "node_modules/@fullcalendar/core/main.min.css",
@@ -57,7 +58,9 @@
                             "aot": true,
                             "extractLicenses": true,
                             "vendorChunk": false,
-                            "buildOptimizer": true
+                            "buildOptimizer": true,
+                            "serviceWorker": true,
+                            "ngswConfigPath": "ngsw-config.json"
                         }
                     }
                 },
@@ -87,7 +90,7 @@
                         "karmaConfig": "src/karma.conf.js",
                         "styles": ["src/styles.css"],
                         "scripts": [],
-                        "assets": ["src/assets"]
+                        "assets": ["src/assets", "src/manifest.webmanifest"]
                     }
                 },
                 "lint": {
