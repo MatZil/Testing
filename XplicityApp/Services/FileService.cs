@@ -46,27 +46,21 @@ namespace XplicityApp.Services
         {
             if (formFile.Length > 0)
             {
-            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+                string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
 
-            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
-            //string containerName = GetRelativeDirectory(fileType);
-            string containerName = "policy";
-            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+                BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+                string containerName = GetRelativeBlob(fileType);
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
 
-            await CreateFileRecord(formFile.FileName, fileType);
-            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
+                await CreateFileRecord(formFile.FileName, fileType);
+                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
 
-            BlobClient blobClient = containerClient.GetBlobClient(formFile.FileName);
+                BlobClient blobClient = containerClient.GetBlobClient(formFile.FileName);
 
-            using FileStream uploadFileStream = File.OpenRead(fullPath);
-            await blobClient.UploadAsync(uploadFileStream, true);
-            uploadFileStream.Close();
-
-            //await CreateFileRecord(formFile.FileName, fileType);
-            //var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
-            //using var fileStream = new FileStream(fullPath, FileMode.Create);
-            //formFile.CopyTo(fileStream);
+                using var fileStream = new FileStream(fullPath, FileMode.Create);
+                await blobClient.UploadAsync(fileStream, true);
+                fileStream.Close();
             }
         }
 
@@ -91,6 +85,28 @@ namespace XplicityApp.Services
             }
 
             return _configuration["FileConfig:UnknownFolder"];
+        }
+        public string GetRelativeBlob(FileTypeEnum fileType)
+        {
+            switch (fileType)
+            {
+                case FileTypeEnum.HolidayPolicy:
+                    return _configuration["BlobConfig:HolidayPolicy"];
+
+                case FileTypeEnum.Document:
+                    return _configuration["BlobConfig:Documents"];
+
+                case FileTypeEnum.Image:
+                    return _configuration["BlobConfig:Images"];
+
+                case FileTypeEnum.Request:
+                    return _configuration["BlobConfig:Requests"];
+
+                case FileTypeEnum.Order:
+                    return _configuration["BlobConfig:Orders"];
+            }
+
+            return _configuration["BlobConfig:Unknown"];
         }
         public async Task<string> GetNewestPolicyPath()
         {
