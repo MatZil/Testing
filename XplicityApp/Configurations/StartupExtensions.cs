@@ -14,12 +14,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
-using System.Collections.Generic;
-using System.Linq;
 using Audit.Core;
-using Audit.EntityFramework.Providers;
 using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
 using Microsoft.Azure.Storage.Blob;
 using Microsoft.Azure.Storage;
 
@@ -164,7 +160,7 @@ namespace XplicityApp.Configurations
                     CloudBlobContainer container = blobClient.GetContainerReference(dir);
                     if (!container.Exists())
                     {
-                        BlobContainerClient containerClient = await blobServiceClient.CreateBlobContainerAsync(dir);
+                        await blobServiceClient.CreateBlobContainerAsync(dir);
                     }
                 }
         }

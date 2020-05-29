@@ -10,6 +10,12 @@ using XplicityApp.Infrastructure.Utils.Interfaces;
 using Moq;
 using System.Text;
 using XplicityApp.Infrastructure.Database.Models;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Microsoft.Azure.Storage.Blob;
+using Microsoft.Azure.Storage;
+using Azure.Storage.Blobs.Specialized;
+using System;
 
 namespace Tests.Tests
 {
@@ -38,14 +44,15 @@ namespace Tests.Tests
             );
         }
         [Theory]
-        [InlineData(FileTypeEnum.Document, "Resources/Documents")]
-        [InlineData(FileTypeEnum.HolidayPolicy, "Resources/Policy")]
-        [InlineData(FileTypeEnum.Image, "Resources/Images")]
-        [InlineData(FileTypeEnum.Order, "Resources/Orders")]
-        [InlineData(FileTypeEnum.Request, "Resources/Requests")]
-        [InlineData(FileTypeEnum.Unknown, "Resources/Unknown")]
-        public async void When_UploadingFile_Expect_FileUploaded(FileTypeEnum fileType, string filePath)
+        [InlineData(FileTypeEnum.Document, "Resources/Documents", "documents")]
+        [InlineData(FileTypeEnum.HolidayPolicy, "Resources/Policy", "policy")]
+        [InlineData(FileTypeEnum.Image, "Resources/Images", "images")]
+        [InlineData(FileTypeEnum.Order, "Resources/Orders", "orders")]
+        [InlineData(FileTypeEnum.Request, "Resources/Requests", "requests")]
+        [InlineData(FileTypeEnum.Unknown, "Resources/Unknown", "unknown")]
+        public async void When_UploadingFile_Expect_FileUploaded(FileTypeEnum fileType, string filePath, string blobPath)
         {
+            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
 
             var formFile = new FormFile(
                 new MemoryStream(Encoding.UTF8.GetBytes(fileType.ToString())),
@@ -64,10 +71,30 @@ namespace Tests.Tests
                 Directory.Delete(expectedDirectoryPath);
 
             Directory.CreateDirectory(expectedDirectoryPath);
-            await _fileService.Upload(formFile, fileType);
 
-            Assert.True(Directory.Exists(expectedDirectoryPath));
-            Assert.True(File.Exists(expectedFilePath));
+            using var fileStream = new FileStream(expectedFilePath, FileMode.Create);
+            formFile.CopyTo(fileStream);
+            fileStream.Close();
+
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+            CloudBlobClient blobClientCheck = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClientCheck.GetContainerReference(blobPath);
+            BlobContainerClient containerClient;
+            
+            if (!container.Exists())
+            {
+                containerClient = await blobServiceClient.CreateBlobContainerAsync(blobPath);
+            }
+            else
+            {
+                containerClient = blobServiceClient.GetBlobContainerClient(blobPath);
+            }
+            await _fileService.Upload(formFile, fileType);
+            BlobClient blobClient = containerClient.GetBlobClient("test.txt");
+            Assert.True(blobClient.Exists());
+            blobClient.DeleteIfExists();
+            //containerClient.DeleteIfExists();
 
             File.Delete(expectedFilePath);
             Directory.Delete(expectedDirectoryPath);

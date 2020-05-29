@@ -9,6 +9,9 @@ using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
 using Azure.Storage.Blobs;
+using System.Threading;
+using System.Runtime.InteropServices;
+using Azure.Storage.Blobs.Models;
 
 namespace XplicityApp.Services
 {
@@ -46,21 +49,24 @@ namespace XplicityApp.Services
         {
             if (formFile.Length > 0)
             {
-                string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+                await CreateFileRecord(formFile.FileName, fileType);
 
+                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
+                var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType));
+                using var fileStream = new FileStream(fullPath, FileMode.Create);
+                await formFile.CopyToAsync(fileStream);
+
+                string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
                 BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
                 string containerName = GetRelativeBlob(fileType);
                 BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-
-
-                await CreateFileRecord(formFile.FileName, fileType);
-                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
-
                 BlobClient blobClient = containerClient.GetBlobClient(formFile.FileName);
 
-                using var fileStream = new FileStream(fullPath, FileMode.Create);
-                await blobClient.UploadAsync(fileStream, true);
+                using FileStream fileStream2 = new FileStream(fullPath,FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                await blobClient.UploadAsync(fileStream2, true);
+                fileStream2.Close();
                 fileStream.Close();
+                File.Delete(fullPath);
             }
         }
 
