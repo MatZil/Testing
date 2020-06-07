@@ -29,7 +29,7 @@
                     placeholder="To (inclusive)" formControlName="toInclusive">
                 <mat-datepicker #toInclusive></mat-datepicker>
                 <mat-datepicker-toggle matSuffix [for]="toInclusive"></mat-datepicker-toggle>
-                <mat-error *ngIf="requestHolidayForm.controls.fromInclusive.invalid">{{getToInclusiveErrorMessage()}}
+                <mat-error *ngIf="requestHolidayForm.controls.toInclusive.invalid">{{getToInclusiveErrorMessage()}}
                 </mat-error>
             </mat-form-field>
         </div>
