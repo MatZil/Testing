@@ -13,6 +13,7 @@ namespace XplicityApp.Services.Interfaces
         Task<FileRecord> GetById(int fileId);
         Task<FileRecord> GetByGuid(string guid);
         string GetRelativeDirectory(FileTypeEnum fileType);
+        string GetRelativeBlob(FileTypeEnum fileType);
         Task<string> GetDownloadLink(int fileId);
     }
 }

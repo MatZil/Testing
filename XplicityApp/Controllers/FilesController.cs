@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Blob;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using XplicityApp.Infrastructure.Enums;
@@ -32,9 +36,15 @@ namespace XplicityApp.Controllers
 
         private IActionResult GetFile(string fileName, FileTypeEnum fileType)
         {
-            var fullPath = Path.Combine(_fileService.GetRelativeDirectory(fileType), fileName);
+            var fullPath = Path.Combine(_fileService.GetRelativeBlob(fileType), fileName);
 
-            var stream = new FileStream(fullPath, FileMode.Open);
+            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+            string containerName = _fileService.GetRelativeBlob(fileType);
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference(containerName);
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
+            var stream = blockBlob.OpenRead();
 
             return File(stream, "application/docx", fileName);
         }

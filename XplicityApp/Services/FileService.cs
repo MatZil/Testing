@@ -12,6 +12,8 @@ using Azure.Storage.Blobs;
 using System.Threading;
 using System.Runtime.InteropServices;
 using Azure.Storage.Blobs.Models;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Blob;
 
 namespace XplicityApp.Services
 {
@@ -53,20 +55,16 @@ namespace XplicityApp.Services
 
                 var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
                 var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType));
-                using var fileStream = new FileStream(fullPath, FileMode.Create);
-                await formFile.CopyToAsync(fileStream);
 
                 string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
-                BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+                var storageAccount = CloudStorageAccount.Parse(connectionString);
+                var blobClient = storageAccount.CreateCloudBlobClient();
                 string containerName = GetRelativeBlob(fileType);
-                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-                BlobClient blobClient = containerClient.GetBlobClient(formFile.FileName);
+                var container = blobClient.GetContainerReference(containerName);
+                var blockBlob = container.GetBlockBlobReference(formFile.FileName);
 
-                using FileStream fileStream2 = new FileStream(fullPath,FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                await blobClient.UploadAsync(fileStream2, true);
-                fileStream2.Close();
-                fileStream.Close();
-                File.Delete(fullPath);
+                Stream fileStream = formFile.OpenReadStream();
+                await blockBlob.UploadFromStreamAsync(fileStream);
             }
         }
 

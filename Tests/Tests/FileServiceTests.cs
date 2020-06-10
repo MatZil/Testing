@@ -94,8 +94,6 @@ namespace Tests.Tests
             BlobClient blobClient = containerClient.GetBlobClient("test.txt");
             Assert.True(blobClient.Exists());
             blobClient.DeleteIfExists();
-            //containerClient.DeleteIfExists();
-
             File.Delete(expectedFilePath);
             Directory.Delete(expectedDirectoryPath);
         }
