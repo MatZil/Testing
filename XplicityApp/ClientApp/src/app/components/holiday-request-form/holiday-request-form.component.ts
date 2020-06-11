@@ -67,10 +67,26 @@ export class HolidayRequestFormComponent implements OnInit {
     formHoliday.employeeId = this.data.employeeId;
     formHoliday.fromInclusive = this.datePipe.transform(formHoliday.fromInclusive, 'yyyy-MM-dd');
     formHoliday.toInclusive = this.datePipe.transform(formHoliday.toInclusive, 'yyyy-MM-dd');
+
     if (!formHoliday.overtimeDays) {
       formHoliday.overtimeDays = 0;
     }
 
     return formHoliday;
+  }
+
+  getFromInclusiveErrorMessage(): string {
+    return this.requestHolidayForm.controls.fromInclusive.errors?.required ? ' Date cannot be empty.' :
+      this.requestHolidayForm.controls.fromInclusive.errors?.isEarlierThanToday ? 'From date cannot be earlier than today.' :
+        this.requestHolidayForm.controls.fromInclusive.errors?.isWeekend ? 'From date can not be a weekend.' :
+          this.requestHolidayForm.controls.fromInclusive.errors?.isFreeWorkday ? 'From date can not be a public holiday.' :
+            '';
+  }
+
+  getToInclusiveErrorMessage(): string {
+    return this.requestHolidayForm.controls.toInclusive.errors?.required ? ' Date cannot be empty.' :
+      this.requestHolidayForm.controls.toInclusive.errors?.isWeekend ? 'To date can not be a weekend.' :
+        this.requestHolidayForm.controls.toInclusive.errors?.isFreeWorkday ? 'To date can not be a public holiday.' :
+          '';
   }
 }

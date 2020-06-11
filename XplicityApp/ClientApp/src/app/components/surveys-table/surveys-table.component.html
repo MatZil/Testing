@@ -1,16 +1,16 @@
 <div>
-    <br>
-    <button mat-raised-button class="top-of-page-actions" color="primary" (click)="openAddForm()">Add survey</button>
-    <br>
-  
-    <mat-form-field class="top-of-page-actions">
-      <input class="search-text-size" matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
-      <mat-icon class="search-icon-size" matSuffix>search</mat-icon>
-    </mat-form-field>
-    <br>
-  
-  </div>
-  
+  <br>
+  <button mat-raised-button class="top-of-page-actions" color="primary" (click)="openAddForm()">Add survey</button>
+  <br>
+
+  <mat-form-field class="top-of-page-actions">
+    <input class="search-text-size" matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
+    <mat-icon class="search-icon-size" matSuffix>search</mat-icon>
+  </mat-form-field>
+  <br>
+
+</div>
+
 <table mat-table [dataSource]="dataSource">
 
   <ng-container matColumnDef="title">
@@ -20,12 +20,17 @@
 
   <ng-container matColumnDef="author">
     <th mat-header-cell *matHeaderCellDef> Author </th>
-    <td mat-cell *matCellDef="let survey"> {{survey.authorId}} </td>
+    <td mat-cell *matCellDef="let survey"> {{getAuthorsName(survey.authorId)}} </td>
   </ng-container>
 
   <ng-container matColumnDef="surveyType">
     <th mat-header-cell *matHeaderCellDef> Survey type </th>
     <td mat-cell *matCellDef="let survey"> {{enumConverter.determineSurveyType(survey.type)}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="creationDate">
+    <th mat-header-cell *matHeaderCellDef> Creation date </th>
+    <td mat-cell *matCellDef="let survey"> {{survey.creationDate | date}} </td>
   </ng-container>
 
   <ng-container matColumnDef="actions">
@@ -44,4 +49,4 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-  <mat-paginator [pageSizeOptions]="[10, 20, 40]" showFirstLastButtons></mat-paginator>
+<mat-paginator [pageSizeOptions]="[10, 20, 40]" showFirstLastButtons></mat-paginator>

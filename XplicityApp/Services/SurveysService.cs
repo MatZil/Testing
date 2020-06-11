@@ -48,8 +48,12 @@ namespace XplicityApp.Services
 
             var guid = Guid.NewGuid().ToString();
             var newSurvey = _mapper.Map<Survey>(newSurveyDto);
+
             newSurvey.Guid = guid;
+            newSurvey.CreationDate = DateTime.Now;
+
             await _repository.Create(newSurvey);
+
             var surveyDto = _mapper.Map<NewSurveyDto>(newSurvey);
 
             return surveyDto;
