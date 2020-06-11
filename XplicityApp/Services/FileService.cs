@@ -56,10 +56,10 @@ namespace XplicityApp.Services
                 var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
                 var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType));
 
-                string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+                var connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
                 var storageAccount = CloudStorageAccount.Parse(connectionString);
                 var blobClient = storageAccount.CreateCloudBlobClient();
-                string containerName = GetRelativeBlob(fileType);
+                var containerName = GetRelativeBlob(fileType);
                 var container = blobClient.GetContainerReference(containerName);
                 var blockBlob = container.GetBlockBlobReference(formFile.FileName);
 
