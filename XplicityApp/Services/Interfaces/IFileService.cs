@@ -9,7 +9,7 @@ namespace XplicityApp.Services.Interfaces
     {
         Task<int> CreateFileRecord(string fileName, FileTypeEnum fileType);
         Task Upload(IFormFile fomFile, FileTypeEnum fileType);
-        Task<string> GetNewestPolicyPath();
+        string GetNewestPolicyPath();
         Task<FileRecord> GetById(int fileId);
         Task<FileRecord> GetByGuid(string guid);
         string GetRelativeDirectory(FileTypeEnum fileType);

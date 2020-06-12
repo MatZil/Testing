@@ -53,15 +53,17 @@ namespace XplicityApp.Services
             {
                 await CreateFileRecord(formFile.FileName, fileType);
 
-                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
-                var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType));
-
-                var connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
-                var storageAccount = CloudStorageAccount.Parse(connectionString);
-                var blobClient = storageAccount.CreateCloudBlobClient();
-                var containerName = GetRelativeBlob(fileType);
-                var container = blobClient.GetContainerReference(containerName);
-                var blockBlob = container.GetBlockBlobReference(formFile.FileName);
+                string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                string containerName = GetRelativeBlob(fileType);
+                CloudBlobContainer container = blobClient.GetContainerReference(containerName);
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference(formFile.FileName);
+                
+                if (fileType == FileTypeEnum.HolidayPolicy)
+                {
+                    blockBlob.Properties.ContentType = "application/pdf";
+                }
 
                 Stream fileStream = formFile.OpenReadStream();
                 await blockBlob.UploadFromStreamAsync(fileStream);
@@ -112,10 +114,16 @@ namespace XplicityApp.Services
 
             return _configuration["BlobConfig:Unknown"];
         }
-        public async Task<string> GetNewestPolicyPath()
+        public string GetNewestPolicyPath()
         {
-            var policy = await _fileRepository.GetNewestPolicy();
-            return Path.Combine(GetRelativeDirectory(policy.Type), policy.Name);
+            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference("policy");
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference("Holiday Policy.pdf");
+
+            var policy = blockBlob.Uri.AbsoluteUri;
+            return policy;
         }
 
         public async Task<FileRecord> GetById(int fileId)

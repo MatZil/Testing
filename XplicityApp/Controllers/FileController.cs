@@ -28,9 +28,9 @@ namespace XplicityApp.Controllers
 
         [HttpGet]
         [Route("Policy")]
-        public async Task<IActionResult> GetNewestPolicy()
+        public  IActionResult GetNewestPolicy()
         {
-            return Ok(await _fileService.GetNewestPolicyPath());
+            return Ok(_fileService.GetNewestPolicyPath());
         }
     }
 }

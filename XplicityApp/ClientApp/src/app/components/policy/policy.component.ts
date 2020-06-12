@@ -19,8 +19,8 @@ export class PolicyComponent implements OnInit {
   }
 
   onButtonClick() {
-    this.fileService.getPolicyRelativePath().subscribe(relativePath => {
-      this.policyPath = this.urlService.getAbsolutePath(relativePath);
+    this.fileService.getPolicyUrl().subscribe(url => {
+      this.policyPath = url;
       this.showPolicy = true;
     }
     );

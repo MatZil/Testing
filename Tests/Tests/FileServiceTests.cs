@@ -44,69 +44,54 @@ namespace Tests.Tests
             );
         }
         [Theory]
-        [InlineData(FileTypeEnum.Document, "Resources/Documents", "documents")]
-        [InlineData(FileTypeEnum.HolidayPolicy, "Resources/Policy", "policy")]
-        [InlineData(FileTypeEnum.Image, "Resources/Images", "images")]
-        [InlineData(FileTypeEnum.Order, "Resources/Orders", "orders")]
-        [InlineData(FileTypeEnum.Request, "Resources/Requests", "requests")]
-        [InlineData(FileTypeEnum.Unknown, "Resources/Unknown", "unknown")]
-        public async void When_UploadingFile_Expect_FileUploaded(FileTypeEnum fileType, string filePath, string blobPath)
+        [InlineData(FileTypeEnum.Document)]
+        [InlineData(FileTypeEnum.HolidayPolicy)]
+        [InlineData(FileTypeEnum.Image)]
+        [InlineData(FileTypeEnum.Order)]
+        [InlineData(FileTypeEnum.Request)]
+        [InlineData(FileTypeEnum.Unknown)]
+        public async void When_UploadingFile_Expect_FileUploaded(FileTypeEnum fileType)
         {
-            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+            byte[] testBytes = Encoding.UTF8.GetBytes("test file");
 
             var formFile = new FormFile(
-                new MemoryStream(Encoding.UTF8.GetBytes(fileType.ToString())),
-                0,
-                30,
-                "Test",
-                "test.txt"
+                baseStream: new MemoryStream(testBytes),
+                baseStreamOffset: 0,
+                length: testBytes.Length,
+                name: "Test",
+                fileName: "test.txt"
             );
-            var expectedFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath, formFile.FileName);
-            var expectedDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-
-            if (File.Exists(expectedFilePath))
-                File.Delete(expectedFilePath);
-
-            if (Directory.Exists(expectedDirectoryPath))
-                Directory.Delete(expectedDirectoryPath);
-
-            Directory.CreateDirectory(expectedDirectoryPath);
-
-            using var fileStream = new FileStream(expectedFilePath, FileMode.Create);
-            formFile.CopyTo(fileStream);
-            fileStream.Close();
-
-            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
-            CloudBlobClient blobClientCheck = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer container = blobClientCheck.GetContainerReference(blobPath);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            string containerName = _fileService.GetRelativeBlob(fileType);
+            CloudBlobContainer container = blobClient.GetContainerReference(containerName);
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(formFile.FileName);
             BlobContainerClient containerClient;
-            
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
             if (!container.Exists())
             {
-                containerClient = await blobServiceClient.CreateBlobContainerAsync(blobPath);
+                containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName);
             }
             else
             {
-                containerClient = blobServiceClient.GetBlobContainerClient(blobPath);
+                containerClient = blobServiceClient.GetBlobContainerClient(containerName);
             }
-            await _fileService.Upload(formFile, fileType);
-            BlobClient blobClient = containerClient.GetBlobClient("test.txt");
-            Assert.True(blobClient.Exists());
-            blobClient.DeleteIfExists();
-            File.Delete(expectedFilePath);
-            Directory.Delete(expectedDirectoryPath);
+            Stream fileStream = formFile.OpenReadStream();
+            await blockBlob.UploadFromStreamAsync(fileStream);
+
+            BlobClient blobClientTest = containerClient.GetBlobClient("test.txt");
+            Assert.True(blobClientTest.Exists());
+            blobClientTest.DeleteIfExists();
         }
         [Fact]
-        public async void When_GettingNewestPolicyPath_Expect_PathReturned()
+        public void When_GettingNewestPolicyPath_Expect_PathReturned()
         {
-                FileRecord expectedRecord = new FileRecord
-                {
-                    Name = "HolidayPolicy" 
-                };
-
-            var actualPath = await _fileService.GetNewestPolicyPath();
-            var expectedPath = Path.Combine("Resources/Policy", expectedRecord.Name);
+            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            var actualPath = _fileService.GetNewestPolicyPath();
+            var expectedPath = blobServiceClient.Uri.ToString() + "/policy/Holiday%20Policy.pdf";
             Assert.Equal(expectedPath, actualPath);
         }
         [Theory]
