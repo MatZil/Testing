@@ -1,6 +1,25 @@
-.kk {
-    height: 340px;
-    float: left;
+.scroll {
+    margin-top: 15px;
+    height: 75%;
+    width: 100%;
+    float: center;
     overflow: auto;
     overflow-x: hidden;
+    align-content: center;
+    padding-top: 0;
+    padding-left: 0;
+    padding-bottom: 0;
+    padding-right: 0;
 }
+
+.buttonn {
+    background-color: #3f51b5;
+    border: none;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+  }

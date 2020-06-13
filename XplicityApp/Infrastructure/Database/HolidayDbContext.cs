@@ -19,6 +19,8 @@ namespace XplicityApp.Infrastructure.Database
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<NotificationSettings> NotificationSettings { get; set; }
         public DbSet<Survey> Surveys { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Choice> Choices { get; set; }
         private readonly IConfiguration _configuration;
 
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XplicityApp.Infrastructure.Database;
 
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    partial class HolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200526122457_AddCreationDateToSurveys")]
+    partial class AddCreationDateToSurveys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -176,27 +178,6 @@ namespace XplicityApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AuditLogs");
-                });
-
-            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Choice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ChoiceText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("Choices");
                 });
 
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Client", b =>
@@ -488,7 +469,7 @@ Please use the first line for team's title, second line for individual employee'
                         {
                             Id = 1,
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Guid = "56976495-89cf-475f-83c4-168da6159b4a-670bc37a-c4fc-4368-963c-a183a314f567",
+                            Guid = "2db351c5-104b-49be-968c-38368cf5aeaa-faa7caae-25d7-4b8a-9adf-164958533c8d",
                             Name = "Holiday Policy.pdf",
                             Type = 1
                         });
@@ -674,30 +655,6 @@ Please use the first line for team's title, second line for individual employee'
                     b.ToTable("NotificationSettings");
                 });
 
-            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Question", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("QuestionText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SurveyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SurveyId");
-
-                    b.ToTable("Questions");
-                });
-
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Survey", b =>
                 {
                     b.Property<int>("Id")
@@ -705,11 +662,11 @@ Please use the first line for team's title, second line for individual employee'
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("AnonymousAnswers")
-                        .HasColumnType("bit");
-
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Guid")
                         .IsRequired()
@@ -719,6 +676,9 @@ Please use the first line for team's title, second line for individual employee'
                         .IsRequired()
                         .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -863,15 +823,6 @@ Please use the first line for team's title, second line for individual employee'
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Choice", b =>
-                {
-                    b.HasOne("XplicityApp.Infrastructure.Database.Models.Question", null)
-                        .WithMany("Choices")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Employee", b =>
                 {
                     b.HasOne("XplicityApp.Infrastructure.Database.Models.Client", "Client")
@@ -921,15 +872,6 @@ Please use the first line for team's title, second line for individual employee'
                     b.HasOne("XplicityApp.Infrastructure.Database.Models.Employee", "Employee")
                         .WithOne("NotificationSettings")
                         .HasForeignKey("XplicityApp.Infrastructure.Database.Models.NotificationSettings", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Question", b =>
-                {
-                    b.HasOne("XplicityApp.Infrastructure.Database.Models.Survey", null)
-                        .WithMany("Questions")
-                        .HasForeignKey("SurveyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

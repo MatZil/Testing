@@ -20,7 +20,6 @@ export class SurveysTableComponent implements OnInit {
   displayedColumns: string[] = [
     'title',
     'author',
-    'surveyType',
     'actions'];
   dataSource = new MatTableDataSource<Survey>();
 

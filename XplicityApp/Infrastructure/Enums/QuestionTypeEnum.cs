@@ -1,10 +1,10 @@
 ﻿namespace XplicityApp.Infrastructure.Enums
 {
-    public enum SurveyTypeEnum
+    public enum QuestionTypeEnum
     {
+        Text_entry,
         Multiple_choice,
         Likert_scale,
-        Ranking,
-        Text_entry
+        Ranking
     }
 }

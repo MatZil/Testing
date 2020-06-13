@@ -1,4 +1,5 @@
-﻿using XplicityApp.Infrastructure.Enums;
+﻿using System.Collections.Generic;
+using XplicityApp.Dtos.Surveys.Questions;
 
 namespace XplicityApp.Dtos.Surveys
 {
@@ -6,6 +7,7 @@ namespace XplicityApp.Dtos.Surveys
     {
         public int AuthorId { get; set; }
         public string Title { get; set; }
-        public SurveyTypeEnum Type { get; set; }
+        public bool AnonymousAnswers { get; set; }
+        public ICollection<QuestionDto> Questions { get; set; }
     }
 }
