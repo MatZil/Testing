@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using XplicityApp.Dtos.Surveys;
 using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services.Interfaces;
 
@@ -81,7 +82,7 @@ namespace XplicityApp.Services
                         Type = question.Type
                     });
 
-                    if (question.Choices != null)
+                    if (question.Type == QuestionTypeEnum.Multiple_choice && question.Choices != null)
                     {
                         foreach (var choice in question.Choices)
                         {
