@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 
 namespace XplicityApp.Infrastructure.Database.Models
@@ -14,6 +15,7 @@ namespace XplicityApp.Infrastructure.Database.Models
         [MaxLength(20)]
         public string Title { get; set; }
         [Required]
+        public DateTime CreationDate { get; set; }
         public bool AnonymousAnswers { get; set; }
         public ICollection<Question> Questions { get; set; }
     }

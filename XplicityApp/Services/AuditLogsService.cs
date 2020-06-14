@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Dtos.AuditLogs;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services.Interfaces;
 
@@ -16,19 +15,8 @@ namespace XplicityApp.Services
             _repository = repository;
         }
 
-        public async Task<ICollection<AuditLog>> GetAll()
+        public async Task<GetAuditLogsDto> GetByType(string entityType, int page, int pageSize)
         {
-            var auditLogs = await _repository.GetAll();
-
-            return auditLogs;
-        }
-
-        public async Task<ICollection<AuditLog>> GetByEntityType(string entityType, int page, int pageSize)
-        {
-            if (entityType == null)
-            {
-                throw new ArgumentNullException("EntityType is null");
-            }
             if(page < 1)
             {
                 throw new ArgumentOutOfRangeException("page parameter is less than 1");
@@ -38,25 +26,36 @@ namespace XplicityApp.Services
                 throw new ArgumentOutOfRangeException("pageSize parameter is less than 1");
             }
 
-            var auditLogs = await _repository.GetByEntityType(entityType, page - 1, pageSize);
+            GetAuditLogsDto auditLogs = new GetAuditLogsDto();
+
+            if (entityType == null)
+            {
+                auditLogs.Logs = await _repository.GetPage(page - 1, pageSize);
+            }
+            else
+            {
+                auditLogs.Logs = await _repository.GetPageByType(entityType, page - 1, pageSize);
+            }
+
+            auditLogs.TotalCount = await GetAllItemsCount(entityType);
 
             return auditLogs;
         }
 
-        public async Task<ICollection<AuditLog>> GetPage(int page, int pageSize)
+        private async Task<int> GetAllItemsCount(string entityType)
         {
-            if (page < 1)
+            int itemsCount;
+
+            if (entityType == null)
             {
-                throw new ArgumentOutOfRangeException("page parameter is less than 1");
+                itemsCount = await _repository.GetAllItemsCount();
             }
-            if (pageSize < 1)
+            else
             {
-                throw new ArgumentOutOfRangeException("pageSize parameter is less than 1");
+                itemsCount = await _repository.GetItemsCountByType(entityType);
             }
 
-            var auditLogs = await _repository.GetPage(page - 1, pageSize);
-
-            return auditLogs;
+            return itemsCount;
         }
     }
 }

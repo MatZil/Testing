@@ -19,8 +19,8 @@ namespace XplicityApp.Services
         private readonly IConfiguration _configuration;
 
         public SurveysService(
-            ISurveysRepository repository, 
-            IConfiguration configuration, 
+            ISurveysRepository repository,
+            IConfiguration configuration,
             IMapper mapper,
             IQuestionsRepository questionsRepository,
             IChoicesRepository choicesRepository
@@ -63,12 +63,13 @@ namespace XplicityApp.Services
                 Guid = guid,
                 AuthorId = newSurveyDto.AuthorId,
                 AnonymousAnswers = newSurveyDto.AnonymousAnswers,
-                Title = newSurveyDto.Title
+                Title = newSurveyDto.Title,
+                CreationDate = DateTime.Now
             };
 
             var surveyDto = _mapper.Map<NewSurveyDto>(newSurvey);
             var surveyId = await _repository.Create(newSurvey);
-            
+
             if (newSurveyDto.Questions != null)
             {
                 foreach (var question in newSurveyDto.Questions)

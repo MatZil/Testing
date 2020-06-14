@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace XplicityApp.Migrations
 {
@@ -7,10 +6,6 @@ namespace XplicityApp.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "CreationDate",
-                table: "Surveys");
-
             migrationBuilder.DropColumn(
                 name: "Type",
                 table: "Surveys");
@@ -67,7 +62,7 @@ namespace XplicityApp.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "Guid",
-                value: "56976495-89cf-475f-83c4-168da6159b4a-670bc37a-c4fc-4368-963c-a183a314f567");
+                value: "ebfd646e-cb37-4966-81c2-9298ce7e33f1-d4f4889a-3a79-4f59-ab9b-064a8e7eb27e");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Choices_QuestionId",
@@ -91,13 +86,6 @@ namespace XplicityApp.Migrations
             migrationBuilder.DropColumn(
                 name: "AnonymousAnswers",
                 table: "Surveys");
-
-            migrationBuilder.AddColumn<DateTime>(
-                name: "CreationDate",
-                table: "Surveys",
-                type: "datetime2",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddColumn<int>(
                 name: "Type",

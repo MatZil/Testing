@@ -10,7 +10,7 @@ using XplicityApp.Infrastructure.Database;
 namespace XplicityApp.Migrations
 {
     [DbContext(typeof(HolidayDbContext))]
-    [Migration("20200613181332_QuestionsChoices")]
+    [Migration("20200614205447_QuestionsChoices")]
     partial class QuestionsChoices
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -490,7 +490,7 @@ Please use the first line for team's title, second line for individual employee'
                         {
                             Id = 1,
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Guid = "56976495-89cf-475f-83c4-168da6159b4a-670bc37a-c4fc-4368-963c-a183a314f567",
+                            Guid = "ebfd646e-cb37-4966-81c2-9298ce7e33f1-d4f4889a-3a79-4f59-ab9b-064a8e7eb27e",
                             Name = "Holiday Policy.pdf",
                             Type = 1
                         });
@@ -712,6 +712,9 @@ Please use the first line for team's title, second line for individual employee'
 
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Guid")
                         .IsRequired()
