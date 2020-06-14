@@ -17,15 +17,15 @@ namespace XplicityApp.Infrastructure.Repositories
 
         public async Task<ICollection<Question>> GetAll()
         {
-            var surveys = await _context.Questions.ToArrayAsync();
+            var questions = await _context.Questions.ToArrayAsync();
 
-            return surveys;
+            return questions;
         }
 
         public async Task<Question> GetById(int id)
         {
-            var survey = await _context.Questions.FindAsync(id);
-            return survey;
+            var question = await _context.Questions.FindAsync(id);
+            return question;
         }
 
         public async Task<int> Create(Question entity)

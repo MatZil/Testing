@@ -8,6 +8,6 @@ namespace XplicityApp.Dtos.Surveys.Questions
     {
         public QuestionTypeEnum Type { get; set; }
         public string QuestionText { get; set; }
-        public ICollection<ChoiceDto> Choices { get; set; }
+        public ICollection<NewChoiceDto> Choices { get; set; }
     }
 }

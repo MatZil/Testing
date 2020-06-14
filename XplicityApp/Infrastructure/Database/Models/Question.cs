@@ -12,7 +12,6 @@ namespace XplicityApp.Infrastructure.Database.Models
         public string QuestionText { get; set; }
         [Required]
         public QuestionTypeEnum Type { get; set; }
-        [Required]
         public ICollection<Choice> Choices { get; set; }
     }
 }

@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using XplicityApp.Dtos.Surveys;
-using XplicityApp.Dtos.Surveys.Questions;
-using XplicityApp.Dtos.Surveys.Questions.Choices;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services.Interfaces;
@@ -21,8 +18,13 @@ namespace XplicityApp.Services
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
-        public SurveysService(ISurveysRepository repository, IQuestionsRepository questionsRepository, IChoicesRepository choicesRepository,
-                              IConfiguration configuration, IMapper mapper)
+        public SurveysService(
+            ISurveysRepository repository, 
+            IConfiguration configuration, 
+            IMapper mapper,
+            IQuestionsRepository questionsRepository,
+            IChoicesRepository choicesRepository
+        )
         {
             _repository = repository;
             _questionsRepository = questionsRepository;
@@ -49,15 +51,6 @@ namespace XplicityApp.Services
 
         public async Task<NewSurveyDto> Create(NewSurveyDto newSurveyDto)
         {
-            //var a = "a";
-
-            await _choicesRepository.Create(new Choice()
-            {
-                QuestionId = 1,
-                ChoiceText = "kkkkk",
-                Id = 10
-            });
-
             if (newSurveyDto == null)
             {
                 throw new ArgumentNullException();
@@ -73,32 +66,33 @@ namespace XplicityApp.Services
                 Title = newSurveyDto.Title
             };
 
-            var surveyId = await _repository.Create(newSurvey);
-
             var surveyDto = _mapper.Map<NewSurveyDto>(newSurvey);
+            var surveyId = await _repository.Create(newSurvey);
+            
+            if (newSurveyDto.Questions != null)
+            {
+                foreach (var question in newSurveyDto.Questions)
+                {
+                    var questionId = await _questionsRepository.Create(new Question()
+                    {
+                        SurveyId = surveyId,
+                        QuestionText = question.QuestionText,
+                        Type = question.Type
+                    });
 
-
-
-            //if (newSurveyDto.Questions != null)
-            //{
-            //    foreach (var question in newSurveyDto.Questions)
-            //    {
-            //        //var questionId = await _questionsRepository.Create(new Question()
-            //        //{
-            //        //    SurveyId = surveyId,
-            //        //});
-
-            //        if (question.Choices != null)
-            //        {
-            //            foreach (var choiceDto in question.Choices)
-            //            {
-            //                choiceDto.QuestionId = 1;
-            //                var choice = _mapper.Map<Choice>(choiceDto);
-            //                await _choicesRepository.Create(choice);
-            //            }
-            //        }
-            //    }
-            //}
+                    if (question.Choices != null)
+                    {
+                        foreach (var choice in question.Choices)
+                        {
+                            await _choicesRepository.Create(new Choice()
+                            {
+                                QuestionId = questionId,
+                                ChoiceText = choice.ChoiceText
+                            });
+                        }
+                    }
+                }
+            }
 
             return surveyDto;
         }

@@ -54,7 +54,7 @@ export class SurveysTableComponent implements OnInit {
   }
 
   showDeleteConfirm(id: number): void {
-    if (confirm('When clicked the OK button this section will be deleted')) {
+    if (confirm('Click OK to delete.')) {
       this.onDeleteButtonClick(id);
       this.closeModal();
     }
@@ -82,6 +82,7 @@ export class SurveysTableComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(newSurvey => {
+      this.refreshTable();
     });
   }
 

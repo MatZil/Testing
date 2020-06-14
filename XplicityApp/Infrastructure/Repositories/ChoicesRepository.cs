@@ -30,7 +30,6 @@ namespace XplicityApp.Infrastructure.Repositories
 
         public async Task<int> Create(Choice entity)
         {
-            var a = "a";
             _context.Choices.Add(entity);
             await _context.SaveChangesAsync();
 

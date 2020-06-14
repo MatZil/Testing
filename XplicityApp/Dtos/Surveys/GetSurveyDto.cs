@@ -10,6 +10,6 @@ namespace XplicityApp.Dtos.Surveys
         public string Title { get; set; }
         public bool AnonymousAnswers { get; set; }
         public string Guid { get; set; }
-        public ICollection<QuestionDto> Questions { get; set; }
+        public ICollection<NewQuestionDto> Questions { get; set; }
     }
 }

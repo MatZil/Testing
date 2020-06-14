@@ -1,6 +1,6 @@
 ﻿namespace XplicityApp.Dtos.Surveys.Questions.Choices
 {
-    public class ChoiceDto
+    public class GetChoiceDto
     {
         public int Id { get; set; }
         public int QuestionId { get; set; }
