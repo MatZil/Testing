@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using XplicityApp.Dtos.Surveys;
+using XplicityApp.Dtos.Surveys.Questions;
+using XplicityApp.Dtos.Surveys.Questions.Choices;
 using XplicityApp.Infrastructure.Database;
-using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services;
 using Xunit;
@@ -12,136 +15,154 @@ namespace Tests.Tests
     [TestCaseOrderer("Tests.SurveyTests.AlphabeticalOrderer", "Tests")]
     public class SurveyTests
     {
-        //private readonly HolidayDbContext _context;
-        //private readonly int _surveysCount;
-        //private readonly SurveysService _surveysService;
-        //private readonly IConfiguration _configuration;
+        private readonly HolidayDbContext _context;
+        private readonly int _surveysCount;
+        private readonly SurveysService _surveysService;
+        private readonly IConfiguration _configuration;
 
-        //public SurveyTests()
-        //{
-        //    var setup = new SetUp();
-        //    setup.Initialize();
-        //    _configuration = setup.GetConfiguration();
-        //    _context = setup.HolidayDbContext;
-        //    var mapper = setup.Mapper;
-        //    _surveysCount = setup.GetCount("surveys");
-        //    ISurveysRepository surveysRepository = new SurveysRepository(_context);
-        //    _surveysService = new SurveysService(surveysRepository, _configuration, mapper);
-        //}
+        public SurveyTests()
+        {
+            var setup = new SetUp();
+            setup.Initialize();
+            _configuration = setup.GetConfiguration();
+            _context = setup.HolidayDbContext;
+            var mapper = setup.Mapper;
+            _surveysCount = setup.GetCount("surveys");
+            ISurveysRepository surveysRepository = new SurveysRepository(_context);
+            IQuestionsRepository questionsRepository = new QuestionsRepository(_context);
+            IChoicesRepository choicesRepository = new ChoicesRepository(_context);
 
-        //[Theory]
-        //[InlineData(1)]
-        //[InlineData(2)]
-        //public async void When_GettingExistingSurveyById_Expect_ReturnsSurvey(int id)
-        //{
-        //    var retrievedSurvey = await _surveysService.GetById(id);
+            _surveysService = new SurveysService(surveysRepository, _configuration, mapper, questionsRepository, choicesRepository);
+        }
 
-        //    Assert.NotNull(retrievedSurvey);
-        //}
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async void When_GettingExistingSurveyById_Expect_ReturnsSurvey(int id)
+        {
+            var retrievedSurvey = await _surveysService.GetById(id);
 
-        //[Theory]
-        //[InlineData(-1)]
-        //public async void When_GettingNonexistentSurveyById_Expect_ReturnsNull(int id)
-        //{
-        //    var retrievedSurvey = await _surveysService.GetById(id);
+            Assert.NotNull(retrievedSurvey);
+        }
 
-        //    Assert.Null(retrievedSurvey);
-        //}
+        [Theory]
+        [InlineData(-1)]
+        public async void When_GettingNonexistentSurveyById_Expect_ReturnsNull(int id)
+        {
+            var retrievedSurvey = await _surveysService.GetById(id);
 
-        //[Fact]
-        //public async void When_GettingAllSurveys_Expect_ReturnsAllSurveys()
-        //{
-        //    var retrievedSurveys = await _surveysService.GetAll();
+            Assert.Null(retrievedSurvey);
+        }
 
-        //    Assert.Equal(_surveysCount, retrievedSurveys.Count);
-        //}
+        [Fact]
+        public async void When_GettingAllSurveys_Expect_ReturnsAllSurveys()
+        {
+            var retrievedSurveys = await _surveysService.GetAll();
 
-        //[Fact]
-        //public async void When_CreatingSurvey_Expect_ReturnsCreatedSurvey()
-        //{
-        //    var newSurvey = new NewSurveyDto()
-        //    {
-        //        Title = "titleNew"
-        //    };
+            Assert.Equal(_surveysCount, retrievedSurveys.Count);
+        }
 
-        //    var createdSurvey = await _surveysService.Create(newSurvey);
+        [Fact]
+        public async void When_CreatingSurvey_Expect_ReturnsCreatedSurvey()
+        {
+            var choices = new List<NewChoiceDto>();
+            choices.Add(new NewChoiceDto()
+            {
+                ChoiceText = "choiceNew"
+            });
 
-        //    Assert.NotNull(createdSurvey);
-        //}
+            var questions = new List<NewQuestionDto>();
+            questions.Add(new NewQuestionDto()
+            {
+                QuestionText = "questionNew",
+                Type = QuestionTypeEnum.Likert_scale,
+                Choices = choices
+            });
 
-        //[Theory]
-        //[InlineData(1)]
-        //[InlineData(2)]
-        //public async void When_DeletingSurvey_Expect_True(int id)
-        //{
-        //    var wasFound = false;
-        //    var wasDeleted = false;
+            var newSurvey = new NewSurveyDto()
+            {
+                Title = "titleNew",
+                Questions = questions
+            };
+            
+            var createdSurvey = await _surveysService.Create(newSurvey);
 
-        //    var found = _context.Surveys.Find(id);
-        //    if (found != null)
-        //    {
-        //        wasFound = true;
-        //    }
+            Assert.NotNull(createdSurvey);
+        }
 
-        //    bool deletedSurvey = await _surveysService.Delete(id);
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async void When_DeletingSurvey_Expect_True(int id)
+        {
+            var wasFound = false;
+            var wasDeleted = false;
 
-        //    found = _context.Surveys.Find(id);
-        //    if (found == null && deletedSurvey)
-        //    {
-        //        wasDeleted = true;
-        //    }
+            var found = _context.Surveys.Find(id);
+            if (found != null)
+            {
+                wasFound = true;
+            }
 
-        //    Assert.True(wasFound && wasDeleted);
-        //}
+            bool deletedSurvey = await _surveysService.Delete(id);
 
-        //[Theory]
-        //[InlineData(-1)]
-        //public async void When_DeletingNonexistentSurvey_Expect_False(int id)
-        //{
-        //    bool deletedSurvey = await _surveysService.Delete(id);
+            found = _context.Surveys.Find(id);
+            if (found == null && deletedSurvey)
+            {
+                wasDeleted = true;
+            }
 
-        //    Assert.False(deletedSurvey);
-        //}
+            Assert.True(wasFound && wasDeleted);
+        }
 
-        //[Theory]
-        //[InlineData(1)]
-        //[InlineData(2)]
-        //public async void When_UpdatingSurvey_Expect_ReturnsUpdatedSurvey(int id)
-        //{
-        //    var initial = _context.Surveys.Find(id).Title;
+        [Theory]
+        [InlineData(-1)]
+        public async void When_DeletingNonexistentSurvey_Expect_False(int id)
+        {
+            bool deletedSurvey = await _surveysService.Delete(id);
 
-        //    UpdateSurveyDto updatedSurvey = new UpdateSurveyDto()
-        //    {
-        //        Title = "UpdatedTitle",
-        //    };
-        //    var expected = updatedSurvey.Title;
+            Assert.False(deletedSurvey);
+        }
 
-        //    await _surveysService.Update(id, updatedSurvey);
-        //    var actual = _context.Surveys.Find(id).Title;
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async void When_UpdatingSurvey_Expect_ReturnsUpdatedSurvey(int id)
+        {
+            var initial = _context.Surveys.Find(id).Title;
 
-        //    Assert.Equal(expected, actual);
-        //}
+            UpdateSurveyDto updatedSurvey = new UpdateSurveyDto()
+            {
+                Title = "UpdatedTitle",
+            };
+            var expected = updatedSurvey.Title;
 
-        //[Theory]
-        //[InlineData(-1)]
-        //public void When_UpdatingNonexistentEmployee_Expect_InvalidOperationException(int id)
-        //{
-        //    UpdateSurveyDto updatedSurvey = new UpdateSurveyDto()
-        //    {
-        //        Title = "UpdatedTitle",
-        //    };
+            await _surveysService.Update(id, updatedSurvey);
+            var actual = _context.Surveys.Find(id).Title;
 
-        //    Assert.ThrowsAsync<InvalidOperationException>(async () => await _surveysService.Update(id, updatedSurvey));
-        //}
+            Assert.Equal(expected, actual);
+        }
 
-        //[Theory]
-        //[InlineData("1")]
-        //[InlineData("2")]
-        //public async void When_GettingExistingSurveyByGuid_Expect_ReturnsSurvey(string id)
-        //{
-        //    var retrievedSurvey = await _surveysService.GetByGuid(id);
+        [Theory]
+        [InlineData(-1)]
+        public void When_UpdatingNonexistentEmployee_Expect_InvalidOperationException(int id)
+        {
+            UpdateSurveyDto updatedSurvey = new UpdateSurveyDto()
+            {
+                Title = "UpdatedTitle",
+            };
 
-        //    Assert.NotNull(retrievedSurvey);
-        //}
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await _surveysService.Update(id, updatedSurvey));
+        }
+
+        [Theory]
+        [InlineData("1")]
+        [InlineData("2")]
+        public async void When_GettingExistingSurveyByGuid_Expect_ReturnsSurvey(string id)
+        {
+            var retrievedSurvey = await _surveysService.GetByGuid(id);
+
+            Assert.NotNull(retrievedSurvey);
+        }
     }
 }

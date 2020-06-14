@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject,} from '@angular/core';
+import { Component, OnInit, Inject} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { QuestionType } from '../../enums/questionType';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -6,7 +6,6 @@ import { SurveyService } from '../../services/survey.service';
 import { Survey } from 'src/app/models/survey';
 import { Question } from 'src/app/models/question';
 import { Choice } from 'src/app/models/choice';
-import { SurveysTableComponent } from '../surveys-table/surveys-table.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -22,8 +21,8 @@ export class SurveysFormComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private surveyService: SurveyService,
     private fb: FormBuilder,
-    // public dialogRef: MatDialogRef<SurveysFormComponent>,
-    // @Inject(MAT_DIALOG_DATA) public data: SurveysTableComponent
+    public dialogRef: MatDialogRef<SurveysFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: SurveysFormComponent
   ) {
     this.form = fb.group({
       'title': [],
@@ -75,11 +74,7 @@ export class SurveysFormComponent implements OnInit {
   onSubmit() {
     const survey = this.addFormArrayDataToSurvey();
     this.surveyService.createNewSurvey(survey).subscribe();
-    this.closeModal();
-  }
-
-  closeModal(): void {
-    //this.dialogRef.close();
+    this.dialogRef.close();
   }
 
   addFormArrayDataToSurvey() {
