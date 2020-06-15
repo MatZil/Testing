@@ -37,6 +37,10 @@ export class SurveyService {
 
   createUrl(id: string): string {
     return `${this.baseUrl}SurveyAnswerForm/${id}`;
+  }
 
+  createNewSurvey(survey: Survey) {
+    //return this.http.get<Survey>(`${this.surveyApi}/${1}`);
+    return this.http.post(this.surveyApi, survey);
   }
 }

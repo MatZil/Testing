@@ -1,0 +1,76 @@
+.form {
+    height: 670px;
+    width: 500px;
+    text-align: center;
+}
+
+.form-title{
+    margin-top:0;
+}
+
+.survey-title {
+    width: 300px;
+    font-size:20px;
+}
+
+.scrollable {
+    margin-top: 15px;
+    height: 75%;
+    width: 100%;
+    float: center;
+    overflow: auto;
+    overflow-x: hidden;
+    align-content: center;
+    padding-top: 0;
+    padding-left: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+}
+
+.question {
+    padding-bottom: 5px;
+}
+
+.question:nth-child(odd) {
+    background-color: #ffffff;
+}
+  
+.question:nth-child(even) {
+    background-color: #f0f0f0;
+}
+
+.questionText {
+    width: 370px;
+}
+
+.answerType {
+    width: 150px !important;
+}
+
+.question-form {
+    margin:0; 
+    top:0; 
+    width: 50px; 
+    left:0; 
+    font-size:18px; 
+    display: inline-block;
+}
+
+.choice-form {
+    width: 330px; 
+    margin-bottom: -1.25em
+}
+
+.new-question-btn {
+    background-color: #3f51b5;
+    border: none;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+ 

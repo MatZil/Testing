@@ -1,10 +1,11 @@
-import { SurveyType } from '../enums/surveyType';
+import { Question } from "./question";
 
 export class Survey {
     id: number;
     title: string;
     authorId: number;
     guid: string;
-    type: SurveyType;
     creationDate: Date;
+    anonymousAnswers: boolean;
+    questions: Question[];
 }

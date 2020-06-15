@@ -7,6 +7,7 @@ using XplicityApp.Dtos.Inventory;
 using XplicityApp.Dtos.NotificationSettings;
 using XplicityApp.Dtos.Tags;
 using XplicityApp.Dtos.Surveys;
+using XplicityApp.Dtos.Surveys.Questions.Choices;
 using XplicityApp.Infrastructure.Database.Models;
 
 namespace XplicityApp.Configurations
