@@ -35,7 +35,10 @@
         </div>
         <div>
             <mat-form-field *ngIf="canBePaid()">
-                <input matInput type="number" step="1" placeholder="Overtime Days" formControlName="overtimeDays">
+                <input matInput type="number" step="1" placeholder="Overtime Days ({{currentUserOvertimeDays}} available)" 
+                       formControlName="overtimeDays" name="toInclusive">
+                <mat-error *ngIf="requestHolidayForm.controls.overtimeDays.invalid">{{getOvertimeDaysErrorMessage()}}
+                </mat-error>
             </mat-form-field>
         </div>
     </mat-card>

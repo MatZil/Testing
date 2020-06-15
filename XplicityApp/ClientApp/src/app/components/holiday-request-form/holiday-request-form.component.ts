@@ -6,9 +6,11 @@ import { NewHoliday } from 'src/app/models/new-holiday';
 import { HolidayType } from 'src/app/enums/holidayType';
 import { RequestHolidayData } from './request-holiday-data';
 import { DatePipe } from '@angular/common';
-import { fromInclusiveValidator, dateRangeValidator, weekendValidator } from './holiday-request-validators';
+import { fromInclusiveValidator, dateRangeValidator, weekendValidator,
+         negativeOvertimeValidator, exceededOvertimeValidatorAsync } from './holiday-request-validators';
 import { freeWorkdayValidatorAsync } from './free-workday-validator';
 import { HolidaysService } from 'src/app/services/holidays.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-holiday-request-form',
@@ -18,17 +20,26 @@ import { HolidaysService } from 'src/app/services/holidays.service';
 export class HolidayRequestFormComponent implements OnInit {
   requestHolidayForm: FormGroup;
   newHoliday: NewHoliday = new NewHoliday();
+  currentUserOvertimeDays: number;
 
   constructor(
     private holidaysService: HolidaysService,
+    private userService: UserService,
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
     public dialogRef: MatDialogRef<EditEmployeeFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: RequestHolidayData) { }
 
   ngOnInit() {
+    this.getCurrentUserOvertimeDays();
     this.setDefaultValues();
     this.initializeFormGroup();
+  }
+
+  getCurrentUserOvertimeDays(): void {
+    this.userService.getCurrentUser().subscribe(user => {
+      this.currentUserOvertimeDays = user.overtimeDays;
+    });
   }
 
   setDefaultValues() {
@@ -47,7 +58,9 @@ export class HolidayRequestFormComponent implements OnInit {
         Validators.required,
         weekendValidator()
       ], freeWorkdayValidatorAsync(this.holidaysService)],
-      overtimeDays: [],
+      overtimeDays: ['', [
+         negativeOvertimeValidator()
+        ], exceededOvertimeValidatorAsync(this.userService)],
       paid: [this.newHoliday.paid]
     }, { validators: dateRangeValidator() });
   }
@@ -73,6 +86,12 @@ export class HolidayRequestFormComponent implements OnInit {
     }
 
     return formHoliday;
+  }
+
+  getOvertimeDaysErrorMessage(): string {
+    return this.requestHolidayForm.controls.overtimeDays.errors?.isNegative ? 'Cannot be a negative number.' :
+      this.requestHolidayForm.controls.overtimeDays.errors?.isExceeding ? 'Cannot exceed the available amount.' :
+        '';
   }
 
   getFromInclusiveErrorMessage(): string {
