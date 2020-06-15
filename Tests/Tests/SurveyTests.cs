@@ -75,7 +75,7 @@ namespace Tests.Tests
             questions.Add(new NewQuestionDto()
             {
                 QuestionText = "questionNew",
-                Type = QuestionTypeEnum.Likert_scale,
+                Type = QuestionTypeEnum.MultipleChoice,
                 Choices = choices
             });
 
