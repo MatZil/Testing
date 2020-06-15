@@ -1,23 +1,23 @@
 <div class="generalSettings">
-    <h1><b>General settings</b></h1>
+    <h1 class="h1-small-space"><b>General settings</b></h1>
     <div *ngIf="isAdmin()">
-        <button class="button" mat-raised-button (click)="showUploadModal()">Upload holiday policy</button>
+        <button class="button" color="primary" mat-raised-button (click)="showUploadModal()">Upload holiday policy</button>
     </div>
     <div>
-        <button class="button" mat-raised-button (click)="showPasswordModal()">Change password</button>
+        <button class="button" color="primary" mat-raised-button (click)="showPasswordModal()">Change password</button>
     </div>
 </div>
 
 <div class="notificationSettings">
     <h1><b>Notification settings</b></h1>
     <p>
-        <mat-slide-toggle (change)="updateNotificationSettings()"
+        <mat-slide-toggle color="primary" (change)="updateNotificationSettings()"
             [(ngModel)]="currentUserSettings.receiveBirthdayNotifications">
             Receive birthday notifications
         </mat-slide-toggle>
     </p>
     <p>
-        <mat-slide-toggle (change)="updateNotificationSettings()" [(ngModel)]=currentUserSettings.broadcastOwnBirthday>
+        <mat-slide-toggle color="primary" (change)="updateNotificationSettings()" [(ngModel)]=currentUserSettings.broadcastOwnBirthday>
             Broadcast birthday notifications
         </mat-slide-toggle>
     </p>
