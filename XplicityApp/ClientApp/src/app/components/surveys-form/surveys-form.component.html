@@ -4,7 +4,7 @@
     <div><mat-checkbox color="primary" formControlName="anonymousAnswers">Anonymous answers</mat-checkbox></div>
     
     <mat-card class="scrollable"  formArrayName="questions">
-<div *ngFor="let question of form.get('questions')['controls']; let i = index" formGroupName="{{i}}" [ngStyle]="{'background-color':getQuestionColor(i)}" class="question">
+<div *ngFor="let question of form.get('questions')['controls']; let i = index" formGroupName="{{i}}" class="question">
             
             <div class="form-group">
             <div class="question-form">{{i + 1}}</div>
@@ -15,7 +15,7 @@
             </div>
 
             <div>
-                <mat-select formControlName="type" style="width: 150px;" name="type" class="answerType" placeholder="Answer type">
+                <mat-select formControlName="type" class="answerType" name="type" class="answerType" placeholder="Answer type">
                     <mat-option [value]="0">
                         Text entry
                     </mat-option>

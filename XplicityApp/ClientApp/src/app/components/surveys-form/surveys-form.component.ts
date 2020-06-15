@@ -39,7 +39,7 @@ export class SurveysFormComponent implements OnInit {
   addQuestion(question?: any) {
     const fg = this.fb.group({
       'questionText': [question ? question.questionText : ''],
-      'type': [question ? question.type : QuestionType.Text_entry],
+      'type': [question ? question.type : QuestionType.TextEntry],
       'choices': this.fb.array([]),
     });
     (<FormArray>this.form.get('questions')).push(fg);
@@ -117,16 +117,8 @@ export class SurveysFormComponent implements OnInit {
   isMultipleChoice(questionIndex: number, index: number) {
     const type = (<FormArray>(<FormGroup>(<FormArray>this.form.controls['questions']).controls[questionIndex]).controls['type']).value;
 
-    if (type === QuestionType.Multiple_choice) {
+    if (type === QuestionType.MultipleChoice) {
         return true;
       }
-  }
-
-  getQuestionColor(i) {
-    if (i & 1) {
-      return '#FFFFFF';
-    } else {
-      return '#F0F0F0';
-    }
   }
 }

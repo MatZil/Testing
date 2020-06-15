@@ -31,8 +31,20 @@
     padding-bottom: 5px;
 }
 
+.question:nth-child(odd) {
+    background-color: #ffffff;
+}
+  
+.question:nth-child(even) {
+    background-color: #f0f0f0;
+}
+
 .questionText {
     width: 370px;
+}
+
+.answerType {
+    width: 150px !important;
 }
 
 .question-form {

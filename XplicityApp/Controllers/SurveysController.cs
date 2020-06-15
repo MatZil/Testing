@@ -66,7 +66,6 @@ namespace XplicityApp.Controllers
         [Produces(typeof(NewSurveyDto))]
         public async Task<IActionResult> Post(NewSurveyDto newSurvey)
         {
-            //var a = "a";
             var createdSurvey = await _surveysService.Create(newSurvey);
 
             return Ok(createdSurvey);

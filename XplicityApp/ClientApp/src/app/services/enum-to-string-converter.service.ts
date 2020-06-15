@@ -13,13 +13,13 @@ export class EnumToStringConverterService {
   determineQuestionType(type: number): string {
 
     switch (type) {
-      case QuestionType.Text_entry:
+      case QuestionType.TextEntry:
         return 'Text entry';
 
-      case QuestionType.Multiple_choice:
+      case QuestionType.MultipleChoice:
         return 'Multiple choice';
 
-      case QuestionType.Likert_scale:
+      case QuestionType.LikertScale:
         return 'Likert scale';
 
       case QuestionType.Ranking:

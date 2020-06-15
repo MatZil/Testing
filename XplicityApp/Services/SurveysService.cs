@@ -82,7 +82,7 @@ namespace XplicityApp.Services
                         Type = question.Type
                     });
 
-                    if (question.Type == QuestionTypeEnum.Multiple_choice && question.Choices != null)
+                    if (question.Type == QuestionTypeEnum.MultipleChoice && question.Choices != null)
                     {
                         foreach (var choice in question.Choices)
                         {
