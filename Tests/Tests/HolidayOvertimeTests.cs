@@ -36,13 +36,14 @@ namespace Tests.Tests
             var userManager = setup.InitializeUserManager();
             _employeesRepository = new EmployeesRepository(_context, userManager);
             var clientsRepository = new ClientsRepository(_context);
+            var holidayGuidsRepository = new HolidayGuidsRepository(_context);
             var mockEmailService = new Mock<IEmailService>();
             var mockDocxGeneratorService = new Mock<IDocxGeneratorService>();
             var mockUserService = new Mock<IUserService>().Object;
 
             _employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(_employeesRepository, _mockTimeService, _overtimeUtility);
             var holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, _mapper, _mockTimeService,
-                                                      _overtimeUtility, clientsRepository, mockUserService, configuration);
+                                                      _overtimeUtility, clientsRepository, mockUserService, configuration, holidayGuidsRepository);
             _holidayConfirmService = new HolidayConfirmService(mockEmailService.Object, _mapper, _holidaysRepository,
                                                                _employeesRepository, clientsRepository, holidaysService,
                                                                 mockDocxGeneratorService.Object, _overtimeUtility,

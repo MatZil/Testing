@@ -23,14 +23,22 @@ namespace XplicityApp.Services
         private readonly IEmailTemplatesRepository _repository;
         private readonly IConfiguration _configuration;
         private readonly IFileService _fileService;
+        private readonly IHolidaysService _holidaysService;
         private readonly IOvertimeUtility _overtimeUtility;
 
-        public EmailService(IEmailer emailer, IEmailTemplatesRepository repository, IConfiguration configuration, IFileService fileService, IOvertimeUtility overtimeUtility)
+        public EmailService(
+            IEmailer emailer, 
+            IEmailTemplatesRepository repository, 
+            IConfiguration configuration, 
+            IFileService fileService,
+            IHolidaysService holidaysService,
+            IOvertimeUtility overtimeUtility)
         {
             _emailer = emailer;
             _repository = repository;
             _configuration = configuration;
             _fileService = fileService;
+            _holidaysService = holidaysService;
             _overtimeUtility = overtimeUtility;
         }
 
@@ -43,7 +51,7 @@ namespace XplicityApp.Services
                                         .Replace("{holiday.type}", holiday.Type.ToString())
                                         .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
                                         .Replace("{holiday.to}", holiday.ToInclusive.ToShortDateString())
-                                        .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={holiday.Id}&confirmerId={client.Id}");
+                                        .Replace("{holiday.confirm}", await _holidaysService.GetConfirmationLink(holiday.Id, client.Id, false));
 
             _emailer.SendMail(client.OwnerEmail, template.Subject, messageString);
         }
@@ -59,11 +67,11 @@ namespace XplicityApp.Services
                                             .Replace("{holiday.type}", holiday.Type.ToString())
                                             .Replace("{holiday.from}", holiday.FromInclusive.ToShortDateString())
                                             .Replace("{holiday.to}", holiday.ToInclusive.ToShortDateString())
-                                            .Replace("{holiday.confirm}", $"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={holiday.Id}&confirmerId={admin.Id}")
+                                            .Replace("{holiday.confirm}", await _holidaysService.GetConfirmationLink(holiday.Id, admin.Id, true))
                                             .Replace("{client.status}", clientStatus)
                                             .Replace("{holiday.overtimeHours}", overtimeSentence);
 
-                _emailer.SendMail(admin.Email, template.Subject, messageString); 
+                _emailer.SendMail(admin.Email, template.Subject, messageString);
             }
         }
 

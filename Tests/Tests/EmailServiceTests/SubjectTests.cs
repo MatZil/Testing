@@ -40,6 +40,10 @@ namespace Tests.Tests.EmailServiceTests
                 .Setup(emailer => emailer.SendMail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Callback<string, string, string>((receiver, subject, body) => _actualSubject = subject);
 
+            var holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, _timeService,
+                                                  mockOvertimeUtility, _clientsRepository, mockUserService, _configuration, holidayGuidsRepository);
+
+
             InitializeEntities();
             _emailService = new EmailService(mockEmailer.Object, _emailTemplatesRepository, config, mockFileService.Object, mockOvertimeUtility.Object);
         }

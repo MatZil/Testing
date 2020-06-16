@@ -10,6 +10,7 @@ namespace XplicityApp.Infrastructure.Database
         public DbSet<Client> Clients { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Holiday> Holidays { get; set; }
+        public DbSet<HolidayGuid> HolidayGuids { get; set; }
         public DbSet<EmailTemplate> EmailTemplates { get; set; }
         public DbSet<FileRecord> FileRecords { get; set; }
         public DbSet<InventoryCategory> InventoryCategories { get; set; }

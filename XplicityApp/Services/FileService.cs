@@ -26,7 +26,7 @@ namespace XplicityApp.Services
 
         public async Task<int> CreateFileRecord(string fileName, FileTypeEnum fileType)
         {
-            var guid = Guid.NewGuid().ToString() + '-' + Guid.NewGuid().ToString();
+            var guid = Guid.NewGuid().ToString();
 
             var fileRecordToCreate = new FileRecord
             {

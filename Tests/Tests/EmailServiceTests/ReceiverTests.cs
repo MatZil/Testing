@@ -87,7 +87,7 @@ namespace Tests.Tests.EmailServiceTests
 
             Assert.Equal(expectedReceivers, _actualReceiverList);
         }
-        
+
         [Fact]
         public async void When_NotifyingAboutAbsences_Expect_CorrectReceivers()
         {

@@ -45,11 +45,12 @@ namespace Tests.Tests
             _holidaysRepository = new HolidaysRepository(_context);
             _employeesRepository = new EmployeesRepository(_context, userManager);
             _clientsRepository = new ClientsRepository(_context);
+            var holidayGuidsRepository = new HolidayGuidsRepository(_context);
             var mockNotificationSettingsService = new Mock<INotificationSettingsService>().Object;
             _employeesService = new EmployeesService(_employeesRepository, mapper, mockOvertimeUtility, _timeService, 
                                                      mockUserService, mockNotificationSettingsService, _configuration);
             _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, mapper, _timeService, 
-                                                   mockOvertimeUtility, _clientsRepository, mockUserService, _configuration);
+                                                   mockOvertimeUtility, _clientsRepository, mockUserService, _configuration, holidayGuidsRepository);
         }
 
         [Theory]
