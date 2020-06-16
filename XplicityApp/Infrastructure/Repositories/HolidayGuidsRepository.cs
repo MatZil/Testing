@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
-using XplicityApp.Infrastructure.Enums;
 
 namespace XplicityApp.Infrastructure.Repositories
 {
@@ -74,7 +72,7 @@ namespace XplicityApp.Infrastructure.Repositories
 
                 return holidayGuid;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

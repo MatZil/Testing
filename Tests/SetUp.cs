@@ -25,6 +25,7 @@ namespace Tests
         private Employee[] _employees;
         private Client[] _clients;
         private Holiday[] _holidays;
+        private HolidayGuid[] _holidayGuids;
         private User[] _users;
         private EmailTemplate[] _emailTemplates;
         private InventoryItem[] _inventoryItems;
@@ -888,6 +889,46 @@ namespace Tests
                 },
             };
             context.Surveys.AddRange(_surveys);
+            context.SaveChanges();
+
+            _holidayGuids = new[] {
+                new HolidayGuid
+                {
+                    ConfirmerId = 1,
+                    HolidayId = 1,
+                    Guid = "test-guid1",
+                    IsAdmin = false
+                },
+                new HolidayGuid
+                {
+                    ConfirmerId = 2,
+                    HolidayId = 2,
+                    Guid = "test-guid2",
+                    IsAdmin = false
+                },
+                 new HolidayGuid
+                {
+                    ConfirmerId = 1,
+                    HolidayId = 3,
+                    Guid = "test-guid3",
+                    IsAdmin = false
+                },
+                  new HolidayGuid
+                {
+                    ConfirmerId = 0,
+                    HolidayId = 0,
+                    Guid = "test-guid4",
+                    IsAdmin = true
+                },
+                  new HolidayGuid
+                {
+                    ConfirmerId = 0,
+                    HolidayId = 0,
+                    Guid = "test-guid5",
+                    IsAdmin = false
+                }
+            };
+            context.HolidayGuids.AddRange(_holidayGuids);
             context.SaveChanges();
         }
 

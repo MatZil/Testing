@@ -2,8 +2,6 @@
 using Moq;
 using Microsoft.Extensions.Logging;
 using XplicityApp.Dtos.Holidays;
-using XplicityApp.Infrastructure.Database;
-using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils;
 using XplicityApp.Services;
@@ -47,10 +45,9 @@ namespace Tests.Tests
             _holidayConfirmService = new HolidayConfirmService(mockEmailService.Object, _mapper, _holidaysRepository,
                                                                _employeesRepository, clientsRepository, holidaysService,
                                                                 mockDocxGeneratorService.Object, _overtimeUtility,
-                                                               _employeeHolidaysConfirmationUpdater, new Mock<ILogger<HolidayConfirmService>>().Object);
+                                                               _employeeHolidaysConfirmationUpdater, holidayGuidsRepository, 
+                                                               new Mock<ILogger<HolidayConfirmService>>().Object);
         }
-
-
 
         [Theory]
         [InlineData(1)]
