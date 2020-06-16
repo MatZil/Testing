@@ -25,7 +25,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   currentUsersId: number;
   currentUsersClientId: number;
   holidayTypes = [['#99ccff', 'Annual unpaid'], ['#0099ff', 'Annual paid'], ['#006699', 'Annual paid, with overtime'],
-                  ['#9933ff', 'Science'], ['#cc99ff', 'Day for children'], ['#FF93AC', 'Birthday']];
+                  ['#cc99ff', 'Science'], ['#9933ff', 'Day for children'], ['#FF93AC', 'Birthday']];
 
   @ViewChild('fullCalendar') fullCalendar: any;
 

@@ -1,5 +1,8 @@
-import { ValidatorFn, AbstractControl, ValidationErrors, FormGroup } from '@angular/forms';
+import { ValidatorFn, AbstractControl, ValidationErrors, FormGroup, AsyncValidatorFn } from '@angular/forms';
 import { WeekDay } from '@angular/common';
+import { timer, Observable, of } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
+import { UserService } from 'src/app/services/user.service';
 
 export function fromInclusiveValidator(): ValidatorFn {
   return (fromInclusiveControl: AbstractControl): ValidationErrors | null => {
@@ -32,5 +35,34 @@ export function weekendValidator(): ValidatorFn {
     const day = dateControl.value.getDay();
     const isWeekend = day === WeekDay.Saturday || day === WeekDay.Sunday;
     return isWeekend ? { 'isWeekend': true } : null;
+  };
+}
+
+export function negativeOvertimeValidator(): ValidatorFn {
+  return (overtimeDaysControl: AbstractControl): ValidationErrors | null => {
+    const overtimeDays = overtimeDaysControl.value;
+    const isNegative = overtimeDays < 0;
+    return isNegative ? { 'isNegative': true } : null;
+  };
+}
+
+export function exceededOvertimeValidatorAsync(userService: UserService): AsyncValidatorFn {
+  return (overtimeDaysControl: AbstractControl): Observable<ValidationErrors | null> => {
+    const overtimeDays = overtimeDaysControl.value;
+
+      if (overtimeDays) {
+          return timer(500).pipe(
+              switchMap(() => {
+                  return userService.getCurrentUser().pipe(
+                      map(user => {
+                          if (overtimeDays > user.overtimeDays) {
+                              return { 'isExceeding': true };
+                          }
+                      })
+                  );
+              })
+          );
+      }
+      return of(null);
   };
 }

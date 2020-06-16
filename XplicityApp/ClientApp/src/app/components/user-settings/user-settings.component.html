@@ -1,10 +1,10 @@
 <div class="generalSettings">
-    <h1><b>General settings</b></h1>
+    <h1 class="h1-small-space"><b>General settings</b></h1>
     <div *ngIf="isAdmin()">
-        <button class="button" mat-raised-button (click)="showUploadModal()">Upload holiday policy</button>
+        <button class="button" color="primary" mat-raised-button (click)="showUploadModal()">Upload holiday policy</button>
     </div>
     <div>
-        <button class="button" mat-raised-button (click)="showPasswordModal()">Change password</button>
+        <button class="button" color="primary" mat-raised-button (click)="showPasswordModal()">Change password</button>
     </div>
 </div>
 
