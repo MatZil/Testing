@@ -133,7 +133,7 @@ namespace XplicityApp.Services
         public async Task<GetSurveyDto> GetByGuid(string guid)
         {
             var survey = await _repository.GetByGuid(guid);
-            var surveyDto = _mapper.Map<GetSurveyDto>(survey);
+            var surveyDto = _mapper.Map<Survey,GetSurveyDto>(survey);
 
             return surveyDto;
         }

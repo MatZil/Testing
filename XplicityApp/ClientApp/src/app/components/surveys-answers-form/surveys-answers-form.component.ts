@@ -4,6 +4,7 @@ import { SurveyService } from '../../services/survey.service';
 import { Survey } from '../../models/survey';
 import { TableRowUserModel } from '../../models/table-row-user-model';
 import { UserService } from '../../services/user.service';
+import { QuestionType } from 'src/app/enums/questionType';
 
 @Component({
   selector: 'app-surveys-answers-form',
@@ -26,7 +27,20 @@ export class SurveysAnswersFormComponent implements OnInit {
   getSelectedSurveyByGuid(guid: string) {
     this.surveyService.getSurveyByGuid(guid).subscribe(selectedSurvey => {
       this.survey = selectedSurvey;
+      console.log(this.survey);
     });
+  }
+
+  getSurveysAnonymical() {
+    return this.survey.anonymousAnswers ? "" : "not ";
+  }
+
+  getQuestionType() {
+    return QuestionType;
+  }
+
+  createSilderLabel(value: number) {
+    return value * 0.1;
   }
 
 }

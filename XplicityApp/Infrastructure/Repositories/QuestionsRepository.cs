@@ -51,5 +51,10 @@ namespace XplicityApp.Infrastructure.Repositories
 
             return changes > 0;
         }
+
+        public Task<ICollection<Question>> GetAllBySurveyId(int surveyId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { registerLocaleData, DatePipe } from '@angular/common';
+import { registerLocaleData, DatePipe, CommonModule } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
@@ -39,6 +39,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FullCalendarModule } from 'primeng/fullcalendar';
+import { MatSliderModule } from '@angular/material/slider';
+import { StarRatingModule } from 'angular-star-rating';
 
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
@@ -145,6 +147,8 @@ export function tokenGetter() {
     MatSidenavModule,
     MatPaginatorModule,
     MatSlideToggleModule,
+    MatSliderModule,
+    StarRatingModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -170,6 +174,7 @@ export function tokenGetter() {
   providers: [
     [RoleGuardService],
     [DatePipe],
+    [CommonModule],
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],

@@ -30,7 +30,13 @@ namespace XplicityApp.Infrastructure.Repositories
         }
         public async Task<Survey> GetByGuid(string guid)
         {
-            var survey = await _context.Surveys.Where(survey => survey.Guid.Equals(guid)).Select(survey => survey).FirstAsync();
+            var survey = await _context.Surveys
+                .Where(survey => survey.Guid.Equals(guid))
+                .Select(survey => survey)
+                .Include(q => q.Questions)
+                .ThenInclude(x => x.Choices)
+                .FirstAsync();
+
             return survey;
         }
 

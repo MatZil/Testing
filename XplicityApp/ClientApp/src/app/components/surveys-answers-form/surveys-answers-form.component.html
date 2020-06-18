@@ -1,1 +1,36 @@
-<p>surveys-answer-form works!</p>
+<h1>{{survey.title}}</h1>
+<ul>
+  <li *ngFor="let question of survey.questions">
+    {{question.questionText}}
+    <div *ngIf="question.type === getQuestionType().TextEntry">
+      <textarea matInput></textarea>
+    </div>
+    <div *ngIf="question.type === getQuestionType().MultipleChoice">
+      <div *ngFor="let choice of question.choices">
+        <mat-checkbox>
+          {{choice.choiceText}}
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <div *ngIf="question.type === getQuestionType().LikertScale">
+      <mat-radio-group>
+        <mat-radio-button>
+          Strongly disagree
+        </mat-radio-button>
+        <br>
+        <mat-radio-button>
+          Strongly agree
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div *ngIf="question.type === getQuestionType().Ranking">
+      <!-- <mat-slider thumbLabel [displayWith]="createSilderLabel" tickInterval="5" min="0" max="50"></mat-slider>-->
+
+      <star-rating [starType]="'svg'"></star-rating>
+    </div>
+  </li>
+</ul>
+<div class="warning">*This survey is {{getSurveysAnonymical()}}anonymus</div>
+<button color="primary">Submit</button>
