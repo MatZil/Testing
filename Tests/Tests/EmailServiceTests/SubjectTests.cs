@@ -10,6 +10,8 @@ using XplicityApp.Services;
 using XplicityApp.Services.Interfaces;
 using Xunit;
 using XplicityApp.Dtos.Holidays;
+using XplicityApp.Infrastructure.Utils;
+using XplicityApp.Services.Extensions;
 
 namespace Tests.Tests.EmailServiceTests
 {
@@ -30,8 +32,10 @@ namespace Tests.Tests.EmailServiceTests
         {
             var setup = new SetUp();
             setup.Initialize();
-            var config = setup.GetConfiguration();
-            _emailTemplatesRepository = new EmailTemplatesRepository(setup.HolidayDbContext);
+            var mapper = setup.Mapper;
+            var context = setup.HolidayDbContext;
+            var configuration = setup.GetConfiguration();
+            _emailTemplatesRepository = new EmailTemplatesRepository(context);
 
             var mockFileService = new Mock<IFileService>();
             var mockOvertimeUtility = new Mock<IOvertimeUtility>();
@@ -40,8 +44,24 @@ namespace Tests.Tests.EmailServiceTests
                 .Setup(emailer => emailer.SendMail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Callback<string, string, string>((receiver, subject, body) => _actualSubject = subject);
 
+            var emailTemplatesRepository = new EmailTemplatesRepository(context);
+            var fileRepository = new FileRepository(context);
+            var timeService = new TimeService();
+            var holidaysRepository = new HolidaysRepository(context);
+            var userManager = setup.InitializeUserManager();
+            var employeesRepository = new EmployeesRepository(context, userManager);
+            var clientsRepository = new ClientsRepository(context);
+            var holidayGuidsRepository = new HolidayGuidsRepository(context);
+            var mockEmailService = new Mock<IEmailService>();
+            var mockDocxGeneratorService = new Mock<IDocxGeneratorService>();
+            var employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(employeesRepository, timeService, mockOvertimeUtility.Object);
+
+            var mockUserService = new Mock<IUserService>().Object;
+            var holidaysService = new HolidaysService(holidaysRepository, employeesRepository, mapper, timeService,
+                                                      mockOvertimeUtility.Object, clientsRepository, mockUserService, configuration, holidayGuidsRepository);
+
             InitializeEntities();
-            _emailService = new EmailService(mockEmailer.Object, _emailTemplatesRepository, config, mockFileService.Object, mockOvertimeUtility.Object);
+            _emailService = new EmailService(mockEmailer.Object, _emailTemplatesRepository, configuration, mockFileService.Object, holidaysService, mockOvertimeUtility.Object);
         }
 
         private void InitializeEntities()

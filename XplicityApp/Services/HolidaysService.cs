@@ -18,6 +18,7 @@ namespace XplicityApp.Services
         private readonly IHolidaysRepository _holidaysRepository;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IRepository<Client> _clientsRepository;
+        private readonly IHolidayGuidsRepository _holidayGuidsRepository;
         private readonly IMapper _mapper;
         private readonly ITimeService _timeService;
         private readonly IOvertimeUtility _overtimeUtility;
@@ -32,7 +33,8 @@ namespace XplicityApp.Services
             IOvertimeUtility overtimeUtility,
             IRepository<Client> clientsRepository,
             IUserService userService,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IHolidayGuidsRepository holidayGuidsRepository
             )
         {
             _holidaysRepository = holidaysRepository;
@@ -43,6 +45,7 @@ namespace XplicityApp.Services
             _clientsRepository = clientsRepository;
             _userService = userService;
             _configuration = configuration;
+            _holidayGuidsRepository = holidayGuidsRepository;
         }
 
         public async Task<GetHolidayDto> GetById(int id)
@@ -82,6 +85,32 @@ namespace XplicityApp.Services
             newHoliday.RequestCreatedDate = _timeService.GetCurrentTime();
             newHoliday.Status = HolidayStatus.Pending;
             var holidayId = await _holidaysRepository.Create(newHoliday);
+
+            var employee = await _employeeRepository.GetById(newHoliday.EmployeeId);
+            if (employee.ClientId > 0)
+            {
+                var newHolidayGuid = new HolidayGuid()
+                {
+                    IsAdmin = false,
+                    ConfirmerId = employee.ClientId,
+                    HolidayId = holidayId,
+                    Guid = Guid.NewGuid().ToString()
+                };
+                await _holidayGuidsRepository.Create(newHolidayGuid);
+            }
+
+            var allAdmins = await _employeeRepository.GetAllAdmins();
+            foreach (var admin in allAdmins)
+            {
+                var newHolidayGuid = new HolidayGuid()
+                {
+                    IsAdmin = true,
+                    ConfirmerId = admin.Id,
+                    HolidayId = holidayId,
+                    Guid = Guid.NewGuid().ToString()
+                };
+                await _holidayGuidsRepository.Create(newHolidayGuid);
+            }
 
             return holidayId;
         }
@@ -225,6 +254,12 @@ namespace XplicityApp.Services
             }
 
             return holidaysFinal;
+        }
+
+        public async Task<string> GetConfirmationLink(int holidayId, int confirmerId, bool isAdmin)
+        {
+            var holidayGuid = await _holidayGuidsRepository.GetGuid(holidayId, confirmerId, isAdmin);
+            return $"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?request={holidayGuid}";
         }
     }
 }

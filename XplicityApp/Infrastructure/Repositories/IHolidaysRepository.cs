@@ -8,5 +8,6 @@ namespace XplicityApp.Infrastructure.Repositories
     public interface IHolidaysRepository : IRepository<Holiday>
     {
         Task<ICollection<Holiday>> GetByEmployeeStatus(EmployeeStatusEnum employeeStatus);
+        //Task<Holiday> GetByGuid(string guid, bool isAdmin);
     }
 }

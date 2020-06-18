@@ -29,7 +29,7 @@ namespace XplicityApp.Infrastructure.Database
 
         public static void CreateInitialPolicyRecord(ModelBuilder builder)
         {
-            var guid = Guid.NewGuid().ToString() + '-' + Guid.NewGuid().ToString();
+            var guid = Guid.NewGuid().ToString();
             builder.Entity<FileRecord>().HasData(
                 new FileRecord
                 {

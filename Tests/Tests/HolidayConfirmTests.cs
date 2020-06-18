@@ -24,7 +24,7 @@ namespace Tests.Tests
         private readonly HolidaysRepository _holidaysRepository;
         private readonly IMapper _mapper;
         private readonly EmployeesRepository _employeesRepository;
-        private readonly ClientsRepository _clientsRepository;
+        private readonly IRepository<Client> _clientsRepository;
         private readonly TimeService _timeService;
         private readonly IOvertimeUtility _mockOvertimeUtility;
         private readonly EmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
@@ -44,7 +44,7 @@ namespace Tests.Tests
             var userManager = setup.InitializeUserManager();
             _employeesRepository = new EmployeesRepository(_context, userManager);
             _clientsRepository = new ClientsRepository(_context);
-            IRepository<Client> clientsRepository = new ClientsRepository(_context);
+            var holidayGuidsRepository = new HolidayGuidsRepository(_context);
             var mockEmailService = new Mock<IEmailService>();
             var mockDocxGeneratorService = new Mock<IDocxGeneratorService>();
             _mockOvertimeUtility = new Mock<IOvertimeUtility>().Object;
@@ -52,11 +52,15 @@ namespace Tests.Tests
 
             var mockUserService = new Mock<IUserService>().Object;
             _holidaysService = new HolidaysService(_holidaysRepository, _employeesRepository, _mapper, _timeService,
-                                                   _mockOvertimeUtility, _clientsRepository, mockUserService, configuration);
+                                                   _mockOvertimeUtility, _clientsRepository, mockUserService, configuration, holidayGuidsRepository);
+
+       
+
             _holidayConfirmService = new HolidayConfirmService(mockEmailService.Object, _mapper, _holidaysRepository,
-                                                               _employeesRepository, clientsRepository, _holidaysService,
+                                                               _employeesRepository, _clientsRepository, _holidaysService,
                                                                 mockDocxGeneratorService.Object, _mockOvertimeUtility,
-                                                               _employeeHolidaysConfirmationUpdater, new Mock<ILogger<HolidayConfirmService>>().Object);
+                                                               _employeeHolidaysConfirmationUpdater, holidayGuidsRepository, 
+                                                               new Mock<ILogger<HolidayConfirmService>>().Object);
             _holidayValidationService = new HolidayValidationService(
                 _holidaysRepository,
                 _employeesRepository,
