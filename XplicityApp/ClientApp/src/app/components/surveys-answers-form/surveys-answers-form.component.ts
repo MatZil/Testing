@@ -40,7 +40,7 @@ export class SurveysAnswersFormComponent implements OnInit {
   }
 
   createSilderLabel(value: number) {
-    return value * 0.1;
+    return value;
   }
 
 }

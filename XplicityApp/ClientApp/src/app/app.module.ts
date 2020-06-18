@@ -40,6 +40,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FullCalendarModule } from 'primeng/fullcalendar';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatStepperModule } from '@angular/material/stepper';
 import { StarRatingModule } from 'angular-star-rating';
 
 import { ErrorPageComponent } from './components/error-page/error-page.component';
@@ -148,6 +149,7 @@ export function tokenGetter() {
     MatPaginatorModule,
     MatSlideToggleModule,
     MatSliderModule,
+    MatStepperModule,
     StarRatingModule,
     JwtModule.forRoot({
       config: {
