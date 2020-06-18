@@ -11,7 +11,7 @@
 
   <ng-container matColumnDef="data">
     <th mat-header-cell *matHeaderCellDef> Data </th>
-    <td mat-cell *matCellDef="let auditLog">{{auditLog.data}}</td>
+    <td><pre *matCellDef="let auditLog">{{auditLog.data | json:2}}</pre></td>
   </ng-container>
 
   <ng-container matColumnDef="entityType">
