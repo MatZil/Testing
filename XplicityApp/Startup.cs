@@ -61,6 +61,7 @@ namespace XplicityApp
 
             app.SetUpStaticFiles(Configuration);
             app.SetUpAzureStorage();
+            app.AddCorsRuleForAzure();
 
             if (!env.IsDevelopment())
             {
