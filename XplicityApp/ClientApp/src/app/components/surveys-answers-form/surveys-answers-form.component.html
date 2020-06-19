@@ -1,46 +1,71 @@
 <h1>{{survey.title}}</h1>
+
 <mat-vertical-stepper>
+
   <div *ngFor="let question of survey.questions">
+
     <mat-step>
       <ng-template matStepLabel>{{question.questionText}}</ng-template>
+      <mat-card>
+        <mat-card-content>
+          <div *ngIf="question.type === getQuestionType().TextEntry">
+            <mat-form-field>
+              <textarea matInput type="text" placeholder="Put your answer here..."></textarea>
+            </mat-form-field>
+          </div>
 
-      <div *ngIf="question.type === getQuestionType().TextEntry">
-        <textarea matInput></textarea>
-      </div>
-      <div *ngIf="question.type === getQuestionType().MultipleChoice">
-        <div *ngFor="let choice of question.choices">
-          <mat-checkbox>
-            {{choice.choiceText}}
-          </mat-checkbox>
-        </div>
-      </div>
+          <div *ngIf="question.type === getQuestionType().MultipleChoice">
+            <div *ngFor="let choice of question.choices">
+              <mat-checkbox>
+                {{choice.choiceText}}
+              </mat-checkbox>
+            </div>
+          </div>
 
-      <div *ngIf="question.type === getQuestionType().LikertScale">
-        <mat-radio-group>
-          <mat-radio-button>
-            Strongly disagree
-          </mat-radio-button>
-          <br>
-          <mat-radio-button>
-            Strongly agree
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
+          <div *ngIf="question.type === getQuestionType().LikertScale">
+            <mat-radio-group>
+              <mat-radio-button [value]="5">
+                Strongly agree
+              </mat-radio-button>
+              <br>
+              <mat-radio-button [value]="4">
+                Agree
+              </mat-radio-button>
+              <br>
+              <mat-radio-button [value]="3">
+                Neither agree nor disagree
+              </mat-radio-button><br>
+              <mat-radio-button [value]="2">
+                Disagree
+              </mat-radio-button><br>
+              <mat-radio-button [value]="1">
+                Strongly disagree
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
 
-      <div *ngIf="question.type === getQuestionType().Ranking">
-        <mat-slider thumbLabel [displayWith]="createSilderLabel" tickInterval="1" min="0" max="5"></mat-slider>
-      </div>
+          <div id="id" *ngIf="question.type === getQuestionType().Ranking">
 
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
-      </div>
+            <mat-slider matInput thumbLabel [displayWith]="createSilderLabel" tickInterval="1" min="0" max="5">
+            </mat-slider>
+          </div>
+        </mat-card-content>
 
+        <mat-card-actions>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </mat-card-actions>
+
+      </mat-card>
     </mat-step>
   </div>
+
   <mat-step>
     <ng-template matStepLabel>Done</ng-template>
-    <div class="warning">*This survey is {{getSurveysAnonymical()}}anonymus</div>
+    <div class="warning">This survey is {{getSurveysAnonymical()}}anonymus</div>
     <button mat-raised-button class="top-of-page-actions" color="primary">Submit</button>
   </mat-step>
+
 </mat-vertical-stepper>
