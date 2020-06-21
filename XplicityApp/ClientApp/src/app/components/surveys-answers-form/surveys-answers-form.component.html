@@ -44,7 +44,7 @@
             </mat-radio-group>
           </div>
 
-          <div id="id" *ngIf="question.type === getQuestionType().Ranking">
+          <div *ngIf="question.type === getQuestionType().Ranking">
 
             <mat-slider matInput thumbLabel [displayWith]="createSilderLabel" tickInterval="1" min="0" max="5">
             </mat-slider>

@@ -10,6 +10,7 @@ using XplicityApp.Dtos.Surveys;
 using XplicityApp.Dtos.Surveys.Questions.Choices;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Dtos.Surveys.Questions;
+using XplicityApp.Dtos.Surveys.Questions.Answers;
 
 namespace XplicityApp.Configurations
 {
@@ -69,8 +70,8 @@ namespace XplicityApp.Configurations
             CreateMap<Tag, TagDto>(MemberList.None);
 
             CreateMap<NewTagDto, Tag>(MemberList.None);
-            CreateMap<Tag, NewTagDto>(MemberList.None); 
-            
+            CreateMap<Tag, NewTagDto>(MemberList.None);
+
             CreateMap<NotificationSettingsDto, NotificationSettings>(MemberList.None);
             CreateMap<NotificationSettings, NotificationSettingsDto>(MemberList.None);
 
@@ -88,6 +89,9 @@ namespace XplicityApp.Configurations
 
             CreateMap<NewChoiceDto, Choice>(MemberList.None);
             CreateMap<Choice, NewChoiceDto>(MemberList.None);
+
+            CreateMap<AnswerDto, Answer>(MemberList.None);
+            CreateMap<Answer, AnswerDto>(MemberList.None);
         }
     }
 }
