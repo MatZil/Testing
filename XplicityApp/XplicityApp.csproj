@@ -52,6 +52,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200605073551_QuestionChoices.cs" />
+    <Compile Remove="Migrations\20200605073551_QuestionChoices.Designer.cs" />
+    <Compile Remove="Migrations\20200613180402_choice.cs" />
+    <Compile Remove="Migrations\20200613180402_choice.Designer.cs" />
+    <Compile Remove="Migrations\20200616075818_HolidayGuids.cs" />
+    <Compile Remove="Migrations\20200616075818_HolidayGuids.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
       <Folder Include="Templates\GeneratedTemplates\" />
   </ItemGroup>
 

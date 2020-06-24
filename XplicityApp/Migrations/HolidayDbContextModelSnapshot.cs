@@ -178,6 +178,27 @@ namespace XplicityApp.Migrations
                     b.ToTable("AuditLogs");
                 });
 
+            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Choice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ChoiceText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("Choices");
+                });
+
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Client", b =>
                 {
                     b.Property<int>("Id")
@@ -467,7 +488,7 @@ Please use the first line for team's title, second line for individual employee'
                         {
                             Id = 1,
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Guid = "2db351c5-104b-49be-968c-38368cf5aeaa-faa7caae-25d7-4b8a-9adf-164958533c8d",
+                            Guid = "3eb1d829-f892-4108-aefd-54aaa7789ad8",
                             Name = "Holiday Policy.pdf",
                             Type = 1
                         });
@@ -515,6 +536,34 @@ Please use the first line for team's title, second line for individual employee'
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Holidays");
+                });
+
+            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.HolidayGuid", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ConfirmerId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("HolidayId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HolidayId");
+
+                    b.ToTable("HolidayGuids");
                 });
 
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.InventoryCategory", b =>
@@ -653,12 +702,39 @@ Please use the first line for team's title, second line for individual employee'
                     b.ToTable("NotificationSettings");
                 });
 
+            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Question", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("QuestionText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SurveyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SurveyId");
+
+                    b.ToTable("Questions");
+                });
+
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Survey", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("AnonymousAnswers")
+                        .HasColumnType("bit");
 
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
@@ -674,9 +750,6 @@ Please use the first line for team's title, second line for individual employee'
                         .IsRequired()
                         .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -821,6 +894,15 @@ Please use the first line for team's title, second line for individual employee'
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Choice", b =>
+                {
+                    b.HasOne("XplicityApp.Infrastructure.Database.Models.Question", null)
+                        .WithMany("Choices")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Employee", b =>
                 {
                     b.HasOne("XplicityApp.Infrastructure.Database.Models.Client", "Client")
@@ -833,6 +915,15 @@ Please use the first line for team's title, second line for individual employee'
                     b.HasOne("XplicityApp.Infrastructure.Database.Models.Employee", "Employee")
                         .WithMany("Holidays")
                         .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.HolidayGuid", b =>
+                {
+                    b.HasOne("XplicityApp.Infrastructure.Database.Models.Holiday", null)
+                        .WithMany("holidayGuids")
+                        .HasForeignKey("HolidayId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -870,6 +961,15 @@ Please use the first line for team's title, second line for individual employee'
                     b.HasOne("XplicityApp.Infrastructure.Database.Models.Employee", "Employee")
                         .WithOne("NotificationSettings")
                         .HasForeignKey("XplicityApp.Infrastructure.Database.Models.NotificationSettings", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("XplicityApp.Infrastructure.Database.Models.Question", b =>
+                {
+                    b.HasOne("XplicityApp.Infrastructure.Database.Models.Survey", null)
+                        .WithMany("Questions")
+                        .HasForeignKey("SurveyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

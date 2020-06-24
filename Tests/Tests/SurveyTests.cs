@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using XplicityApp.Dtos.Surveys;
+using XplicityApp.Dtos.Surveys.Questions;
+using XplicityApp.Dtos.Surveys.Questions.Choices;
 using XplicityApp.Infrastructure.Database;
-using XplicityApp.Infrastructure.Database.Models;
+using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Services;
 using Xunit;
@@ -26,7 +29,10 @@ namespace Tests.Tests
             var mapper = setup.Mapper;
             _surveysCount = setup.GetCount("surveys");
             ISurveysRepository surveysRepository = new SurveysRepository(_context);
-            _surveysService = new SurveysService(surveysRepository, _configuration, mapper);
+            IQuestionsRepository questionsRepository = new QuestionsRepository(_context);
+            IChoicesRepository choicesRepository = new ChoicesRepository(_context);
+
+            _surveysService = new SurveysService(surveysRepository, _configuration, mapper, questionsRepository, choicesRepository);
         }
 
         [Theory]
@@ -59,11 +65,26 @@ namespace Tests.Tests
         [Fact]
         public async void When_CreatingSurvey_Expect_ReturnsCreatedSurvey()
         {
+            var choices = new List<NewChoiceDto>();
+            choices.Add(new NewChoiceDto()
+            {
+                ChoiceText = "choiceNew"
+            });
+
+            var questions = new List<NewQuestionDto>();
+            questions.Add(new NewQuestionDto()
+            {
+                QuestionText = "questionNew",
+                Type = QuestionTypeEnum.MultipleChoice,
+                Choices = choices
+            });
+
             var newSurvey = new NewSurveyDto()
             {
-                Title = "titleNew"
+                Title = "titleNew",
+                Questions = questions
             };
-
+            
             var createdSurvey = await _surveysService.Create(newSurvey);
 
             Assert.NotNull(createdSurvey);

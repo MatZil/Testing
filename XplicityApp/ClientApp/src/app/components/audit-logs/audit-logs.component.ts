@@ -63,7 +63,10 @@ export class AuditLogsComponent implements OnInit {
         return data.logs;
       }))
       .subscribe(data => {
-      this.data = data;
+        for (var i = 0; i < data.length; i++) {
+          data[i].data = JSON.parse(data[i].data);
+        }
+        this.data = data;
     }); 
   }
 

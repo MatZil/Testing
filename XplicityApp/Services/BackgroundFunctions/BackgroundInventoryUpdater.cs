@@ -38,6 +38,8 @@ namespace XplicityApp.Services.BackgroundFunctions
                 var dailyDepreciation = (item.OriginalPrice - 1) / serviceLifeInDays;
 
                 item.CurrentPrice -= (decimal)dailyDepreciation;
+
+                await _inventoryItemRepository.Update(item);
             }
         }
     }

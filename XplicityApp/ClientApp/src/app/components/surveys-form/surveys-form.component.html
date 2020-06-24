@@ -1,1 +1,59 @@
-<p>surveys-form works!</p>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+    <h1 mat-dialog-title class="form-title">Add a new survey</h1>
+    <input class="survey-title" matInput type="text" placeholder="Enter the title..." formControlName="title">
+    <div><mat-checkbox color="primary" formControlName="anonymousAnswers">Anonymous answers</mat-checkbox></div>
+    
+    <mat-card class="scrollable"  formArrayName="questions">
+<div *ngFor="let question of form.get('questions')['controls']; let i = index" formGroupName="{{i}}" class="question">
+            
+            <div class="form-group">
+            <div class="question-form">{{i + 1}}</div>
+            <mat-form-field class="questionText">
+                <input formControlName="questionText" matInput type="text" placeholder="Question text">
+            </mat-form-field>
+            <button mat-icon-button color="warn" type="button" (click)="deleteQuestion(i)"><mat-icon>clear</mat-icon></button>
+            </div>
+
+            <div>
+                <mat-select formControlName="type" class="answerType" name="type" class="answerType" placeholder="Answer type">
+                    <mat-option [value]="0">
+                        Text entry
+                    </mat-option>
+                    <mat-option [value]="1">
+                        Multiple choice
+                    </mat-option>
+                    <mat-option [value]="2">
+                        Likert scale
+                    </mat-option>
+                    <mat-option [value]="3">
+                        Ranking
+                    </mat-option>
+                </mat-select>
+              </div>
+
+            <div *ngIf="isMultipleChoice(i)" formArrayName="choices">
+                <div class="form-group" *ngFor="let choice of question.controls.choices.controls; let j = index" formGroupName="{{j}}">
+                    <label>{{j+1}})</label>
+                    <mat-form-field class="choice-form">
+                       <input formControlName="choiceText" matInput type="text">
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" type="button" (click)="deleteChoice(i,j)"><mat-icon>clear</mat-icon></button>
+                </div>
+                <button mat-icon-button color="primary" type="button" (click)="addChoice(i)"><mat-icon>plus_one</mat-icon></button>
+            </div>
+        </div>
+
+    <button type="button" class="new-question-btn" (click)="addQuestion()">New question</button>
+</mat-card>
+
+<mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" type="submit" [mat-dialog-close]>
+      Add Survey
+    </button>
+    <button mat-flat-button color="warn" [mat-dialog-close]>
+      Cancel
+    </button>
+</mat-dialog-actions>
+</form>
+
+

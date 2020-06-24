@@ -23,6 +23,7 @@ namespace XplicityApp.Services
         private readonly IHolidaysRepository _repositoryHolidays;
         private readonly IDocxGeneratorService _docxGeneratorService;
         private readonly IEmployeeHolidaysConfirmationUpdater _employeeHolidaysConfirmationUpdater;
+        private readonly IHolidayGuidsRepository _holidayGuidsRepository;
         private readonly ILogger<HolidayConfirmService> _logger;
         private readonly IOvertimeUtility _overtimeUtility;
 
@@ -36,6 +37,7 @@ namespace XplicityApp.Services
             IDocxGeneratorService docxGeneratorService,
             IOvertimeUtility overtimeUtility,
             IEmployeeHolidaysConfirmationUpdater employeeHolidaysConfirmationUpdater,
+            IHolidayGuidsRepository holidayGuidsRepository,
             ILogger<HolidayConfirmService> logger)
         {
             _emailService = emailService;
@@ -47,28 +49,39 @@ namespace XplicityApp.Services
             _docxGeneratorService = docxGeneratorService;
             _overtimeUtility = overtimeUtility;
             _employeeHolidaysConfirmationUpdater = employeeHolidaysConfirmationUpdater;
+            _holidayGuidsRepository = holidayGuidsRepository;
             _logger = logger;
         }
 
         public async Task UpdateHolidayConfirmationStatus(UpdateHolidayStatusDto holidayConfirmationStatus)
         {
+            var holidayId = holidayConfirmationStatus.HolidayId;
+            var confirmerId = holidayConfirmationStatus.ConfirmerId;
+
             if (holidayConfirmationStatus.Confirm)
             {
                 if (holidayConfirmationStatus.IsConfirmerAdmin)
                 {
-                    await ConfirmHoliday(holidayConfirmationStatus.HolidayId, holidayConfirmationStatus.ConfirmerId);
-                    await GenerateFilesAndNotify(holidayConfirmationStatus.HolidayId);
+                    await ConfirmHoliday(holidayId, confirmerId);
+                    await GenerateFilesAndNotify(holidayId);
+                    await _holidayGuidsRepository.DeleteGuids(holidayId, true);
                 }
                 else
                 {
-                    await RequestAdminApproval(holidayConfirmationStatus.HolidayId, EmployeeClientStatus.CLIENT_CONFIRMED,
-                        holidayConfirmationStatus.ConfirmerId);
+                    await RequestAdminApproval(holidayId, EmployeeClientStatus.CLIENT_CONFIRMED, confirmerId);
+                    await _holidayGuidsRepository.DeleteGuids(holidayId, false);
                 }
             }
             else
             {
-                await Decline(holidayConfirmationStatus.HolidayId, holidayConfirmationStatus.ConfirmerId,
-                    holidayConfirmationStatus.RejectionReason);
+                await Decline(holidayId, confirmerId, holidayConfirmationStatus.RejectionReason);
+
+                await _holidayGuidsRepository.DeleteGuids(holidayId, true);
+
+                if (!holidayConfirmationStatus.IsConfirmerAdmin)
+                {
+                    await _holidayGuidsRepository.DeleteGuids(holidayId, false);
+                }
             }
         }
 
@@ -103,7 +116,7 @@ namespace XplicityApp.Services
                 await _holidaysService.Update(holidayId, updateHolidayDto);
             }
             
-            var admins = await _repositoryEmployees.GetAllAdmins(); 
+            var admins = await _repositoryEmployees.GetAllAdmins();
             var overtimeSentence = _overtimeUtility.GetOvertimeSentence(OvertimeEmail.CONFIRMATION, holiday.OvertimeDays);
             await _emailService.ConfirmHolidayWithAdmin(admins, employee, holiday, clientStatus, overtimeSentence);
 
@@ -201,6 +214,11 @@ namespace XplicityApp.Services
             await _emailService.NotifyAboutRejectedRequest(getHolidayDto, employee.Email);
 
             return successful;
+        }
+
+        public async Task<HolidayGuid> GetHolidayGuid(string guid)
+        {
+            return await _holidayGuidsRepository.GetHolidayGuid(guid);
         }
     }
 }
