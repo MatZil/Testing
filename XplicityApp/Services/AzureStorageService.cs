@@ -41,7 +41,7 @@ namespace XplicityApp.Services
         public Task UploadBlob(string containerName, string blobName, string contentType, Stream stream)
         {
             var blobClient = GetBlobClient(containerName, blobName);
-            return blobClient.UploadAsync(stream, true);
+            return blobClient.UploadAsync(stream, new BlobHttpHeaders {ContentType = contentType}); // overwrites by default
         }
 
         private BlobClient GetBlobClient(string containerName, string blobName)

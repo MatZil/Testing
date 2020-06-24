@@ -9,13 +9,9 @@ using System.IO;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using Moq;
 using System.Text;
-using XplicityApp.Infrastructure.Database.Models;
 using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
 using Microsoft.Azure.Storage.Blob;
 using Microsoft.Azure.Storage;
-using Azure.Storage.Blobs.Specialized;
-using System;
 using XplicityApp.Configurations;
 using XplicityApp.Services.Interfaces;
 
@@ -48,6 +44,7 @@ namespace Tests.Tests
                 _azureStorageService
             );
         }
+
         [Theory]
         [InlineData(FileTypeEnum.Document)]
         [InlineData(FileTypeEnum.HolidayPolicy)]
@@ -57,7 +54,8 @@ namespace Tests.Tests
         [InlineData(FileTypeEnum.Unknown)]
         public async void When_UploadingFile_Expect_FileUploaded(FileTypeEnum fileType)
         {
-            byte[] testBytes = Encoding.UTF8.GetBytes("test file");
+            var testBytes = Encoding.UTF8.GetBytes("test file");
+            var azureStorageService = new AzureStorageService();
 
             var formFile = new FormFile(
                 baseStream: new MemoryStream(testBytes),
@@ -65,16 +63,19 @@ namespace Tests.Tests
                 length: testBytes.Length,
                 name: "Test",
                 fileName: "test.txt"
-            );
-            string connectionString = AzureStorageConfiguration.GetConnectionString();
+            )
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "text/plain; charset=utf-8"
+            };
+            var connectionString = AzureStorageConfiguration.GetConnectionString();
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            string containerName = _fileService.GetBlobContainerName(fileType);
+            var containerName = _fileService.GetBlobContainerName(fileType);
             CloudBlobContainer container = blobClient.GetContainerReference(containerName);
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference(formFile.FileName);
-            BlobContainerClient containerClient;
             BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
+            BlobContainerClient containerClient;
             if (!container.Exists())
             {
                 containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName);
@@ -83,13 +84,23 @@ namespace Tests.Tests
             {
                 containerClient = blobServiceClient.GetBlobContainerClient(containerName);
             }
-            Stream fileStream = formFile.OpenReadStream();
-            await blockBlob.UploadFromStreamAsync(fileStream);
 
-            BlobClient blobClientTest = containerClient.GetBlobClient("test.txt");
-            Assert.True(blobClientTest.Exists());
-            blobClientTest.DeleteIfExists();
+            await using (var fileStream = formFile.OpenReadStream())
+            {
+                await azureStorageService.UploadBlob(containerName, formFile.FileName, formFile.ContentType,
+                    fileStream);
+            }
+
+            var blobClientTest = containerClient.GetBlobClient(formFile.FileName);
+
+            Assert.True(await blobClientTest.ExistsAsync());
+            var downloadInfo = await azureStorageService.GetBlobDownloadInfo(containerName, formFile.FileName);
+            Assert.NotNull(downloadInfo);
+            Assert.Equal(formFile.ContentType, downloadInfo.ContentType);
+
+            await blobClientTest.DeleteIfExistsAsync();
         }
+
         [Fact]
         public void When_GettingNewestPolicyPath_Expect_PathReturned()
         {
