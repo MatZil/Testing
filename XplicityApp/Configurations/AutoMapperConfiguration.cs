@@ -87,6 +87,9 @@ namespace XplicityApp.Configurations
             CreateMap<NewQuestionDto, Question>(MemberList.None);
             CreateMap<Question, NewQuestionDto>(MemberList.None);
 
+            CreateMap<GetQuestionDto, Question>(MemberList.None);
+            CreateMap<Question, GetQuestionDto>(MemberList.None);
+
             CreateMap<NewChoiceDto, Choice>(MemberList.None);
             CreateMap<Choice, NewChoiceDto>(MemberList.None);
 

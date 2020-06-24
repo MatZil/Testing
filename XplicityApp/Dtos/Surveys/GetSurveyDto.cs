@@ -12,6 +12,6 @@ namespace XplicityApp.Dtos.Surveys
         public bool AnonymousAnswers { get; set; }
         public string Guid { get; set; }
         public DateTime CreationDate { get; set; }
-        public ICollection<NewQuestionDto> Questions { get; set; }
+        public ICollection<GetQuestionDto> Questions { get; set; }
     }
 }

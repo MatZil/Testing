@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject} from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { QuestionType } from '../../enums/questionType';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -104,7 +104,7 @@ export class SurveysFormComponent implements OnInit {
       const choices = questions.at(i).get('choices') as FormArray;
       for (let j = 0; j < choices.length; j++) {
         const choice = new Choice;
-        choice .choiceText = choices.at(j).get('choiceText').value;
+        choice.choiceText = choices.at(j).get('choiceText').value;
         question.choices.push(choice);
       }
 
@@ -118,7 +118,7 @@ export class SurveysFormComponent implements OnInit {
     const type = (<FormArray>(<FormGroup>(<FormArray>this.form.controls['questions']).controls[questionIndex]).controls['type']).value;
 
     if (type === QuestionType.MultipleChoice) {
-        return true;
-      }
+      return true;
+    }
   }
 }
