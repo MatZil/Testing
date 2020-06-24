@@ -11,24 +11,26 @@ namespace XplicityApp.Controllers
     public class FileController : ControllerBase
     {
         private readonly IFileService _fileService;
+
         public FileController(IFileService fileService)
         {
             _fileService = fileService;
         }
+
         [HttpPost]
         [Route("Upload")]
         [RequestSizeLimit(1048576)]
         public async Task<IActionResult> Upload()
         {
             var file = Request.Form.Files[0];
-            var fileType = (FileTypeEnum)Enum.Parse(typeof(FileTypeEnum), Request.Form["fileType"]);
+            var fileType = (FileTypeEnum) Enum.Parse(typeof(FileTypeEnum), Request.Form["fileType"]);
             await _fileService.Upload(file, fileType);
             return Ok();
         }
 
         [HttpGet]
         [Route("Policy")]
-        public  IActionResult GetNewestPolicy()
+        public IActionResult GetNewestPolicy()
         {
             return Ok(_fileService.GetNewestPolicyPath());
         }

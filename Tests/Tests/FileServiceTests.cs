@@ -16,6 +16,8 @@ using Microsoft.Azure.Storage.Blob;
 using Microsoft.Azure.Storage;
 using Azure.Storage.Blobs.Specialized;
 using System;
+using XplicityApp.Configurations;
+using XplicityApp.Services.Interfaces;
 
 namespace Tests.Tests
 {
@@ -27,6 +29,7 @@ namespace Tests.Tests
         private readonly FileRepository _fileRepository;
         private readonly IConfiguration _configuration;
         private readonly ITimeService _timeService;
+        private readonly IAzureStorageService _azureStorageService;
         public FileServiceTests()
         {
             var setup = new SetUp();
@@ -36,11 +39,13 @@ namespace Tests.Tests
             _timeService = new Mock<ITimeService>().Object;
             _fileRepository = new FileRepository(_context);
             _configuration = setup.GetConfiguration();
+            _azureStorageService = new AzureStorageService();
 
             _fileService = new FileService(
                 _fileRepository,
                 _configuration,
-                _timeService
+                _timeService,
+                _azureStorageService
             );
         }
         [Theory]
@@ -61,10 +66,10 @@ namespace Tests.Tests
                 name: "Test",
                 fileName: "test.txt"
             );
-            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+            string connectionString = AzureStorageConfiguration.GetConnectionString();
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            string containerName = _fileService.GetRelativeBlob(fileType);
+            string containerName = _fileService.GetBlobContainerName(fileType);
             CloudBlobContainer container = blobClient.GetContainerReference(containerName);
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(formFile.FileName);
             BlobContainerClient containerClient;
@@ -88,7 +93,7 @@ namespace Tests.Tests
         [Fact]
         public void When_GettingNewestPolicyPath_Expect_PathReturned()
         {
-            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+            string connectionString = AzureStorageConfiguration.GetConnectionString();
             BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
             var actualPath = _fileService.GetNewestPolicyPath();
             var expectedPath = blobServiceClient.Uri.ToString() + "/policy/Holiday%20Policy.pdf";

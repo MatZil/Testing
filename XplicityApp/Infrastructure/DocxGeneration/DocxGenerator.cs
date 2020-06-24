@@ -12,7 +12,6 @@ using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
-using Azure.Storage.Blobs;
 
 namespace XplicityApp.Infrastructure.DocxGeneration
 {
@@ -22,6 +21,7 @@ namespace XplicityApp.Infrastructure.DocxGeneration
         private readonly ITimeService _timeService;
         private readonly IFileUtility _fileUtility;
         private readonly IFileService _fileService;
+        private readonly IAzureStorageService _azureStorageService;
         private readonly IOvertimeUtility _overtimeUtility;
         private readonly ILogger<DocxGenerator> _logger;
 
@@ -30,6 +30,7 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             ITimeService timeService,
             IFileUtility fileUtility,
             IFileService fileService,
+            IAzureStorageService azureStorageService,
             IOvertimeUtility overtimeUtility,
             ILogger<DocxGenerator> logger)
         {
@@ -37,6 +38,7 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             _timeService = timeService;
             _fileUtility = fileUtility;
             _fileService = fileService;
+            _azureStorageService = azureStorageService;
             _overtimeUtility = overtimeUtility;
             _logger = logger;
         }
@@ -52,11 +54,11 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             {
                 var replacementMap = GetReplacementMap(holiday, employee, holidayDocumentType);
                 var templatePath = GetTemplatePath(holidayDocumentType);
-                var generationPath = await _fileUtility.GetGeneratedDocxPath(holiday.Id, holidayDocumentType);
-                var fileName = _fileUtility.ExtractNameFromPath(generationPath);
+                var documentFileName = await _fileUtility.GetGeneratedDocxName(holiday.Id, holidayDocumentType);
+                var fileName = _fileUtility.ExtractNameFromPath(documentFileName);
                 var fileId = await _fileService.CreateFileRecord(fileName, holidayDocumentType);
 
-                await ProcessTemplate(templatePath, generationPath, replacementMap, holidayDocumentType);
+                await ProcessTemplate(templatePath, documentFileName, replacementMap, holidayDocumentType);
 
                 return fileId;
             }
@@ -157,14 +159,14 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             return "";
         }
 
-        private async Task ProcessTemplate(string templatePath, string generationPath, Dictionary<string, string> replacementMap, FileTypeEnum holidayDocumentType)
+        private async Task ProcessTemplate(string templatePath, string documentFileName,
+            Dictionary<string, string> replacementMap, FileTypeEnum holidayDocumentType)
         {
             var documentTemplateHtml = await GetHtmlTemplateString(templatePath);
             var documentContentHtml = GetContentFromTemplate(documentTemplateHtml, replacementMap);
-
-            await CreateDocxFromHtml(documentContentHtml, generationPath);
-            await UploadDocxToBlob(generationPath, holidayDocumentType);
-            File.Delete(generationPath);
+            await using var stream = await CreateDocxFromHtml(documentContentHtml);
+            stream.Position = 0;
+            await UploadDocxToBlob(documentFileName, holidayDocumentType, stream);
         }
 
         private static async Task<string> GetHtmlTemplateString(string templatePath)
@@ -185,35 +187,35 @@ namespace XplicityApp.Infrastructure.DocxGeneration
             return templateString;
         }
 
-        private static async Task CreateDocxFromHtml(string htmlString, string generationPath)
+        private static async Task<MemoryStream> CreateDocxFromHtml(string htmlString)
         {
-            const string altChunkID = "AltChunkId1";
-            using var newDocument = WordprocessingDocument.Create(generationPath, WordprocessingDocumentType.Document);
+            var memoryStream = new MemoryStream();
+            const string altChunkId = "AltChunkId1";
+            using var newDocument = WordprocessingDocument.Create(memoryStream, WordprocessingDocumentType.Document);
             var mainPart = newDocument.AddMainDocumentPart();
             var document = new Document(new Body());
             document.Save(mainPart);
 
-            var chunk = mainPart.AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Xhtml, altChunkID);
+            var chunk = mainPart.AddAlternativeFormatImportPart(AlternativeFormatImportPartType.Xhtml, altChunkId);
             using (var chunkStream = chunk.GetStream(FileMode.Create, FileAccess.Write))
             {
                 using var stringStream = new StreamWriter(chunkStream, Encoding.UTF8);
                 await stringStream.WriteAsync(htmlString);
             }
 
-            var altChunk = new AltChunk { Id = altChunkID };
+            var altChunk = new AltChunk { Id = altChunkId };
             mainPart.Document.Body.InsertAt(altChunk, 0);
             mainPart.Document.Save();
+            return memoryStream;
         }
-        private async Task UploadDocxToBlob(string generationPath, FileTypeEnum holidayDocumentType)
+        
+        private async Task UploadDocxToBlob(string documentFileName, FileTypeEnum holidayDocumentType, Stream stream)
         {
-            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
-            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
-            string containerName = _fileService.GetRelativeBlob(holidayDocumentType);
-            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-            BlobClient blobClient = containerClient.GetBlobClient(Path.GetFileName(generationPath));
-            using FileStream fileStream = new FileStream(generationPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            await blobClient.UploadAsync(fileStream, true);
+            var containerName = _fileService.GetBlobContainerName(holidayDocumentType);
+            await _azureStorageService.UploadBlob(containerName, documentFileName,
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document", stream);
         }
+        
         private string GetTemplatePath(FileTypeEnum holidayDocumentType)
         {
             var templateDir = _configuration["DocxGeneration:TemplatesDir"];

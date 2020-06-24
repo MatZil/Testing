@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
@@ -21,16 +20,14 @@ namespace XplicityApp.Infrastructure.Utils
             _fileService = fileService;
         }
 
-        public async Task<string> GetGeneratedDocxPath(int holidayId, FileTypeEnum holidayDocumentType)
+        public async Task<string> GetGeneratedDocxName(int holidayId, FileTypeEnum holidayDocumentType)
         {
             var holiday = await _holidaysRepository.GetById(holidayId);
 
-            var generationPath = Path.Combine(_fileService.GetRelativeDirectory(holidayDocumentType),
-                                              _configuration["DocxGeneration:NameFormat"]
-                                                .Replace("{holidayId}", holiday.Id.ToString())
-                                                .Replace("{documentType}", holidayDocumentType.ToString())
-                                                .Replace("{holidayType}", holiday.Type.ToString())
-                                             );
+            var generationPath = _configuration["DocxGeneration:NameFormat"]
+                .Replace("{holidayId}", holiday.Id.ToString())
+                .Replace("{documentType}", holidayDocumentType.ToString())
+                .Replace("{holidayType}", holiday.Type.ToString());
             return generationPath;
         }
 

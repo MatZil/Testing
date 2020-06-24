@@ -145,9 +145,10 @@ namespace XplicityApp.Configurations
                 RequestPath = new PathString(string.Concat("/", baseFolder))
             });
         }
+        
         public static async void SetUpAzureStorage(this IApplicationBuilder app)
         {
-            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+            string connectionString = AzureStorageConfiguration.GetConnectionString();
 
             BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
@@ -155,7 +156,7 @@ namespace XplicityApp.Configurations
 
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
 
-            string[] directories = { "documents", "images", "orders", "policy", "requests", "stylesheets", "unknown" };
+            string[] directories = { "documents", "orders", "policy", "requests", "unknown" };
 
             foreach (var dir in directories)
             {
@@ -166,6 +167,7 @@ namespace XplicityApp.Configurations
                 }
             }
         }
+        
         public static void AddCorsRuleForAzure(this IApplicationBuilder app)
         {
             var corsRule = new CorsRule()
@@ -176,7 +178,7 @@ namespace XplicityApp.Configurations
                 MaxAgeInSeconds = 3600,
             };
 
-            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+            string connectionString = AzureStorageConfiguration.GetConnectionString();
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudBlobClient client = storageAccount.CreateCloudBlobClient();
             ServiceProperties serviceProperties = client.GetServiceProperties();

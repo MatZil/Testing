@@ -1,11 +1,5 @@
-﻿using Azure.Storage.Blobs;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
-using System;
-using System.IO;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Controllers
@@ -15,10 +9,12 @@ namespace XplicityApp.Controllers
     public class FilesController : ControllerBase
     {
         private readonly IFileService _fileService;
+        private readonly IAzureStorageService _azureStorageService;
 
-        public FilesController(IFileService fileService)
+        public FilesController(IFileService fileService, IAzureStorageService azureStorageService)
         {
             _fileService = fileService;
+            _azureStorageService = azureStorageService;
         }
 
         [HttpGet("{fileGuid}/download")]
@@ -31,22 +27,9 @@ namespace XplicityApp.Controllers
                 return BadRequest();
             }
 
-            return GetFile(file.Name, file.Type);
-        }
-
-        private IActionResult GetFile(string fileName, FileTypeEnum fileType)
-        {
-            var fullPath = Path.Combine(_fileService.GetRelativeBlob(fileType), fileName);
-
-            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
-            string containerName = _fileService.GetRelativeBlob(fileType);
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
-            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer container = blobClient.GetContainerReference(containerName);
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
-            var stream = blockBlob.OpenRead();
-
-            return File(stream, "application/docx", fileName);
+            var containerName = _fileService.GetBlobContainerName(file.Type);
+            var downloadInfo = await _azureStorageService.GetBlobDownloadInfo(containerName, file.Name);
+            return File(downloadInfo.Content, downloadInfo.ContentType, file.Name);
         }
     }
 }

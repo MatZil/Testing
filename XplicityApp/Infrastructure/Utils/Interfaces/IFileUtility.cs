@@ -5,7 +5,7 @@ namespace XplicityApp.Infrastructure.Utils.Interfaces
 {
     public interface IFileUtility
     {
-        Task<string> GetGeneratedDocxPath(int holidayId, FileTypeEnum holidayDocumentType);
+        Task<string> GetGeneratedDocxName(int holidayId, FileTypeEnum holidayDocumentType);
         string ExtractNameFromPath(string pathToFile);
     }
 }

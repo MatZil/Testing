@@ -1,19 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Repositories;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
-using Azure.Storage.Blobs;
-using System.Threading;
-using System.Runtime.InteropServices;
-using Azure.Storage.Blobs.Models;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
 
 namespace XplicityApp.Services
 {
@@ -22,17 +15,20 @@ namespace XplicityApp.Services
         private readonly IFileRepository _fileRepository;
         private readonly IConfiguration _configuration;
         private readonly ITimeService _timeService;
+        private readonly IAzureStorageService _azureStorageService;
 
-        public FileService(IFileRepository fileRepository, IConfiguration configuration, ITimeService timeService)
+        public FileService(IFileRepository fileRepository, IConfiguration configuration, ITimeService timeService,
+            IAzureStorageService azureStorageService)
         {
             _fileRepository = fileRepository;
             _configuration = configuration;
             _timeService = timeService;
+            _azureStorageService = azureStorageService;
         }
 
         public async Task<int> CreateFileRecord(string fileName, FileTypeEnum fileType)
         {
-            var guid = Guid.NewGuid().ToString() + '-' + Guid.NewGuid().ToString();
+            var guid = Guid.NewGuid().ToString() + '-' + Guid.NewGuid();
 
             var fileRecordToCreate = new FileRecord
             {
@@ -52,21 +48,11 @@ namespace XplicityApp.Services
             if (formFile.Length > 0)
             {
                 await CreateFileRecord(formFile.FileName, fileType);
-
-                string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
-                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                string containerName = GetRelativeBlob(fileType);
-                CloudBlobContainer container = blobClient.GetContainerReference(containerName);
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(formFile.FileName);
                 
-                if (fileType == FileTypeEnum.HolidayPolicy)
-                {
-                    blockBlob.Properties.ContentType = "application/pdf";
-                }
-
-                Stream fileStream = formFile.OpenReadStream();
-                await blockBlob.UploadFromStreamAsync(fileStream);
+                var containerName = GetBlobContainerName(fileType);
+                var fileStream = formFile.OpenReadStream();
+                await _azureStorageService.UploadBlob(containerName, formFile.FileName, formFile.ContentType, fileStream);
+                fileStream.Close();
             }
         }
 
@@ -92,7 +78,7 @@ namespace XplicityApp.Services
 
             return _configuration["FileConfig:UnknownFolder"];
         }
-        public string GetRelativeBlob(FileTypeEnum fileType)
+        public string GetBlobContainerName(FileTypeEnum fileType)
         {
             switch (fileType)
             {
@@ -116,14 +102,7 @@ namespace XplicityApp.Services
         }
         public string GetNewestPolicyPath()
         {
-            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
-            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer container = blobClient.GetContainerReference("policy");
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference("Holiday Policy.pdf");
-
-            var policy = blockBlob.Uri.AbsoluteUri;
-            return policy;
+            return _azureStorageService.GetBlobUrl("policy", "Holiday Policy.pdf");
         }
 
         public async Task<FileRecord> GetById(int fileId)

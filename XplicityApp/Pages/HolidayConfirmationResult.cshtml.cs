@@ -14,12 +14,12 @@ namespace XplicityApp
 
             if (confirmed)
             {
-                ImagePath = Url.Content("http://127.0.0.1:10000/devstoreaccount1/images/requestConfirmed.png");
+                ImagePath = Url.Content("~/Resources/Images/requestConfirmed.png");
                 ConfirmationText = "You confirmed the request.";
             }
             else
             {
-                ImagePath = Url.Content("http://127.0.0.1:10000/devstoreaccount1/images/requestRejected.png");
+                ImagePath = Url.Content("~/Resources/Images/requestRejected.png");
                 ConfirmationText = "You rejected the request.";
             }
         }
