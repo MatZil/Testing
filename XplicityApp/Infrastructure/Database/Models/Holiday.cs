@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using XplicityApp.Infrastructure.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace XplicityApp.Infrastructure.Database.Models
 {
@@ -25,6 +26,7 @@ namespace XplicityApp.Infrastructure.Database.Models
         public DateTime RequestCreatedDate { get; set; }
         public int ConfirmerAdminId { get; set; }
         public int ConfirmerClientId { get; set; }
+        public ICollection<HolidayGuid> holidayGuids { get; set; }
 
         [NotMapped]
         public double OvertimeHours { get; set; }

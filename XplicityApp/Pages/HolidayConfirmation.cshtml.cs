@@ -16,7 +16,7 @@ namespace XplicityApp.Pages
         private readonly HolidayDbContext _context;
         private readonly IHolidayConfirmService _holidayConfirmationService;
 
-        public int ConfirmerId { get; private set; }
+        public int? ConfirmerId { get; private set; }
         public int HolidayId { get; private set; }
         public string RequesterName { get; private set; }
         public DateTime HolidayFrom { get; private set; }
@@ -33,24 +33,31 @@ namespace XplicityApp.Pages
             _holidayConfirmationService = holidayConfirmationService;
         }
 
-        public async Task<IActionResult> OnGetAsync(int holidayId, int confirmerId)
+        public async Task<IActionResult> OnGetAsync(string request)
         {
+            var holidayGuid = await _holidayConfirmationService.GetHolidayGuid(request);
 
-            ConfirmerId = confirmerId;
-            HolidayId = holidayId;
-
-            var holiday = await _context.Holidays.FindAsync(holidayId);
-            HolidayFrom = holiday.FromInclusive;
-            HolidayTo = holiday.ToInclusive;
-
-            var employee = await _context.Employees.FindAsync(holiday.EmployeeId);
-            RequesterName = $"{employee.Name} {employee.Surname}";
-            if (holiday.Status == HolidayStatus.Abandoned)
+            if (holidayGuid != null)
             {
-                return RedirectToPage("HolidayConfirmationAbandoned", new { userWhoAbandoned = RequesterName });
+                ConfirmerId = holidayGuid.ConfirmerId;
+                HolidayId = holidayGuid.HolidayId;
+
+                var holiday = await _context.Holidays.FindAsync(holidayGuid.HolidayId);
+                HolidayFrom = holiday.FromInclusive;
+                HolidayTo = holiday.ToInclusive;
+
+                var employee = await _context.Employees.FindAsync(holiday.EmployeeId);
+                RequesterName = $"{employee.Name} {employee.Surname}";
+                if (holiday.Status == HolidayStatus.Abandoned)
+                {
+                    return RedirectToPage("HolidayConfirmationAbandoned", new { userWhoAbandoned = RequesterName });
+                }
+                IsConfirmerAdmin = holidayGuid.IsAdmin;
+
+                return Page();
             }
-            IsConfirmerAdmin = employee.ClientId == null || holiday.Status == HolidayStatus.ClientConfirmed;
-            return Page();
+
+            return RedirectToPage("BadRequest");
         }
 
         public async Task<IActionResult> OnPostAsync(bool confirm, int holidayId, int confirmerId, bool isConfirmerAdmin)

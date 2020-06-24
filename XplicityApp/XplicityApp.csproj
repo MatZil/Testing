@@ -50,6 +50,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200616075818_HolidayGuids.cs" />
+    <Compile Remove="Migrations\20200616075818_HolidayGuids.Designer.cs" />
       <Folder Include="Templates\GeneratedTemplates\" />
   </ItemGroup>
 

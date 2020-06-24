@@ -13,6 +13,8 @@ using Xunit;
 using XplicityApp.Dtos.Holidays;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Static_Files;
+using XplicityApp.Services.Interfaces;
+using XplicityApp.Services.Extensions;
 
 namespace Tests.Tests.EmailServiceTests
 {
@@ -22,6 +24,7 @@ namespace Tests.Tests.EmailServiceTests
         private readonly EmailService _emailService;
         private readonly FileService _fileService;
         private readonly IConfiguration _configuration;
+        private readonly HolidaysService _holidaysService;
 
         private Employee _employee;
         private ICollection<Employee> _admins;
@@ -34,9 +37,11 @@ namespace Tests.Tests.EmailServiceTests
         {
             var setup = new SetUp();
             setup.Initialize();
+            var mapper = setup.Mapper;
             _configuration = setup.GetConfiguration();
-            var emailTemplatesRepository = new EmailTemplatesRepository(setup.HolidayDbContext);
-            var fileRepository = new FileRepository(setup.HolidayDbContext);
+            var context = setup.HolidayDbContext;
+            var emailTemplatesRepository = new EmailTemplatesRepository(context);
+            var fileRepository = new FileRepository(context);
             var timeService = new TimeService();
             _fileService = new FileService(fileRepository, _configuration, timeService);
 
@@ -46,13 +51,21 @@ namespace Tests.Tests.EmailServiceTests
                 .Setup(emailer => emailer.SendMail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Callback<string, string, string>((receiver, subject, body) => _actualBodyList.Add(body));
 
-            InitializeEntities();
-            _emailService = new EmailService(mockEmailer.Object, emailTemplatesRepository, _configuration, _fileService, mockOvertimeUtility.Object);
-        }
+            var holidaysRepository = new HolidaysRepository(context);
+            var userManager = setup.InitializeUserManager();
+            var employeesRepository = new EmployeesRepository(context, userManager);
+            var clientsRepository = new ClientsRepository(context);
+            var holidayGuidsRepository = new HolidayGuidsRepository(context);
+            var mockEmailService = new Mock<IEmailService>();
+            var mockDocxGeneratorService = new Mock<IDocxGeneratorService>();
+            var employeeHolidaysConfirmationUpdater = new EmployeeHolidaysConfirmationUpdater(employeesRepository, timeService, mockOvertimeUtility.Object);
 
-        private string GetPaidString(bool paid)
-        {
-            return paid ? "Paid" : "Unpaid";
+            var mockUserService = new Mock<IUserService>().Object;
+            _holidaysService = new HolidaysService(holidaysRepository, employeesRepository, mapper, timeService,
+                                                      mockOvertimeUtility.Object, clientsRepository, mockUserService, _configuration, holidayGuidsRepository);
+
+            InitializeEntities();
+            _emailService = new EmailService(mockEmailer.Object, emailTemplatesRepository, _configuration, _fileService, _holidaysService, mockOvertimeUtility.Object);
         }
 
         private void InitializeEntities()
@@ -71,7 +84,7 @@ namespace Tests.Tests.EmailServiceTests
             var expectedBody =
                             $"Hello, {_client.OwnerName},\n\nAn employee {_employee.Name} {_employee.Surname} is intending to go on " +
                             $"{_holiday.Type} holidays from {_holiday.FromInclusive.ToShortDateString()} to {_holiday.ToInclusive.ToShortDateString()} (inclusive).\n\n" +
-                            $"Click this link to confirm or decline: {$"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={_holiday.Id}&confirmerId={_client.Id}"}";
+                            $"Click this link to confirm or decline: {await _holidaysService.GetConfirmationLink(_holiday.Id, _client.Id, false)}";
 
             Assert.Equal(expectedBody, _actualBodyList.FirstOrDefault());
         }
@@ -90,7 +103,7 @@ namespace Tests.Tests.EmailServiceTests
                 var expectedBody =
                     $"Hello, {admin.Name},\n\nAn employee {_employee.Name} {_employee.Surname} is intending to go on " +
                     $"{_holiday.Type} holidays from {_holiday.FromInclusive.ToShortDateString()} to {_holiday.ToInclusive.ToShortDateString()} (inclusive). " +
-                    $"{clientStatus} \n\nClick this link to confirm or decline: {$"{_configuration["AppSettings:RootUrl"]}/HolidayConfirmation?holidayId={_holiday.Id}&confirmerId={admin.Id}"}";
+                    $"{clientStatus} \n\nClick this link to confirm or decline: {await _holidaysService.GetConfirmationLink(_holiday.Id, admin.Id, true)}";
 
                 expectedBodies.Add(expectedBody);
             }

@@ -53,6 +53,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<IChoicesRepository, ChoicesRepository>()
                 .AddScoped<IAuditLogsRepository, AuditLogsRepository>()
                 .AddScoped<IAnswerRepository, AnswerRepository>()
+                .AddScoped<IHolidayGuidsRepository, HolidayGuidsRepository>()
                 .AddSingleton<ITimeService, TimeService>()
                 .AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }
