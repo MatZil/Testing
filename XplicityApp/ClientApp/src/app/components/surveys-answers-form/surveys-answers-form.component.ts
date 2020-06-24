@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SurveyService } from '../../services/survey.service';
 import { Survey } from '../../models/survey';
 import { TableRowUserModel } from '../../models/table-row-user-model';
-import { UserService } from '../../services/user.service';
 import { QuestionType } from 'src/app/enums/questionType';
 import { Answer } from '../../models/answer';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AnswerService } from 'src/app/services/answer.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
@@ -16,7 +15,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
   styleUrls: ['./surveys-answers-form.component.scss']
 })
 export class SurveysAnswersFormComponent implements OnInit {
-  survey: Survey;
+  survey: Survey = new Survey();
   currentUser: TableRowUserModel;
   answers: Answer[] = [];
   answerFormGroup: FormGroup;
@@ -24,14 +23,13 @@ export class SurveysAnswersFormComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private userService: UserService,
     private surveyService: SurveyService,
-    private formBuilder: FormBuilder,
+    public formBuilder: FormBuilder,
     private answerService: AnswerService,
     private authenticationService: AuthenticationService
   ) {
     this.answerFormGroup = formBuilder.group({
-      'answers': []
+      'answers': ['', Validators.required]
     });
   }
 
@@ -53,7 +51,7 @@ export class SurveysAnswersFormComponent implements OnInit {
     return QuestionType;
   }
 
-  createSilderLabel(value: number) {
+  createSliderLabel(value: number) {
     return value;
   }
 
@@ -71,17 +69,13 @@ export class SurveysAnswersFormComponent implements OnInit {
         }
 
         answer.questionId = this.survey.questions[index].id;
-        console.log(this.survey.questions[index]);
-
         answer.answerText = this.allAnswers[index];
-
 
         this.answers.push(answer);
       }
 
       this.answerService.createAnswers(this.answers).subscribe();
     }
-
   }
 
 }

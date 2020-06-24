@@ -49,28 +49,23 @@
             </div>
 
             <div *ngIf="question.type === getQuestionType().Ranking">
-              <mat-slider formControlName="answers" matInput thumbLabel [displayWith]="createSilderLabel"
+              <mat-slider formControlName="answers" matInput thumbLabel [displayWith]="createSliderLabel"
                 tickInterval="1" min="0" max="5">
               </mat-slider>
             </div>
-
           </mat-card-content>
+
           <mat-card-actions>
-
-            <div>
-              <button mat-button matStepperNext>Next</button>
-            </div>
+            <button mat-button matStepperNext>Next</button>
           </mat-card-actions>
-
         </mat-card>
       </mat-step>
     </div>
 
-    <!-- <mat-step>
+    <mat-step>
       <ng-template matStepLabel>Done</ng-template>
-      <div class="warning">This survey is {{getSurveysAnonymical()}}anonymus</div>
-      <button mat-raised-button class="top-of-page-actions" color="primary" type="submit">Submit</button>
+      <div class="warning">This survey is done. Thank you for your answers!</div>
     </mat-step>
--->
+
   </mat-vertical-stepper>
 </form>

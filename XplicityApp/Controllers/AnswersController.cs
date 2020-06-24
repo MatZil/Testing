@@ -7,7 +7,7 @@ namespace XplicityApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AnswersController : Controller
+    public class AnswersController : ControllerBase
     {
         private readonly IAnswersService _answersService;
 

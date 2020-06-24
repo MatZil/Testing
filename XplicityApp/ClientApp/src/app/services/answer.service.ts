@@ -14,7 +14,6 @@ export class AnswerService {
   ) { }
 
   createAnswers(answers: Answer[]) {
-    console.log(answers);
     return this.http.post(this.answersApi, answers);
   }
 }

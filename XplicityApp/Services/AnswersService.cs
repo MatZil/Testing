@@ -18,7 +18,7 @@ namespace XplicityApp.Services
             _answerRepository = answerRepository;
         }
 
-        public async Task<int> Create(AnswerDto[] answersDto)
+        public async Task Create(AnswerDto[] answersDto)
         {
             var answers = _mapper.Map<Answer[]>(answersDto);
 
@@ -26,8 +26,6 @@ namespace XplicityApp.Services
             {
                 await _answerRepository.Create(answer);
             }
-
-            return 1;
         }
     }
 }

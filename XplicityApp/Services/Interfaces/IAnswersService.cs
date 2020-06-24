@@ -5,6 +5,6 @@ namespace XplicityApp.Services.Interfaces
 {
     public interface IAnswersService
     {
-        Task<int> Create(AnswerDto[] answersDto);
+        Task Create(AnswerDto[] answersDto);
     }
 }
