@@ -8,6 +8,10 @@ Install the following applications:
   - Node.js (v12+) (https://nodejs.org/en/download/)
   - Visual Studio Code (https://code.visualstudio.com/download)
   - Visual Studio 2019 IDE (https://visualstudio.microsoft.com/vs/community/)
+  - Azure Storage Emulator: (https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator)
+
+Optional:
+  - Azure Storage Explorer (https://azure.microsoft.com/en-us/features/storage-explorer/)
   - Microsoft SQL Server Management Studio 18
 (https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15)
   - Sourcetree graphic interface for Git (https://www.sourcetreeapp.com)
@@ -27,15 +31,23 @@ Install the following applications:
   - **Pull**. Merges the retrieved branch into your local repository.
 Read about other operations here: https://confluence.lsstcorp.org/display/LDMDG/Basic+Git+Operations
 
-# Run the application (Easy mode)
+# Run the application
+## Start Azure Storage Emulator
+In Windows Start Menu type ```Microsoft Azure Storage Emulator``` and launch Microsoft Azure Storage Emulator application.
+Alternatively you can run it using using any terminal. For example, to start Azure Storage Emulator in PowerShell (or in Visual Studio's Package Manager Console) type:
+```powershell
+ & "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
+```
+
+## Run the application (Easy mode)
  * Open the solution (**.sln** file in the root of the repository) using Visual Studio.
  * Build the solution (**F6** while in Visual Studio)
  * Update database - open package manager console in Visual Studio and type **Update-Database** and enter
  * Change the debugging profile to Kestrel - there's a dropdown on the debug button in the toolbar (by default it's set to 'IIS Express'), choose 'Xplicity_Holidays' from the dropdown
  * Run the application (**F5** or the Debug button in the toolbar)
 
-# Running front-end and back-end separately
-## Run front-end files
+## Running front-end and back-end separately
+### Run front-end files
 The very first time you open Visual Studio Code, you should:
 open Terminal (in the tools bar) > New Terminal > type **npm install -g @angular/cli** > click Enter.
 You can also do this using Command Prompt or Windows Powershell.
