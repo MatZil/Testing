@@ -44,7 +44,7 @@ namespace XplicityApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-            AzureStorageConfiguration.Configure(app.ApplicationServices);
+            AzureStorageConfiguration.Configure(app.ApplicationServices.GetRequiredService<IConfiguration>());
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

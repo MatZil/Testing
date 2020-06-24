@@ -96,8 +96,8 @@ namespace Tests.Tests
             string connectionString = AzureStorageConfiguration.GetConnectionString();
             BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
             var actualPath = _fileService.GetNewestPolicyPath();
-            var expectedPath = blobServiceClient.Uri.ToString() + "/policy/Holiday%20Policy.pdf";
-            Assert.Equal(expectedPath, actualPath);
+            var expectedPath = blobServiceClient.Uri + "/policy/Holiday%20Policy.pdf";
+            Assert.StartsWith(expectedPath, actualPath);
         }
         [Theory]
         [InlineData(1, "Order")]
