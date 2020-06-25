@@ -11,16 +11,12 @@ namespace XplicityApp.Configurations
         {
             _configuration = configuration;
         }
-        
+
         public static string GetConnectionString()
         {
-            string connectionString;
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
-            {
-                var environmentVariableName = _configuration.GetValue<string>("AzureStorage:EnvironmentVariableName");
-                connectionString = Environment.GetEnvironmentVariable(environmentVariableName);
-            }
-            else
+            var environmentVariableName = _configuration.GetValue<string>("AzureStorage:EnvironmentVariableName");
+            var connectionString = Environment.GetEnvironmentVariable(environmentVariableName);
+            if (string.IsNullOrEmpty(connectionString))
             {
                 connectionString = _configuration.GetValue<string>("AzureStorage:ConnectionString");
             }
