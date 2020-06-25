@@ -14,20 +14,23 @@ using Microsoft.Azure.Storage.Blob;
 using Microsoft.Azure.Storage;
 using XplicityApp.Configurations;
 using XplicityApp.Services.Interfaces;
+using Xunit.Abstractions;
 
 namespace Tests.Tests
 {
     [TestCaseOrderer("Tests.FileServiceTests.AlphabeticalOrderer", "Tests")]
     public class FileServiceTests
     {
+        private readonly ITestOutputHelper _output;
         private readonly HolidayDbContext _context;
         private readonly FileService _fileService;
         private readonly FileRepository _fileRepository;
         private readonly IConfiguration _configuration;
         private readonly ITimeService _timeService;
         private readonly IAzureStorageService _azureStorageService;
-        public FileServiceTests()
+        public FileServiceTests(ITestOutputHelper output)
         {
+            _output = output;
             var setup = new SetUp();
             setup.Initialize();
             _context = setup.HolidayDbContext;
@@ -69,6 +72,7 @@ namespace Tests.Tests
                 ContentType = "text/plain; charset=utf-8"
             };
             var connectionString = AzureStorageConfiguration.GetConnectionString();
+            _output.WriteLine($"Connection str: {connectionString}"); // todo remove
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
             var containerName = _fileService.GetBlobContainerName(fileType);
