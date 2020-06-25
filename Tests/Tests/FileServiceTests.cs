@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Http;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Enums;
@@ -111,7 +112,7 @@ namespace Tests.Tests
             string connectionString = AzureStorageConfiguration.GetConnectionString();
             BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
             var actualPath = _fileService.GetNewestPolicyPath();
-            var expectedPath = blobServiceClient.Uri + "/policy/Holiday%20Policy.pdf";
+            var expectedPath = new Uri(blobServiceClient.Uri, "/policy/Holiday%20Policy.pdf").AbsoluteUri;
             Assert.StartsWith(expectedPath, actualPath);
         }
         [Theory]
