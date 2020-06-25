@@ -15,7 +15,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
   styleUrls: ['./surveys-answers-form.component.scss']
 })
 export class SurveysAnswersFormComponent implements OnInit {
-  survey: Survey = new Survey();
+  survey: Survey;
   currentUser: TableRowUserModel;
   answers: Answer[] = [];
   answerFormGroup: FormGroup;

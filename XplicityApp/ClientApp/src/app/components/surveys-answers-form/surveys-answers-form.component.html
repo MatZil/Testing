@@ -1,4 +1,4 @@
-<form [formGroup]="answerFormGroup" (ngSubmit)="onSubmit()" class="form">
+<form *ngIf="survey" [formGroup]="answerFormGroup" (ngSubmit)="onSubmit()" class="form">
 
   <h1>{{survey.title}}</h1>
   <div class="warning">This survey is {{getSurveysAnonymical()}}anonymus</div>
@@ -20,14 +20,14 @@
 
             <div *ngIf="question.type === getQuestionType().MultipleChoice">
               <div *ngFor="let choice of question.choices">
-                <mat-checkbox formControlName="answers">
+                <mat-checkbox color="primary" formControlName="answers">
                   {{choice.choiceText}}
                 </mat-checkbox>
               </div>
             </div>
 
             <div *ngIf="question.type === getQuestionType().LikertScale">
-              <mat-radio-group formControlName="answers">
+              <mat-radio-group color="primary" formControlName="answers">
                 <mat-radio-button [value]="5">
                   Strongly agree
                 </mat-radio-button>
@@ -49,8 +49,8 @@
             </div>
 
             <div *ngIf="question.type === getQuestionType().Ranking">
-              <mat-slider formControlName="answers" matInput thumbLabel [displayWith]="createSliderLabel"
-                tickInterval="1" min="0" max="5">
+              <mat-slider color="primary" formControlName="answers" matInput thumbLabel
+                [displayWith]="createSliderLabel" tickInterval="1" min="0" max="5">
               </mat-slider>
             </div>
           </mat-card-content>
