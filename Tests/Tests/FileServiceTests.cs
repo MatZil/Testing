@@ -74,6 +74,9 @@ namespace Tests.Tests
             };
             var connectionString = AzureStorageConfiguration.GetConnectionString();
             _output.WriteLine($"Connection str: {connectionString}"); // todo remove
+            _output.WriteLine($"Config str: {_configuration.GetValue<string>("AzureStorage:EnvironmentVariableName")}");
+            _output.WriteLine($"Env variable: {Environment.GetEnvironmentVariable("XplicityAppStorageConnection")}"); // todo remove
+            _output.WriteLine($"Env variable process: {Environment.GetEnvironmentVariable("XplicityAppStorageConnection", EnvironmentVariableTarget.Process)}"); // todo remove
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
             var containerName = _fileService.GetBlobContainerName(fileType);
