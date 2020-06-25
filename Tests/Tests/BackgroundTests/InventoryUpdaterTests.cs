@@ -4,6 +4,8 @@ using Xunit;
 using XplicityApp.Services.BackgroundFunctions;
 using System.Linq;
 using XplicityApp.Infrastructure.Utils;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace Tests.Tests.BackgroundTests
 {
@@ -26,8 +28,9 @@ namespace Tests.Tests.BackgroundTests
             _inventoryItemRepository = new InventoryItemsRepository(context);
             _inventoryCategoryRepository = new InventoryCategoryRepository(context);
             _timeService = new TimeService();
+            var _logger = new Mock<ILogger<BackgroundInventoryUpdater>>().Object;
 
-            _backgroundInventoryUpdater = new BackgroundInventoryUpdater(_inventoryItemRepository, _inventoryCategoryRepository, _timeService);
+            _backgroundInventoryUpdater = new BackgroundInventoryUpdater(_inventoryItemRepository, _inventoryCategoryRepository, _timeService, _logger);
         }
 
         [Fact]
