@@ -74,6 +74,7 @@ namespace Tests.Tests
             };
             var connectionString = AzureStorageConfiguration.GetConnectionString();
             _output.WriteLine($"Connection str: {connectionString}"); // todo remove
+            _output.WriteLine($"ASPNETCORE_ENVIRONMENT: {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}"); // todo remove
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
             var containerName = _fileService.GetBlobContainerName(fileType);
