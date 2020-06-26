@@ -28,6 +28,8 @@ steps:
     command: test
     projects: '**/Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
+  env:
+    XPLICITY_APP_STORAGE_CONNECTION: $(XPLICITY_APP_STORAGE_CONNECTION)
 
 - task: DotNetCoreCLI@2
   displayName: "Publish"
