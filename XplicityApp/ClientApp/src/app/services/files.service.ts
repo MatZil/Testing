@@ -11,7 +11,7 @@ export class FilesService {
   private readonly fileApi = `${this.baseUrl}api/File`;
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
-  getPolicyRelativePath(): Observable<string> {
+  getPolicyUrl(): Observable<string> {
     return this.http.get<string>(`${this.fileApi}/Policy`, { responseType: 'text' as 'json' });
   }
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
@@ -16,12 +15,15 @@ namespace XplicityApp.Services
         private readonly IFileRepository _fileRepository;
         private readonly IConfiguration _configuration;
         private readonly ITimeService _timeService;
+        private readonly IAzureStorageService _azureStorageService;
 
-        public FileService(IFileRepository fileRepository, IConfiguration configuration, ITimeService timeService)
+        public FileService(IFileRepository fileRepository, IConfiguration configuration, ITimeService timeService,
+            IAzureStorageService azureStorageService)
         {
             _fileRepository = fileRepository;
             _configuration = configuration;
             _timeService = timeService;
+            _azureStorageService = azureStorageService;
         }
 
         public async Task<int> CreateFileRecord(string fileName, FileTypeEnum fileType)
@@ -46,9 +48,11 @@ namespace XplicityApp.Services
             if (formFile.Length > 0)
             {
                 await CreateFileRecord(formFile.FileName, fileType);
-                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), GetRelativeDirectory(fileType), formFile.FileName);
-                using var fileStream = new FileStream(fullPath, FileMode.Create);
-                formFile.CopyTo(fileStream);
+                
+                var containerName = GetBlobContainerName(fileType);
+                var fileStream = formFile.OpenReadStream();
+                await _azureStorageService.UploadBlob(containerName, formFile.FileName, formFile.ContentType, fileStream);
+                fileStream.Close();
             }
         }
 
@@ -74,10 +78,31 @@ namespace XplicityApp.Services
 
             return _configuration["FileConfig:UnknownFolder"];
         }
-        public async Task<string> GetNewestPolicyPath()
+        public string GetBlobContainerName(FileTypeEnum fileType)
         {
-            var policy = await _fileRepository.GetNewestPolicy();
-            return Path.Combine(GetRelativeDirectory(policy.Type), policy.Name);
+            switch (fileType)
+            {
+                case FileTypeEnum.HolidayPolicy:
+                    return _configuration["BlobConfig:HolidayPolicy"];
+
+                case FileTypeEnum.Document:
+                    return _configuration["BlobConfig:Documents"];
+
+                case FileTypeEnum.Image:
+                    return _configuration["BlobConfig:Images"];
+
+                case FileTypeEnum.Request:
+                    return _configuration["BlobConfig:Requests"];
+
+                case FileTypeEnum.Order:
+                    return _configuration["BlobConfig:Orders"];
+            }
+
+            return _configuration["BlobConfig:Unknown"];
+        }
+        public string GetNewestPolicyPath()
+        {
+            return _azureStorageService.GetBlobUrl("policy", "Holiday Policy.pdf");
         }
 
         public async Task<FileRecord> GetById(int fileId)

@@ -43,7 +43,8 @@ namespace Tests.Tests.EmailServiceTests
             var emailTemplatesRepository = new EmailTemplatesRepository(context);
             var fileRepository = new FileRepository(context);
             var timeService = new TimeService();
-            _fileService = new FileService(fileRepository, _configuration, timeService);
+            var azureStorageService = new AzureStorageService();
+            _fileService = new FileService(fileRepository, _configuration, timeService, azureStorageService);
 
             var mockOvertimeUtility = new Mock<IOvertimeUtility>();
             var mockEmailer = new Mock<IEmailer>();

@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Http;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Enums;
@@ -9,7 +10,11 @@ using System.IO;
 using XplicityApp.Infrastructure.Utils.Interfaces;
 using Moq;
 using System.Text;
-using XplicityApp.Infrastructure.Database.Models;
+using Azure.Storage.Blobs;
+using Microsoft.Azure.Storage.Blob;
+using Microsoft.Azure.Storage;
+using XplicityApp.Configurations;
+using XplicityApp.Services.Interfaces;
 
 namespace Tests.Tests
 {
@@ -21,6 +26,7 @@ namespace Tests.Tests
         private readonly FileRepository _fileRepository;
         private readonly IConfiguration _configuration;
         private readonly ITimeService _timeService;
+        private readonly IAzureStorageService _azureStorageService;
         public FileServiceTests()
         {
             var setup = new SetUp();
@@ -30,59 +36,80 @@ namespace Tests.Tests
             _timeService = new Mock<ITimeService>().Object;
             _fileRepository = new FileRepository(_context);
             _configuration = setup.GetConfiguration();
+            _azureStorageService = new AzureStorageService();
 
             _fileService = new FileService(
                 _fileRepository,
                 _configuration,
-                _timeService
+                _timeService,
+                _azureStorageService
             );
         }
+
         [Theory]
-        [InlineData(FileTypeEnum.Document, "Resources/Documents")]
-        [InlineData(FileTypeEnum.HolidayPolicy, "Resources/Policy")]
-        [InlineData(FileTypeEnum.Image, "Resources/Images")]
-        [InlineData(FileTypeEnum.Order, "Resources/Orders")]
-        [InlineData(FileTypeEnum.Request, "Resources/Requests")]
-        [InlineData(FileTypeEnum.Unknown, "Resources/Unknown")]
-        public async void When_UploadingFile_Expect_FileUploaded(FileTypeEnum fileType, string filePath)
+        [InlineData(FileTypeEnum.Document)]
+        [InlineData(FileTypeEnum.HolidayPolicy)]
+        [InlineData(FileTypeEnum.Image)]
+        [InlineData(FileTypeEnum.Order)]
+        [InlineData(FileTypeEnum.Request)]
+        [InlineData(FileTypeEnum.Unknown)]
+        public async void When_UploadingFile_Expect_FileUploaded(FileTypeEnum fileType)
         {
+            var testBytes = Encoding.UTF8.GetBytes("test file");
+            var azureStorageService = new AzureStorageService();
 
             var formFile = new FormFile(
-                new MemoryStream(Encoding.UTF8.GetBytes(fileType.ToString())),
-                0,
-                30,
-                "Test",
-                "test.txt"
-            );
-            var expectedFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath, formFile.FileName);
-            var expectedDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+                baseStream: new MemoryStream(testBytes),
+                baseStreamOffset: 0,
+                length: testBytes.Length,
+                name: "Test",
+                fileName: "test.txt"
+            )
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "text/plain; charset=utf-8"
+            };
+            var connectionString = AzureStorageConfiguration.GetConnectionString();
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            var containerName = _fileService.GetBlobContainerName(fileType);
+            CloudBlobContainer container = blobClient.GetContainerReference(containerName);
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
-            if (File.Exists(expectedFilePath))
-                File.Delete(expectedFilePath);
+            BlobContainerClient containerClient;
+            if (!container.Exists())
+            {
+                containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName);
+            }
+            else
+            {
+                containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            }
 
-            if (Directory.Exists(expectedDirectoryPath))
-                Directory.Delete(expectedDirectoryPath);
+            await using (var fileStream = formFile.OpenReadStream())
+            {
+                await azureStorageService.UploadBlob(containerName, formFile.FileName, formFile.ContentType,
+                    fileStream);
+            }
 
-            Directory.CreateDirectory(expectedDirectoryPath);
-            await _fileService.Upload(formFile, fileType);
+            var blobClientTest = containerClient.GetBlobClient(formFile.FileName);
 
-            Assert.True(Directory.Exists(expectedDirectoryPath));
-            Assert.True(File.Exists(expectedFilePath));
+            Assert.True(await blobClientTest.ExistsAsync());
+            var downloadInfo = await azureStorageService.GetBlobDownloadInfo(containerName, formFile.FileName);
+            Assert.NotNull(downloadInfo);
+            Assert.Equal(formFile.ContentType, downloadInfo.ContentType);
 
-            File.Delete(expectedFilePath);
-            Directory.Delete(expectedDirectoryPath);
+            await blobClientTest.DeleteIfExistsAsync();
         }
-        [Fact]
-        public async void When_GettingNewestPolicyPath_Expect_PathReturned()
-        {
-                FileRecord expectedRecord = new FileRecord
-                {
-                    Name = "HolidayPolicy" 
-                };
 
-            var actualPath = await _fileService.GetNewestPolicyPath();
-            var expectedPath = Path.Combine("Resources/Policy", expectedRecord.Name);
-            Assert.Equal(expectedPath, actualPath);
+        [Fact]
+        public void When_GettingNewestPolicyPath_Expect_PathReturned()
+        {
+            string connectionString = AzureStorageConfiguration.GetConnectionString();
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            var actualPath = _fileService.GetNewestPolicyPath();
+            var expectedPath = new Uri(blobServiceClient.Uri, "/policy/Holiday%20Policy.pdf").AbsoluteUri;
+            Assert.StartsWith(expectedPath, actualPath);
         }
         [Theory]
         [InlineData(1, "Order")]

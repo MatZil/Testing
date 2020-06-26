@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using System.Threading.Tasks;
-using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Services.Interfaces;
 
 namespace XplicityApp.Controllers
@@ -11,10 +9,12 @@ namespace XplicityApp.Controllers
     public class FilesController : ControllerBase
     {
         private readonly IFileService _fileService;
+        private readonly IAzureStorageService _azureStorageService;
 
-        public FilesController(IFileService fileService)
+        public FilesController(IFileService fileService, IAzureStorageService azureStorageService)
         {
             _fileService = fileService;
+            _azureStorageService = azureStorageService;
         }
 
         [HttpGet("{fileGuid}/download")]
@@ -27,16 +27,9 @@ namespace XplicityApp.Controllers
                 return BadRequest();
             }
 
-            return GetFile(file.Name, file.Type);
-        }
-
-        private IActionResult GetFile(string fileName, FileTypeEnum fileType)
-        {
-            var fullPath = Path.Combine(_fileService.GetRelativeDirectory(fileType), fileName);
-
-            var stream = new FileStream(fullPath, FileMode.Open);
-
-            return File(stream, "application/docx", fileName);
+            var containerName = _fileService.GetBlobContainerName(file.Type);
+            var downloadInfo = await _azureStorageService.GetBlobDownloadInfo(containerName, file.Name);
+            return File(downloadInfo.Content, downloadInfo.ContentType, file.Name);
         }
     }
 }

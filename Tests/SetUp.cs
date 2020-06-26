@@ -79,6 +79,7 @@ namespace Tests
                 cfg.AddProfile(new AutoMapperConfiguration());
             });
             _mapper = config.CreateMapper();
+            AzureStorageConfiguration.Configure(_configuration);
         }
 
         public IConfiguration GetConfiguration()

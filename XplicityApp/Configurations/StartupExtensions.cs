@@ -14,10 +14,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using XplicityApp.Infrastructure.Database;
 using XplicityApp.Infrastructure.Database.Models;
-using System.Collections.Generic;
-using System.Linq;
 using Audit.Core;
-using Audit.EntityFramework.Providers;
+using Azure.Storage.Blobs;
+using Microsoft.Azure.Storage.Blob;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Shared.Protocol;
+using System.Collections.Generic;
 
 namespace XplicityApp.Configurations
 {
@@ -115,7 +117,8 @@ namespace XplicityApp.Configurations
 
         public static void ConfigureCors(this IServiceCollection services)
         {
-            services.AddCors(options => options.AddPolicy("ExposeResponseHeaders", policyBuilder => {
+            services.AddCors(options => options.AddPolicy("ExposeResponseHeaders", policyBuilder =>
+            {
                 policyBuilder.WithExposedHeaders("Content-Disposition");
             }));
         }
@@ -141,6 +144,48 @@ namespace XplicityApp.Configurations
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), baseFolder)),
                 RequestPath = new PathString(string.Concat("/", baseFolder))
             });
+        }
+        
+        public static async void SetUpAzureStorage(this IApplicationBuilder app)
+        {
+            string connectionString = AzureStorageConfiguration.GetConnectionString();
+
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+
+            string[] directories = { "documents", "orders", "policy", "requests", "unknown" };
+
+            foreach (var dir in directories)
+            {
+                CloudBlobContainer container = blobClient.GetContainerReference(dir);
+                if (!container.Exists())
+                {
+                    await blobServiceClient.CreateBlobContainerAsync(dir);
+                }
+            }
+        }
+        
+        public static void AddCorsRuleForAzure(this IApplicationBuilder app)
+        {
+            var corsRule = new CorsRule()
+            {
+                AllowedHeaders = new List<string> { "*" },
+                AllowedMethods = CorsHttpMethods.Get,
+                AllowedOrigins = new List<string> { "https://localhost:5001" },
+                MaxAgeInSeconds = 3600,
+            };
+
+            string connectionString = AzureStorageConfiguration.GetConnectionString();
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+            CloudBlobClient client = storageAccount.CreateCloudBlobClient();
+            ServiceProperties serviceProperties = client.GetServiceProperties();
+            CorsProperties corsSettings = serviceProperties.Cors;
+
+            corsSettings.CorsRules.Add(corsRule);
+            client.SetServiceProperties(serviceProperties);
         }
 
         public static IServiceCollection SetupJtwAuthentication(this IServiceCollection services, IConfiguration configuration)

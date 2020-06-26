@@ -72,6 +72,7 @@ namespace XplicityApp.Configurations
                 .AddScoped<IEmailService, EmailService>()
                 .AddScoped<IEmailTemplatesService, EmailTemplatesService>()
                 .AddScoped<IUserService, UserService>()
+                .AddTransient<IAzureStorageService, AzureStorageService>()
                 .AddScoped<IFileService, FileService>()
                 .AddScoped<IInventoryItemService, InventoryItemService>()
                 .AddScoped<IInventoryCategoryService, InventoryCategoryService>()
