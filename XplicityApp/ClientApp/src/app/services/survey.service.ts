@@ -11,12 +11,6 @@ export class SurveyService {
 
   private readonly surveyApi = `${this.baseUrl}api/Surveys`;
 
-  private readonly httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
-
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
   getAllSurveys(): Observable<Survey[]> {

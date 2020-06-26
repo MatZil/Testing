@@ -89,7 +89,7 @@ export class SurveysTableComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(newSurvey => {
+    dialogRef.afterClosed().subscribe(() => {
       this.refreshTable();
     });
   }

@@ -2,7 +2,7 @@
 
 namespace XplicityApp.Infrastructure.Repositories
 {
-    public interface IQuestionsRepository : IRepository<Question>
-{
+    public interface IAnswerRepository : IRepository<Answer>
+    {
     }
 }

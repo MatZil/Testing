@@ -1,1 +1,71 @@
-<p>surveys-answer-form works!</p>
+<form *ngIf="survey" [formGroup]="answerFormGroup" (ngSubmit)="onSubmit()" class="form">
+
+  <h1>{{survey.title}}</h1>
+  <div class="warning">This survey is {{getSurveysAnonymical()}}anonymus</div>
+
+  <mat-vertical-stepper [linear]="true">
+
+    <div *ngFor="let question of survey.questions;  let i = index">
+
+      <mat-step>
+        <ng-template matStepLabel>{{question.questionText}}</ng-template>
+        <mat-card>
+          <mat-card-content>
+            <div *ngIf="question.type === getQuestionType().TextEntry">
+              <mat-form-field>
+                <textarea formControlName="answers" matInput type="text"
+                  placeholder="Put your answer here..."></textarea>
+              </mat-form-field>
+            </div>
+
+            <div *ngIf="question.type === getQuestionType().MultipleChoice">
+              <div *ngFor="let choice of question.choices">
+                <mat-checkbox color="primary" formControlName="answers">
+                  {{choice.choiceText}}
+                </mat-checkbox>
+              </div>
+            </div>
+
+            <div *ngIf="question.type === getQuestionType().LikertScale">
+              <mat-radio-group color="primary" formControlName="answers">
+                <mat-radio-button [value]="5">
+                  Strongly agree
+                </mat-radio-button>
+                <br>
+                <mat-radio-button [value]="4">
+                  Agree
+                </mat-radio-button>
+                <br>
+                <mat-radio-button [value]="3">
+                  Neither agree nor disagree
+                </mat-radio-button><br>
+                <mat-radio-button [value]="2">
+                  Disagree
+                </mat-radio-button><br>
+                <mat-radio-button [value]="1">
+                  Strongly disagree
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <div *ngIf="question.type === getQuestionType().Ranking">
+              <mat-slider color="primary" formControlName="answers" matInput thumbLabel
+                [displayWith]="createSliderLabel" tickInterval="1" min="0" max="5">
+              </mat-slider>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-button matStepperNext>Next</button>
+          </mat-card-actions>
+        </mat-card>
+      </mat-step>
+    </div>
+
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <div class="warning">This survey is done. Thank you for your answers!</div>
+    </mat-step>
+
+  </mat-vertical-stepper>
+</form>

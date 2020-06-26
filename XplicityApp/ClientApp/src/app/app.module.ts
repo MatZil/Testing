@@ -39,6 +39,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FullCalendarModule } from 'primeng/fullcalendar';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatStepperModule } from '@angular/material/stepper';
 
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { EmployeesTableComponent } from './components/employees-table/employees-table.component';
@@ -145,6 +147,8 @@ export function tokenGetter() {
     MatSidenavModule,
     MatPaginatorModule,
     MatSlideToggleModule,
+    MatSliderModule,
+    MatStepperModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

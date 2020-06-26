@@ -22,6 +22,7 @@ namespace XplicityApp.Infrastructure.Database
         public DbSet<Survey> Surveys { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Choice> Choices { get; set; }
+        public DbSet<Answer> Answers { get; set; }
         private readonly IConfiguration _configuration;
 
 

@@ -47,7 +47,9 @@ namespace XplicityApp.Controllers
             var survey = await _surveysService.GetByGuid(guid);
 
             if (survey == null)
+            {
                 return NotFound();
+            }
 
             return Ok(survey);
         }
