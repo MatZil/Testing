@@ -74,6 +74,8 @@ import { SurveysFormComponent } from './components/surveys-form/surveys-form.com
 import { SurveysAnswersFormComponent } from './components/surveys-answers-form/surveys-answers-form.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import {PdfViewerDialogComponent} from './components/pdf-viewer-dialog/pdf-viewer-dialog.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 registerLocaleData(en);
 export function tokenGetter() {
@@ -93,6 +95,7 @@ export function tokenGetter() {
     ProfileComponent,
     HolidaysTableComponent,
     PolicyComponent,
+    PdfViewerDialogComponent,
     EmailtemplatesTableComponent,
     UploadComponent,
     OvertimeDisplayComponent,
@@ -120,7 +123,7 @@ export function tokenGetter() {
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: 'never' }),
+    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
     HttpClientModule,
     BrowserAnimationsModule,
     MatInputModule,
@@ -156,7 +159,8 @@ export function tokenGetter() {
         blacklistedRoutes: ['example.com/examplebadroute/']
       }
     }),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    MatTooltipModule
   ],
   entryComponents: [
     AddEmployeeFormComponent,

@@ -1,0 +1,11 @@
+<div mat-dialog-title class="dialog-title">
+  <h2 mat-dialog-title>{{data.title}}</h2>
+  <button mat-icon-button aria-label="Close dialog" tabindex="-1" matTooltip="Close" (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <pdf-viewer [autoresize]="true" [fit-to-page]='true' [original-size]='true' [render-text]='false' [show-all]="false"
+              [src]="data.url">
+  </pdf-viewer>
+</mat-dialog-content>

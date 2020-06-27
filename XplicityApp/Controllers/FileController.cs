@@ -11,10 +11,12 @@ namespace XplicityApp.Controllers
     public class FileController : ControllerBase
     {
         private readonly IFileService _fileService;
+        private readonly IAzureStorageService _azureStorageService;
 
-        public FileController(IFileService fileService)
+        public FileController(IFileService fileService, IAzureStorageService azureStorageService)
         {
             _fileService = fileService;
+            _azureStorageService = azureStorageService;
         }
 
         [HttpPost]
@@ -27,12 +29,13 @@ namespace XplicityApp.Controllers
             await _fileService.Upload(file, fileType);
             return Ok();
         }
-
-        [HttpGet]
-        [Route("Policy")]
-        public IActionResult GetNewestPolicy()
+        
+        [HttpGet("policy")]
+        public async Task<IActionResult> GetNewestPolicy()
         {
-            return Ok(_fileService.GetNewestPolicyPath());
+            const string policyFileName = "Holiday Policy.pdf";
+            var downloadInfo = await _azureStorageService.GetBlobDownloadInfo("policy", policyFileName);
+            return File(downloadInfo.Content, downloadInfo.ContentType, policyFileName);
         }
     }
 }

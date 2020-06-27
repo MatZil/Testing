@@ -3,16 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FileType } from '../enums/fileType';
 import * as mime from 'mime-types';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilesService {
   private readonly fileApi = `${this.baseUrl}api/File`;
+
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
-  getPolicyUrl(): Observable<string> {
-    return this.http.get<string>(`${this.fileApi}/Policy`, { responseType: 'text' as 'json' });
+  downloadPolicy(): Observable<Blob> {
+    return this.http.get(`${this.fileApi}/policy`, {responseType: 'blob'}).pipe(map(res => new Blob([res], { type: 'application/pdf' })));
   }
 
   upload(formData: FormData) {
