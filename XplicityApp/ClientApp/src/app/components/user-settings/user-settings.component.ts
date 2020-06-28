@@ -28,7 +28,7 @@ export class UserSettings implements OnInit {
 
   showUploadModal(): void {
     const dialogRef = this.dialog.open(UploadComponent, {
-      width: '500px'
+      width: '500px', data: '.pdf'
     });
   }
 

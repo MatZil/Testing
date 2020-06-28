@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input, Inject} from '@angular/core';
 import { HttpEventType } from '@angular/common/http';
 
 import { AlertService } from 'src/app/services/alert.service';
 import { FileType } from '../../enums/fileType';
 import { FilesService } from 'src/app/services/files.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-upload',
@@ -19,7 +19,8 @@ export class UploadComponent implements OnInit {
   constructor(
     private alertService: AlertService,
     private fileService: FilesService,
-    public dialogRef: MatDialogRef<UploadComponent>) { }
+    public dialogRef: MatDialogRef<UploadComponent>,
+    @Inject(MAT_DIALOG_DATA) public acceptedFiles: string) { }
 
   ngOnInit() {
     this.fileType = FileType.HolidayPolicy;
