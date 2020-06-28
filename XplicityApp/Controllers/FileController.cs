@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Services.Interfaces;
 
@@ -12,11 +13,14 @@ namespace XplicityApp.Controllers
     {
         private readonly IFileService _fileService;
         private readonly IAzureStorageService _azureStorageService;
+        private readonly IConfiguration _configuration;
 
-        public FileController(IFileService fileService, IAzureStorageService azureStorageService)
+        public FileController(IFileService fileService, IAzureStorageService azureStorageService,
+            IConfiguration configuration)
         {
             _fileService = fileService;
             _azureStorageService = azureStorageService;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -29,11 +33,11 @@ namespace XplicityApp.Controllers
             await _fileService.Upload(file, fileType);
             return Ok();
         }
-        
+
         [HttpGet("policy")]
         public async Task<IActionResult> GetNewestPolicy()
         {
-            const string policyFileName = "Holiday Policy.pdf";
+            var policyFileName = _configuration["FileConfig:HolidayPolicyFileName"];
             var downloadInfo = await _azureStorageService.GetBlobDownloadInfo("policy", policyFileName);
             return File(downloadInfo.Content, downloadInfo.ContentType, policyFileName);
         }
