@@ -1,6 +1,8 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { FilesService } from '../../services/files.service';
-import { UrlService } from 'src/app/services/url.service';
+import {Component, OnInit} from '@angular/core';
+import {FilesService} from '../../services/files.service';
+import {MatDialog} from '@angular/material/dialog';
+import {PdfViewerDialogComponent} from '../pdf-viewer-dialog/pdf-viewer-dialog.component';
+import {PdfViewerDialogData} from '../pdf-viewer-dialog/pdf-viewer-dialog-data';
 
 @Component({
   selector: 'app-policy',
@@ -8,26 +10,19 @@ import { UrlService } from 'src/app/services/url.service';
   styleUrls: ['./policy.component.scss']
 })
 export class PolicyComponent implements OnInit {
-  policyPath: string;
-  showPolicy = false;
 
-  constructor(
-    private fileService: FilesService,
-    private urlService: UrlService) { }
+  constructor(private fileService: FilesService,
+              private dialog: MatDialog) {
+  }
 
   ngOnInit() {
   }
 
   onButtonClick() {
-    this.fileService.getPolicyUrl().subscribe(url => {
-      this.policyPath = url;
-      this.showPolicy = true;
-    }
-    );
-  }
-
-  @HostListener('document:click', ['$event'])
-  exitPdf() {
-    this.showPolicy = false;
+    this.fileService.downloadPolicy().subscribe(blob => {
+      const fileURL = URL.createObjectURL(blob);
+      const data: PdfViewerDialogData = {url: fileURL, title: 'Holiday Policy'};
+      this.dialog.open(PdfViewerDialogComponent, {data: data});
+    });
   }
 }

@@ -1,0 +1,14 @@
+.dialog-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  h2 {
+    flex-grow: 1;
+    margin-bottom: 0;
+  }
+
+  button {
+    flex: 0 0 40px;
+  }
+}

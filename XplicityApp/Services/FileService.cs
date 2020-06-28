@@ -51,7 +51,10 @@ namespace XplicityApp.Services
                 
                 var containerName = GetBlobContainerName(fileType);
                 var fileStream = formFile.OpenReadStream();
-                await _azureStorageService.UploadBlob(containerName, formFile.FileName, formFile.ContentType, fileStream);
+                await _azureStorageService.UploadBlob(containerName,
+                    fileType == FileTypeEnum.HolidayPolicy
+                        ? _configuration["FileConfig:HolidayPolicyFileName"]
+                        : formFile.FileName, formFile.ContentType, fileStream);
                 fileStream.Close();
             }
         }
@@ -100,9 +103,9 @@ namespace XplicityApp.Services
 
             return _configuration["BlobConfig:Unknown"];
         }
-        public string GetNewestPolicyPath()
+        public string GetHolidayPolicyPath()
         {
-            return _azureStorageService.GetBlobUrl("policy", "Holiday Policy.pdf");
+            return _azureStorageService.GetBlobUrl("policy", _configuration["FileConfig:HolidayPolicyFileName"]);
         }
 
         public async Task<FileRecord> GetById(int fileId)

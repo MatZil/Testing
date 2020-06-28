@@ -105,10 +105,14 @@ namespace Tests.Tests
         [Fact]
         public void When_GettingNewestPolicyPath_Expect_PathReturned()
         {
-            string connectionString = AzureStorageConfiguration.GetConnectionString();
-            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
-            var actualPath = _fileService.GetNewestPolicyPath();
-            var expectedPath = new Uri(blobServiceClient.Uri, "/policy/Holiday%20Policy.pdf").AbsoluteUri;
+            var connectionString = AzureStorageConfiguration.GetConnectionString();
+            var blobServiceClient = new BlobServiceClient(connectionString);
+            var actualPath = _fileService.GetHolidayPolicyPath();
+            var blobServiceUri = blobServiceClient.Uri.AbsoluteUri;
+            if (!blobServiceUri.EndsWith('/')) { blobServiceUri += '/'; }
+            var expectedPath =
+                new Uri(new Uri(blobServiceUri), "policy/Holiday%20Policy.pdf")
+                    .AbsoluteUri;
             Assert.StartsWith(expectedPath, actualPath);
         }
         [Theory]
