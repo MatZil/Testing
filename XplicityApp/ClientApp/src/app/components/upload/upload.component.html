@@ -2,7 +2,7 @@
     <h1>Upload file</h1>
     <mat-card>
         <div>
-            <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
+            <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;" accept="{{acceptedFiles}}">
             <button mat-raised-button (click)="file.click()">Upload</button>
         </div>
         <div>
