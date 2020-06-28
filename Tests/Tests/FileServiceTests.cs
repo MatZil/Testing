@@ -63,7 +63,7 @@ namespace Tests.Tests
                 baseStreamOffset: 0,
                 length: testBytes.Length,
                 name: "Test",
-                fileName: "test.txt"
+                fileName: $"test-{Guid.NewGuid()}.txt"
             )
             {
                 Headers = new HeaderDictionary(),
