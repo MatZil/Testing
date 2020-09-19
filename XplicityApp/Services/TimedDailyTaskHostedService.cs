@@ -42,7 +42,7 @@ namespace XplicityApp.Services
             {
                 using var scope = _serviceProvider.CreateScope();
                 var backgroundService = scope.ServiceProvider.GetRequiredService<IBackgroundService>();
-                await backgroundService.DoBackgroundTasks();
+                await backgroundService.ExecuteDailyBackgroundTasks();
 
                 _logger.LogInformation(GetType().Name + " has done an additional iteration at " + _timeService.GetCurrentTime());
             }

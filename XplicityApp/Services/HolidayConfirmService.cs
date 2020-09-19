@@ -62,14 +62,20 @@ namespace XplicityApp.Services
             {
                 if (holidayConfirmationStatus.IsConfirmerAdmin)
                 {
-                    await ConfirmHoliday(holidayId, confirmerId);
-                    await GenerateFilesAndNotify(holidayId);
-                    await _holidayGuidsRepository.DeleteGuids(holidayId, true);
+                    var result = await _holidayGuidsRepository.DeleteGuids(holidayId, true);
+                    if (result)
+                    {
+                        await ConfirmHoliday(holidayId, confirmerId);
+                        await GenerateFilesAndNotify(holidayId);
+                    }
                 }
                 else
                 {
-                    await RequestAdminApproval(holidayId, EmployeeClientStatus.CLIENT_CONFIRMED, confirmerId);
-                    await _holidayGuidsRepository.DeleteGuids(holidayId, false);
+                    var result = await _holidayGuidsRepository.DeleteGuids(holidayId, false);
+                    if (result)
+                    {
+                        await RequestAdminApproval(holidayId, EmployeeClientStatus.CLIENT_CONFIRMED, confirmerId);
+                    }
                 }
             }
             else

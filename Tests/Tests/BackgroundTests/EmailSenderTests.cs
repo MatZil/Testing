@@ -23,6 +23,7 @@ namespace Tests.Tests.BackgroundTests
         private readonly Mock<ILogger<BackgroundEmailSender>> _mockLoggerEmailSender;
         private readonly Mock<IEmailService> _mockEmailService;
         private readonly HolidaysRepository _holidaysRepository;
+        private readonly NotificationSettingsRepository _notificationSettingsRepository;
 
         public EmailSenderTests()
         {
@@ -33,6 +34,7 @@ namespace Tests.Tests.BackgroundTests
 
             _employeesRepository = new EmployeesRepository(context, userManager);
             _holidaysRepository = new HolidaysRepository(context);
+            _notificationSettingsRepository = new NotificationSettingsRepository(context);
             var mockHolidayInfoService = new Mock<IHolidayInfoService>().Object;
             _mockLoggerEmailSender = new Mock<ILogger<BackgroundEmailSender>>();
             _mockEmailService = new Mock<IEmailService>();
@@ -41,9 +43,11 @@ namespace Tests.Tests.BackgroundTests
             _mockTimeService = new Mock<ITimeService>();
 
             _backgroundEmailSenderWithMockedTimeService = new BackgroundEmailSender(_mockTimeService.Object, _employeesRepository, _holidaysRepository,
-                                                                                    _mockEmailService.Object, mockHolidayInfoService, _mockLoggerEmailSender.Object);
+                                                                                    _mockEmailService.Object, mockHolidayInfoService, _notificationSettingsRepository,
+                                                                                    _mockLoggerEmailSender.Object);
             _backgroundEmailSender = new BackgroundEmailSender(_timeService, _employeesRepository, _holidaysRepository,
-                                                               _mockEmailService.Object, mockHolidayInfoService, _mockLoggerEmailSender.Object);
+                                                               _mockEmailService.Object, mockHolidayInfoService, _notificationSettingsRepository, 
+                                                               _mockLoggerEmailSender.Object);
         }
 
         [Fact]

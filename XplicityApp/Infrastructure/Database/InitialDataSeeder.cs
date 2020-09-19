@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using XplicityApp.Infrastructure.Database.Models;
 using XplicityApp.Infrastructure.Enums;
 using XplicityApp.Infrastructure.Static_Files;
@@ -193,6 +194,16 @@ namespace XplicityApp.Infrastructure.Database
                     Deprecation = Convert.ToInt32(configuration["EquipmentCategories:License:Deprecation"])
                 }
             );
+        }
+
+        public static void CreateBackgroundTaskLog(ModelBuilder builder)
+        {
+            builder.Entity<BackgroundTask>().HasData(
+                new BackgroundTask
+                {
+                    Id = 1,
+                    ExecutionDate = DateTime.Today
+                });
         }
     }
 }

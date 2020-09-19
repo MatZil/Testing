@@ -927,6 +927,60 @@ namespace Tests
                     HolidayId = 0,
                     Guid = "test-guid5",
                     IsAdmin = false
+                },
+                  new HolidayGuid
+                {
+                    ConfirmerId = 1,
+                    HolidayId = 1,
+                    IsAdmin = true
+                },
+                  new HolidayGuid
+                {
+                    ConfirmerId = 2,
+                    HolidayId = 2,
+                    IsAdmin = true
+                },
+                  new HolidayGuid
+                {
+                    ConfirmerId = 3,
+                    HolidayId = 3,
+                    IsAdmin = true
+                },
+                  new HolidayGuid
+                {
+                    ConfirmerId = 0,
+                    HolidayId = 4,
+                    IsAdmin = true
+                },
+                  new HolidayGuid
+                {
+                    ConfirmerId = 0,
+                    HolidayId = 5,
+                    IsAdmin = true
+                },
+                  new HolidayGuid
+                {
+                    ConfirmerId = 0,
+                    HolidayId = 6,
+                    IsAdmin = true
+                },
+                  new HolidayGuid
+                {
+                    ConfirmerId = 0,
+                    HolidayId = 7,
+                    IsAdmin = true
+                },
+                  new HolidayGuid
+                {
+                    ConfirmerId = 0,
+                    HolidayId = 8,
+                    IsAdmin = true
+                },
+                  new HolidayGuid
+                {
+                    ConfirmerId = 0,
+                    HolidayId = 9,
+                    IsAdmin = true
                 }
             };
             context.HolidayGuids.AddRange(_holidayGuids);

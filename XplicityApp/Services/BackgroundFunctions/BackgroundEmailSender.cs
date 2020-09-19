@@ -7,6 +7,7 @@ using XplicityApp.Infrastructure.Utils.Interfaces;
 using XplicityApp.Services.Interfaces;
 using XplicityApp.Services.BackgroundFunctions.Interfaces;
 using Microsoft.Extensions.Logging;
+using XplicityApp.Infrastructure.Database.Models;
 
 namespace XplicityApp.Services.BackgroundFunctions
 {
@@ -17,6 +18,7 @@ namespace XplicityApp.Services.BackgroundFunctions
         private readonly IHolidaysRepository _holidaysRepository;
         private readonly IEmailService _emailService;
         private readonly IHolidayInfoService _holidayInfoService;
+        private readonly INotificationSettingsRepository _notificationSettingsRepository;
         private readonly ILogger<BackgroundEmailSender> _logger;
 
         public BackgroundEmailSender(
@@ -24,14 +26,16 @@ namespace XplicityApp.Services.BackgroundFunctions
             IEmployeeRepository employeeRepository, 
             IHolidaysRepository holidaysRepository,
             IEmailService emailService, 
-            IHolidayInfoService holidayInfoService, 
-            ILogger<BackgroundEmailSender> logger)
+            IHolidayInfoService holidayInfoService,
+            INotificationSettingsRepository notificationSettingsRepository,
+        ILogger<BackgroundEmailSender> logger)
         {
             _timeService = timeService;
             _employeeRepository = employeeRepository;
             _holidaysRepository = holidaysRepository;
             _emailService = emailService;
             _holidayInfoService = holidayInfoService;
+            _notificationSettingsRepository = notificationSettingsRepository;
             _logger = logger;
         }
 
@@ -96,6 +100,34 @@ namespace XplicityApp.Services.BackgroundFunctions
             _logger.LogInformation("BroadcastCoworkersAbsences() ended at " + currentTime);
         }
 
+        private async Task<bool> ShouldBroadcast(int employeeId)
+        {
+            var notificationSettings = await _notificationSettingsRepository.GetByEmployeeId(employeeId);
+
+            if (notificationSettings.BroadcastOwnBirthday)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private async Task<bool> ShouldReceive(int employeeId)
+        {
+            var notificationSettings = await _notificationSettingsRepository.GetByEmployeeId(employeeId);
+
+            if (notificationSettings.ReceiveBirthdayNotifications)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public async Task BroadcastCoworkersBirthdays()
         {
             var currentTime = _timeService.GetCurrentTime();
@@ -103,13 +135,12 @@ namespace XplicityApp.Services.BackgroundFunctions
             try
             {
                 var allEmployees = await _employeeRepository.GetAll();
-                var employeesWithBirthdays = allEmployees.Where(employee =>
-                                                                    employee.NotificationSettings.BroadcastOwnBirthday == true &&
+                var employeesWithBirthdays = allEmployees.Where(employee => ShouldBroadcast(employee.Id).Result &&
                                                                     employee.BirthdayDate.Month == currentTime.Month &&
-                                                                    employee.BirthdayDate.Day == currentTime.Day &&
-                                                                    employee.NotificationSettings.BroadcastOwnBirthday == true
+                                                                    employee.BirthdayDate.Day == currentTime.Day
                                                                ).ToList();
-                var employeesToReceiveBirthdays = allEmployees.Where(employee => employee.NotificationSettings.ReceiveBirthdayNotifications == true).ToList();
+
+                var employeesToReceiveBirthdays = allEmployees.Where(employee => ShouldReceive(employee.Id).Result).ToList();
                 if (employeesWithBirthdays.Any() && employeesToReceiveBirthdays.Any())
                 {
                     await _emailService.SendBirthDayReminder(employeesWithBirthdays, employeesToReceiveBirthdays);

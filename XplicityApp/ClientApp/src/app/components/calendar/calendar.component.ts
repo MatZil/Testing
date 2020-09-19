@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { HolidaysService } from 'src/app/services/holidays.service';
 import { Holiday } from 'src/app/models/holiday';
 import { Birthday } from 'src/app/models/birthday';
@@ -6,7 +6,7 @@ import { UserService } from '../../services/user.service';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { HolidayType } from 'src/app/enums/holidayType';
-import {BehaviorSubject, of, zip} from 'rxjs';
+import { BehaviorSubject, of, zip } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Client } from 'src/app/models/client';
 import { ClientService } from 'src/app/services/client.service';
@@ -25,7 +25,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   currentUsersId: number;
   currentUsersClientId: number;
   holidayTypes = [['#99ccff', 'Annual unpaid'], ['#0099ff', 'Annual paid'], ['#006699', 'Annual paid, with overtime'],
-                  ['#cc99ff', 'Science'], ['#9933ff', 'Day for children'], ['#FF93AC', 'Birthday']];
+  ['#cc99ff', 'Science'], ['#9933ff', 'Day for children'], ['#FF93AC', 'Birthday']];
 
   @ViewChild('fullCalendar') fullCalendar: any;
 
@@ -36,14 +36,16 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.clientService.getClient().subscribe(clients => {
-      this.clients = clients;
-    });
+    if (this.isAdmin()) {
+      this.clientService.getClient().subscribe(clients => {
+        this.clients = clients;
+      });
+    }
     this.setCalendarOptions();
     this.getUserAndFilteredCurrentMonthHolidays(0);
   }
 
-    getUserAndFilteredCurrentMonthHolidays(filter) {
+  getUserAndFilteredCurrentMonthHolidays(filter) {
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUsersId = user.id;
       this.addMonthsToCurrentDate(0);
@@ -77,9 +79,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         const birthdayEvents = this.getBirthdayEvents(val[1]);
         const allEvents = holidayEvents.concat(birthdayEvents);
         return of(allEvents);
-    })).subscribe(events => {
-      this.events = events;
-    });
+      })).subscribe(events => {
+        this.events = events;
+      });
   }
 
   private getHolidayEvents(holidays: Holiday[]): any[] {
