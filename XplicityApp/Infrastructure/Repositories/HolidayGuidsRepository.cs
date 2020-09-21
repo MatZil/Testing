@@ -62,6 +62,8 @@ namespace XplicityApp.Infrastructure.Repositories
             return holidayGuid;
         }
 
+
+
         public async Task<HolidayGuid> GetHolidayGuid(string guid)
         {
             try
@@ -89,6 +91,7 @@ namespace XplicityApp.Infrastructure.Repositories
                 foreach (var guid in holidayGuids)
                 {
                     await Delete(guid);
+                    return true;
                 }
             }
             else
@@ -96,10 +99,15 @@ namespace XplicityApp.Infrastructure.Repositories
                 var holidayGuid = await Context.HolidayGuids
                                   .Where(holidayGuid => holidayGuid.HolidayId == holidayId && holidayGuid.IsAdmin == false)
                                   .Select(holidayGuid => holidayGuid).FirstAsync();
-                await Delete(holidayGuid);
+
+                if (holidayGuid != null)
+                {
+                    await Delete(holidayGuid);
+                    return true;
+                }
             }
 
-            return true;
+            return false;
         }
     }
 }

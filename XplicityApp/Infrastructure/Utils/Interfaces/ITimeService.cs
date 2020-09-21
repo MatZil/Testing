@@ -14,6 +14,5 @@ namespace XplicityApp.Infrastructure.Utils.Interfaces
         int ConvertYearsToDays(int years);
         DateTime GetCalendarDateFrom(IConfiguration configuration, DateTime selectedDate);
         DateTime GetCalendarDateTo(IConfiguration configuration, DateTime selectedDate);
-        DateTime AdjustBirthdayDateForCalendar(DateTime date);
     }
 }

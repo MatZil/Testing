@@ -210,7 +210,7 @@ namespace XplicityApp.Services
 
             foreach (var employee in allEmployees)
             {
-                var birthday = await GetBirthdayInformation(employee);
+                var birthday = await GetBirthdayInformation(employee, selectedDate);
                 bool datesOverlap = dateFrom < birthday.BirthdayDate && birthday.BirthdayDate <= dateTo;
                 if (datesOverlap)
                 {
@@ -243,14 +243,17 @@ namespace XplicityApp.Services
             return allBirthdays;
         }
 
-        private async Task<GetEmployeeBirthdayDto> GetBirthdayInformation(Employee employee)
+        private async Task<GetEmployeeBirthdayDto> GetBirthdayInformation(Employee employee, DateTime selectedDate)
         {
             var notificationSettings = await _notificationSettingsService.GetByEmployeeId(employee.Id);
+
+            var birthdayDate = employee.BirthdayDate;
+            var adjustedBirthdayDate = new DateTime(selectedDate.Year, birthdayDate.Month, birthdayDate.Day);
 
             var birthday = new GetEmployeeBirthdayDto()
             {
                 FullName = $"{employee.Name} {employee.Surname}",
-                BirthdayDate = _timeService.AdjustBirthdayDateForCalendar(employee.BirthdayDate),
+                BirthdayDate = adjustedBirthdayDate,
                 IsPublic = notificationSettings.BroadcastOwnBirthday
             };
 

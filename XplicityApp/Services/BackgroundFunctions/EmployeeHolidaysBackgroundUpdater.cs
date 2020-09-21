@@ -39,7 +39,8 @@ namespace XplicityApp.Services.BackgroundFunctions
                     {
                         if (!_employeesService.HasActiveUnpaidHoliday(employee.Id))
                         {
-                            employee.FreeWorkDays += Math.Round((double)employee.DaysOfVacation / workDaysPerYear, 2);
+                            var holidaysToAdd = Math.Round((double)employee.DaysOfVacation / workDaysPerYear, 2);
+                            employee.FreeWorkDays += holidaysToAdd;
                             await _employeeRepository.Update(employee);
                         }
                     }

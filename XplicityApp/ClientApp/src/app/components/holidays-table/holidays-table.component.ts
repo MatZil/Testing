@@ -35,7 +35,12 @@ export class HolidaysTableComponent implements OnInit {
   ngOnInit() {
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
+      this.initialize();
     });
+  }
+
+  initialize()
+  {
     this.refreshTable(this.selectedEmployeeStatus);
     this.dataSource.paginator = this.paginator;
     if (this.isAdmin()) {

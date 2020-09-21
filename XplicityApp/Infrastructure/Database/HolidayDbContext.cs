@@ -23,8 +23,8 @@ namespace XplicityApp.Infrastructure.Database
         public DbSet<Question> Questions { get; set; }
         public DbSet<Choice> Choices { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<BackgroundTask> BackgroundTasks { get; set; }
         private readonly IConfiguration _configuration;
-
 
         public HolidayDbContext(DbContextOptions options, IConfiguration configuration) : base(options)
         {
@@ -75,6 +75,8 @@ namespace XplicityApp.Infrastructure.Database
             InitialDataSeeder.CreateEquipmentCategories(builder, _configuration);
 
             InitialDataSeeder.CreateInitialPolicyRecord(builder);
+
+            InitialDataSeeder.CreateBackgroundTaskLog(builder);
         }
     }
 }

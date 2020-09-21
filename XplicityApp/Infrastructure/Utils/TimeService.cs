@@ -95,12 +95,5 @@ namespace XplicityApp.Infrastructure.Utils
 
             return dateTo;
         }
-
-        public DateTime AdjustBirthdayDateForCalendar(DateTime date)
-        {
-            var currentYear = DateTime.Now.Year;
-            var adjustedBirthdayDate = new DateTime(currentYear, date.Month, date.Day);
-            return adjustedBirthdayDate;
-        }
     }
 }
