@@ -121,6 +121,7 @@ namespace XplicityApp.Services
         public async Task<string> GetDownloadLink(int fileId)
         {
             var file = await GetById(fileId);
+
             return $"{_configuration["AppSettings:RootUrl"]}/api/files/{file.Guid}/download";
         }
     }
